@@ -20,7 +20,7 @@ export const ProjectCard: Component<{ detail: ProjectCardDetails }, {}> =
       &:hover {
         transform: scale(1.02);
         transition: 0.25s cubic-bezier(0, 0.55, 0.45, 1);
-        box-shadow: 0 0 30px var(--shadow-color);
+        box-shadow: 0 0 20px var(--shadow-color);
         border-color: var(--accent);
       }
 

@@ -142,6 +142,12 @@ export const Contact: Component<{}, {}> = function () {
           </a>
         </li>
         <li>
+        <a href="https://x.com/bomberfish77" target="blank" rel="me">
+            X
+          </a>
+          &nbsp;(@bomberfish77)
+        </li>
+        <li>
           <a href="https://wetdry.world/@fish" target="blank" rel="me">
             fediverse
           </a>
@@ -183,12 +189,6 @@ export const Contact: Component<{}, {}> = function () {
             <li>@pageprotectionlayer</li>
             <li>@securepagetablemonitor</li>
           </ul>
-        </li>
-        <li>
-        <a href="https://x.com/bomberfish77" target="blank" rel="me">
-            X
-          </a>
-          &nbsp;(@bomberfish77)
         </li>
         <li>
           <a

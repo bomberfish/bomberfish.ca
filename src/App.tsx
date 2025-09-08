@@ -39,19 +39,24 @@ const App: Component<
   {
     rotation: number;
     projects: ProjectCardDetails[];
-    prevMouseX: number;
-    prevMouseY: number;
-    prevX: number;
-    prevY: number;
+    velX: number;
+    velY: number;
+    posX: number;
+    posY: number;
+    targetX: number;
+    targetY: number;
+    rafId?: number;
     timeout: boolean;
     selectedTab: number;
     elements: Element[];
   }
 > = function () {
-  this.prevMouseX = 0;
-  this.prevMouseY = 0;
-  this.prevX = 0;
-  this.prevY = 0;
+  this.velX = 0;
+  this.velY = 0;
+  this.posX = window.innerWidth / 2;
+  this.posY = window.innerHeight / 2;
+  this.targetX = this.posX;
+  this.targetY = this.posY;
   this.projects = projects;
   this.rotation = 0;
   this.timeout = false;
@@ -59,7 +64,7 @@ const App: Component<
   this.elements = [
     <Intro />,
     <div>
-      <h1 style="margin-bottom: 0.7em!important;">my work</h1>
+      <h1 style="margin-bottom: 0.7em!important;">projects</h1>
       <ProjectList projects={this.projects} />
     </div>,
     // <Contact />,
@@ -71,7 +76,6 @@ const App: Component<
     <DesignPhilosophy />,
   ];
   this.css = `
-    // background: var(--crust);
     color: var(--text);
     font-family: var(--font-body);
     margin: 0;
@@ -91,6 +95,9 @@ const App: Component<
       height: 60vh;
       height: min-content;
       border-radius: 0 0 1.2rem 1.2rem;
+      border-bottom: 1px solid var(--surface0);
+      border-left: 1px solid var(--surface0);
+      border-right: 1px solid var(--surface0);
     }
 
     #mainarticle {
@@ -101,7 +108,7 @@ const App: Component<
     }
 
     #content > *:not(#tabs) {
-      padding-inline: 1rem;
+      padding-inline: 1.25rem;
     }
 
     #mainarticle.transparent {
@@ -129,8 +136,9 @@ const App: Component<
     // console.warn(document.getElementById("mainarticle")!.getBoundingClientRect().height);
     updateSize();
 
+    // Prime the background motion once so CSS vars have sane initial values
     document.querySelector("main")?.dispatchEvent(
-      new MouseEvent("move", {
+      new PointerEvent("pointermove", {
         clientX: window.innerWidth,
         clientY: window.innerHeight,
       }),
@@ -148,25 +156,36 @@ const App: Component<
   });
 
   document.addEventListener("pointermove", (e: PointerEvent) => {
-    // i feel like this is way more complicated than it needs to be
     // console.debug(e.clientX, e.clientY);
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
       console.info("user prefers less motion");
       return;
     }
-    const offsetX = this.prevMouseX - e.clientX;
-    const offsetY = this.prevMouseY - e.clientY;
-    // console.debug(offsetX, offsetY);
-    const x = this.prevX - offsetX * 0.15;
-    const y = this.prevY - offsetY * 0.3;
-    // console.debug(x, y);
-    document.documentElement.style.setProperty("--bgmoveX", x + "px");
-    document.documentElement.style.setProperty("--bgmoveY", y + "px");
-    this.prevMouseX = e.clientX;
-    this.prevMouseY = e.clientY;
-    this.prevX = x;
-    this.prevY = y;
+    // Update the target position; the animation loop will interpolate toward it.
+    this.targetX = e.clientX;
+    this.targetY = e.clientY;
   });
+
+  // Continuous animation loop that eases toward the last known pointer location
+  const step = () => {
+    // Respect reduced motion; keep the loop alive in case the pref changes
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      this.rafId = requestAnimationFrame(step);
+      return;
+    }
+
+    const obedience = 0.05; // easing factor; higher = snappier
+    this.velX = obedience * (this.targetX - this.posX);
+    this.velY = obedience * (this.targetY - this.posY);
+    this.posX += (this.velX / 1.5);
+    this.posY += (this.velY / 1.5);
+
+    document.documentElement.style.setProperty("--bgmoveX", this.posX + "px");
+    document.documentElement.style.setProperty("--bgmoveY", this.posY + "px");
+
+    this.rafId = requestAnimationFrame(step);
+  };
+  this.rafId = requestAnimationFrame(step);
 
   return (
     <main

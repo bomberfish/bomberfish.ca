@@ -349,7 +349,7 @@ export const ThreeDeeApp: Component<
             height={960}
           >
             <article>
-              <h1>my work</h1>
+              <h1>projects</h1>
               <ProjectList projects={this.projects} />
             </article>
           </Screen>
