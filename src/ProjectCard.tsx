@@ -2,12 +2,12 @@ import "dreamland";
 import ProjectCardDetails from "./Project";
 import { LargeProjectView } from "./LargeProjectView";
 
-export const ProjectCard: Component<{ detail: ProjectCardDetails }, {}> =
+export const ProjectCard: Component<{ detail: ProjectCardDetails; size: 'small'|'large'; }, {}> =
   function () {
     this.css = `
       background: var(--surface0);
       width: 100%;
-      min-height: 280px;
+      ${this.size == "small" ? "height: 6rem;":"min-height: 280px;"}
       border-radius: 1rem!important;
       padding-bottom: 0.2rem;
       cursor: pointer;
@@ -16,6 +16,8 @@ export const ProjectCard: Component<{ detail: ProjectCardDetails }, {}> =
       --shadow-color: color-mix(in srgb, var(--accent) 30%, transparent);
       box-shadow: 0 0 0px var(--shadow-color);
       border: 1px dashed var(--overlay1);
+      display: flex;
+      flex-direction: ${this.size == "small" ? "row" : "column"}
 
       &:hover {
         transform: scale(1.02);
@@ -43,9 +45,8 @@ export const ProjectCard: Component<{ detail: ProjectCardDetails }, {}> =
     transform: translateZ(50px);
 
     .img-container {
-      width: 100%;
-      height: auto;
-      aspect-ratio: 512 / 277;
+      ${this.size == "small" ? "width: 6rem; height: 6rem;" : "width: 100%; height: auto;" }
+        aspect-ratio: ${this.size == "small" ? "1 / 1" : "512 / 277"};
     }
 
     img {
@@ -53,8 +54,8 @@ export const ProjectCard: Component<{ detail: ProjectCardDetails }, {}> =
       -webkit-user-drag: none;
       -webkit-user-select: none;
       border-radius: 0.9rem;
-      width: calc(100% - 1px);
-      height: calc(100% - 1px);
+      width: ${this.size == "small" ? "calc(6rem - 1px)" : "calc(100% - 1px)"};
+      height: ${this.size == "small" ? "calc(6rem - 2px)" : "calc(100% - 1px)"};
       object-fit: cover;
     }
 
@@ -62,8 +63,8 @@ export const ProjectCard: Component<{ detail: ProjectCardDetails }, {}> =
       display: flex;
       justify-content: center;
       align-items: center;
-      width: calc(100% - 1px);
-      height: calc(100% - 1px);
+      width: ${this.size == "small" ? "calc(6rem - 1px)" : "calc(100% - 1px)"};
+      height: ${this.size == "small" ? "calc(6rem - 2px)" : "calc(100% - 1px)"};
       border-radius: 0.9rem;
       background: var(--base);
       color: var(--subtext0);
@@ -80,16 +81,21 @@ export const ProjectCard: Component<{ detail: ProjectCardDetails }, {}> =
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
-      font-family: 1rem;
+      flex-wrap: wrap;
+      font-size: 1rem;
     }
 
     p {
       margin: 0!important;
       margin-top: 0.025rem!important;
+      line-height: 1.2rem;
+      min-height: 2.4rem;
+      vertical-align: center;
+      font-size: ${this.size == "small" ? "0.8rem" : "1rem"};
     }
 
     .title > span {
-      font-size: 1.5rem;
+      font-size: ${this.size == "small" ? "1.25rem" : "1.5rem"};
       font-weight: 600;
       margin-right: 0.5rem;
       font-family: var(--font-serif);
@@ -111,6 +117,11 @@ export const ProjectCard: Component<{ detail: ProjectCardDetails }, {}> =
       top: 75%;
       opacity: 0;
       transition: opacity 0.2s;
+    }
+
+    subt {
+      line-height: 1.5rem!important;
+      font-size: ${this.size == "small" ? "0.7rem" : "0.9rem"};
     }
     `;
 
@@ -141,11 +152,6 @@ export const ProjectCard: Component<{ detail: ProjectCardDetails }, {}> =
       >
         <div
           class="img-container"
-          style={{
-            width: "100%",
-            height: "auto",
-            aspectRatio: "512 / 277",
-          }}
         >
           {$if(
             this.detail.img != undefined,
@@ -163,8 +169,10 @@ export const ProjectCard: Component<{ detail: ProjectCardDetails }, {}> =
         </div>
         <div class="detail">
           <div class="title">
-            <span>{this.detail.title}</span>
-            <subt> • ({this.detail.year})</subt>
+            <span>{this.detail.title}</span>{" "}
+            <subt>({
+              this.detail.startYear == this.detail.endYear ? this.detail.startYear : this.detail.startYear + "–" + (this.detail.endYear || "present")
+            })</subt>
           </div>
           <p>{this.detail.blurb}</p>
           <kbd>↩</kbd>
@@ -173,28 +181,55 @@ export const ProjectCard: Component<{ detail: ProjectCardDetails }, {}> =
     );
   };
 
-export const ProjectList: Component<{ projects: ProjectCardDetails[] }, {}> =
-  function () {
-    this.css = `
+  export const ProjectListFlat: Component<{projects: ProjectCardDetails[]},{}> = function() {
+     this.css = `
+    margin-bottom: 1.5rem;
       .projects-group {
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-        grid-gap: 2rem;
+        grid-gap: 1.25rem;
         place-items: center;
         place-content: center;
-        width: calc(100% - 4rem);
-        margin: 0 2rem;
+        width: calc(100% - 2.5rem);
+        margin: 0 1.25rem;
       }
       `;
     return (
-      <div id="projects-container">
+      <div class="projects-container">
+<div class="projects-group">
+        {use(this.projects, (projects) =>
+          projects
+            
+            .map((project) => <ProjectCard detail={project} size="small" />),
+        )}
+      </div>
+      </div>
+    )
+  }
+
+export const ProjectList: Component<{ projects: ProjectCardDetails[] }, {}> =
+  function () {
+    this.css = `
+    margin-bottom: 1.5rem;
+      .projects-group {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+        grid-gap: 1.25rem;
+        place-items: center;
+        place-content: center;
+        width: calc(100% - 2.5rem);
+        margin: 0 1.25rem;
+      }
+      `;
+    return (
+      <div class="projects-container">
       <h2>featured</h2>
       <div class="projects-group">
         {use(this.projects, (projects) =>
           projects
             .filter((project) => project.featured)
             .sort((a, b) => (a.featuredPosition || 0) - (b.featuredPosition || 0))
-            .map((project) => <ProjectCard detail={project} />),
+            .map((project) => <ProjectCard detail={project} size="large" />),
         )}
       </div><br />
       <h2>other</h2>
@@ -202,7 +237,7 @@ export const ProjectList: Component<{ projects: ProjectCardDetails[] }, {}> =
         {use(this.projects, (projects) =>
           projects
             .filter((project) => !project.featured)
-            .map((project) => <ProjectCard detail={project} />),
+            .map((project) => <ProjectCard detail={project} size="small" />),
         )}
       </div>
       </div>

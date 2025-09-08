@@ -6,8 +6,8 @@ console.log(
 import "dreamland";
 import { ThreeDeeApp } from "./3DSite/ThreeDeeApp.tsx";
 import ProjectCardDetails from "./Project.ts";
-import { ProjectList } from "./ProjectCard.tsx";
-import { projects } from "./Projects.ts";
+import { ProjectList, ProjectListFlat } from "./ProjectCard.tsx";
+import { jobs, projects } from "./Projects.ts";
 import { ClickWall } from "./3DSite/ClickWall.tsx";
 import { DarkReaderWarning } from "./DarkReaderWarning.tsx";
 import { sharedCSS, articleCSS } from "./CommonCSS.tsx";
@@ -64,12 +64,14 @@ const App: Component<
   this.elements = [
     <Intro />,
     <div>
-      <h1 style="margin-bottom: 0.7em!important;">projects</h1>
+      <h1 style="margin-bottom: 1.5rem!important;">work experience</h1>
+      <ProjectListFlat projects={jobs}/>
+      <h1 style="margin-bottom: 1.5rem!important;">projects</h1>
       <ProjectList projects={this.projects} />
     </div>,
     // <Contact />,
     <div>
-      <h1 style="margin-bottom: 0.7em!important;">latest post</h1>
+      <h1 style="margin-bottom: 1.5rem!important;">latest post</h1>
       <LatestToot />
     </div>,
     <SiteMap />,
