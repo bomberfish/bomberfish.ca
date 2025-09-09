@@ -135,12 +135,13 @@ export const LargeProjectView: Component<{ project: ProjectCardDetails }, {}> =
         overflow: scroll;
         position: relative;
         width: 100%;
-        height: calc(100% - 7rem);
+        height: ${this.project.img ? "calc(100% - 7rem)" : "100%"};
         display: flex;
         flex-direction: column;
-        align-items: flex-start;
+        align-items: center;
+        justify-content: ${this.project.img ? "flex-start" : "space-around"};
         overflow: scroll;
-        align-self: flex-end;
+        align-self: ${this.project.img ? "flex-end" : "flex-start"};
         justify-self: center;
         z-index: 3;
         padding-bottom: 1rem;
@@ -331,7 +332,9 @@ export const LargeProjectView: Component<{ project: ProjectCardDetails }, {}> =
               />),
             )}
             <div class="article-inner">
+              {$if(this.project.img,
               <div style="flex-grow: 1;" />
+              )}
               <span id="title">{this.project.title}</span>
               <div class="desc">
                 <p>{this.project.largeDesc}</p>

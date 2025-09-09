@@ -100,7 +100,7 @@ export const projects = [
   new ProjectCardDetails(
     "/proj-thumbnails/Twitter Banner.png",
     "QuickSign",
-    "iOS Codesigning App",
+    "iOS Sideloading App",
     "In late 2024 I joined the development of QuickSign, an app to sign sideloaded iOS apps. Development was cancelled in mid 2025 due to Apple mass terminating developer accounts.",
     2024,
     2025,

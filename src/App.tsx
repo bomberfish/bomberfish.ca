@@ -5,8 +5,7 @@ console.log(
 
 import "dreamland";
 import { ThreeDeeApp } from "./3DSite/ThreeDeeApp.tsx";
-import ProjectCardDetails from "./Project.ts";
-import { ProjectList, ProjectListFlat } from "./ProjectCard.tsx";
+import { ProjectListFlat } from "./ProjectCard.tsx";
 import { jobs, projects } from "./Projects.ts";
 import { ClickWall } from "./3DSite/ClickWall.tsx";
 import { DarkReaderWarning } from "./DarkReaderWarning.tsx";
@@ -16,7 +15,6 @@ import { Intro, SiteMap, DesignPhilosophy } from "./SiteContent.tsx";
 import { convertRemToPixels } from "./Utils.ts";
 import { Footer } from "./Footer.tsx";
 import { Nav, TabBar } from "./Navigation.tsx";
-import { LatestToot } from "./LatestToot.tsx";
 import { oled } from "./Themes";
 import { oneko } from "./Oneko.ts";
 // import { Cursor } from "./Cursor.tsx";
@@ -38,7 +36,6 @@ const App: Component<
   {},
   {
     rotation: number;
-    projects: ProjectCardDetails[];
     velX: number;
     velY: number;
     posX: number;
@@ -57,7 +54,6 @@ const App: Component<
   this.posY = window.innerHeight / 2;
   this.targetX = this.posX;
   this.targetY = this.posY;
-  this.projects = projects;
   this.rotation = 0;
   this.timeout = false;
   this.selectedTab = 0;
@@ -65,14 +61,12 @@ const App: Component<
     <Intro />,
     <div>
       <h1 style="margin-bottom: 1.5rem!important;">work experience</h1>
-      <ProjectListFlat projects={jobs}/>
-      <h1 style="margin-bottom: 1.5rem!important;">projects</h1>
-      <ProjectList projects={this.projects} />
-    </div>,
-    // <Contact />,
-    <div>
-      <h1 style="margin-bottom: 1.5rem!important;">latest post</h1>
-      <LatestToot />
+      <ProjectListFlat projects={jobs} size="small" />
+      <h1 style="margin-bottom: 1.5rem!important;">projects <h2 style="display: inline; color: var(--subtext0)">(featured)</h2></h1>
+      <ProjectListFlat projects={projects.filter((project) => project.featured)
+            .sort((a, b) => (a.featuredPosition || 0) - (b.featuredPosition || 0))} size="large" />
+      <h2 style="margin-bottom: 1.5rem!important; color: var(--subtext0)">other</h2>
+      <ProjectListFlat projects={projects.filter((project) => !project.featured)} size="small" />
     </div>,
     <SiteMap />,
     <DesignPhilosophy />,
@@ -204,7 +198,6 @@ const App: Component<
           tabs={[
             "about me",
             "my work",
-            "yapping",
             "sitemap",
             "about this site",
           ]}

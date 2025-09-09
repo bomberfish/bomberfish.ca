@@ -181,7 +181,7 @@ export const ProjectCard: Component<{ detail: ProjectCardDetails; size: 'small'|
     );
   };
 
-  export const ProjectListFlat: Component<{projects: ProjectCardDetails[]},{}> = function() {
+  export const ProjectListFlat: Component<{projects: ProjectCardDetails[], size: "small" | "large"},{}> = function() {
      this.css = `
     margin-bottom: 1.5rem;
       .projects-group {
@@ -200,7 +200,7 @@ export const ProjectCard: Component<{ detail: ProjectCardDetails; size: 'small'|
         {use(this.projects, (projects) =>
           projects
             
-            .map((project) => <ProjectCard detail={project} size="small" />),
+            .map((project) => <ProjectCard detail={project} size={this.size} />),
         )}
       </div>
       </div>

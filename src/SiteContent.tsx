@@ -79,19 +79,17 @@ export const IntroSmall: Component<{}, {}> = function () {
       </h1>
       <p>i'm hariz, a 16 y/o high school student from canada :3</p>
       <p>
-        i sometimes make <code>use(ful|less)</code> projects among other stuff.
+        i sometimes make <code>use(ful|less)</code> projects, among other stuff.
       </p>
+      <subt>(make sure to check the "my work" tab!)</subt>
       <p>
         <br></br>
         as for <code>.* engineering</code>, I'm interested in:
         <ul>
-          <li>embedded systems and hardware</li>
-          <li>ios development with swiftui</li>
           <li>
-            webdev (as you can tell from this immaculately put-together
-            portfolio)
+            webdev and frontend design (this site is a good example!)
           </li>
-          <li>...and a little bit of security research!</li>
+          <li>embedded systems and hardware</li>
         </ul>
       </p>
     </section>
@@ -107,10 +105,9 @@ export const About: Component<{}, {}> = function () {
         <li>
           fluent in the following programming languages:
           <ul>
-            <li>swift (the GOAT)</li>
+            <li>swift</li>
             <li>javascript/typescript</li>
             <li>c/c++/objective-c</li>
-            <li>bash</li>
             <li>python</li>
           </ul>
         </li>
@@ -125,7 +122,7 @@ export const About: Component<{}, {}> = function () {
           </a>{" "}
           chromebook exploit.
         </li>
-        <li>an amateur music producer! stay tuned for more info!</li>
+        <li>an amateur music producer!</li>
       </ul>
     </section>
   );
@@ -136,6 +133,9 @@ export const Contact: Component<{}, {}> = function () {
     <section>
       <h2>get in touch!</h2>
       <ul>
+        <li>
+          <a href="mailto:hariz@bomberfish.ca">email</a> (hariz@bomberfish.ca)
+        </li>
         <li>
           <a href="https://github.com/BomberFish" target="blank" rel="me">
             github
@@ -152,43 +152,15 @@ export const Contact: Component<{}, {}> = function () {
             fediverse
           </a>
           &nbsp;(@fish@wetdry.world)
-          <ul>
-            <li>
-              if you use bluesky, you can follow&nbsp;
-              <a
+        </li>
+        <li>
+          <a
                 href="https://bsky.app/profile/bomberfish.ca"
                 target="blank"
               >
-                @bomberfish.ca
-              </a>
-              &nbsp;to view my posts on the fediverse. please note, this is
-              usually a few minutes behind!
-            </li>
-            <li>
-              if you use neither of those, you can view my latest post in the
-              "yapping" tab above.
-            </li>
-          </ul>
-        </li>
-        <li>
-          <a href="mailto:hariz@bomberfish.ca">email</a> (hariz@bomberfish.ca)
-          <ul>
-            <li>
-              i might be slow to respond, since i don't check my email often.
-            </li>
-            <li>every email address @bomberfish.ca belongs to me.</li>
-          </ul>
-        </li>
-        <li>
-          discord
-          <ul>
-            <li>
-              @bomberfish <strong>(main account)</strong>
-            </li>
-            <li>@realtimsweeneyepic</li>
-            <li>@pageprotectionlayer</li>
-            <li>@securepagetablemonitor</li>
-          </ul>
+                bluesky
+              </a> (@bomberfish.ca) <subt>(please note, this is
+              usually a few minutes behind! it mirrors my fediverse account.)</subt>
         </li>
         <li>
           <a
@@ -201,10 +173,10 @@ export const Contact: Component<{}, {}> = function () {
           (@bomberfish:omada.cafe)
         </li>
         <li>
+          discord: @bomberfish
+        </li>
+        <li>
           <span>signal: @bomberfish.77</span>
-          <ul>
-            <li>please only use this if all else fails!</li>
-          </ul>
         </li>
       </ul>
     </section>
