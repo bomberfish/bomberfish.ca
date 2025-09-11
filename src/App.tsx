@@ -50,8 +50,8 @@ const App: Component<
 > = function () {
   this.velX = 0;
   this.velY = 0;
-  this.posX = window.innerWidth / 2;
-  this.posY = window.innerHeight / 2;
+  this.posX = window.innerWidth / 10;
+  this.posY = window.innerHeight / 10;
   this.targetX = this.posX;
   this.targetY = this.posY;
   this.rotation = 0;
@@ -158,8 +158,8 @@ const App: Component<
       return;
     }
     // Update the target position; the animation loop will interpolate toward it.
-    this.targetX = e.clientX;
-    this.targetY = e.clientY;
+    this.targetX = e.clientX / 4;
+    this.targetY = e.clientY / 4;
   });
 
   // Continuous animation loop that eases toward the last known pointer location
@@ -170,11 +170,11 @@ const App: Component<
       return;
     }
 
-    const obedience = 0.05; // easing factor; higher = snappier
+    const obedience = 0.07; // easing factor; higher = snappier
     this.velX = obedience * (this.targetX - this.posX);
     this.velY = obedience * (this.targetY - this.posY);
-    this.posX += (this.velX / 1.5);
-    this.posY += (this.velY / 1.5);
+    this.posX += this.velX;
+    this.posY += this.velY;
 
     document.documentElement.style.setProperty("--bgmoveX", this.posX + "px");
     document.documentElement.style.setProperty("--bgmoveY", this.posY + "px");
