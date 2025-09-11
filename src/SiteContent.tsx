@@ -176,7 +176,7 @@ export const About: Component<{}, {}> = function () {
           <a href="https://mercurywork.shop" target="blank">
             mercury workshop
           </a>
-          , a software development team best known for the{" "}
+          , a software development collective best known for the{" "}
           <a href="https://sh1mmer.me" target="blank">
             sh1mmer
           </a>{" "}

@@ -173,10 +173,15 @@ body:not(.cool) {
     main {
         display: initial !important;
         width: 100vw;
+       
+    }
+
+    #content {
+         border: none !important;
     }
 
     body {
-        background: var(--base)
+        background: var(--crust);
     }
 
     #darkreader-warning {
