@@ -1,5 +1,4 @@
 import "dreamland";
-import isMobile from "./IsMobile";
 import { MK64Frame } from "./N64";
 
 const CopiedToast: Component<{}, {}> = function () {

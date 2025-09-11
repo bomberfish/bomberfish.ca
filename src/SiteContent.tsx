@@ -62,6 +62,8 @@ export const IntroSmall: Component<{}, {}> = function () {
 
   #konami {
     font-size: 0.8rem;
+    margin-top: 0.35rem;
+    margin-bottom: 1rem;
   }
 
   #konami > kbd {
