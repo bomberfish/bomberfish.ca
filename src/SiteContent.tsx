@@ -1,5 +1,6 @@
 import "dreamland";
 import { articleCSS } from "./CommonCSS";
+import isMobile from "./IsMobile";
 
 export const FullArticle: Component<{}, {}> = function () {
   return (
@@ -58,6 +59,38 @@ export const IntroSmall: Component<{}, {}> = function () {
     font-weight: bold!important;
   }
 
+
+  #konami {
+    font-size: 0.8rem;
+  }
+
+  #konami > kbd {
+        margin-right: 0.65em;
+        font-size: 1em;
+        color: var(--overlay1);
+        border-color: var(--overlay1);
+        padding: 0.2em 0.6em;
+        transition: 0.2s;
+        &.active {
+          color: var(--accent);
+          border-color: var(--accent);
+          box-shadow: 0 0 4rem 0 color-mix(in srgb, transparent 70%, var(--accent));
+        }
+      }
+
+      #konami > a {
+        opacity: 0;
+        pointer-events: none;
+        transition: 0.2s;
+      }
+
+      #konami:hover > a,
+      #konami:focus-within > a {
+        opacity: 1;
+        pointer-events: auto;
+        transition: 0.2s;
+      }
+
   // h1>span {
   //   font-weight: 900!important;
   //   transition: font-weight 0.25s ease,
@@ -76,6 +109,33 @@ export const IntroSmall: Component<{}, {}> = function () {
     <section>
       <h1>
         <span>hiya!</span> 👋
+
+        {$if(
+          new URL(window.location.href).searchParams.get("higherdimension") ===
+            null && !isMobile(),
+          <div>
+            {/* <div>
+                      Pro tip: you can navigate this site with your keyboard! Press{" "}
+                      <kbd>tab</kbd> to start.
+                      <br></br>
+                      <br></br>
+                    </div> */}
+            <div id="konami">
+              <kbd id="k0">↑</kbd>
+              <kbd id="k1">↑</kbd>
+              <kbd id="k2">↓</kbd>
+              <kbd id="k3">↓</kbd>
+              <kbd id="k4">←</kbd>
+              <kbd id="k5">→</kbd>
+              <kbd id="k6">←</kbd>
+              <kbd id="k7">→</kbd>
+              <kbd id="k8">b</kbd>
+              <kbd id="k9">a</kbd>
+              <a href="/?higherdimension">I'm lazy</a>
+            </div>
+          </div>,
+        )}
+
       </h1>
       <p>i'm hariz, a 16 y/o high school student from canada :3</p>
       <p>

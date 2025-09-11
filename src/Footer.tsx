@@ -114,29 +114,6 @@ export const WebButton: Component<
 
 export const Footer: Component<{}, {}> = function () {
   this.css = `
-      #konami > kbd {
-        margin-right: 0.65rem;
-
-        &.active {
-          color: var(--accent);
-          border-color: var(--accent);
-          box-shadow: 0 0 4rem 0 color-mix(in srgb, transparent 70%, var(--accent));
-        }
-      }
-
-      #konami > a {
-        opacity: 0;
-        pointer-events: none;
-        transition: 0.2s;
-      }
-
-      #konami:hover > a,
-      #konami:focus-within > a {
-        opacity: 1;
-        pointer-events: auto;
-        transition: 0.2s;
-      }
-
       span {
         font-size: 1.5rem;
         color: var(--text);
@@ -209,31 +186,6 @@ export const Footer: Component<{}, {}> = function () {
           bomberfish.ca is a <strong>&lt;blink&gt; free zone</strong>.
         </p>
         {/* <br></br> */}
-        {$if(
-          new URL(window.location.href).searchParams.get("higherdimension") ===
-            null && !isMobile(),
-          <div>
-            {/* <div>
-                      Pro tip: you can navigate this site with your keyboard! Press{" "}
-                      <kbd>tab</kbd> to start.
-                      <br></br>
-                      <br></br>
-                    </div> */}
-            <div id="konami">
-              <kbd id="k0">↑</kbd>
-              <kbd id="k1">↑</kbd>
-              <kbd id="k2">↓</kbd>
-              <kbd id="k3">↓</kbd>
-              <kbd id="k4">←</kbd>
-              <kbd id="k5">→</kbd>
-              <kbd id="k6">←</kbd>
-              <kbd id="k7">→</kbd>
-              <kbd id="k8">b</kbd>
-              <kbd id="k9">a</kbd>
-              <a href="/?higherdimension">I'm lazy</a>
-            </div>
-          </div>,
-        )}
       </subt>
     </footer>
   );

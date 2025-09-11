@@ -68,7 +68,7 @@ img::selection {
 }
 
 :root {
-    --perspective: 1000px;
+    --perspective: 1250px;
     --gridsize: 50px;
     --bgmoveX: -19px;
     --bgmoveY: -19px;
