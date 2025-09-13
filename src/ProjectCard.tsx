@@ -5,7 +5,7 @@ import { LargeProjectView } from "./LargeProjectView";
 export const ProjectCard: Component<{ detail: ProjectCardDetails; size: 'small'|'large'; }, {}> =
   function () {
     this.css = `
-      background: var(--surface0);
+      background: var(--base);
       width: 100%;
       ${this.size == "small" ? "height: 6rem;":"min-height: 280px;"}
       border-radius: 1rem!important;
@@ -13,16 +13,16 @@ export const ProjectCard: Component<{ detail: ProjectCardDetails; size: 'small'|
       cursor: pointer;
       transform: scale(1);
       transition: 0.25s cubic-bezier(0, 0.55, 0.45, 1);
-      --shadow-color: color-mix(in srgb, var(--accent) 30%, transparent);
+      --shadow-color: color-mix(in srgb, var(--accent) 20%, transparent);
       box-shadow: 0 0 0px var(--shadow-color);
-      border: 1px dashed var(--overlay1);
+      border: 1px solid var(--surface0);
       display: flex;
       flex-direction: ${this.size == "small" ? "row" : "column"}
 
       &:hover {
-        transform: scale(1.02);
+        transform: scale(1.015);
         transition: 0.25s cubic-bezier(0, 0.55, 0.45, 1);
-        box-shadow: 0 0 20px var(--shadow-color);
+        box-shadow: 0 0 40px var(--shadow-color);
         border-color: var(--accent);
       }
 
@@ -53,7 +53,7 @@ export const ProjectCard: Component<{ detail: ProjectCardDetails; size: 'small'|
       user-select: none;
       -webkit-user-drag: none;
       -webkit-user-select: none;
-      border-radius: 0.9rem;
+      border-radius: 1rem;
       width: ${this.size == "small" ? "calc(6rem - 1px)" : "calc(100% - 1px)"};
       height: ${this.size == "small" ? "calc(6rem - 2px)" : "calc(100% - 1px)"};
       object-fit: cover;
@@ -65,8 +65,8 @@ export const ProjectCard: Component<{ detail: ProjectCardDetails; size: 'small'|
       align-items: center;
       width: ${this.size == "small" ? "calc(6rem - 1px)" : "calc(100% - 1px)"};
       height: ${this.size == "small" ? "calc(6rem - 2px)" : "calc(100% - 1px)"};
-      border-radius: 0.9rem;
-      background: var(--base);
+      border-radius: calc(1rem + 1px);
+      background: var(--mantle);
       color: var(--subtext0);
       span {
         font-size: 3rem;

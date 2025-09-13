@@ -56,6 +56,7 @@ img::selection {
 }
 
 :root {
+    interpolate-size: allow-keywords;
     --crust: #000000;
     --base: #0f0e0f;
     --mantle: #050405;

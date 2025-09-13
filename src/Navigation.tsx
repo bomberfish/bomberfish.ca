@@ -302,11 +302,11 @@ export const TabBar: Component<
         font-weight: 500;
 
         color: var(--overlay1);
-        filter: drop-shadow(0 0 10px transparent);
+        
         scale: 1;
 
         &.selected {
-          filter: drop-shadow(0 0 10px color-mix(in srgb, var(--accent) 70%, transparent));
+          text-shadow: 0 0 8px color-mix(in srgb, var(--accent) 70%, white);
      			color: var(--text);
      			padding-bottom: 1px;
      			border-bottom-color: var(--accent);
@@ -315,20 +315,20 @@ export const TabBar: Component<
 
         &:hover:not(.selected),
         &:focus:not(.selected) {
-          filter: drop-shadow(0 0 10px var(--overlay1));
+          text-shadow: 0 0 8px color-mix(in srgb, var(--accent) 20%, var(--overlay1));
      			border-width: 2px;
      			padding-bottom: 0.1em;
      			border-bottom-color: var(--surface2);
         }
 
         &:hover:not(.selected) {
-        	font-weight: 350;
+        	font-weight: 300;
           color: var(--subtext0);
         }
 
         &:active:not(.selected) {
    	      scale: 0.95;
-          font-weight: 250;
+          font-weight: 100;
           border-width: 1.5px;
         }
 
@@ -383,8 +383,8 @@ export const TabBar: Component<
                       .classList.remove("transparent");
                   },
                   window.matchMedia("(prefers-reduced-motion: reduce)").matches
-                    ? 150
-                    : 570,
+                    ? 100
+                    : 300,
                 );
               }}
             >

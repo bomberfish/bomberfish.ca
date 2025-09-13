@@ -99,7 +99,7 @@ const App: Component<
     #mainarticle {
       height: 100%;
       overflow: hidden;
-      transition: 0.35s, opacity 0.15s;
+      transition: 0.35s, opacity 0.1s;
       transition-timing-function: ease;
     }
 
