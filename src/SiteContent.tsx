@@ -139,9 +139,9 @@ export const IntroSmall: Component<{}, {}> = function () {
         )}
 
       </h1>
-      <p>i'm hariz, a 16 y/o high school student from canada :3</p>
+      <p>i'm hariz, a 16 y/o high school student living in waterloo, canada.</p>
       <p>
-        i sometimes make <code>use(ful|less)</code> projects, among other stuff.
+        i sometimes make <code>use(ful|less)</code> projects, among other stuff :3
       </p>
       <subt>(make sure to check the "my work" tab!)</subt>
       <p>
