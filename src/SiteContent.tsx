@@ -238,7 +238,7 @@ export const Contact: Component<{}, {}> = function () {
           discord: @bomberfish
         </li>
         <li>
-          <span>signal: @bomberfish.77</span>
+          <span>signal: @one.337</span>
         </li>
       </ul>
     </section>
