@@ -196,7 +196,7 @@ export const Contact: Component<{}, {}> = function () {
       <h2>get in touch!</h2>
       <ul>
         <li>
-          <a href="mailto:hariz@bomberfish.ca">email</a> (hariz@bomberfish.ca)
+          <a href="mailto:me@bomberfish.ca">email</a> (me@bomberfish.ca)
         </li>
         <li>
           <a href="https://github.com/BomberFish" target="blank" rel="me">
@@ -226,13 +226,13 @@ export const Contact: Component<{}, {}> = function () {
         </li>
         <li>
           <a
-            href="https://matrix.to/#/@bomberfish:omada.cafe"
+            href="https://matrix.to/#/@me:bomberfish.ca"
             target="blank"
             rel="me"
           >
             matrix
           </a>{" "}
-          (@bomberfish:omada.cafe)
+          (@me:bomberfish.ca)
         </li>
         <li>
           discord: @bomberfish
