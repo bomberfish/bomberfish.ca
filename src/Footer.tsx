@@ -352,6 +352,11 @@ const Buttons: Component<{}, {}> = function () {
             href="https://anybrowser.org/campaign/index.html"
           />
           <WebButton
+            src="/buttons/oxo.gif"
+            title="Radiohead"
+            href="https://radiohead.com"
+          />
+          <WebButton
             src="/buttons/hg88x31.webp"
             title="Mercury Workshop"
             href="https://mercurywork.shop"
@@ -366,6 +371,16 @@ const Buttons: Component<{}, {}> = function () {
             src="/buttons/firefox.gif"
             title="Firefox is EVIL!"
             href="https://lunduke.locals.com/post/5871895/mozilla-firefox-goes-anti-privacy-pro-advertising"
+          />
+          <WebButton
+            src="/buttons/smoke.gif"
+            title="Smokepowered"
+            href="https://smokepowered.com"
+          />
+          <WebButton
+            src="/buttons/blazed.png"
+            title="Epic MegaBlazed"
+            href="https://epicblazed.com"
           />
           <WebButton
             src="/buttons/ce88x31.webp"
@@ -393,14 +408,39 @@ const Buttons: Component<{}, {}> = function () {
             href="https://circulars.dev"
           />
           <WebButton
-            src="/buttons/necoarc-88x31.webp"
-            title="the profaned one"
-            href="https://necoarc.dev"
-          />
-          <WebButton
             src="/buttons/authenyo.gif"
             title="authenyo"
             href="https://authenyo.xyz"
+          />
+          <WebButton
+            src="/buttons/k8.png"
+            title="thememesniper"
+            href="https://thememesniper.dev"
+          />
+          <WebButton
+            src="/buttons/cvfd.gif"
+            title="notfire"
+            href="https://notfire.cc"
+          />
+          <WebButton
+            src="/buttons/kopper.png"
+            title="kopper"
+            href="https://w.on-t.work"
+          />
+          <WebButton
+            src="/buttons/melon.png"
+            title="melontini"
+            href="https://melontini.me"
+          />
+          <WebButton
+            src="/buttons/ipg.png"
+            title="InvoxiPlayGames"
+            href="https://invoxiplaygames.uk"
+          />
+          <WebButton
+            src="/buttons/necoarc-88x31.webp"
+            title="the profaned one"
+            href="https://necoarc.dev"
           />
           <WebButton
             src="/buttons/eightyeightthirtyone.webp"
@@ -435,7 +475,7 @@ const Buttons: Component<{}, {}> = function () {
             href="https://dashboard.simpleanalytics.com/bomberfish.ca"
           />
           <WebButton
-            src="/buttons/dreamland-new.webp" // ughhhh i know this is unofficial but it's still good
+            src="/buttons/dreamland-new.webp"
             title="Made with dreamland.js"
             href="https://dreamland.js.org/?uwu"
           />
@@ -470,8 +510,13 @@ const Buttons: Component<{}, {}> = function () {
             href="https://anybrowser.org/campaign/index.html"
           />
           <WebButton
+            src="/buttons/oxo.gif"
+            title="Radiohead"
+            href="https://radiohead.com"
+          />
+          <WebButton
             src="/buttons/hg88x31.webp"
-            title="Percury Mercshop"
+            title="Mercury Workshop"
             href="https://mercurywork.shop"
           />
           <WebButton
@@ -479,10 +524,21 @@ const Buttons: Component<{}, {}> = function () {
             title="omada.cafe, an private and secure alternative provider."
             href="https://omada.cafe"
           />
+          {/* TODO: update this to mozilla's latest shenanigans */}
           <WebButton
             src="/buttons/firefox.gif"
             title="Firefox is EVIL!"
             href="https://lunduke.locals.com/post/5871895/mozilla-firefox-goes-anti-privacy-pro-advertising"
+          />
+          <WebButton
+            src="/buttons/smoke.gif"
+            title="Smokepowered"
+            href="https://smokepowered.com"
+          />
+          <WebButton
+            src="/buttons/blazed.png"
+            title="Epic MegaBlazed"
+            href="https://epicblazed.com"
           />
           <WebButton
             src="/buttons/ce88x31.webp"
@@ -510,6 +566,36 @@ const Buttons: Component<{}, {}> = function () {
             href="https://circulars.dev"
           />
           <WebButton
+            src="/buttons/authenyo.gif"
+            title="authenyo"
+            href="https://authenyo.xyz"
+          />
+          <WebButton
+            src="/buttons/k8.png"
+            title="thememesniper"
+            href="https://thememesniper.dev"
+          />
+          <WebButton
+            src="/buttons/cvfd.gif"
+            title="notfire"
+            href="https://notfire.cc"
+          />
+          <WebButton
+            src="/buttons/kopper.png"
+            title="kopper"
+            href="https://w.on-t.work"
+          />
+          <WebButton
+            src="/buttons/melon.png"
+            title="melontini"
+            href="https://melontini.me"
+          />
+          <WebButton
+            src="/buttons/ipg.png"
+            title="InvoxiPlayGames"
+            href="https://invoxiplaygames.uk"
+          />
+          <WebButton
             src="/buttons/necoarc-88x31.webp"
             title="the profaned one"
             href="https://necoarc.dev"
@@ -529,6 +615,7 @@ const Buttons: Component<{}, {}> = function () {
             title="Lucida: Free Music. No BS."
             href="https://lucida.to"
           />
+          {/* Because Nintendo can bite me */}
           <WebButton
             src="/buttons/mariokart.webp"
             title="Play some Mario Kart!"
