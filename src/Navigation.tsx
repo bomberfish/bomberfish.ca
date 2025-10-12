@@ -15,7 +15,7 @@ export const Nav: Component<
     z-index: 100;
     padding: 0.25em 1.25rem;
     width: min(100vw, max(60vw, 800px));
-    height: 3.75rem;
+    height: 4.75rem;
     margin: 0;
     display: flex;
     flex-direction: row;
@@ -32,7 +32,7 @@ export const Nav: Component<
       margin: 0!important;
       gap: 0.1rem;
       font-weight: normal !important;
-      font-size: 1.75rem!important;
+      font-size: 2rem!important;
 
       /* Nintendo Switch-style 3d spinning text effect */
       & > span {
@@ -103,8 +103,8 @@ export const Nav: Component<
       background: black;
       padding: 2px;
 
-      width: 2.2rem;
-      height: 2.2rem;
+      width: 3.25rem;
+      height: 3.25rem;
 
       user-select: none;
       -webkit-user-drag: none;
@@ -121,7 +121,7 @@ export const Nav: Component<
     }
 
     subt {
-      font-size: 0.875rem !important;
+      font-size: 0.85rem !important;
       font-family: var(--font-mono);
       margin-top: 0.3em;
     }
@@ -169,7 +169,7 @@ export const Nav: Component<
     <nav>
       <span id="title">
         <img
-          src="/favicon.ico"
+          src="/me.jpeg"
           alt="my profile picture"
           title="click me!"
           style={{ transform: use`rotate(${this.rotation}deg)` }}
@@ -190,7 +190,7 @@ export const Nav: Component<
           <span>i</span>
           <span>s</span>
           <span>h</span>
-          <subt>(he/they)</subt>
+          <subt>[he/they]</subt>
         </h2>
       </span>
       <span id="right">
