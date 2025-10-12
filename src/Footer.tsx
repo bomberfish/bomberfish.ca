@@ -398,6 +398,11 @@ const Buttons: Component<{}, {}> = function () {
             href="https://necoarc.dev"
           />
           <WebButton
+            src="/buttons/authenyo.gif"
+            title="authenyo"
+            href="https://authenyo.xyz"
+          />
+          <WebButton
             src="/buttons/eightyeightthirtyone.webp"
             title="88x31"
             href="https://eightyeightthirty.one"
