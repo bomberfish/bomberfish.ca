@@ -29,7 +29,7 @@ body {
 
 @media (orientation: portrait) {
 	body {
-		padding: 0.5rem;
+		padding: 0;
 	}
 }
 
