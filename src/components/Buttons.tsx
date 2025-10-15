@@ -60,12 +60,12 @@ export const ButtonList: Component<{}, {}> = function () {
 				href="https://dashboard.simpleanalytics.com/bomberfish.ca"
 			/>
 			<WebButton
-				src="/buttons/dreamland-new.webp"
+				src="/buttons/dreamland-new.gif"
 				title="Made with dreamland.js"
 				href="https://dreamland.js.org/?uwu"
 			/>
 			<WebButton
-				src="/buttons/any-browser.webp"
+				src="/buttons/any-browser.gif"
 				title="View this site on any (modern) web browser!"
 				href="https://anybrowser.org/campaign/index.html"
 			/>
@@ -75,12 +75,12 @@ export const ButtonList: Component<{}, {}> = function () {
 				href="https://radiohead.com"
 			/>
 			<WebButton
-				src="/buttons/hg88x31.webp"
+				src="/buttons/hg88x31.gif"
 				title="Mercury Workshop"
 				href="https://mercurywork.shop"
 			/>
 			<WebButton
-				src="/buttons/hackclub.png"
+				src="/buttons/hackclub.gif"
 				title="Hack Club"
 				href="https://hack.club"
 			/>
@@ -106,22 +106,22 @@ export const ButtonList: Component<{}, {}> = function () {
 				href="https://epicblazed.com"
 			/>
 			<WebButton
-				src="/buttons/mariokart.webp"
+				src="/buttons/mariokart.gif"
 				title="Play some Mario Kart!"
 				href="https://bomberfish.ca/N64Wasm"
 			/>
 			<WebButton
-				src="/buttons/ce88x31.webp"
+				src="/buttons/ce88x31.gif"
 				title="velzie.d"
 				href="https://velzie.rip"
 			/>
 			<WebButton
-				src="/buttons/thinlqd.webp"
+				src="/buttons/thinlqd.gif"
 				title="ThinLiquid"
 				href="https://thinliquid.dev"
 			/>
 			<WebButton
-				src="/buttons/foxmossbutton.webp"
+				src="/buttons/foxmossbutton.gif"
 				title="FoxMoss"
 				href="https://foxmoss.com"
 			/>
@@ -141,7 +141,7 @@ export const ButtonList: Component<{}, {}> = function () {
 				href="https://authenyo.xyz"
 			/>
 			<WebButton
-				src="/buttons/k8.png"
+				src="/buttons/k8.gif"
 				title="thememesniper"
 				href="https://thememesniper.dev"
 			/>
@@ -156,7 +156,7 @@ export const ButtonList: Component<{}, {}> = function () {
 				href="https://w.on-t.work"
 			/>
 			<WebButton
-				src="/buttons/melon.png"
+				src="/buttons/melon.gif"
 				title="melontini"
 				href="https://melontini.me"
 			/>
@@ -166,12 +166,12 @@ export const ButtonList: Component<{}, {}> = function () {
 				href="https://invoxiplaygames.uk"
 			/>
 			<WebButton
-				src="/buttons/necoarc-88x31.webp"
+				src="/buttons/necoarc-88x31.gif"
 				title="the profaned one"
 				href="https://necoarc.dev"
 			/>
 			<WebButton
-				src="/buttons/eightyeightthirtyone.webp"
+				src="/buttons/eightyeightthirtyone.gif"
 				title="88x31"
 				href="https://eightyeightthirty.one"
 			/>
