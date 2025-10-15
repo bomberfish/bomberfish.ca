@@ -7,7 +7,7 @@
 		"dev": "vite",
 		"build:client": "tsc && vite build --ssrManifest .vite/ssr-manifest.json --outDir dist/static",
 		"build:server": "tsc && vite build --ssr src/main-server.ts --outDir dist/server",
-		"build": "pnpm run build:client && pnpm run build:server && node prerender.js",
+		"build": "npm run build:client && npm run build:server && node prerender.js",
 		"format": "prettier --write src/"
 	},
 	"devDependencies": {
