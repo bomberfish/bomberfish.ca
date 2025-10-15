@@ -27,6 +27,12 @@ body {
 	padding: 2rem;
 }
 
+@media (orientation: portrait) {
+	body {
+		padding: 0.5rem;
+	}
+}
+
 app {
 	max-width: 100%;
 }

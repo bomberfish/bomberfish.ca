@@ -34,6 +34,7 @@ Header.style = css`
 
 	nav {
 		display: flex;
+		align-items: center;
 		gap: 0.5rem;
 		flex-wrap: wrap;
 		user-select: none;
@@ -49,6 +50,14 @@ Header.style = css`
 	a:visited {
 		text-decoration: none;
 		color: var(--text) !important;
+	}
+
+	a[target="_blank"] {
+		display: flex;
+		align-items: center;
+		gap: 0.1rem;
+		padding: 0;
+		margin-right: 0.5rem;
 	}
 
 	nav a:hover {
