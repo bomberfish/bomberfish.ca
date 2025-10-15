@@ -67,12 +67,24 @@ export const AboutView: Component<{}, {}> = function () {
 			<article>
 				<h2>about this website</h2>
 				<p>
-					bomberfish.ca is built using{" "}
+					i built this website using{" "}
 					<a href="https://dreamland.js.org" target="_blank" rel="noopener">
 						dreamland.js
 					</a>
 					, a small and utilitarian web framework. it leverages the ssg
-					capabilities of 0.1.0 to pre-render all pages at build time.
+					capabilities of version 0.1.0 to pre-render all pages at deploy time, and hydrate them with interactive components on the client side.
+				</p>
+				<p>
+					bomberfish.ca is open-source under the MIT license, and
+					you can view the source code{" "}
+					<a
+						href="https://github.com/bomberfish/bomberfish.ca"
+						target="_blank"
+						rel="noopener"
+					>
+						here
+					</a>
+					.
 				</p>
 				<h2>archive of previous versions</h2>
 				<p>
