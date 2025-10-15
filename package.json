@@ -13,6 +13,7 @@
 	"devDependencies": {
 		"@literals/rollup-plugin-html-css-minifier": "^3.0.1",
 		"@types/node": "^24.7.2",
+		"@vitejs/plugin-legacy": "^7.2.1",
 		"prettier": "next",
 		"typescript": "next",
 		"vite": "^7.1.10"

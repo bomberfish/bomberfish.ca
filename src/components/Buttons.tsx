@@ -80,7 +80,7 @@ export const ButtonList: Component<{}, {}> = function () {
 				href="https://mercurywork.shop"
 			/>
 			<WebButton
-				src="/buttons/hackclub.webp"
+				src="/buttons/hackclub.png"
 				title="Hack Club"
 				href="https://hack.club"
 			/>

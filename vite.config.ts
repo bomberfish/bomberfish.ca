@@ -1,6 +1,7 @@
 import { defineConfig } from "vite";
 import { devSsr } from "dreamland/vite";
 import { literalsHtmlCssMinifier } from "@literals/rollup-plugin-html-css-minifier";
+import legacy from "@vitejs/plugin-legacy";
 
 export default defineConfig({
 	plugins: [
@@ -9,6 +10,9 @@ export default defineConfig({
 		}),
 		devSsr({
 			entry: "/src/main-server.ts",
+		}),
+		legacy({
+			targets: ["defaults", "blackberry 10"],
 		}),
 	],
 	define: {

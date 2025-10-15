@@ -9,10 +9,10 @@ const Header: Component<{}, {}> = function () {
 			</a>
 			<nav>
 				<Link href="/" class="router-link">
-					Home
+					Home&nbsp;
 				</Link>
 				<Link href="/projects" class="router-link">
-					Projects
+					Projects&nbsp;
 				</Link>
 				<a href="https://blog.bomberfish.ca" target="_blank">
 					Blog <span class="material-symbols">open_in_new</span>
@@ -34,7 +34,7 @@ Header.style = css`
 
 	nav {
 		display: flex;
-		gap: 1rem;
+		gap: 0.5rem;
 		flex-wrap: wrap;
 		user-select: none;
 		-webkit-user-select: none;
