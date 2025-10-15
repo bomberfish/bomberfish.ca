@@ -1,0 +1,267 @@
+@font-face {
+	font-family: "Inter Tight";
+	src:
+		local("Inter Tight"),
+		url("/fonts/display/InterTight-VariableFont_wght.woff2") format("woff2"),
+		url("https://bomberfish.ca/fonts/display/InterTight-VariableFont_wght.woff2")
+			format("woff2"),
+		url("https://bomberfish.ca/fonts/display/InterTight-VariableFont_wght.woff")
+			format("woff"),
+		url("https://bomberfish.ca/fonts/display/InterTight-VariableFont_wght.ttf")
+			format("truetype");
+	font-weight: 100 900;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: "Inter Tight";
+	src:
+		local("Inter Tight"),
+		url("/fonts/display/InterTight-Italic-VariableFont_wght.woff2")
+			format("woff2"),
+		url("https://bomberfish.ca/fonts/display/InterTight-Italic-VariableFont_wght.woff2")
+			format("woff2"),
+		url("https://bomberfish.ca/fonts/display/InterTight-Italic-VariableFont_wght.woff")
+			format("woff"),
+		url("https://bomberfish.ca/fonts/display/InterTight-Italic-VariableFont_wght.ttf")
+			format("truetype");
+	font-weight: 100 900;
+	font-style: italic;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: "Adwaita Sans";
+	src:
+		local("Adwaita Sans"),
+		url("/fonts/body/AdwaitaSans-Regular.woff2") format("woff2"),
+		url("https://bomberfish.ca/fonts/body/AdwaitaSans-Regular.woff2")
+			format("woff2"),
+		url("https://bomberfish.ca/fonts/body/AdwaitaSans-Regular.woff")
+			format("woff"),
+		url("https://bomberfish.ca/fonts/body/AdwaitaSans-Regular.ttf")
+			format("truetype");
+	font-weight: 100 900;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: "Adwaita Sans";
+	src:
+		local("Adwaita Sans"),
+		url("/fonts/body/AdwaitaSans-Italic.woff2") format("woff2"),
+		url("https://bomberfish.ca/fonts/body/AdwaitaSans-Italic.woff2")
+			format("woff2"),
+		url("https://bomberfish.ca/fonts/body/AdwaitaSans-Italic.woff")
+			format("woff"),
+		url("https://bomberfish.ca/fonts/body/AdwaitaSans-Italic.ttf")
+			format("truetype");
+	font-weight: 100 900;
+	font-style: italic;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: "Adwaita Mono";
+	src:
+		local("Adwaita Mono"),
+		url("/fonts/mono/AdwaitaMono-Regular.woff2") format("woff2"),
+		url("https://bomberfish.ca/fonts/mono/AdwaitaMono-Regular.woff2")
+			format("woff2"),
+		url("https://bomberfish.ca/fonts/mono/AdwaitaMono-Regular.woff")
+			format("woff"),
+		url("https://bomberfish.ca/fonts/mono/AdwaitaMono-Regular.ttf")
+			format("truetype");
+	font-weight: normal;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: "Adwaita Mono";
+	src:
+		local("Adwaita Mono"),
+		url("/fonts/mono/AdwaitaMono-Italic.woff2") format("woff2"),
+		url("https://bomberfish.ca/fonts/mono/AdwaitaMono-Italic.woff2")
+			format("woff2"),
+		url("https://bomberfish.ca/fonts/mono/AdwaitaMono-Italic.woff")
+			format("woff"),
+		url("https://bomberfish.ca/fonts/mono/AdwaitaMono-Italic.ttf")
+			format("truetype");
+	font-weight: normal;
+	font-style: italic;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: "Adwaita Mono";
+	src:
+		local("Adwaita Mono"),
+		url("/fonts/mono/AdwaitaMono-Bold.woff2") format("woff2"),
+		url("https://bomberfish.ca/fonts/mono/AdwaitaMono-Bold.woff2")
+			format("woff2"),
+		url("https://bomberfish.ca/fonts/mono/AdwaitaMono-Bold.woff") format("woff"),
+		url("https://bomberfish.ca/fonts/mono/AdwaitaMono-Bold.ttf")
+			format("truetype");
+	font-weight: bold;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: "Adwaita Mono";
+	src:
+		local("Adwaita Mono"),
+		url("/fonts/mono/AdwaitaMono-BoldItalic.woff2") format("woff2"),
+		url("https://bomberfish.ca/fonts/mono/AdwaitaMono-BoldItalic.woff2")
+			format("woff2"),
+		url("https://bomberfish.ca/fonts/mono/AdwaitaMono-BoldItalic.woff")
+			format("woff"),
+		url("https://bomberfish.ca/fonts/mono/AdwaitaMono-BoldItalic.ttf")
+			format("truetype");
+	font-weight: bold;
+	font-style: italic;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: "Apple Garamond";
+	src:
+		url("/fonts/serif/AppleGaramond-Bk.woff2") format("woff2"),
+		url("https://bomberfish.ca/fonts/serif/AppleGaramond-Bk.woff2")
+			format("woff2"),
+		url("https://bomberfish.ca/fonts/serif/AppleGaramond-Bk.woff")
+			format("woff"),
+		url("https://bomberfish.ca/fonts/serif/AppleGaramond-Bk.ttf")
+			format("truetype");
+	/* local("Apple Garamond"), local("ITC Garamond Condensed"), local("ITC Garamond"), local("Garamond"), local("Adobe Garamond"), local("EB Garamond"); */
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Apple Garamond";
+	src:
+		url("/fonts/serif/AppleGaramond-BkIt.woff2") format("woff2"),
+		url("https://bomberfish.ca/fonts/serif/AppleGaramond-BkIt.woff2")
+			format("woff2"),
+		url("https://bomberfish.ca/fonts/serif/AppleGaramond-BkIt.woff")
+			format("woff"),
+		url("https://bomberfish.ca/fonts/serif/AppleGaramond-BkIt.ttf")
+			format("truetype");
+	/* local("Apple Garamond"), local("ITC Garamond Condensed"), local("ITC Garamond"), local("Garamond"), local("Adobe Garamond"), local("EB Garamond"); */
+	font-weight: normal;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "Apple Garamond";
+	src:
+		url("/fonts/serif/AppleGaramond-Bd.woff2") format("woff2"),
+		url("https://bomberfish.ca/fonts/serif/AppleGaramond-Bd.woff2")
+			format("woff2"),
+		url("https://bomberfish.ca/fonts/serif/AppleGaramond-Bd.woff")
+			format("woff"),
+		url("https://bomberfish.ca/fonts/serif/AppleGaramond-Bd.ttf")
+			format("truetype");
+	/* local("Apple Garamond"), local("ITC Garamond Condensed"), local("ITC Garamond"), local("Garamond"), local("Adobe Garamond"), local("EB Garamond"); */
+	font-weight: bolder;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Apple Garamond";
+	src:
+		url("/fonts/serif/AppleGaramond-BdIt.woff2") format("woff2"),
+		url("https://bomberfish.ca/fonts/serif/AppleGaramond-BdIt.woff2")
+			format("woff2"),
+		url("https://bomberfish.ca/fonts/serif/AppleGaramond-BdIt.woff")
+			format("woff"),
+		url("https://bomberfish.ca/fonts/serif/AppleGaramond-BdIt.ttf")
+			format("truetype");
+	/* local("Apple Garamond"), local("ITC Garamond Condensed"), local("ITC Garamond"), local("Garamond"), local("Adobe Garamond"), local("EB Garamond"); */
+	font-weight: bolder;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "Apple Garamond";
+	src:
+		url("/fonts/serif/AppleGaramond-Lt.woff2") format("woff2"),
+		url("https://bomberfish.ca/fonts/serif/AppleGaramond-Lt.woff2")
+			format("woff2"),
+		url("https://bomberfish.ca/fonts/serif/AppleGaramond-Lt.woff")
+			format("woff"),
+		url("https://bomberfish.ca/fonts/serif/AppleGaramond-Lt.ttf")
+			format("truetype");
+	/* local("Apple Garamond Light"), local("Apple Garamond"), local("ITC Garamond Condensed"), local("ITC Garamond"), local("Garamond"), local("Adobe Garamond"), local("EB Garamond"); */
+	font-weight: lighter;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "Apple Garamond";
+	src:
+		url("/fonts/serif/AppleGaramond-LtIt.woff2") format("woff2"),
+		url("https://bomberfish.ca/fonts/serif/AppleGaramond-LtIt.woff2")
+			format("woff2"),
+		url("https://bomberfish.ca/fonts/serif/AppleGaramond-LtIt.woff")
+			format("woff"),
+		url("https://bomberfish.ca/fonts/serif/AppleGaramond-LtIt.ttf")
+			format("truetype");
+	/* local("Apple Garamond Light"), 
+    local("Apple Garamond"), 
+    local("ITC Garamond Condensed"), 
+    local("ITC Garamond"), 
+    local("Garamond"), 
+    local("Adobe Garamond"), 
+    local("EB Garamond"); */
+	font-weight: lighter;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "Material Symbols Rounded";
+	font-style: normal;
+	font-weight: 400;
+	font-display: block;
+	src: url(https://fonts.gstatic.com/s/materialsymbolsrounded/v181/syl0-zNym6YjUruM-QrEh7-nyTnjDwKNJ_190FjpZIvDmUSVOK7BDB_Qb9vUSzq3wzLK-P0J-V_Zs-QtQth3-jOcbTCVpeRL2w5rwZu2rIelXxc.woff2)
+		format("woff2");
+}
+
+.material-symbols,
+.material-symbols-rounded {
+	font-family: "Material Symbols Rounded";
+	font-weight: normal;
+	font-style: normal;
+	/* font-size: 24px; */
+	line-height: 1;
+	letter-spacing: normal;
+	text-transform: none;
+	display: inline-block;
+	white-space: nowrap;
+	word-wrap: normal;
+	direction: ltr;
+	-webkit-font-feature-settings: "liga";
+	-webkit-font-smoothing: antialiased;
+}
+
+:root {
+	--font-display:
+		"Inter Tight", "Adwaita Sans", Inter, "SF Pro Display", "SF Pro",
+		"SF Pro Text", -apple-system, BlinkMacSystemFont, system-ui,
+		"Helvetica Neue", Helvetica, Arial, sans-serif, "Apple Color Emoji",
+		"Noto Color Emoji", "Segoe UI Emoji";
+	--font-body:
+		"Adwaita Sans", Inter, "SF Pro Text", "SF Pro", -apple-system,
+		BlinkMacSystemFont, system-ui, "Helvetica Neue", Helvetica, Arial,
+		sans-serif, "Apple Color Emoji", "Noto Color Emoji", "Segoe UI Emoji";
+	--font-mono:
+		"Adwaita Mono", "Iosveka", "Source Code Pro", ui-monospace, monospace;
+	--font-serif:
+		"Apple Garamond", "ITC Garamond Condensed", "ITC Garamond", "Garamond",
+		"Adobe Garamond", "EB Garamond", "Times New Roman", Times,
+		"Linux Libertine", serif;
+}

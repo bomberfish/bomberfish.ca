@@ -1,0 +1,29 @@
+main {
+	transform: translateY(0);
+	opacity: 1;
+	transition:
+		0.25s transform ease,
+		0.25s opacity ease;
+}
+
+main.will-navigate {
+	transform: translateY(-1rem);
+	opacity: 0;
+}
+
+@starting-style {
+	main {
+		transform: translateY(1rem);
+		opacity: 0;
+	}
+}
+
+.tooltip {
+	opacity: 0;
+	visibility: hidden;
+}
+
+a,
+a:visited {
+	color: inherit;
+}

@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Super Epic Meme Generator™ - bomberfish.ca</title>
+		<link href="style.css" rel="stylesheet" />
+		<link href="../../styles.css" rel="stylesheet" />
+	</head>
+
+	<body>
+		<a href="../">❮ Go Back</a><br /><br />
+		<form>
+			<label for="top">Top Text:</label>
+			<input
+				type="text"
+				id="topInput"
+				maxlength="60"
+				oninput="updateTop()"
+				name="top"
+			/><br />
+			<label for="bottom">Bottom Text:</label>
+			<input
+				type="text"
+				id="bottomInput"
+				maxlength="60"
+				oninput="updateBottom()"
+				name="bottom"
+			/><br />
+			<label for="font"><strong>TODO:</strong> Select font:</label>
+			<select name="font" id="font">
+				<option
+					value="Impact"
+					style="
+						font-family:
+							Impact, Haettenschweiler, &quot;Arial Narrow Bold&quot;,
+							sans-serif;
+					"
+				>
+					Impact
+				</option>
+				<option value="Arial" style="font-family: Arial, sans-serif">
+					Arial
+				</option>
+				<option
+					value="Comic Sans MS"
+					style="
+						font-family:
+							&quot;Comic Sans MS&quot;, &quot;Comic Sans&quot;, cursive;
+					"
+				>
+					Comic Sans MS
+				</option>
+				<option value="Papyrus" style="font-family: Papyrus, fantasy">
+					Papyrus
+				</option></select
+			><br /><br />
+			<input
+				type="file"
+				id="fileInput"
+				maxlength="60"
+				oninput="updateImg()"
+				name="file"
+			/>
+		</form>
+		<br /><br />
+		<div id="wrapper" height="500" width="600">
+			<div id="topText" class="memeText"></div>
+			<div id="bottomText" class="memeText"></div>
+			<div id="memeImg"><img src height="500" width="600" /></div>
+		</div>
+	</body>
+	<script src="script.js"></script>
+</html>
