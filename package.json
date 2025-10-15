@@ -16,7 +16,7 @@
 		"@vitejs/plugin-legacy": "^7.2.1",
 		"prettier": "next",
 		"typescript": "next",
-		"vite": "^7.1.10"
+		"vite": "npm:rolldown-vite@latest"
 	},
 	"dependencies": {
 		"css-vars-ponyfill": "^2.4.9",
