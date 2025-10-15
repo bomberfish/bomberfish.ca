@@ -76,7 +76,7 @@ body {
 	background-repeat: repeat;
 	background-attachment: fixed;
 	color: var(--text);
-	font-family: var(--font-body);
+	font-family: var(--font-body), "Adwaita Sans", sans-serif;
 	font-size: clamp(15px, 0.4vw + 14px, 17px);
 	line-height: 1.8;
 	text-rendering: optimizeLegibility;
@@ -112,7 +112,7 @@ h3,
 h4,
 h5,
 h6 {
-	font-family: var(--font-serif);
+	font-family: var(--font-serif), "Apple Garamond", serif;
 	font-weight: bolder;
 }
 
@@ -312,6 +312,10 @@ ul.compact a {
 
 .project-card * {
 	text-decoration: none !important;
+}
+
+.pfp.rear {
+	display: none;
 }
 
 @media (prefers-reduced-motion: reduce) {

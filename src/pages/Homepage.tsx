@@ -8,6 +8,10 @@ const Homepage: Component<{}, {}> = function () {
 		<main>
 			<Header />
 			<div class="content-with-image">
+				<div class="img-wrapper">
+					<img src="/me.jpg" class="pfp rear" alt="" aria-hidden="true" />
+					<img src="/me.jpg" class="pfp" title="my profile picture! :3" />
+				</div>
 				<article>
 					<h2>about me</h2>
 					<div>
@@ -164,10 +168,6 @@ const Homepage: Component<{}, {}> = function () {
 						</Link>
 					</section>
 				</article>
-				<div class="img-wrapper">
-					<img src="/me.jpg" class="pfp" alt="" />
-					<img src="/me.jpg" class="pfp" title="my profile picture! :3" />
-				</div>
 			</div>
 		</main>
 	);
@@ -184,7 +184,7 @@ Homepage.style = css`
 
 	.content-with-image {
 		display: flex;
-		flex-direction: row;
+		flex-direction: row-reverse;
 		align-items: flex-start;
 		justify-content: space-between;
 		gap: 1rem;
@@ -208,24 +208,23 @@ Homepage.style = css`
 		top: 0;
 		left: 0;
 		object-fit: cover;
-		box-shadow: 0 0 0 0.025rem var(--image-ring);
-		border-radius: 50%;
-	}
-	.pfp:first-child {
-		filter: blur(30px) contrast(1.2) brightness(1.1);
-		transform: scale(1.1);
-		z-index: 0;
-	}
-	.pfp:last-child {
-		z-index: 1;
 		box-shadow:
 			0 0 0 0.025rem var(--image-ring),
 			0 0 1rem var(--shadow-soft);
+		border-radius: 50%;
+		z-index: 1;
+	}
+	.pfp.rear {
+		filter: blur(32px) contrast(1.4) brightness(1.1);
+		transform: scale(1.1);
+		z-index: 0;
+		box-shadow: none;
+		display: initial!important;
 	}
 
 	@media (max-width: 680px) or (orientation: portrait) {
 		.content-with-image {
-			flex-direction: column-reverse;
+			flex-direction: column;
 			align-items: center;
 			justify-content: center;
 		}
