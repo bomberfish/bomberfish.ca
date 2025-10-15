@@ -30,6 +30,7 @@ body {
 @media (orientation: portrait) {
 	body {
 		padding: 0;
+		justify-content: flex-start;
 	}
 }
 
