@@ -1,61 +1,3 @@
-:root {
-	--main-hue: 18;
-
-	--base-hsl: var(--main-hue), 25%, 96.5%;
-	--base: hsl(var(--base-hsl));
-
-	--surface0-hsl: var(--main-hue), 50%, 95%;
-	--surface0: hsl(var(--surface0-hsl));
-	--surface1-hsl: var(--main-hue), 40%, 92.5%;
-	--surface1: hsl(var(--surface1-hsl));
-	--surface2-hsl: var(--main-hue), 45%, 90%;
-	--surface2: hsl(var(--surface2-hsl));
-	--surface3-hsl: var(--main-hue), 35%, 87.5%;
-	--surface3: hsl(var(--surface3-hsl));
-	--surface4-hsl: var(--main-hue), 30%, 85%;
-	--surface4: hsl(var(--surface4-hsl));
-	--surface5-hsl: var(--main-hue), 20%, 82.5%;
-	--surface5: hsl(var(--surface5-hsl));
-
-	--overlay0-hsl: var(--main-hue), 20%, 70%;
-	--overlay0: hsl(var(--overlay0-hsl));
-	--overlay1-hsl: var(--main-hue), 25%, 60%;
-	--overlay1: hsl(var(--overlay1-hsl));
-	--overlay2-hsl: var(--main-hue), 30%, 50%;
-	--overlay2: hsl(var(--overlay2-hsl));
-	--overlay3-hsl: var(--main-hue), 35%, 40%;
-	--overlay3: hsl(var(--overlay3-hsl));
-
-	--text-hsl: var(--main-hue), 40%, 25%;
-	--text: hsl(var(--text-hsl));
-	--subtext0-hsl: var(--main-hue), 20%, 35%;
-	--subtext0: hsl(var(--subtext0-hsl));
-	--subtext1-hsl: var(--main-hue), 30%, 45%;
-	--subtext1: hsl(var(--subtext1-hsl));
-	--subtext2-hsl: var(--main-hue), 25%, 55%;
-	--subtext2: hsl(var(--subtext2-hsl));
-
-	--accent-hsl: var(--main-hue), 60%, 70%;
-	--accent: hsl(var(--accent-hsl));
-
-	--bgscale: 1;
-	--bgmoveX: 0px;
-	--bgmoveY: 0px;
-
-	--card-surface: color-mix(in srgb, var(--surface0) 90%, transparent);
-	--card-surface-hover: color-mix(in srgb, var(--surface0) 96%, transparent);
-	--card-overlay: color-mix(in srgb, var(--overlay3) 70%, var(--text) 30%);
-	--shadow-soft: color-mix(in srgb, var(--overlay0) 25%, transparent);
-	--shadow-medium: color-mix(in srgb, var(--overlay0) 40%, transparent);
-	--shadow-strong: color-mix(in srgb, var(--overlay0) 55%, transparent);
-	--shadow-ultra: color-mix(in srgb, var(--overlay0) 65%, transparent);
-	--shadow-highlight: color-mix(in srgb, var(--surface0) 70%, transparent);
-	--tooltip-shadow: color-mix(in srgb, var(--overlay3) 35%, transparent);
-	--image-ring: color-mix(in srgb, var(--surface0) 80%, transparent);
-	--text-on-dark: color-mix(in srgb, var(--surface0) 85%, var(--base) 15%);
-	--text-shadow-soft: color-mix(in srgb, var(--surface0) 65%, transparent);
-}
-
 ::selection {
 	background: hsla(var(--accent-hsl), 0.5);
 }
@@ -66,7 +8,6 @@ body {
 	justify-content: center;
 	align-items: center;
 	min-height: 100vh;
-	background: var(--base);
 	background-image: radial-gradient(
 		var(--surface1) calc(var(--bgscale) * var(--bgscale) * 1.5px),
 		transparent 0
@@ -75,10 +16,7 @@ body {
 	background-position: var(--bgmoveX) var(--bgmoveY);
 	background-repeat: repeat;
 	background-attachment: fixed;
-	color: var(--text);
-	font-family: var(--font-body), "Adwaita Sans", sans-serif;
 	font-size: clamp(15px, 0.4vw + 14px, 17px);
-	line-height: 1.8;
 	text-rendering: optimizeLegibility;
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
@@ -104,16 +42,6 @@ main {
 
 main > * {
 	width: 100%;
-}
-
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-	font-family: var(--font-serif), "Apple Garamond", serif;
-	font-weight: bolder;
 }
 
 h1 {
@@ -312,10 +240,6 @@ ul.compact a {
 
 .project-card * {
 	text-decoration: none !important;
-}
-
-.pfp.rear {
-	display: none;
 }
 
 @media (prefers-reduced-motion: reduce) {
