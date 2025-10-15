@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      css-vars-ponyfill:
+        specifier: ^2.4.9
+        version: 2.4.9
       dreamland:
         specifier: ^0.1.0
         version: https://codeload.github.com/MercuryWorkshop/dreamlandjs/tar.gz/e35d4c1095973fefbf08e6ae460794ddad82627e
@@ -883,6 +886,9 @@ packages:
     peerDependencies:
       '@babel/core': ^7.4.0 || ^8.0.0-0 <8.0.0
 
+  balanced-match@1.0.2:
+    resolution: {integrity: sha512-3oSeUO0TMV67hN1AmbXsK4yaqU7tjiHlbxRDZOpH0KW9+CeX4bRAaX0Anxt0tx2MrpRpWwQaPwIlISEJhYU5Pw==}
+
   baseline-browser-mapping@2.8.16:
     resolution: {integrity: sha512-OMu3BGQ4E7P1ErFsIPpbJh0qvDudM/UuJeHgkAvfWe+0HFJCXh+t/l8L6fVLR55RI/UbKrVLnAXZSVwd9ysWYw==}
     hasBin: true
@@ -935,6 +941,9 @@ packages:
 
   core-js@3.46.0:
     resolution: {integrity: sha512-vDMm9B0xnqqZ8uSBpZ8sNtRtOdmfShrvT6h2TuQGLs0Is+cR0DYbj/KWP6ALVNbWPpqA/qPLoOuppJN07humpA==}
+
+  css-vars-ponyfill@2.4.9:
+    resolution: {integrity: sha512-aZyLue5bdiGVNCiCclNjo123D8I7kyoYNUaAvz+H1JalX1ye4Ilz7jNRRH5YbM+dYD6ucejiydGwk7lol/GCXQ==}
 
   debug@4.4.3:
     resolution: {integrity: sha512-RGwwWnwQvkVfavKVt22FGLw+xYSdzARwm0ru6DhTVA3umU5hZc28V3kO4stgYryrTlLpuvgI9GiijltAjNbcqA==}
@@ -1036,6 +1045,9 @@ packages:
   gensync@1.0.0-beta.2:
     resolution: {integrity: sha512-3hN7NaskYvMDLQY55gnW3NQ+mesEAepTqlg+VEbj7zzqEMBVNhzcGYYeqFo/TlYz6eQiFcp1HcsCZO+nGgS8zg==}
     engines: {node: '>=6.9.0'}
+
+  get-css-data@2.1.1:
+    resolution: {integrity: sha512-JpMa/f5P4mDXKg6l5/2cHL5xNY77Jap7tHyduMa6BF0E2a7bQ6Tvaz2BIMjeVYZYLcmOZ5w2Ro0yVJEI41tMbw==}
 
   get-current-package@1.0.1:
     resolution: {integrity: sha512-c/Rw5ByDQ+zg+Lh/emBWv0bDpugEFdmXPR6/srIemVtIvol0XbT0JAr8Db0cX+Jj/xY9wj1wdjeq2qNB35Tayg==}
@@ -2353,6 +2365,8 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
+  balanced-match@1.0.2: {}
+
   baseline-browser-mapping@2.8.16: {}
 
   binary-extensions@3.1.0: {}
@@ -2398,6 +2412,11 @@ snapshots:
       browserslist: 4.26.3
 
   core-js@3.46.0: {}
+
+  css-vars-ponyfill@2.4.9:
+    dependencies:
+      balanced-match: 1.0.2
+      get-css-data: 2.1.1
 
   debug@4.4.3:
     dependencies:
@@ -2508,6 +2527,8 @@ snapshots:
   function-once@3.0.1: {}
 
   gensync@1.0.0-beta.2: {}
+
+  get-css-data@2.1.1: {}
 
   get-current-package@1.0.1:
     dependencies:

@@ -19,6 +19,7 @@
 		"vite": "^7.1.10"
 	},
 	"dependencies": {
+		"css-vars-ponyfill": "^2.4.9",
 		"dreamland": "^0.1.0"
 	}
 }
