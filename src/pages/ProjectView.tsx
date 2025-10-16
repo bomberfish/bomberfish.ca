@@ -12,7 +12,7 @@ const ProjectView: Component<{ project: ProjectCardDetails }, {}> =
 						<img src={this.project.img} />
 					</section>
 					<section id="details">
-						<h2 class="name">{this.project.title}</h2>
+						<h1 class="name">{this.project.title}</h1>
 						<p class="description">{this.project.largeDesc}</p>
 						<ul class="compact">
 							{this.project.links?.map((link) => (
@@ -35,7 +35,7 @@ ProjectView.style = css`
 		flex-direction: row;
 		align-items: center;
 		justify-content: center;
-		gap: 2rem;
+		gap: 0.75rem;
 		flex-grow: 1;
 	}
 
@@ -48,18 +48,19 @@ ProjectView.style = css`
 
 	#details {
 		width: 100%;
+		padding-inline: 1rem;
 	}
 
 	img {
 		max-width: min(40rem, 50vw);
 		width: auto;
 		max-height: 100%;
-		border-radius: 0.5rem;
+		border-radius: 1rem;
 		margin: 0;
 		padding: 0;
 	}
 
-	@media (max-width: 680px) or (orientation: portrait) {
+	@media (max-width: 1024px) or (orientation: portrait) {
 		#details {
 			width: unset;
 		}
@@ -70,6 +71,7 @@ ProjectView.style = css`
 
 		img {
 			width: 100%;
+			max-width: unset;
 		}
 	}
 `;

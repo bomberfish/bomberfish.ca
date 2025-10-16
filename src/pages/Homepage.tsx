@@ -222,7 +222,7 @@ Homepage.style = css`
 		display: initial!important;
 	}
 
-	@media (max-width: 680px) or (orientation: portrait) {
+	@media (max-width: 960px) or (orientation: portrait) {
 		.content-with-image {
 			flex-direction: column;
 			align-items: center;
@@ -232,6 +232,7 @@ Homepage.style = css`
 		article {
 			max-width: 100%;
 			width: 100%;
+			padding: 0 0.5rem;
 		}
 
 		.img-wrapper {

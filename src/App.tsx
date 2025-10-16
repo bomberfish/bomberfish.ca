@@ -154,7 +154,7 @@ App.style = css`
 		padding-block: 1.5rem 3rem;
 	}
 
-	@media (min-width: 680px) and (orientation: landscape) {
+	@media (min-width: 960px) and (orientation: landscape) {
 		:scope {
 			aspect-ratio: 4 / 3;
 		}

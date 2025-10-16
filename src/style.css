@@ -52,7 +52,7 @@ main > * {
 }
 
 h1 {
-	font-size: clamp(1.6rem, 2vw + 1rem, 2.25rem);
+	font-size: clamp(1.75rem, 2.25vw + 1.1rem, 2.5rem);
 	margin-block-start: 0.25em;
 	margin-block-end: 0.5em;
 	line-height: 1.2;
