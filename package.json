@@ -20,6 +20,6 @@
 	},
 	"dependencies": {
 		"css-vars-ponyfill": "^2.4.9",
-		"dreamland": "^0.1.0"
+		"dreamland": "^0.1.1"
 	}
 }
