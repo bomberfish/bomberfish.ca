@@ -86,7 +86,7 @@ ProjectCard.style = css<typeof ProjectCard>`
 		bottom: 0;
 		background: linear-gradient(
 			to top,
-			rgba(0, 0, 0, 0.4) 0%,
+			rgba(39, 34, 30, 1) 0%,
 			transparent 60%,
 			transparent 100%
 		);
@@ -113,18 +113,18 @@ ProjectCard.style = css<typeof ProjectCard>`
 			use(s.project).map((p) => (p && p.img ? `url("${p.img}")` : "none"))};
 		background-size: cover;
 		background-position: center;
-		filter: saturate(1.2) brightness(0.8);
+		filter: saturate(0.9) brightness(0.5);
 		z-index: -1;
 		transition: all 0.25s ease;
 	}
 
 	:scope:hover::after {
 		transform: scale(1.01);
-		filter: saturate(1.5) brightness(0.975);
+		filter: saturate(1.25) brightness(0.9);
 	}
 
 	.content {
-		transform: translateY(0);
+		transform: translateY(0.2rem);
 		transition: transform 0.25s ease;
 		margin: 0;
 		position: relative;
@@ -137,7 +137,7 @@ ProjectCard.style = css<typeof ProjectCard>`
 	}
 
 	:scope:hover .content {
-		transform: translateY(-0.1rem);
+		transform: translateY(-0.05rem);
 	}
 
 	:scope:hover .name {
@@ -149,7 +149,7 @@ ProjectCard.style = css<typeof ProjectCard>`
 	.name {
 		font-size: clamp(1.1rem, 1.2vw + 1rem, 1.5rem);
 		font-weight: 700;
-		color: var(--text-on-dark);
+		color: var(--surface0);
 		margin: 0;
 		text-shadow: 0 2px 8px var(--shadow-strong);
 		line-height: 1.2;
@@ -165,7 +165,7 @@ ProjectCard.style = css<typeof ProjectCard>`
 
 	.description {
 		font-size: clamp(0.9rem, 0.4vw + 0.8rem, 0.95rem);
-		color: color-mix(in srgb, var(--text-on-dark) 90%, transparent);
+		color: var(--surface4);
 		text-shadow: 0 1px 4px var(--shadow-medium);
 		line-height: 1.4;
 		opacity: 0.95;

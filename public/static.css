@@ -42,18 +42,17 @@
 	--bgmoveX: 0px;
 	--bgmoveY: 0px;
 
-	--card-surface: color-mix(in srgb, var(--surface0) 90%, transparent);
-	--card-surface-hover: color-mix(in srgb, var(--surface0) 96%, transparent);
 	--card-overlay: color-mix(in srgb, var(--overlay3) 70%, var(--text) 30%);
-	--shadow-soft: color-mix(in srgb, var(--overlay0) 25%, transparent);
-	--shadow-medium: color-mix(in srgb, var(--overlay0) 40%, transparent);
-	--shadow-strong: color-mix(in srgb, var(--overlay0) 55%, transparent);
-	--shadow-ultra: color-mix(in srgb, var(--overlay0) 65%, transparent);
-	--shadow-highlight: color-mix(in srgb, var(--surface0) 70%, transparent);
-	--tooltip-shadow: color-mix(in srgb, var(--overlay3) 35%, transparent);
-	--image-ring: color-mix(in srgb, var(--surface0) 80%, transparent);
-	--text-on-dark: color-mix(in srgb, var(--surface0) 85%, var(--base) 15%);
-	--text-shadow-soft: color-mix(in srgb, var(--surface0) 65%, transparent);
+	--card-surface: hsla(var(--surface0-hsl), 0.90);
+	--card-surface-hover: hsla(var(--surface0-hsl), 0.96);
+	--shadow-soft: hsla(var(--overlay0-hsl), 0.25);
+	--shadow-medium: hsla(var(--overlay0-hsl), 0.40);
+	--shadow-strong: hsla(var(--overlay0-hsl), 0.55);
+	--shadow-ultra: hsla(var(--overlay0-hsl), 0.65);
+	--shadow-highlight: hsla(var(--surface0-hsl), 0.70);
+	--tooltip-shadow: hsla(var(--overlay3-hsl), 0.35);
+	--image-ring: hsla(var(--surface0-hsl), 0.80);
+	--text-shadow-soft: hsla(var(--surface0-hsl), 0.65);
 }
 
 body {
@@ -82,11 +81,14 @@ h6 {
 }
 
 main {
-	transform: translateY(0);
+	transform: translateY(0) rotate3d(1, 0, 0, 0deg);
 	opacity: 1;
 	transition:
-		0.25s transform ease,
-		0.25s opacity ease;
+		0.2s transform ease,
+		0.2s opacity ease;
+	perspective: 1000px;
+	transform-origin: bottom center;
+	transition-timing-function: cubic-bezier(.2,.2,.5,1);
 }
 
 main.will-navigate {
@@ -96,8 +98,8 @@ main.will-navigate {
 
 @starting-style {
 	main {
-		transform: translateY(1rem);
-		opacity: 0;
+		transform: translateY(1rem) rotate3d(1, 0, 0, 7.5deg);
+		opacity: 0.1;
 	}
 }
 

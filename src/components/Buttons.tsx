@@ -151,6 +151,11 @@ export const ButtonList: Component<{}, {}> = function () {
 				href="https://notfire.cc"
 			/>
 			<WebButton
+				src="/buttons/dispherical.gif"
+				title="dispherical"
+				href="https://dispherical.com"
+			/>
+			<WebButton
 				src="/buttons/kopper.png"
 				title="kopper"
 				href="https://w.on-t.work"
@@ -202,7 +207,7 @@ export const CopiedToast: Component<{}, {}> = function (cx) {
 	cx.mount = () => {
 		setTimeout(() => {
 			cx.root.remove();
-		}, 2000);
+		}, 2250);
 	};
 
 	return (
@@ -219,8 +224,9 @@ CopiedToast.style = css`
 		bottom: 0;
 		right: 0;
 		background-color: var(--surface0);
+		border: 0.083rem solid var(--overlay0);
 		color: var(--text);
-		padding: 0.5rem;
+		padding: 0.5rem 1rem;
 		display: flex;
 		align-items: center;
 		gap: 0.5rem;
@@ -230,30 +236,34 @@ CopiedToast.style = css`
 		animation:
 			fadein 0.25s,
 			fadeout 0.25s 1.75s;
+		animation-timing-function: cubic-bezier(.2,.2,.5,1);
 
 		font-weight: 520;
-		box-shadow: 0 1px 4px var(--shadow-soft);
+		box-shadow: 0 2px 8px var(--tooltip-shadow);
+
+		perspective: 1000px;
+		transform-origin: bottom center;
 	}
 
 	@keyframes fadein {
 		from {
 			opacity: 0;
-			transform: translateY(1rem);
+			transform: translateY(0) rotate3d(1, 0, 0, 70deg);
 		}
 		to {
 			opacity: 1;
-			transform: translateY(0);
+			transform: translateY(0) rotate3d(1, 0, 0, 0deg);
 		}
 	}
 
 	@keyframes fadeout {
 		from {
 			opacity: 1;
-			transform: translateY(0);
+			transform: translateY(0) rotate3d(1, 0, 0, 0deg);
 		}
 		to {
 			opacity: 0;
-			transform: translateY(1rem);
+			transform: translateY(1rem) rotate3d(1, 0, 0, 70deg);
 		}
 	}
 `;

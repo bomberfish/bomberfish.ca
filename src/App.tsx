@@ -90,7 +90,6 @@ const App: Component<{}, {}> = function (cx) {
 			}
 		};
 
-		// Smooth pointer-driven background parallax; reuse cleanup for HMR.
 		document.addEventListener("pointermove", handlePointerMove, {
 			passive: true,
 		});
@@ -110,14 +109,10 @@ const App: Component<{}, {}> = function (cx) {
 		window.__bgMoveCleanup = () => {
 			document.removeEventListener("pointermove", handlePointerMove);
 			window.removeEventListener("resize", handleResize);
-			if (reduceMotionQuery.removeEventListener) {
-				reduceMotionQuery.removeEventListener(
-					"change",
-					handleMotionPreferenceChange
-				);
-			} else if (reduceMotionQuery.removeListener) {
-				reduceMotionQuery.removeListener(handleMotionPreferenceChange);
-			}
+			reduceMotionQuery.removeEventListener(
+				"change",
+				handleMotionPreferenceChange
+			);
 			window.cancelAnimationFrame(rafId);
 			window.__bgMoveCleanup = undefined;
 		};

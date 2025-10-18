@@ -188,7 +188,7 @@ ul.compact a {
 	background: var(--surface0);
 	padding: 0.25rem 0.5rem;
 	border-radius: 0.4rem;
-	border: 0.083rem solid var(--overlay1);
+	border: 0.083rem solid var(--overlay0);
 	font-size: 0.875rem;
 	white-space: pre-line;
 	z-index: 1000;
@@ -213,7 +213,7 @@ ul.compact a {
 	left: 50%;
 	transform: translateX(-50%);
 	border: 0.525rem solid transparent;
-	border-bottom-color: var(--overlay1);
+	border-bottom-color: var(--overlay0);
 	z-index: 1001;
 }
 
