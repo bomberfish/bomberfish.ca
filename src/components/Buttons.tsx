@@ -207,7 +207,7 @@ export const CopiedToast: Component<{}, {}> = function (cx) {
 	cx.mount = () => {
 		setTimeout(() => {
 			cx.root.remove();
-		}, 2250);
+		}, 2000);
 	};
 
 	return (

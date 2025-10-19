@@ -84,8 +84,8 @@ main {
 	transform: translateY(0) rotate3d(1, 0, 0, 0deg);
 	opacity: 1;
 	transition:
-		0.2s transform ease,
-		0.2s opacity ease;
+		0.175s transform ease,
+		0.175s opacity ease;
 	perspective: 1000px;
 	transform-origin: bottom center;
 	transition-timing-function: cubic-bezier(.2,.2,.5,1);
