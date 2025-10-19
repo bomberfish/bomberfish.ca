@@ -8,12 +8,18 @@ importers:
 
   .:
     dependencies:
+      autoprefixer:
+        specifier: ^10.4.21
+        version: 10.4.21(postcss@8.5.6)
       css-vars-ponyfill:
         specifier: ^2.4.9
         version: 2.4.9
       dreamland:
         specifier: ^0.1.1
         version: 0.1.1
+      postcss:
+        specifier: ^8.5.6
+        version: 8.5.6
     devDependencies:
       '@literals/rollup-plugin-html-css-minifier':
         specifier: ^3.0.1
@@ -983,6 +989,13 @@ packages:
   atomically@2.0.3:
     resolution: {integrity: sha512-kU6FmrwZ3Lx7/7y3hPS5QnbJfaohcIul5fGqf7ok+4KklIEk9tJ0C2IQPdacSbVUWv6zVHXEBWoWd6NrVMT7Cw==}
 
+  autoprefixer@10.4.21:
+    resolution: {integrity: sha512-O+A6LWV5LDHSJD3LjHYoNi4VLsj/Whi7k6zG12xTYaU4cQ8oxQGckXNX8cRHK5yOZ/ppVHe0ZBXGzSV9jXdVbQ==}
+    engines: {node: ^10 || ^12 || >=14}
+    hasBin: true
+    peerDependencies:
+      postcss: ^8.1.0
+
   babel-plugin-polyfill-corejs2@0.4.14:
     resolution: {integrity: sha512-Co2Y9wX854ts6U8gAAPXfn0GmAyctHuK8n0Yhfjd6t30g7yvKjspvvOo9yG+z52PZRgFErt7Ka2pYnXCjLKEpg==}
     peerDependencies:
@@ -1145,6 +1158,9 @@ packages:
 
   find-up-path@1.0.1:
     resolution: {integrity: sha512-cl4Sfxufq9WK848L887b4r+NVZoBjMeB4QydPZ+pXbp6Jt2nUVspTo2svNOm48stIIeSxtuCsULa9+e+LMTzwA==}
+
+  fraction.js@4.3.7:
+    resolution: {integrity: sha512-ZsDfxO51wGAXREY55a7la9LScWpwv9RxIrYABrlvOFBlH/ShPnrtsXeuUIfXKKOVicNxQ+o8JTbJvjS4M89yew==}
 
   fsevents@2.3.3:
     resolution: {integrity: sha512-5xoDfX+fL7faATnagmWPpbFtwh/R77WmMMqqHGS65C3vvB0YHrgF+B1YmZ3441tMj5n63k0212XNoJwzlhffQw==}
@@ -1331,6 +1347,10 @@ packages:
   node-releases@2.0.23:
     resolution: {integrity: sha512-cCmFDMSm26S6tQSDpBCg/NR8NENrVPhAJSf+XbxBG4rPFaaonlEoE9wHQmun+cls499TQGSb7ZyPBRlzgKfpeg==}
 
+  normalize-range@0.1.2:
+    resolution: {integrity: sha512-bdok/XvKII3nUpklnV6P2hxtMNrCboOjAcyBuQnWEhO665FwrSNRxU+AqpsyvO6LgGYPspN+lu5CLtw4jPRKNA==}
+    engines: {node: '>=0.10.0'}
+
   param-case@3.0.4:
     resolution: {integrity: sha512-RXlj7zCYokReqWpOPH9oYivUzLYZ5vAPIfEmCTNViosC78F8F0H9y7T7gG2M39ymgutxF5gcFEsyZQSph9Bp3A==}
 
@@ -1349,6 +1369,9 @@ packages:
 
   pioppo@1.2.1:
     resolution: {integrity: sha512-1oErGVWD6wFDPmrJWEY1Cj2p829UGT6Fw9OItYFxLkWtBjCvQSMC8wA5IcAR5ms/6gqiY8pnJvIV/+/Imyobew==}
+
+  postcss-value-parser@4.2.0:
+    resolution: {integrity: sha512-1NNCs6uurfkVbeXG4S8JFT9t19m45ICnif8zWLd5oPSZ50QnwMfK+H3jv408d4jw/7Bttv5axS5IiHoLaVNHeQ==}
 
   postcss@8.5.6:
     resolution: {integrity: sha512-3Ybi1tAuwAP9s0r1UQ2J4n5Y0G05bJkpUIO0/bI9MhwmD70S5aTWbXGBwxHrelT+XM1k6dM0pk+SwNkpTRN7Pg==}
@@ -2611,6 +2634,16 @@ snapshots:
       stubborn-fs: 1.2.5
       when-exit: 2.1.4
 
+  autoprefixer@10.4.21(postcss@8.5.6):
+    dependencies:
+      browserslist: 4.26.3
+      caniuse-lite: 1.0.30001750
+      fraction.js: 4.3.7
+      normalize-range: 0.1.2
+      picocolors: 1.1.1
+      postcss: 8.5.6
+      postcss-value-parser: 4.2.0
+
   babel-plugin-polyfill-corejs2@0.4.14(@babel/core@7.28.4):
     dependencies:
       '@babel/compat-data': 7.28.4
@@ -2792,6 +2825,8 @@ snapshots:
 
   find-up-path@1.0.1: {}
 
+  fraction.js@4.3.7: {}
+
   fsevents@2.3.3:
     optional: true
 
@@ -2942,6 +2977,8 @@ snapshots:
 
   node-releases@2.0.23: {}
 
+  normalize-range@0.1.2: {}
+
   param-case@3.0.4:
     dependencies:
       dot-case: 3.0.4
@@ -2962,6 +2999,8 @@ snapshots:
     dependencies:
       dettle: 1.0.5
       when-exit: 2.1.4
+
+  postcss-value-parser@4.2.0: {}
 
   postcss@8.5.6:
     dependencies:

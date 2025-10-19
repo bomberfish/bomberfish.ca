@@ -34,6 +34,7 @@ ProjectCard.style = css<typeof ProjectCard>`
 		justify-content: flex-end;
 		text-align: left;
 		gap: 0.5rem;
+		min-height: 180px;
 		min-height: clamp(10rem, 24vw, 12rem);
 		padding: 1rem;
 		position: relative;
@@ -62,10 +63,12 @@ ProjectCard.style = css<typeof ProjectCard>`
 	}
 
 	:scope.small {
+		min-height: 140px;
 		min-height: clamp(6rem, 20vw, 8rem);
 	}
 
 	:scope.no-image {
+		min-height: 100px;
 		min-height: clamp(5rem, 18vw, 6rem);
 		justify-content: center;
 	}
@@ -147,6 +150,7 @@ ProjectCard.style = css<typeof ProjectCard>`
 	}
 
 	.name {
+		font-size: 20px;
 		font-size: clamp(1.1rem, 1.2vw + 1rem, 1.5rem);
 		font-weight: 700;
 		color: var(--surface0);
@@ -164,6 +168,7 @@ ProjectCard.style = css<typeof ProjectCard>`
 	}
 
 	.description {
+		font-size: 14px;
 		font-size: clamp(0.9rem, 0.4vw + 0.8rem, 0.95rem);
 		color: var(--surface4);
 		text-shadow: 0 1px 4px var(--shadow-medium);

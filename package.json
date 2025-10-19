@@ -19,7 +19,9 @@
 		"vite": "npm:rolldown-vite@latest"
 	},
 	"dependencies": {
+		"autoprefixer": "^10.4.21",
 		"css-vars-ponyfill": "^2.4.9",
-		"dreamland": "^0.1.1"
+		"dreamland": "^0.1.1",
+		"postcss": "^8.5.6"
 	}
 }

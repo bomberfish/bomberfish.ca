@@ -194,14 +194,18 @@ Homepage.style = css`
 
 	img {
 		aspect-ratio: 1/1;
+		height: 160px;
 		height: clamp(10rem, 22vw, 14rem);
 		z-index: 1;
 		margin-top: 1.25rem;
 	}
 	.img-wrapper {
+		aspect-ratio: 1;
 		position: relative;
+		height: 160px;
 		height: clamp(10rem, 22vw, 14rem);
-		width: clamp(10rem, 22vw, 14rem);
+		width: 160px;
+		width: auto;
 	}
 	.pfp {
 		position: absolute;

@@ -43,6 +43,7 @@ Header.style = css`
 
 	h1 {
 		margin-block: 0.1em !important;
+		font-size: 28px !important;
 		font-size: clamp(1.6rem, 2vw + 1rem, 2.25rem)!important;
 	}
 

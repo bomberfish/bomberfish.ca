@@ -16,6 +16,7 @@ body {
 	background-position: var(--bgmoveX) var(--bgmoveY);
 	background-repeat: repeat;
 	background-attachment: fixed;
+	font-size: 16px;
 	font-size: clamp(15px, 0.4vw + 14px, 17px);
 	text-rendering: optimizeLegibility;
 	-webkit-font-smoothing: antialiased;
@@ -52,6 +53,7 @@ main > * {
 }
 
 h1 {
+	font-size: 36px;
 	font-size: clamp(1.75rem, 2.25vw + 1.1rem, 2.5rem);
 	margin-block-start: 0.25em;
 	margin-block-end: 0.5em;
@@ -74,10 +76,12 @@ h3 {
 }
 
 h2 {
+	font-size: 24px;
 	font-size: clamp(1.25rem, 1.2vw + 0.9rem, 1.75rem);
 }
 
 h3 {
+	font-size: 18px;
 	font-size: clamp(1.1rem, 0.9vw + 0.9rem, 1.35rem);
 }
 

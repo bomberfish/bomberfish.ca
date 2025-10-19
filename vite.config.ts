@@ -2,6 +2,7 @@ import { defineConfig } from "vite";
 import { devSsr } from "dreamland/vite";
 import { literalsHtmlCssMinifier } from "@literals/rollup-plugin-html-css-minifier";
 import legacy from "@vitejs/plugin-legacy";
+import autoprefixer from 'autoprefixer';
 
 export default defineConfig({
 	plugins: [
@@ -20,6 +21,15 @@ export default defineConfig({
 	},
 	build: {
 		target: "es2015",
+	},
+	css: {
+		postcss: {
+			plugins: [
+				autoprefixer({
+					overrideBrowserslist: ["since 2010"],
+					grid: "autoplace"
+				})
+			],
+		}
 	}
 });
- 
