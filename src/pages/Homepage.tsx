@@ -17,7 +17,7 @@ const Homepage: Component<{}, {}> = function () {
 					<div>
 						<section id="about">
 							<p>
-								i'm hariz (he/they), a 16 y/o high school student living in
+								i'm hariz (he/they), a 17 y/o high school student living in
 								waterloo, canada.
 							</p>
 							<p>
