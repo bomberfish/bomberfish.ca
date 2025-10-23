@@ -22,7 +22,7 @@ const ProjectCard: Component<
 				</div>
 			)}
 			<div class="fill-link">
-			<Link href={`projects/${this.project.lastPathComponent}`} class="fill-link">
+			<Link href={`projects/${this.project.lastPathComponent}`} class="router-link">
 				<div class="content">
 					<h3 class="name">{this.project.title}</h3>
 					<p class="description">{this.project.blurb}</p>
