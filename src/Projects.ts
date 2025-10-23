@@ -38,9 +38,113 @@ export const projects = [
 	//   ],
 	// ),
 	new ProjectCardDetails(
+		"/proj-thumbnails/steed.jpg",
+		"Steed",
+		"A simple platformer game where sacrifices must be made.",
+		"A simple platformer game where sacrifices must be made, built using C++ and Raylib. Made for Hack Club's Daydream Game Jam.",
+		2025,
+		2025,
+		[
+			{
+				name: "Play on itch.io",
+				url: "https://bomberfish.itch.io/steed",
+				icon: "stadia_controller"
+			},
+			{
+				name: "GitHub",
+				url: "https://github.com/bomberfish/steed",
+				icon: "code"
+			},
+			{
+				name: "About Daydream",
+				url: "https://daydream.hackclub.com/"
+			}
+		]
+	),
+	new ProjectCardDetails(
+		"/proj-thumbnails/pspleste.jpg",
+		"PSPleste",
+		"Port of Celeste Classic to the PSP",
+		"A port of Celeste Classic to the PSP written in Rust, using rustic-mountain and rust-psp. I made this to learn Rust.",
+		2025,
+		2025,
+		[
+			{
+				name: "GitHub",
+				url: "https://github.com/BomberFish/PSPleste",
+				icon: "code",
+			},
+		]
+	),
+	new ProjectCardDetails(
 		undefined,
+		"FFmpreg",
+		"FFmpeg GUI for iOS",
+		undefined,
+		2025,
+		2025,
+		[
+			{
+				name: "GitHub",
+				url: "https://github.com/BomberFish/FFmpreg",
+				icon: "code",
+			},
+		]
+	),
+	new ProjectCardDetails(
+		"/proj-thumbnails/converge.jpg",
+		"Converge",
+		"A simple, lightweight SwiftUI wrapper for Wine on macOS.",
+		undefined,
+		2025,
+		2025,
+		[
+			{
+				name: "GitHub",
+				url: "https://github.com/BomberFish/Converge",
+				icon: "code",
+			},
+		]
+	),
+	new ProjectCardDetails(
+		"/proj-thumbnails/transcribe.jpg",
+		"Transcribe",
+		"A free webapp to transfer playlists between music streaming services.",
+		"A work-in-progress web application to transfer playlists between music streaming services. Currently only supports YouTube Music and Apple Music.",
+		2025,
+		2025,
+		[
+			{
+				name: "Try it out",
+				url: "https://bomberfish.ca/Transcribe"
+			},
+			{
+				name: "GitHub",
+				url: "https://github.com/BomberFish/Transcribe",
+				icon: "code",
+			},
+		]
+	),
+	new ProjectCardDetails(
+		"/proj-thumbnails/pollux.jpeg",
+		"Pollux",
+		"A Chrome extension that uses on-device AI to answer questions about the current page.",
+		undefined,
+		2025,
+		2025,
+		[
+			{
+				name: "GitHub",
+				url: "https://github.com/BomberFish/Pollux",
+				icon: "code",
+			},
+		]
+	),
+	new ProjectCardDetails(
+		"/proj-thumbnails/mergeflow.jpg",
 		"MergeFlow",
 		"Gemini-powered Git merge conflict resolution",
+		// straight bullshitting ngl
 		"In 2025, me and a small team created MergeFlow, a smart Git merge conflict resolution tool powered by Gemini. It uses advanced AI algorithms to automatically resolve merge conflicts, making the process faster and more efficient. This was created for Hack Canada 2025.",
 		2025,
 		2025,
@@ -58,7 +162,7 @@ export const projects = [
 		]
 	),
 	new ProjectCardDetails(
-		undefined,
+		"/proj-thumbnails/voltaire.jpg",
 		"Voltaire",
 		"Snazzy local LLM inference app for iOS",
 		"Voltaire runs popular LLMs, including DeepSeek R1, LLaMa 3, and others, locally on iOS devices.",
@@ -98,10 +202,24 @@ export const projects = [
 		]
 	),
 	new ProjectCardDetails(
-		"/proj-thumbnails/Twitter Banner.png",
+		"/proj-thumbnails/mammut.jpeg",
+		"Mammut",
+		"A minimalistic, lightweight, highly-compatible, and no-frills Mastodon client written in vanilla JS.",
+		"",
+		2024,
+		2025,
+		[
+			{
+				name: "Try it out",
+				url: "https://mammut.bomberfish.ca"
+			}
+		]
+	),
+	new ProjectCardDetails(
+		"/proj-thumbnails/qs.jpg",
 		"QuickSign",
 		"iOS Sideloading App",
-		"In late 2024 I joined the development of QuickSign, an app to sign sideloaded iOS apps. Development was cancelled in mid 2025 due to Apple mass terminating developer accounts.",
+		"In late 2024 I joined the development of QuickSign, an app to sign sideloaded iOS apps. Development was cancelled in mid 2025 due to Apple mass terminating developer accounts and general disinterest.",
 		2024,
 		2025,
 		[
@@ -120,7 +238,7 @@ export const projects = [
 		"/proj-thumbnails/celeste.jpeg",
 		"Webleste",
 		"Port of Celeste (2018) to WebAssembly",
-		"Webleste (formerly celeste-wasm) is a port of the popular platformer game Celeste to WebAssembly. I helped out with it during its initial development in May 2024, and with the development of version 2.0 in April 2025. It is a complete port of the game, using experimental WASM support in .NET and the FNA game engine. I worked with my fellow colleagues at Mercury Workshop to help with porting the game.",
+		"Webleste (formerly celeste-wasm) is a port of the popular platformer game Celeste to WebAssembly. I was responsible for the browser frontend during its initial development in May 2024, and with the development of version 2.0 in April 2025. It is a complete port of the game, using experimental WASM support in .NET and the FNA game engine. I worked with my fellow colleagues at Mercury Workshop to help with porting the game.",
 		2024,
 		2025,
 		[
@@ -147,7 +265,7 @@ export const projects = [
 		"/proj-thumbnails/anura.jpeg",
 		"AnuraOS",
 		"Contributor to webOS since v2.x",
-		"AnuraOS is the next-gen webOS and development environment with full Linux emulation. That is to say, a full desktop environment running locally in your browser, with x86 Linux emulation. I've been making various contributions since March 2024, most of which reworked various parts of the UI. AnuraOS 2.0, which contains my contributions, was released in November 2024.",
+		"AnuraOS is a next-gen webOS and development environment with full Linux emulation. That is to say, a full desktop environment running locally in your browser, with x86 Linux emulation. I've been making various contributions since March 2024, most of which reworked various parts of the UI. AnuraOS 2.0, which contains my contributions, was released in November 2024.",
 		2024,
 		2024,
 		[
