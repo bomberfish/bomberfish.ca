@@ -209,6 +209,7 @@ Homepage.style = css`
 
 		transition: transform 0.5s cubic-bezier(0.3, 0, 0.6, 1);
 		transform-origin: center center;
+		cursor: pointer;
 	}
 	.pfp {
 		aspect-ratio: 1/1;
