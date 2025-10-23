@@ -50,13 +50,13 @@ const Homepage: Component<{}, {}> = function () {
 						</subt>
 						<ul class="compact">
 							<li>
-								<div class="tooltip-wrapper">
+								<span class="tooltip-wrapper">
 									<a href="mailto:me@bomberfish.ca">email</a>
 									<span class="tooltip">me@bomberfish.ca</span>
-								</div>
+								</span>
 							</li>
 							<li>
-								<div class="tooltip-wrapper">
+								<span class="tooltip-wrapper">
 									<a
 										href="https://github.com/BomberFish"
 										target="_blank"
@@ -65,10 +65,10 @@ const Homepage: Component<{}, {}> = function () {
 										github
 									</a>
 									<span class="tooltip">@bomberfish</span>
-								</div>
+								</span>
 							</li>
 							<li>
-								<div class="tooltip-wrapper">
+								<span class="tooltip-wrapper">
 									<a
 										href="https://wetdry.world/@fish"
 										target="_blank"
@@ -77,10 +77,10 @@ const Homepage: Component<{}, {}> = function () {
 										fediverse
 									</a>
 									<span class="tooltip">@fish@wetdry.world</span>
-								</div>
+								</span>
 							</li>
 							<li>
-								<div class="tooltip-wrapper">
+								<span class="tooltip-wrapper">
 									<a
 										href="https://x.com/bomberfish77"
 										target="_blank"
@@ -89,10 +89,10 @@ const Homepage: Component<{}, {}> = function () {
 										X
 									</a>
 									<span class="tooltip">@bomberfish77</span>
-								</div>
+								</span>
 							</li>
 							<li>
-								<div class="tooltip-wrapper">
+								<span class="tooltip-wrapper">
 									<a
 										href="https://bsky.app/profile/bomberfish.ca"
 										target="_blank"
@@ -101,10 +101,10 @@ const Homepage: Component<{}, {}> = function () {
 										bluesky
 									</a>
 									<span class="tooltip">@bomberfish.ca</span>
-								</div>
+								</span>
 							</li>
 							<li>
-								<div class="tooltip-wrapper">
+								<span class="tooltip-wrapper">
 									<a
 										href="https://matrix.to/#/@me:bomberfish.ca"
 										target="_blank"
@@ -113,16 +113,16 @@ const Homepage: Component<{}, {}> = function () {
 										matrix
 									</a>
 									<span class="tooltip">@me:bomberfish.ca</span>
-								</div>
+								</span>
 							</li>
 							<li>
-								<div class="tooltip-wrapper">
+								<span class="tooltip-wrapper">
 									discord
 									<span class="tooltip">@bomberfish</span>
-								</div>
+								</span>
 							</li>
 							<li>
-								<div class="tooltip-wrapper">
+								<span class="tooltip-wrapper">
 									<a
 										href="https://signal.me/#eu/Hj17C2gxd-rMfhgGYLZADiwtnP9y1xDF9waDfQxJudgShHBOqThJXLLHV4ZPmPny"
 										target="_blank"
@@ -131,24 +131,20 @@ const Homepage: Component<{}, {}> = function () {
 										signal
 									</a>
 									<span class="tooltip">@one.337</span>
-								</div>
+								</span>
 							</li>
 						</ul>
 					</section>
 					<br />
 					<section id="buttons">
-						<div style="display: flex; align-items: center; height: max(31px,2.25rem); margin-bottom: 0.5rem;">
+						<div>
 							<WebButton
 								src="/button.gif"
 								title="Click to copy my button! (HTML code)"
 								action={(e: MouseEvent) => {
 									e.preventDefault();
 									try {
-										navigator.clipboard.writeText(`
-          <a href="https://bomberfish.ca">
-            <img src="https://bomberfish.ca/button.gif" alt="BomberFish" title="BomberFish" />
-          </a>
-        `);
+										navigator.clipboard.writeText('<a href="https://bomberfish.ca">\n<img src="https://bomberfish.ca/button.gif" alt="BomberFish" title="BomberFish" />\n</a>');
 										document.body.appendChild(<CopiedToast />);
 									} catch {
 										console.error(e);
@@ -190,6 +186,13 @@ Homepage.style = css`
 		gap: 1rem;
 		flex-wrap: wrap;
 		height: min-content;
+	}
+
+	.buttons > div {
+		display: flex; 
+		align-items: center; 
+		height: max(31px,2.25rem); 
+		margin-bottom: 0.5rem;
 	}
 
 	img {

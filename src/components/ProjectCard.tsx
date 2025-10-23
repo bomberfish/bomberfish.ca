@@ -18,7 +18,7 @@ const ProjectCard: Component<
 		}}>
 			{this.project.img && (
 				<div class="media" aria-hidden="true">
-					<img src={this.project.img} alt="" loading="lazy" />
+					<img src={this.project.img} alt="" loading="lazy" class="project-image" />
 				</div>
 			)}
 			<div class="fill-link">
@@ -90,7 +90,8 @@ ProjectCard.style = css<typeof ProjectCard>`
 		transition: opacity 0.25s ease;
 	}
 
-	.media img {
+	.project-image {
+		max-width: 100%;
 		width: 100%;
 		height: 100%;
 		object-fit: cover;
