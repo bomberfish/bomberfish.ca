@@ -134,7 +134,7 @@ h1 {
 }
 
 article {
-	margin-top: 1.25em;
+	margin-top: 1.2em;
 }
 
 article > h1 {
@@ -283,6 +283,11 @@ a:visited {
 .pfp {
 	max-width: 14rem;
 	max-height: 14rem;
+	box-shadow:
+		0 0 0 0.025rem var(--image-ring),
+		0 0 1rem var(--shadow-soft);
+	border-radius: 50%;
+	margin-block: 1.25rem;
 }
 
 .pfp.rear {

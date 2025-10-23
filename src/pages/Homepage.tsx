@@ -195,13 +195,6 @@ Homepage.style = css`
 		margin-bottom: 0.5rem;
 	}
 
-	img {
-		aspect-ratio: 1/1;
-		height: 160px;
-		height: clamp(10rem, 22vw, 14rem);
-		z-index: 1;
-		margin-top: 1.25rem;
-	}
 	.img-wrapper {
 		aspect-ratio: 1;
 		position: relative;
@@ -211,14 +204,14 @@ Homepage.style = css`
 		width: auto;
 	}
 	.pfp {
+		aspect-ratio: 1/1;
+		height: 160px;
+		height: clamp(10rem, 22vw, 14rem);
+		z-index: 1;
 		position: absolute;
 		top: 0;
 		left: 0;
 		object-fit: cover;
-		box-shadow:
-			0 0 0 0.025rem var(--image-ring),
-			0 0 1rem var(--shadow-soft);
-		border-radius: 50%;
 		z-index: 1;
 	}
 	.pfp.rear {
