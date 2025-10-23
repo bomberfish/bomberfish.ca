@@ -66,7 +66,7 @@ export const ButtonList: Component<{}, {}> = function () {
 			/>
 			<WebButton
 				src="/buttons/any-browser.gif"
-				title="View this site on any (modern) web browser!"
+				title="View this site on any web browser!"
 				href="https://anybrowser.org/campaign/index.html"
 			/>
 			<WebButton

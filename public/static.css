@@ -294,6 +294,10 @@ a:visited {
 	text-decoration: underline;
 }
 
+.img-wrapper {
+	margin-block: 1.5rem;
+}
+
 .pfp {
 	max-width: 14rem;
 	max-height: 14rem;
@@ -301,7 +305,6 @@ a:visited {
 		0 0 0 0.025rem var(--image-ring),
 		0 0 1rem var(--shadow-soft);
 	border-radius: 50%;
-	margin-block: 1.25rem;
 }
 
 .pfp.rear {

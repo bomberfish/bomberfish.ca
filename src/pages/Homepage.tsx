@@ -3,13 +3,16 @@ import Header from "../components/Header";
 import { WebButton, ButtonList, CopiedToast } from "../components/Buttons";
 import { Link } from "dreamland/router";
 
-const Homepage: Component<{}, {}> = function () {
+const Homepage: Component<{}, {rotation: number}> = function () {
+	this.rotation = 0;
 	return (
 		<main>
 			<Header />
 			<div class="content-with-image">
-				<div class="img-wrapper">
-					<img src="/me.jpg" class="pfp rear" alt="" aria-hidden="true" />
+				<div class="img-wrapper" style={use(this.rotation).map(r => `transform: rotate(${r}deg);`)} on:click={() => {
+					this.rotation += 1440;
+				}}>
+					<img src="/me.jpg" class="pfp rear" alt="" aria-hidden="true" hidden />
 					<img src="/me.jpg" class="pfp" title="my profile picture! :3" />
 				</div>
 				<article>
@@ -203,6 +206,9 @@ Homepage.style = css`
 		height: clamp(10rem, 22vw, 14rem);
 		width: 160px;
 		width: auto;
+
+		transition: transform 0.5s cubic-bezier(0.3, 0, 0.6, 1);
+		transform-origin: center center;
 	}
 	.pfp {
 		aspect-ratio: 1/1;
