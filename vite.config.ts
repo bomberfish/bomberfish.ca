@@ -2,6 +2,8 @@ import { defineConfig } from "vite";
 import { devSsr } from "dreamland/vite";
 import { literalsHtmlCssMinifier } from "@literals/rollup-plugin-html-css-minifier";
 import legacy from "@vitejs/plugin-legacy";
+import postCssPresetEnv from "postcss-preset-env";
+import autoprefixer from "autoprefixer";
 
 export default defineConfig({
 	plugins: [
@@ -20,5 +22,59 @@ export default defineConfig({
 	},
 	build: {
 		target: "es2015",
+		cssMinify: "lightningcss",
+		minify: "terser",
+		terserOptions: {
+			ecma: 2015,
+			format: {
+				comments: false,
+			},
+			compress: {
+				arguments: true,
+				passes: 2,
+				unsafe: true,
+				unsafe_proto: true,
+				unsafe_math: true,
+				unsafe_undefined: true,
+				unsafe_regexp: true,
+				unsafe_methods: true,
+				unsafe_symbols: true,
+				unsafe_Function: true,
+				comparisons: true,
+				unsafe_comps: true,
+			},
+			mangle: true,
+		},
+		sourcemap: true,
+		rolldownOptions: {
+			treeshake: true,
+			logLevel: "info",
+			optimization: {
+				inlineConst: {
+					mode: "smart",
+					pass: 2
+				}
+			},
+			output: {
+				generatedCode: {
+					preset: "es2015",
+				}
+			}
+		}
 	},
+	css: {
+		postcss: {
+			plugins: [
+				postCssPresetEnv({
+					features: {},
+					browsers: ["fully supports es6"],
+					stage: 0
+				}),
+				autoprefixer({
+					overrideBrowserslist: ["fully supports es6"],
+					grid: "autoplace"
+				}),
+			]
+		}
+	}
 });

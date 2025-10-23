@@ -6,6 +6,8 @@ import { mkdir, readFile, rm, writeFile } from "node:fs/promises";
 import postcss from 'postcss';
 import autoprefixer from 'autoprefixer';
 import postCssPresetEnv from 'postcss-preset-env';
+import oldie from 'oldie';
+import cssnano from 'cssnano';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const resolve = (p) => resolvePath(__dirname, p);
@@ -31,15 +33,17 @@ for (const [route, path] of paths) {
 const cssPath = resolve("dist/static/static.css");
 const css = await readFile(cssPath, "utf8");
 const result = await postcss([
-	autoprefixer({
-		overrideBrowserslist: [">= 0.00%"],
-		grid: "autoplace"
-	}),
 	postCssPresetEnv({
 		features: {},
 		browsers: [">= 0.00%"],
 		stage: 0
 	}),
+	oldie(),
+	autoprefixer({
+		overrideBrowserslist: [">= 0.00%"],
+		grid: "autoplace"
+	}),
+	cssnano(),
 ]).process(css, { from: cssPath, to: cssPath });
 await writeFile(cssPath, result.css);
 console.log(`processed: static.css\t${(new TextEncoder().encode(result.css).byteLength / 1024).toFixed(2)}kb`);

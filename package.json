@@ -14,16 +14,19 @@
 		"@literals/rollup-plugin-html-css-minifier": "^3.0.1",
 		"@types/node": "^24.7.2",
 		"@vitejs/plugin-legacy": "^7.2.1",
+		"cssnano": "^7.1.1",
+		"lightningcss": "^1.30.2",
+		"oldie": "^1.3.0",
+		"postcss": "^8.5.6",
 		"postcss-cli": "^11.0.1",
 		"prettier": "next",
+		"terser": "^5.44.0",
 		"typescript": "next",
 		"vite": "npm:rolldown-vite@latest"
 	},
 	"dependencies": {
 		"autoprefixer": "^10.4.21",
-		"css-vars-ponyfill": "^2.4.9",
 		"dreamland": "^0.1.1",
-		"postcss": "^8.5.6",
 		"postcss-preset-env": "^10.4.0"
 	}
 }
