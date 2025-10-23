@@ -32,7 +32,7 @@ const ProjectList: Component<{}, {}> = function () {
 ProjectList.style = css`
 	.projects-group {
 		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+		grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
 		gap: 0.7rem;
 		margin-top: 1rem;
 		grid-auto-flow: dense;
