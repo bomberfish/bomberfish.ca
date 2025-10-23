@@ -19,7 +19,7 @@ export const jobs = [
 
 export const projects = [
 	// new ProjectCardDetails(
-	//   "/proj-thumbnails/celeste.webp",
+	//   "/proj-thumbnails/celeste.jpeg",
 	//   "Webshot",
 	//   "Port of OneShot to WebAssembly",
 	//   "Webshot is a port of OneShot: World Machine Edition to WebAssembly. Like fez-wasm and Webleste, it leverages WebAssembly support in .NET and FNA to run the game in a web browser. Unlike Webleste, I led the porting efforts."
@@ -117,7 +117,7 @@ export const projects = [
 		]
 	),
 	new ProjectCardDetails(
-		"/proj-thumbnails/celeste.webp",
+		"/proj-thumbnails/celeste.jpeg",
 		"Webleste",
 		"Port of Celeste (2018) to WebAssembly",
 		"Webleste (formerly celeste-wasm) is a port of the popular platformer game Celeste to WebAssembly. I helped out with it during its initial development in May 2024, and with the development of version 2.0 in April 2025. It is a complete port of the game, using experimental WASM support in .NET and the FNA game engine. I worked with my fellow colleagues at Mercury Workshop to help with porting the game.",
@@ -144,7 +144,7 @@ export const projects = [
 		2
 	),
 	new ProjectCardDetails(
-		"/proj-thumbnails/anura.webp",
+		"/proj-thumbnails/anura.jpeg",
 		"AnuraOS",
 		"Contributor to webOS since v2.x",
 		"AnuraOS is the next-gen webOS and development environment with full Linux emulation. That is to say, a full desktop environment running locally in your browser, with x86 Linux emulation. I've been making various contributions since March 2024, most of which reworked various parts of the UI. AnuraOS 2.0, which contains my contributions, was released in November 2024.",
@@ -160,7 +160,7 @@ export const projects = [
 		3
 	),
 	new ProjectCardDetails(
-		"/proj-thumbnails/mandelapro.webp",
+		"/proj-thumbnails/mandelapro.jpeg",
 		"Mandela Pro",
 		"Cancelled customization app",
 		"Mandela Pro was a cancelled iOS customization app I created solo in early 2024. It was intended for iOS 16.0-17.0, but was cancelled due to the release of Dopamine 2.0 for 16.x versions and the lack of interest for iOS 17.0.",
@@ -180,7 +180,7 @@ export const projects = [
 		1
 	),
 	new ProjectCardDetails(
-		"/proj-thumbnails/dssos.webp",
+		"/proj-thumbnails/dssos.jpeg",
 		"dssOS",
 		"Live dev environment for ChromeOS devices",
 		"dssOS was one of my first projects involving ChromeOS, and was a live development environment for ChromeOS devices. It used a modified diagnostic tool to boot into a Linux chroot, which you could use for programming. dssOS was created in November 2023.",
@@ -194,7 +194,7 @@ export const projects = [
 		]
 	),
 	new ProjectCardDetails(
-		"/proj-thumbnails/picasso.webp",
+		"/proj-thumbnails/picasso.jpeg",
 		"Picasso",
 		"iOS customization app with 100k+ peak MAU",
 		"Picasso was a customization app for iOS 15.0-17.0, taking advantage of various security vulnerabilities to allow for deep customization. At its peak, it had over 100,000 active users. I worked with sourcelocation to develop it, and it was first released in August 2023 on our own third-party marketplace separate from Apple's App Store.",
@@ -216,7 +216,7 @@ export const projects = [
 		0
 	),
 	new ProjectCardDetails(
-		"/proj-thumbnails/appcommander.webp",
+		"/proj-thumbnails/appcommander.jpeg",
 		"AppCommander",
 		"App Manager for iOS 15.0-18.4",
 		"AppCommander (v1.x) was an app manager for iOS 15.0-16.1.2, and allowed the user to perform advanced app management using a sandbox escape that utilized the MacDirtyCow vunerability. Some key features included creating app backups, exporting IPA files, clearing app caches, and more. AppCommander 1.0.0 was released in July 2023.",
@@ -236,7 +236,7 @@ export const projects = [
 		]
 	),
 	new ProjectCardDetails(
-		"/proj-thumbnails/cowabunga.webp",
+		"/proj-thumbnails/cowabunga.jpeg",
 		"Cowabunga",
 		"Major contributor to customization app",
 		"Cowabunga was a major project I contributed to in 2023. It was a customization app for iOS 14.0-16.1.2, using the MacDirtyCow vunerability to allow for deep customization. My contributions included adding tools such as an enterprise certificate blacklist remover, and a tool to remove the three-app limit on developer-signed apps.",
