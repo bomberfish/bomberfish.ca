@@ -80,7 +80,7 @@ ProjectCard.style = css<typeof ProjectCard>`
 		pointer-events: none;
 	}
 
-	.media::after {
+	.media:after {
 		content: "";
 		position: absolute;
 		top: 0;
@@ -124,7 +124,7 @@ ProjectCard.style = css<typeof ProjectCard>`
 		background-color: var(--card-overlay);
 	}
 
-	:scope::before {
+	:scope:before {
 		content: "";
 		position: absolute;
 		top: 0;
@@ -144,7 +144,7 @@ ProjectCard.style = css<typeof ProjectCard>`
 		opacity: 1;
 	}
 
-	:scope:hover::before {
+	:scope:hover:before {
 		opacity: 0.8;
 	}
 
@@ -215,7 +215,7 @@ ProjectCard.style = css<typeof ProjectCard>`
 			transform: none;
 		}
 
-		.media::after {
+		.media:after {
 			transition: none;
 		}
 

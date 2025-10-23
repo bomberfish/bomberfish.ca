@@ -43,7 +43,7 @@ img {
 	cursor: pointer;
 }
 
-.tooltip-wrapper::before {
+.tooltip-wrapper:before {
 	content: "";
 	position: absolute;
 	top: 100%;
@@ -56,7 +56,7 @@ img {
 	pointer-events: none;
 }
 
-.tooltip-wrapper:hover::before {
+.tooltip-wrapper:hover:before {
 	pointer-events: auto;
 }
 
@@ -86,7 +86,7 @@ img {
 	pointer-events: none;
 }
 
-.tooltip::after {
+.tooltip:after {
 	content: "";
 	position: absolute;
 	bottom: 100%;
@@ -97,7 +97,7 @@ img {
 	z-index: 1001;
 }
 
-.tooltip::before {
+.tooltip:before {
 	content: "";
 	position: absolute;
 	bottom: calc(100% - 1px);

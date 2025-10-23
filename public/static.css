@@ -207,7 +207,7 @@ ul.compact > li {
 	white-space: nowrap;
 }
 
-ul.compact > li:not(:last-child)::after {
+ul.compact > li:not(:last-child):after {
 	content: "/";
 	margin: 0 0.75rem;
 	opacity: 0.6;
