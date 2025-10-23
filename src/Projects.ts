@@ -40,7 +40,7 @@ export const projects = [
 	new ProjectCardDetails(
 		"/proj-thumbnails/steed.jpg",
 		"Steed",
-		"A simple platformer game where sacrifices must be made.",
+		"Entry for Hack Club Daydream",
 		"A simple platformer game where sacrifices must be made, built using C++ and Raylib. Made for Hack Club's Daydream Game Jam.",
 		2025,
 		2025,
@@ -94,8 +94,8 @@ export const projects = [
 	new ProjectCardDetails(
 		"/proj-thumbnails/converge.jpg",
 		"Converge",
+		"SwiftUI wrapper for Wine on macOS",
 		"A simple, lightweight SwiftUI wrapper for Wine on macOS.",
-		undefined,
 		2025,
 		2025,
 		[
@@ -109,7 +109,7 @@ export const projects = [
 	new ProjectCardDetails(
 		"/proj-thumbnails/transcribe.jpg",
 		"Transcribe",
-		"A free webapp to transfer playlists between music streaming services.",
+		"Streaming service playlist transfer tool",
 		"A work-in-progress web application to transfer playlists between music streaming services. Currently only supports YouTube Music and Apple Music.",
 		2025,
 		2025,
@@ -128,8 +128,8 @@ export const projects = [
 	new ProjectCardDetails(
 		"/proj-thumbnails/pollux.jpeg",
 		"Pollux",
+		"Chrome extension for on-device LLMs",
 		"A Chrome extension that uses on-device AI to answer questions about the current page.",
-		undefined,
 		2025,
 		2025,
 		[
@@ -204,8 +204,8 @@ export const projects = [
 	new ProjectCardDetails(
 		"/proj-thumbnails/mammut.jpeg",
 		"Mammut",
+		"Lightweight Mastodon web client",
 		"A minimalistic, lightweight, highly-compatible, and no-frills Mastodon client written in vanilla JS.",
-		"",
 		2024,
 		2025,
 		[
