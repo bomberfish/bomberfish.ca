@@ -16,12 +16,19 @@ const ProjectCard: Component<
 			}
 			router.navigate(`projects/${this.project.lastPathComponent}`);
 		}}>
+			{this.project.img && (
+				<div class="media" aria-hidden="true">
+					<img src={this.project.img} alt="" loading="lazy" />
+				</div>
+			)}
+			<div class="fill-link">
 			<Link href={`projects/${this.project.lastPathComponent}`} class="fill-link">
 				<div class="content">
 					<h3 class="name">{this.project.title}</h3>
 					<p class="description">{this.project.blurb}</p>
 				</div>
 			</Link>
+			</div>
 		</div>
 	);
 };
@@ -48,7 +55,7 @@ ProjectCard.style = css<typeof ProjectCard>`
 		backdrop-filter: blur(8px);
 		cursor: pointer;
 		color: inherit;
-	}
+	}	
 
 	:scope > .fill-link {
 		display: flex;
@@ -62,6 +69,37 @@ ProjectCard.style = css<typeof ProjectCard>`
 		position: relative;
 	}
 
+	.media {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		overflow: hidden;
+		z-index: 0;
+		pointer-events: none;
+	}
+
+	.media::after {
+		content: "";
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		transition: opacity 0.25s ease;
+	}
+
+	.media img {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		filter: saturate(0.9) brightness(0.5);
+		transform-origin: center;
+		transition: transform 0.25s ease, filter 0.25s ease;
+		will-change: transform, filter;
+	}
+
 	:scope.small {
 		min-height: 140px;
 		min-height: clamp(6rem, 20vw, 8rem);
@@ -71,6 +109,7 @@ ProjectCard.style = css<typeof ProjectCard>`
 		min-height: 100px;
 		min-height: clamp(5rem, 18vw, 6rem);
 		justify-content: center;
+		background-color: var(--card-overlay);
 	}
 
 	:scope:hover {
@@ -78,6 +117,10 @@ ProjectCard.style = css<typeof ProjectCard>`
 			0 25px 50px -12px var(--shadow-ultra),
 			0 0 0 1px var(--shadow-highlight);
 		background: var(--card-surface-hover);
+	}
+
+	:scope.no-image:hover {
+		background-color: var(--card-overlay);
 	}
 
 	:scope::before {
@@ -104,24 +147,7 @@ ProjectCard.style = css<typeof ProjectCard>`
 		opacity: 0.8;
 	}
 
-	:scope::after {
-		content: "";
-		position: absolute;
-		top: 0;
-		left: 0;
-		width: 100%;
-		height: 100%;
-		background-color: var(--card-overlay);
-		background-image: ${(s) =>
-			use(s.project).map((p) => (p && p.img ? `url("${p.img}")` : "none"))};
-		background-size: cover;
-		background-position: center;
-		filter: saturate(0.9) brightness(0.5);
-		z-index: -1;
-		transition: all 0.25s ease;
-	}
-
-	:scope:hover::after {
+	:scope:hover .media img {
 		transform: scale(1.01);
 		filter: saturate(1.25) brightness(0.9);
 	}
@@ -188,14 +214,51 @@ ProjectCard.style = css<typeof ProjectCard>`
 			transform: none;
 		}
 
-		:scope::after {
+		.media::after {
 			transition: none;
 		}
 
-		:scope:hover::after {
+		.media img {
+			transition: none;
+		}
+
+		:scope:hover .media img {
 			transform: none;
+			filter: saturate(0.9) brightness(0.5);
 		}
 	}
+
+	@supports (grid-template-rows: masonry) or (grid-template-columns: masonry) or (display: masonry) {
+		:scope:not(.no-image) {
+			width: auto;
+			min-width: 300px;
+			min-height: auto;
+			display: block;
+			padding: 0;
+		}
+
+		:scope:not(.no-image) .media {
+			position: relative;
+			height: auto;
+		}
+
+		.media img {
+			object-fit: cover;
+			width: 100%;
+			height: auto;
+			display: block;
+		}
+
+		:scope:not(.no-image) .fill-link {
+			position: absolute;
+			bottom: 0;
+			left: 0;
+			right: 0;
+			height: auto;
+			padding: 5%;
+		}
+	}
+
 `;
 
 export default ProjectCard;
