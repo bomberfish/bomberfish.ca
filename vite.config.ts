@@ -14,7 +14,7 @@ export default defineConfig({
 			entry: "/src/main-server.ts",
 		}),
 		legacy({
-			targets: ["supports es6"],
+			targets: ["fully supports es6"],
 		}),
 	],
 	define: {
@@ -61,11 +61,11 @@ export default defineConfig({
 			plugins: [
 				postCssPresetEnv({
 					features: {},
-					browsers: ["fully supports es6"],
+					browsers: [">= 0.00%"],
 					stage: 0
 				}),
 				autoprefixer({
-					overrideBrowserslist: ["fully supports es6"],
+					overrideBrowserslist: [">= 0.00%"],
 					grid: "autoplace"
 				}),
 			]
