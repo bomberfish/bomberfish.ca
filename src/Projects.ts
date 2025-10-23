@@ -77,7 +77,7 @@ export const projects = [
 		]
 	),
 	new ProjectCardDetails(
-		undefined,
+		"/proj-thumbnails/ffmpreg.jpeg",
 		"FFmpreg",
 		"FFmpeg GUI for iOS",
 		undefined,
@@ -182,7 +182,7 @@ export const projects = [
 		]
 	),
 	new ProjectCardDetails(
-		undefined,
+		"/proj-thumbnails/fez.jpg",
 		"fez-wasm",
 		"Port of Fez (2012) to WebAssembly",
 		"fez-wasm is a WebAssembly port of Fez, a puzzle-platformer first released in 2012. It is a heavy work in progress, with many portions non-functional.",

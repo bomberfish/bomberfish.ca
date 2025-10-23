@@ -34,7 +34,7 @@ ProjectView.style = css`
 		display: flex;
 		flex-direction: row;
 		align-items: center;
-		justify-content: center;
+		justify-content: space-evenly;
 		gap: 0.75rem;
 		flex-grow: 1;
 	}
@@ -47,14 +47,14 @@ ProjectView.style = css`
 	}
 
 	#details {
-		width: 100%;
+		max-width: 100%;
 		padding-inline: 1rem;
 	}
 
 	img {
-		max-width: min(40rem, 50vw);
+		max-width: min(50rem, 70vw);
 		width: auto;
-		max-height: 100%;
+		max-height: 70vh;
 		border-radius: 1rem;
 		margin: 0;
 		padding: 0;

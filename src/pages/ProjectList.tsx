@@ -30,6 +30,10 @@ const ProjectList: Component<{}, {}> = function () {
 };
 
 ProjectList.style = css`
+	article {
+		padding-bottom: 2rem;
+	}
+	
 	.projects-group {
 		display: grid;
 		grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
@@ -38,35 +42,13 @@ ProjectList.style = css`
 		grid-auto-flow: dense;
 	}
 
-
-	@supports (grid-template-rows: masonry) and (grid-template-columns: masonry) {
-		.projects-group {
-			grid-template-rows: masonry;
-			grid-auto-rows: masonry;
-			grid-template-columns: masonry;
-			grid-auto-columns: 1fr;
-			grid-auto-flow: dense;
-			display: grid;
-		}
-	}
-
 	@supports (grid-template-rows: masonry) {
 		.projects-group {
+			display: grid;
+			grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
 			grid-template-rows: masonry;
 			grid-auto-rows: masonry;
-		}
-	}
-
-	@supports (grid-template-columns: masonry) {
-		.projects-group {
-			grid-template-columns: masonry;
-			grid-auto-columns: 1fr;
-		}
-	}
-
-	@supports (grid-template-rows: masonry) and (not (grid-template-columns: masonry)) {
-		.projects-group {
-			grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+			grid-auto-flow: dense;
 		}
 	}
 
