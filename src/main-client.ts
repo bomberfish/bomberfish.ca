@@ -12,7 +12,7 @@ hydrate(
 	document.querySelector("[dlssr-d]")!
 );
 
-document.querySelectorAll("router-link").forEach((el) => {
+document.querySelectorAll(".router-link").forEach((el) => {
 	el.setAttribute("target", "_self");
 });
 
