@@ -31,17 +31,11 @@ export default defineConfig({
 			},
 			compress: {
 				arguments: true,
-				passes: 2,
+				passes: 3,
 				unsafe: true,
 				unsafe_proto: true,
 				unsafe_math: true,
-				unsafe_undefined: true,
 				unsafe_regexp: true,
-				unsafe_methods: true,
-				unsafe_symbols: true,
-				unsafe_Function: true,
-				comparisons: true,
-				unsafe_comps: true,
 			},
 			mangle: true,
 		},
@@ -52,7 +46,7 @@ export default defineConfig({
 			optimization: {
 				inlineConst: {
 					mode: "smart",
-					pass: 2
+					pass: 3
 				}
 			},
 			output: {
