@@ -115,20 +115,20 @@ main {
 	transform: translateY(0) rotate3d(1, 0, 0, 0deg);
 	opacity: 1;
 	transition:
-		0.175s transform ease, 0.175s opacity ease;
+		0.2s transform, 0.2s opacity;
 	perspective: 1000px;
 	transform-origin: bottom center;
-	transition-timing-function: cubic-bezier(.2,.2,.5,1);
+	transition-timing-function: cubic-bezier(.2,.2,.8,1);
 }
 
 main.will-navigate {
-	transform: translateY(-1rem);
+	transform: translateY(0.7rem);
 	opacity: 0;
 }
 
 @starting-style {
 	main {
-		transform: translateY(1rem) rotate3d(1, 0, 0, 7.5deg);
+		transform: translateY(0.7rem) rotate3d(1, 0, 0, 7.5deg);
 		opacity: 0.1;
 	}
 }
@@ -259,7 +259,7 @@ a:visited {
 	text-decoration-thickness: 1.2px !important;
 	text-decoration-color: var(--overlay0) !important;
 	transition:
-		color 0.25s ease, text-decoration-color 0.25s ease;
+		color 0.3s ease, text-decoration-color 0.3s ease;
 }
 
 a:visited {

@@ -42,13 +42,13 @@ ProjectCard.style = css<typeof ProjectCard>`
 		text-align: left;
 		gap: 0.5rem;
 		min-height: 180px;
-		min-height: clamp(10rem, 24vw, 12rem);
+		min-height: clamp(12rem, 27vw, 20rem);
 		padding: 1rem;
 		position: relative;
 		background: var(--card-surface);
 		border-radius: 0.5rem;
 		overflow: hidden;
-		transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+		transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
 		box-shadow:
 			0 4px 6px -1px var(--shadow-medium),
 			0 2px 4px -1px var(--shadow-soft);
@@ -80,14 +80,14 @@ ProjectCard.style = css<typeof ProjectCard>`
 		pointer-events: none;
 	}
 
-	.media:after {
+	.media::after {
 		content: "";
 		position: absolute;
 		top: 0;
 		left: 0;
 		width: 100%;
 		height: 100%;
-		transition: opacity 0.25s ease;
+		transition: opacity 0.35s ease;
 	}
 
 	.project-image {
@@ -97,18 +97,18 @@ ProjectCard.style = css<typeof ProjectCard>`
 		object-fit: cover;
 		filter: saturate(0.9) brightness(0.5);
 		transform-origin: center;
-		transition: transform 0.25s ease, filter 0.25s ease;
+		transition: transform 0.35s ease, filter 0.35s ease;
 		will-change: transform, filter;
 	}
 
 	:scope.small {
 		min-height: 140px;
-		min-height: clamp(6rem, 20vw, 8rem);
+		min-height: clamp(8rem, 24vw, 12rem);
 	}
 
 	:scope.no-image {
 		min-height: 100px;
-		min-height: clamp(5rem, 18vw, 6rem);
+		min-height: clamp(6rem, 20vw, 8rem);
 		justify-content: center;
 		background-color: var(--card-overlay);
 	}
@@ -124,7 +124,7 @@ ProjectCard.style = css<typeof ProjectCard>`
 		background-color: var(--card-overlay);
 	}
 
-	:scope:before {
+	:scope::before {
 		content: "";
 		position: absolute;
 		top: 0;
@@ -133,18 +133,18 @@ ProjectCard.style = css<typeof ProjectCard>`
 		bottom: 0;
 		background: linear-gradient(
 			to top,
-			rgba(39, 34, 30, 1) 0%,
+			rgba(0, 0, 0, 0.9) 0%,
 			transparent 60%,
 			transparent 100%
 		);
-		backdrop-filter: blur(4px);
-		mask-image: linear-gradient(to top, black 0%, transparent 60%);
+		backdrop-filter: blur(2px);
+		mask-image: linear-gradient(to top, black 0%, black 20%, transparent 70%);
 		z-index: 1;
-		transition: opacity 0.25s ease;
+		transition: opacity 0.35s ease;
 		opacity: 1;
 	}
 
-	:scope:hover:before {
+	:scope:hover::before {
 		opacity: 0.8;
 	}
 
@@ -155,7 +155,7 @@ ProjectCard.style = css<typeof ProjectCard>`
 
 	.content {
 		transform: translateY(0.2rem);
-		transition: transform 0.25s ease;
+		transition: transform 0.35s ease;
 		margin: 0;
 		position: relative;
 		z-index: 2;
@@ -167,7 +167,7 @@ ProjectCard.style = css<typeof ProjectCard>`
 	}
 
 	:scope:hover .content {
-		transform: translateY(-0.05rem);
+		transform: translateY(0);
 	}
 
 	:scope:hover .name {
@@ -184,7 +184,7 @@ ProjectCard.style = css<typeof ProjectCard>`
 		margin: 0;
 		text-shadow: 0 2px 8px var(--shadow-strong);
 		line-height: 1.2;
-		transition: text-shadow 0.25s ease;
+		transition: text-shadow 0.35s ease;
 	}
 
 	.fill-link:hover .description {
@@ -202,8 +202,8 @@ ProjectCard.style = css<typeof ProjectCard>`
 		line-height: 1.4;
 		opacity: 0.95;
 		transition:
-			opacity 0.25s ease,
-			text-shadow 0.25s ease;
+			opacity 0.35s ease,
+			text-shadow 0.35s ease;
 	}
 
 	@media (prefers-reduced-motion: reduce) {
@@ -215,7 +215,7 @@ ProjectCard.style = css<typeof ProjectCard>`
 			transform: none;
 		}
 
-		.media:after {
+		.media::after {
 			transition: none;
 		}
 

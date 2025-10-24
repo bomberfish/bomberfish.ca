@@ -234,8 +234,8 @@ CopiedToast.style = css`
 		margin: 1rem;
 
 		animation:
-			fadein 0.25s,
-			fadeout 0.25s 1.75s;
+			fadein 0.35s,
+			fadeout 0.35s 1.75s;
 		animation-timing-function: cubic-bezier(.2,.2,.5,1);
 
 		font-weight: 520;

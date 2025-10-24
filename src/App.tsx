@@ -62,7 +62,7 @@ const App: Component<{}, {}> = function (cx) {
 
 		const step = () => {
 			if (!reduceMotionQuery.matches) {
-				const obedience = 0.07;
+				const obedience = 0.05;
 				velX = obedience * (targetX - posX);
 				velY = obedience * (targetY - posY);
 				posX += velX;

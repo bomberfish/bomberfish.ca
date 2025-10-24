@@ -36,7 +36,7 @@ ProjectList.style = css`
 	
 	.projects-group {
 		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+		grid-template-columns: repeat(auto-fit, minmax(30rem, 1fr));
 		gap: 0.7rem;
 		margin-top: 1rem;
 		grid-auto-flow: dense;
@@ -45,7 +45,7 @@ ProjectList.style = css`
 	@supports (grid-template-rows: masonry) {
 		.projects-group {
 			display: grid;
-			grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+			grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr));
 			grid-template-rows: masonry;
 			grid-auto-rows: masonry;
 			grid-auto-flow: dense;
@@ -56,7 +56,7 @@ ProjectList.style = css`
 		.projects-group {
 			display: masonry;
 			masonry-auto-flow: next;
-			grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+			grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr));
 		}
 	}
 `;
