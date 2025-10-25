@@ -154,11 +154,15 @@ ProjectCard.style = css<typeof ProjectCard>`
 	}
 
 	.content {
-		transform: translateY(0.2rem);
+		transform: translateY(0);
 		transition: transform 0.35s ease;
 		margin: 0;
 		position: relative;
 		z-index: 2;
+	}
+
+	p {
+		margin-bottom: 0;
 	}
 
 	*, .content, .name, .description {
@@ -167,7 +171,7 @@ ProjectCard.style = css<typeof ProjectCard>`
 	}
 
 	:scope:hover .content {
-		transform: translateY(0);
+		transform: translateY(-0.075rem);
 	}
 
 	:scope:hover .name {
