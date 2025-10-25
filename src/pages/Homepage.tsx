@@ -163,7 +163,7 @@ const Homepage: Component<{}, {rotation: number}> = function () {
 					</section>
 					<section id="footer">
 						<Link href="/siteinfo" class="router-link">
-							<subt>{"bomberfish.ca v" + __APP_VERSION__}</subt>
+							<subt>{"bomberfish.ca v" + __APP_VERSION__ + " (" + __COMMIT_HASH__ + ", " + __BUILD_DATE__ + ")"}</subt>
 						</Link>
 					</section>
 				</article>

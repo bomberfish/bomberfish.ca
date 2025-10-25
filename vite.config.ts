@@ -4,6 +4,7 @@ import { literalsHtmlCssMinifier } from "@literals/rollup-plugin-html-css-minifi
 import legacy from "@vitejs/plugin-legacy";
 import postCssPresetEnv from "postcss-preset-env";
 import autoprefixer from "autoprefixer";
+import { execSync } from "child_process";
 
 export default defineConfig({
 	plugins: [
@@ -19,6 +20,8 @@ export default defineConfig({
 	],
 	define: {
 		__APP_VERSION__: JSON.stringify(process.env.npm_package_version),
+		__BUILD_DATE__: JSON.stringify(new Date().toISOString()),
+		__COMMIT_HASH__: JSON.stringify(execSync('git rev-parse --short HEAD').toString().trim()),
 	},
 	build: {
 		target: "es2015",
@@ -31,7 +34,6 @@ export default defineConfig({
 			},
 			compress: {
 				arguments: true,
-				passes: 3,
 				unsafe: true,
 				unsafe_proto: true,
 				unsafe_math: true,
