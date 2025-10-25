@@ -80,6 +80,10 @@
 	}
 }
 
+::selection {
+	background: hsla(var(--accent-hsl), 0.5);
+}
+
 body {
 	font-family: "Adwaita Sans", sans-serif;
 	font-family: var(--font-body);
@@ -150,6 +154,28 @@ main {
 main.will-navigate {
 	transform: translateY(0.7rem);
 	opacity: 0;
+}
+
+header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	flex-wrap: wrap;
+}
+
+@media (orientation: portrait) {
+	body {
+		padding: 0;
+		justify-content: flex-start;
+	}
+}
+
+app {
+	max-width: 100%;
+}
+
+main > * {
+	width: 100%;
 }
 
 @starting-style {

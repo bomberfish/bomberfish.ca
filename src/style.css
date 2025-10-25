@@ -2,21 +2,6 @@
 	background: hsla(var(--accent-hsl), 0.5);
 }
 
-@media (orientation: portrait) {
-	body {
-		padding: 0;
-		justify-content: flex-start;
-	}
-}
-
-app {
-	max-width: 100%;
-}
-
-main > * {
-	width: 100%;
-}
-
 img {
 	user-select: none;
 	-webkit-user-select: none;
