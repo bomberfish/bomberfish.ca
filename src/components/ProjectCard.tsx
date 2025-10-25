@@ -131,6 +131,8 @@ ProjectCard.style = css<typeof ProjectCard>`
 		left: 0;
 		right: 0;
 		bottom: 0;
+		width: 110%;
+		height: 110%;
 		background: linear-gradient(
 			to top,
 			rgba(0, 0, 0, 0.9) 0%,
@@ -148,7 +150,7 @@ ProjectCard.style = css<typeof ProjectCard>`
 		opacity: 0.8;
 	}
 
-	:scope:hover .media img {
+	:scope:hover .project-image {
 		transform: scale(1.01);
 		filter: saturate(1.25) brightness(0.9);
 	}
@@ -159,6 +161,7 @@ ProjectCard.style = css<typeof ProjectCard>`
 		margin: 0;
 		position: relative;
 		z-index: 2;
+		
 	}
 
 	p {
@@ -180,6 +183,13 @@ ProjectCard.style = css<typeof ProjectCard>`
 			0 -0.5px 1px rgba(0, 0, 0, 0.2);
 	}
 
+	.fill-link:hover .description {
+		text-shadow:
+			0 1px 4px rgba(0, 0, 0, 0.4),
+			0 -0.5px 1px rgba(0, 0, 0, 0.2);
+		opacity: 1;
+	}
+
 	.name {
 		font-size: 20px;
 		font-size: clamp(1.1rem, 1.2vw + 1rem, 1.5rem);
@@ -189,13 +199,6 @@ ProjectCard.style = css<typeof ProjectCard>`
 		text-shadow: 0 2px 8px var(--shadow-strong);
 		line-height: 1.2;
 		transition: text-shadow 0.35s ease;
-	}
-
-	.fill-link:hover .description {
-		text-shadow:
-			0 1px 4px rgba(0, 0, 0, 0.4),
-			0 -0.5px 1px rgba(0, 0, 0, 0.2);
-		opacity: 1;
 	}
 
 	.description {
@@ -208,6 +211,24 @@ ProjectCard.style = css<typeof ProjectCard>`
 		transition:
 			opacity 0.35s ease,
 			text-shadow 0.35s ease;
+	}
+
+	@media (prefers-color-scheme: dark) {
+		.name {
+			color: var(--text);
+		}
+
+		.description {
+			color: var(--subtext1);
+		}
+
+		.project-image {
+			filter: saturate(1.1) brightness(0.8);
+		}
+
+		:scope:hover .project-image {
+			filter: saturate(1.3) brightness(1);
+		}
 	}
 
 	@media (prefers-reduced-motion: reduce) {

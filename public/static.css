@@ -2,40 +2,37 @@
 	--main-hue: 18;
 
 	--base-hsl: var(--main-hue), 25%, 96.5%;
-	--base: hsl(var(--base-hsl));
-
 	--surface0-hsl: var(--main-hue), 50%, 95%;
-	--surface0: hsl(var(--surface0-hsl));
 	--surface1-hsl: var(--main-hue), 40%, 92.5%;
-	--surface1: hsl(var(--surface1-hsl));
 	--surface2-hsl: var(--main-hue), 45%, 90%;
-	--surface2: hsl(var(--surface2-hsl));
 	--surface3-hsl: var(--main-hue), 35%, 87.5%;
-	--surface3: hsl(var(--surface3-hsl));
 	--surface4-hsl: var(--main-hue), 30%, 85%;
-	--surface4: hsl(var(--surface4-hsl));
 	--surface5-hsl: var(--main-hue), 20%, 82.5%;
-	--surface5: hsl(var(--surface5-hsl));
-
 	--overlay0-hsl: var(--main-hue), 20%, 70%;
-	--overlay0: hsl(var(--overlay0-hsl));
 	--overlay1-hsl: var(--main-hue), 25%, 60%;
-	--overlay1: hsl(var(--overlay1-hsl));
 	--overlay2-hsl: var(--main-hue), 30%, 50%;
-	--overlay2: hsl(var(--overlay2-hsl));
 	--overlay3-hsl: var(--main-hue), 35%, 40%;
-	--overlay3: hsl(var(--overlay3-hsl));
-
 	--text-hsl: var(--main-hue), 40%, 25%;
-	--text: hsl(var(--text-hsl));
 	--subtext0-hsl: var(--main-hue), 20%, 35%;
-	--subtext0: hsl(var(--subtext0-hsl));
 	--subtext1-hsl: var(--main-hue), 30%, 45%;
-	--subtext1: hsl(var(--subtext1-hsl));
 	--subtext2-hsl: var(--main-hue), 25%, 55%;
-	--subtext2: hsl(var(--subtext2-hsl));
-
 	--accent-hsl: var(--main-hue), 60%, 70%;
+
+	--base: hsl(var(--base-hsl));
+	--surface0: hsl(var(--surface0-hsl));
+	--surface1: hsl(var(--surface1-hsl));
+	--surface2: hsl(var(--surface2-hsl));
+	--surface3: hsl(var(--surface3-hsl));
+	--surface4: hsl(var(--surface4-hsl));
+	--surface5: hsl(var(--surface5-hsl));
+	--overlay0: hsl(var(--overlay0-hsl));
+	--overlay1: hsl(var(--overlay1-hsl));
+	--overlay2: hsl(var(--overlay2-hsl));
+	--overlay3: hsl(var(--overlay3-hsl));
+	--text: hsl(var(--text-hsl));
+	--subtext0: hsl(var(--subtext0-hsl));
+	--subtext1: hsl(var(--subtext1-hsl));
+	--subtext2: hsl(var(--subtext2-hsl));
 	--accent: hsl(var(--accent-hsl));
 
 	--bgscale: 1;
@@ -55,11 +52,40 @@
 	--text-shadow-soft: hsla(var(--surface0-hsl), 0.65);
 }
 
+@media (prefers-color-scheme: dark) {
+	:root {
+		--main-hue: 275;
+
+		--base-hsl: var(--main-hue), 25%, 4.5%;
+		--surface0-hsl: var(--main-hue), 45%, 7.5%;
+		--surface1-hsl: var(--main-hue), 35%, 12.5%;
+		--surface2-hsl: var(--main-hue), 40%, 15%;
+		--surface3-hsl: var(--main-hue), 30%, 17.5%;
+		--surface4-hsl: var(--main-hue), 25%, 20%;
+		--surface5-hsl: var(--main-hue), 15%, 22.5%;
+		--overlay0-hsl: var(--main-hue), 15%, 25%;
+		--overlay1-hsl: var(--main-hue), 20%, 30%;
+		--overlay2-hsl: var(--main-hue), 25%, 35%;
+		--overlay3-hsl: var(--main-hue), 30%, 40%;
+		--text-hsl: var(--main-hue), 30%, 95%;
+		--subtext0-hsl: var(--main-hue), 30%, 90%;
+		--subtext1-hsl: var(--main-hue), 35%, 87.5%;
+		--subtext2-hsl: var(--main-hue), 25%, 77.5%;
+
+		--shadow-soft: hsla(var(--text-hsl), 0.0075);
+		--shadow-medium: hsla(var(--text-hsl), 0.02);
+		--shadow-strong: hsla(var(--text-hsl), 0.05);
+		--shadow-ultra: hsla(var(--text-hsl), 0.07);
+		--shadow-highlight: hsla(var(--surface0-hsl), 0.3);
+	}
+}
+
 body {
 	font-family: "Adwaita Sans", sans-serif;
 	font-family: var(--font-body);
 	background: var(--base);
 	color: var(--text);
+	color-scheme: light dark;
 	line-height: 1.8;
 	display: flex;
 	flex-direction: column;

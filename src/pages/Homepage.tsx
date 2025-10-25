@@ -222,12 +222,19 @@ Homepage.style = css`
 		object-fit: cover;
 		z-index: 1;
 	}
+
 	.pfp.rear {
 		filter: blur(32px) contrast(1.4) brightness(1.1);
 		transform: scale(1.1);
 		z-index: 0;
 		box-shadow: none;
 		display: initial!important;
+	}
+
+	@media (prefers-color-scheme: dark) {
+		.pfp.rear {
+			filter: blur(32px) contrast(1.6) brightness(0.3) opacity(0.6);
+		}
 	}
 
 	@media (max-width: 960px) or (orientation: portrait) {
