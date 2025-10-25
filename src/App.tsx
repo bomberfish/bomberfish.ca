@@ -8,6 +8,7 @@ import { projects } from "./Projects";
 import ProjectView from "./pages/ProjectView";
 import ProjectList from "./pages/ProjectList";
 import { AboutView } from "./pages/AboutView";
+import Oneko from "./Oneko";
 
 let page: Stateful<{
 	url?: string;
@@ -137,6 +138,7 @@ const App: Component<{}, {}> = function (cx) {
 					<Route path={route.path} show={route.show} />
 				))}
 			</Router>
+			<Oneko />
 		</app>
 	);
 };
