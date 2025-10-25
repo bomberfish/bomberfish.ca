@@ -1,7 +1,3 @@
-::selection {
-	background: hsla(var(--accent-hsl), 0.5);
-}
-
 img {
 	user-select: none;
 	-webkit-user-select: none;
@@ -50,6 +46,7 @@ img {
 	z-index: 1000;
 	box-shadow: 0 2px 8px var(--tooltip-shadow);
 	max-width: 40rem;
+	width: max-content;
 	text-align: center;
 	opacity: 0;
 	visibility: hidden;

@@ -2,9 +2,30 @@ import { Component, css } from "dreamland/core";
 import Header from "../components/Header";
 import { WebButton, ButtonList, CopiedToast } from "../components/Buttons";
 import { Link } from "dreamland/router";
+import humanizeDuration from "humanize-duration";
 
-const Homepage: Component<{}, {rotation: number}> = function () {
+const Homepage: Component<{}, {
+	rotation: number,
+	elapsed: string
+}> = function (cx) {
 	this.rotation = 0;
+	this.elapsed = `built on ${new Date(__BUILD_DATE__).toLocaleDateString()}`;
+	
+	cx.mount = () => {
+		const buildDate = new Date(__BUILD_DATE__);
+		const updateElapsed = () => {
+			const now = new Date();
+			const diff = now.getTime() - buildDate.getTime();
+			this.elapsed = "built " + humanizeDuration(diff , {round: true}) + " ago";
+		};
+		updateElapsed();
+		const intervalId = setInterval(updateElapsed, 1000);
+
+		return () => {
+			clearInterval(intervalId);
+		};
+	}
+
 	return (
 		<main>
 			<Header />
@@ -161,11 +182,14 @@ const Homepage: Component<{}, {rotation: number}> = function () {
 						{/* <br /> */}
 						<ButtonList />
 					</section>
-					<section id="footer">
-						<Link href="/siteinfo" class="router-link">
-							<subt>{"bomberfish.ca v" + __APP_VERSION__ + " (" + __COMMIT_HASH__ + ", " + __BUILD_DATE__ + ")"}</subt>
-						</Link>
-					</section>
+					<footer>
+						<span class="tooltip-wrapper">
+							<Link href="/siteinfo" class="router-link">
+								<subt>{"bomberfish.ca v" + __APP_VERSION__ + " (" + __COMMIT_HASH__ + ")"}</subt>
+							</Link>
+							<span class="tooltip">{use(this.elapsed)}</span>
+						</span>
+					</footer>
 				</article>
 			</div>
 			<div></div>
@@ -263,7 +287,7 @@ Homepage.style = css`
 		width: min(68rem, 100vw - 2rem);
 	}
 
-	#footer {
+	footer {
 		margin-top: 1.25rem;
 		font-size: 0.875rem;
 	}

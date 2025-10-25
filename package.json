@@ -12,6 +12,7 @@
 	},
 	"devDependencies": {
 		"@literals/rollup-plugin-html-css-minifier": "^3.0.1",
+		"@types/humanize-duration": "^3.27.4",
 		"@types/node": "^24.9.1",
 		"@vitejs/plugin-legacy": "^7.2.1",
 		"cssnano": "^7.1.1",
@@ -27,6 +28,7 @@
 	"dependencies": {
 		"autoprefixer": "^10.4.21",
 		"dreamland": "^0.1.1",
+		"humanize-duration": "^3.33.1",
 		"postcss-preset-env": "^10.4.0"
 	}
 }
