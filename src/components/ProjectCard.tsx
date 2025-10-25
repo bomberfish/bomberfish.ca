@@ -10,7 +10,7 @@ const ProjectCard: Component<
 	return (
 		<div on:click={(e: MouseEvent) => {
 				console.log(e.target);
-				if ((e.target as HTMLElement).tagName.toLowerCase() !== "div") {
+				if ((e.target as HTMLElement).tagName.toLowerCase() === "a") {
 					// let the link handle the click if one was clicked
 					return;
 				}
