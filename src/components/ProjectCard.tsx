@@ -8,27 +8,27 @@ const ProjectCard: Component<
 	{}
 > = function () {
 	return (
-		<div class={`project-card card interactable ${this.size}`} class:no-image={!this.project.img} on:click={(e: MouseEvent) => {
-			console.log(e.target);
-			if ((e.target as HTMLElement).tagName.toLowerCase() !== "div") {
-				// let the link handle the click if one was clicked
-				return;
-			}
-			router.navigate(`projects/${this.project.lastPathComponent}`);
-		}}>
-			{this.project.img && (
-				<div class="media" aria-hidden="true">
-					<img src={this.project.img} alt="" loading="lazy" class="project-image" />
-				</div>
-			)}
-			<div class="fill-link">
-			<Link href={`projects/${this.project.lastPathComponent}`} class="router-link">
-				<div class="content">
-					<h3 class="name">{this.project.title}</h3>
-					<p class="description">{this.project.blurb}</p>
+		<div on:click={(e: MouseEvent) => {
+				console.log(e.target);
+				if ((e.target as HTMLElement).tagName.toLowerCase() !== "div") {
+					// let the link handle the click if one was clicked
+					return;
+				}
+				router.navigate(`projects/${this.project.lastPathComponent}`);
+			}}>
+			<Link href={`projects/${this.project.lastPathComponent}`}  class={`project-card card interactable ${this.size}`} class:no-image={!this.project.img}>
+				{this.project.img && (
+					<div class="media" aria-hidden="true">
+						<img src={this.project.img} alt="" loading="lazy" class="project-image" />
+					</div>
+				)}
+				<div class="fill-link">
+					<div class="content">
+						<h3 class="name">{this.project.title}</h3>
+						<p class="description">{this.project.blurb}</p>
+					</div>
 				</div>
 			</Link>
-			</div>
 		</div>
 	);
 };
@@ -57,7 +57,7 @@ ProjectCard.style = css<typeof ProjectCard>`
 		color: inherit;
 	}	
 
-	:scope > .fill-link {
+	.fill-link {
 		display: flex;
 		flex-direction: column;
 		justify-content: flex-end;
