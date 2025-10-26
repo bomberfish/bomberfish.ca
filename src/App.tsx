@@ -121,7 +121,6 @@ const App: Component<{}, {}> = function (cx) {
 
 	const routes = [
 		{ path: undefined, show: <Homepage /> },
-		{ path: "member", show: <NotFoundView /> },
 		{ path: "projects", show: <ProjectList /> },
 		...projects.map((project) => ({
 			path: `projects/${project.lastPathComponent}`,

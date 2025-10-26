@@ -142,18 +142,19 @@ main {
     align-items: center;
     justify-content: space-between;
 
-	transform: translateY(0) rotate3d(1, 0, 0, 0deg);
+	transform: translateY(0);
 	opacity: 1;
 	transition:
 		0.2s transform, 0.2s opacity;
-	perspective: 1000px;
 	transform-origin: bottom center;
 	transition-timing-function: cubic-bezier(.2,.2,.8,1);
 }
 
-main.will-navigate {
-	transform: translateY(0.7rem);
-	opacity: 0;
+@starting-style {
+	main {
+		transform: translateY(0.7rem);
+		opacity: 0;
+	}
 }
 
 header {
@@ -176,13 +177,6 @@ app {
 
 main > * {
 	width: 100%;
-}
-
-@starting-style {
-	main {
-		transform: translateY(0.7rem) rotate3d(1, 0, 0, 7.5deg);
-		opacity: 0.1;
-	}
 }
 
 h1 {
