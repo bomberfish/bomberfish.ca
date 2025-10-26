@@ -1,6 +1,8 @@
 html {
 	--main-hue: 20;
 
+	--grid-lines: hsla(var(--main-hue), 40%, 92.5%);
+
 	--base-hsl: var(--main-hue), 25%, 96.5%;
 	--surface0-hsl: var(--main-hue), 40%, 92%;
 	--surface1-hsl: var(--main-hue), 50%, 90%;
@@ -56,6 +58,8 @@ html {
 	html {
 		--main-hue: 271;
 
+		--grid-lines: hsla(var(--main-hue), 77%, 12%);
+
 		--base-hsl: var(--main-hue), 70%, 4%;
 		--surface0-hsl: var(--main-hue), 70%, 12.5%;
 		--surface1-hsl: var(--main-hue), 60%, 12.5%;
@@ -97,12 +101,12 @@ body {
 	align-items: center;
 	min-height: 100vh;
 	background-image: 
-		linear-gradient(to right, var(--surface0) 1px, transparent 1px),
-		linear-gradient(to bottom, var(--surface0) 1px, transparent 1px);
+		linear-gradient(to right, var(--grid-lines) 1px, transparent 1px),
+		linear-gradient(to bottom, var(--grid-lines) 1px, transparent 1px);
 		/* radial-gradient(var(--surface0) calc(var(--bgscale) * var(--bgscale) * 1px),transparent 0); */
 	/* background-size: calc(20px * 1) calc(20px * 1);
 	background-size: calc(20px * var(--bgscale)) calc(20px * var(--bgscale)); */
-	background-size: 25px 25px;
+	background-size: 30px 30px;
 	background-position: 0px 0px;
 	background-position: var(--bgmoveX) var(--bgmoveY);
 	background-repeat: repeat;
