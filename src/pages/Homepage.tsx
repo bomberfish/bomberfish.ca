@@ -165,7 +165,7 @@ const Homepage: Component<{}, {
 							<WebButton
 								src="/button.gif"
 								title="Click to copy my button! (HTML code)"
-								action={(e: MouseEvent) => {
+								on:click={(e: MouseEvent) => {
 									e.preventDefault();
 									try {
 										navigator.clipboard.writeText('<a href="https://bomberfish.ca">\n<img src="https://bomberfish.ca/button.gif" alt="BomberFish" title="BomberFish" />\n</a>');
