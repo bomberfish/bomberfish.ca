@@ -1,4 +1,4 @@
-:root {
+html {
 	--main-hue: 18;
 
 	--base-hsl: var(--main-hue), 25%, 96.5%;
@@ -53,7 +53,7 @@
 }
 
 @media (prefers-color-scheme: dark) {
-	:root {
+	html {
 		--main-hue: 275;
 
 		--base-hsl: var(--main-hue), 25%, 4.5%;

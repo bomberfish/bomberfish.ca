@@ -6,7 +6,6 @@ import { mkdir, readFile, rm, writeFile } from "node:fs/promises";
 import postcss from 'postcss';
 import autoprefixer from 'autoprefixer';
 import postCssPresetEnv from 'postcss-preset-env';
-import oldie from 'oldie';
 import cssnano from 'cssnano';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -38,7 +37,6 @@ const result = await postcss([
 		browsers: [">= 0.00%"],
 		stage: 0
 	}),
-	oldie(),
 	autoprefixer({
 		overrideBrowserslist: [">= 0.00%"],
 		grid: "autoplace"
