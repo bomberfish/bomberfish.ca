@@ -1,13 +1,13 @@
 html {
-	--main-hue: 18;
+	--main-hue: 20;
 
 	--base-hsl: var(--main-hue), 25%, 96.5%;
-	--surface0-hsl: var(--main-hue), 50%, 95%;
-	--surface1-hsl: var(--main-hue), 40%, 92.5%;
-	--surface2-hsl: var(--main-hue), 45%, 90%;
-	--surface3-hsl: var(--main-hue), 35%, 87.5%;
-	--surface4-hsl: var(--main-hue), 30%, 85%;
-	--surface5-hsl: var(--main-hue), 20%, 82.5%;
+	--surface0-hsl: var(--main-hue), 40%, 92%;
+	--surface1-hsl: var(--main-hue), 50%, 90%;
+	--surface2-hsl: var(--main-hue), 45%, 87.5%;
+	--surface3-hsl: var(--main-hue), 35%, 85%;
+	--surface4-hsl: var(--main-hue), 30%, 82.5%;
+	--surface5-hsl: var(--main-hue), 20%, 80%;
 	--overlay0-hsl: var(--main-hue), 20%, 70%;
 	--overlay1-hsl: var(--main-hue), 25%, 60%;
 	--overlay2-hsl: var(--main-hue), 30%, 50%;
@@ -16,7 +16,7 @@ html {
 	--subtext0-hsl: var(--main-hue), 20%, 35%;
 	--subtext1-hsl: var(--main-hue), 30%, 45%;
 	--subtext2-hsl: var(--main-hue), 25%, 55%;
-	--accent-hsl: var(--main-hue), 60%, 70%;
+	--accent-hsl: var(--main-hue), 77%, 70%;
 
 	--base: hsl(var(--base-hsl));
 	--surface0: hsl(var(--surface0-hsl));
@@ -35,7 +35,7 @@ html {
 	--subtext2: hsl(var(--subtext2-hsl));
 	--accent: hsl(var(--accent-hsl));
 
-	--bgscale: 1;
+	/* --bgscale: 1; */
 	--bgmoveX: 0px;
 	--bgmoveY: 0px;
 
@@ -54,23 +54,23 @@ html {
 
 @media (prefers-color-scheme: dark) {
 	html {
-		--main-hue: 275;
+		--main-hue: 271;
 
-		--base-hsl: var(--main-hue), 25%, 4.5%;
-		--surface0-hsl: var(--main-hue), 45%, 7.5%;
-		--surface1-hsl: var(--main-hue), 35%, 12.5%;
-		--surface2-hsl: var(--main-hue), 40%, 15%;
-		--surface3-hsl: var(--main-hue), 30%, 17.5%;
-		--surface4-hsl: var(--main-hue), 25%, 20%;
-		--surface5-hsl: var(--main-hue), 15%, 22.5%;
-		--overlay0-hsl: var(--main-hue), 15%, 25%;
-		--overlay1-hsl: var(--main-hue), 20%, 30%;
-		--overlay2-hsl: var(--main-hue), 25%, 35%;
-		--overlay3-hsl: var(--main-hue), 30%, 40%;
+		--base-hsl: var(--main-hue), 70%, 4%;
+		--surface0-hsl: var(--main-hue), 70%, 12.5%;
+		--surface1-hsl: var(--main-hue), 60%, 12.5%;
+		--surface2-hsl: var(--main-hue), 50%, 15%;
+		--surface3-hsl: var(--main-hue), 55%, 17.5%;
+		--surface4-hsl: var(--main-hue), 60%, 20%;
+		--surface5-hsl: var(--main-hue), 65%, 22.5%;
+		--overlay0-hsl: var(--main-hue), 45%, 30%;
+		--overlay1-hsl: var(--main-hue), 40%, 32.5%;
+		--overlay2-hsl: var(--main-hue), 35%, 35%;
+		--overlay3-hsl: var(--main-hue), 20%, 37.5%;
 		--text-hsl: var(--main-hue), 30%, 95%;
-		--subtext0-hsl: var(--main-hue), 30%, 90%;
-		--subtext1-hsl: var(--main-hue), 35%, 87.5%;
-		--subtext2-hsl: var(--main-hue), 25%, 77.5%;
+		--subtext0-hsl: var(--main-hue), 40%, 90%;
+		--subtext1-hsl: var(--main-hue), 15%, 70%;
+		--subtext2-hsl: var(--main-hue), 12.5%, 75%;
 
 		--shadow-soft: hsla(var(--text-hsl), 0.0075);
 		--shadow-medium: hsla(var(--text-hsl), 0.02);
@@ -81,7 +81,7 @@ html {
 }
 
 ::selection {
-	background: hsla(var(--accent-hsl), 0.5);
+	background: hsla(var(--accent-hsl), 0.2);
 }
 
 body {
@@ -96,12 +96,13 @@ body {
 	justify-content: flex-start;
 	align-items: center;
 	min-height: 100vh;
-	background-image: radial-gradient(
-		var(--surface1) calc(var(--bgscale) * var(--bgscale) * 1.5px),
-		transparent 0
-	);
-	background-size: calc(20px * 1) calc(20px * 1);
-	background-size: calc(20px * var(--bgscale)) calc(20px * var(--bgscale));
+	background-image: 
+		linear-gradient(to right, var(--surface0) 1px, transparent 1px),
+		linear-gradient(to bottom, var(--surface0) 1px, transparent 1px);
+		/* radial-gradient(var(--surface0) calc(var(--bgscale) * var(--bgscale) * 1px),transparent 0); */
+	/* background-size: calc(20px * 1) calc(20px * 1);
+	background-size: calc(20px * var(--bgscale)) calc(20px * var(--bgscale)); */
+	background-size: 25px 25px;
 	background-position: 0px 0px;
 	background-position: var(--bgmoveX) var(--bgmoveY);
 	background-repeat: repeat;
