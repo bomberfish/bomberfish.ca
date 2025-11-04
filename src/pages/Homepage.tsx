@@ -1,5 +1,5 @@
 import { Component, css } from "dreamland/core";
-import Header from "../components/Header";
+import Header, { TopNav } from "../components/Header";
 import { WebButton, ButtonList, CopiedToast } from "../components/Buttons";
 import { Link } from "dreamland/router";
 import humanizeDuration from "humanize-duration";
@@ -28,14 +28,16 @@ const Homepage: Component<{}, {
 
 	return (
 		<main>
-			<Header />
-			<div class="content-with-image">
-				<div class="img-wrapper" style={use(this.rotation).map(r => `transform: rotate(${r}deg);`)} on:click={() => {
-					this.rotation += 1440;
-				}}>
-					<img src="/me.jpg" class="pfp rear" alt="" aria-hidden="true" hidden />
-					<img src="/me.jpg" class="pfp" title="my profile picture! :3" />
-				</div>
+			{/* <Header /> */}
+			<header class="frontpage-header">
+			<div class="title">
+				<a href="/me.png" target="_blank">
+					<img src="/pfp-display.gif" class="pfp" title="my profile picture. click to view full color version." />
+				</a>
+				<h1>bomber<br/>fish.ca</h1>
+			</div>
+			<TopNav />
+			</header>
 				<article>
 					<h2>about me</h2>
 					<div>
@@ -191,7 +193,6 @@ const Homepage: Component<{}, {
 						</span>
 					</footer>
 				</article>
-			</div>
 			<div></div>
 		</main>
 	);
@@ -206,16 +207,6 @@ Homepage.style = css`
 		max-width: calc(100% - 20rem);
 	}
 
-	.content-with-image {
-		display: flex;
-		flex-direction: row-reverse;
-		align-items: flex-start;
-		justify-content: space-between;
-		gap: 1rem;
-		flex-wrap: wrap;
-		height: min-content;
-	}
-
 	.buttons > div {
 		display: flex; 
 		align-items: center; 
@@ -223,49 +214,23 @@ Homepage.style = css`
 		margin-bottom: 0.5rem;
 	}
 
-	.img-wrapper {
-		aspect-ratio: 1;
-		position: relative;
-		height: 160px;
-		height: clamp(10rem, 22vw, 14rem);
-		width: 160px;
-		width: auto;
-
-		transition: transform 0.5s cubic-bezier(0.3, 0, 0.6, 1);
-		transform-origin: center center;
-		cursor: pointer;
-	}
 	.pfp {
-		aspect-ratio: 1/1;
-		height: 160px;
-		height: clamp(10rem, 22vw, 14rem);
+		/* aspect-ratio: 1/1; */
+		/* width: clamp(30rem, 15vw, 8rem); */
+		height: 100%;
+		max-width: 100%;
 		z-index: 1;
-		position: absolute;
+		/* position: absolute;
 		top: 0;
 		left: 0;
-		object-fit: cover;
+		object-fit: cover; */
 		z-index: 1;
-	}
-
-	.pfp.rear {
-		filter: blur(32px) contrast(1.4) brightness(1.1);
-		transform: scale(1.1);
-		z-index: 0;
-		box-shadow: none;
-		display: initial!important;
-	}
-
-	@media (prefers-color-scheme: dark) {
-		.pfp.rear {
-			filter: blur(32px) contrast(1.6) brightness(0.3) opacity(0.6);
-		}
+		image-rendering: pixelated;
 	}
 
 	@media (max-width: 960px) or (orientation: portrait) {
-		.content-with-image {
+		.title {
 			flex-direction: column;
-			align-items: center;
-			justify-content: center;
 		}
 
 		article {
@@ -284,7 +249,7 @@ Homepage.style = css`
 	}
 
 	#buttons {
-		width: min(68rem, 100vw - 2rem);
+		width: 100%;
 	}
 
 	footer {

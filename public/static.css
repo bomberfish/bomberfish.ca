@@ -1,4 +1,35 @@
 html {
+	--base: hsl(var(--base-hsl));
+	--surface0: hsl(var(--surface0-hsl));
+	--surface1: hsl(var(--surface1-hsl));
+	--surface2: hsl(var(--surface2-hsl));
+	--surface3: hsl(var(--surface3-hsl));
+	--surface4: hsl(var(--surface4-hsl));
+	--surface5: hsl(var(--surface5-hsl));
+	--overlay0: hsl(var(--overlay0-hsl));
+	--overlay1: hsl(var(--overlay1-hsl));
+	--overlay2: hsl(var(--overlay2-hsl));
+	--overlay3: hsl(var(--overlay3-hsl));
+	--supertext: hsl(var(--supertext-hsl));
+	--text: hsl(var(--text-hsl));
+	--subtext0: hsl(var(--subtext0-hsl));
+	--subtext1: hsl(var(--subtext1-hsl));
+	--subtext2: hsl(var(--subtext2-hsl));
+	--accent: hsl(var(--accent-hsl));
+
+	--bgmoveX: 0px;
+	--bgmoveY: 0px;
+
+
+	--tooltip-shadow: hsla(var(--overlay3-hsl), 0.35);
+	--image-ring: hsla(var(--surface1-hsl), 0.80);
+	--text-shadow-soft: hsla(var(--surface1-hsl), 0.65);
+	--card-overlay: color-mix(in srgb, var(--overlay3) 70%, var(--text) 30%);
+	--card-surface: hsla(var(--surface1-hsl), 0.90);
+	--card-surface-hover: hsla(var(--surface1-hsl), 0.96);
+}
+
+/* html {
 	--main-hue: 20;
 
 	--grid-lines: hsla(var(--main-hue), 40%, 92.5%);
@@ -20,95 +51,86 @@ html {
 	--subtext2-hsl: var(--main-hue), 25%, 55%;
 	--accent-hsl: var(--main-hue), 77%, 70%;
 
-	--base: hsl(var(--base-hsl));
-	--surface0: hsl(var(--surface0-hsl));
-	--surface1: hsl(var(--surface1-hsl));
-	--surface2: hsl(var(--surface2-hsl));
-	--surface3: hsl(var(--surface3-hsl));
-	--surface4: hsl(var(--surface4-hsl));
-	--surface5: hsl(var(--surface5-hsl));
-	--overlay0: hsl(var(--overlay0-hsl));
-	--overlay1: hsl(var(--overlay1-hsl));
-	--overlay2: hsl(var(--overlay2-hsl));
-	--overlay3: hsl(var(--overlay3-hsl));
-	--text: hsl(var(--text-hsl));
-	--subtext0: hsl(var(--subtext0-hsl));
-	--subtext1: hsl(var(--subtext1-hsl));
-	--subtext2: hsl(var(--subtext2-hsl));
-	--accent: hsl(var(--accent-hsl));
-
-	/* --bgscale: 1; */
-	--bgmoveX: 0px;
-	--bgmoveY: 0px;
-
-	--card-overlay: color-mix(in srgb, var(--overlay3) 70%, var(--text) 30%);
-	--card-surface: hsla(var(--surface0-hsl), 0.90);
-	--card-surface-hover: hsla(var(--surface0-hsl), 0.96);
+	
 	--shadow-soft: hsla(var(--overlay0-hsl), 0.25);
 	--shadow-medium: hsla(var(--overlay0-hsl), 0.40);
 	--shadow-strong: hsla(var(--overlay0-hsl), 0.55);
 	--shadow-ultra: hsla(var(--overlay0-hsl), 0.65);
 	--shadow-highlight: hsla(var(--surface0-hsl), 0.70);
-	--tooltip-shadow: hsla(var(--overlay3-hsl), 0.35);
-	--image-ring: hsla(var(--surface0-hsl), 0.80);
-	--text-shadow-soft: hsla(var(--surface0-hsl), 0.65);
-}
+} */
 
-@media (prefers-color-scheme: dark) {
+/* @media (prefers-color-scheme: dark) { */
 	html {
-		--main-hue: 271;
+		/* --main-hue: 271; */
+		--main-hue: 0;
 
-		--grid-lines: hsla(var(--main-hue), 77%, 12%);
+		--base-hsl: 0, 0%, 0%; /* hsl(0deg 0% 0%) */
+		--surface0-hsl: var(--main-hue), 100%, 5%;
+		--surface1-hsl: 356.84, 73.08%, 10.2%;
+		--surface2-hsl: 356.92, 90.7%, 16.86%;
+		--surface3-hsl: 357.09, 78.63%, 25.69%;
+		--surface4-hsl: 357.37, 73.26%, 36.67%;
+		--surface5-hsl: 356.81, 75.81%, 48.63%;
+		--surface6-hsl: 356.81, 70%, 56%; /* extended a touch above surface4 for highlights */
+		--overlay0-hsl: 356.92, 90.7%, 16.86%;
+		--overlay1-hsl: 357.09, 78.63%, 25.69%;
+		--overlay2-hsl: 357.37, 73.26%, 36.67%;
+		--overlay3-hsl: 356.81, 75.81%, 48.63%;
+		--supertext-hsl: 356.05, 100%, 96%;
+		--text-hsl: 356.05, 100%, 85.1%;
+		--subtext0-hsl: 356.05, 95%, 80%;
+		--subtext1-hsl: 356.05, 85%, 72%;
+		--subtext2-hsl: 356.05, 70%, 64%;
+		--accent-hsl: 356.81, 75.81%, 48.63%;
 
-		--base-hsl: var(--main-hue), 70%, 4%;
-		--surface0-hsl: var(--main-hue), 70%, 12.5%;
-		--surface1-hsl: var(--main-hue), 60%, 12.5%;
-		--surface2-hsl: var(--main-hue), 50%, 15%;
-		--surface3-hsl: var(--main-hue), 55%, 17.5%;
-		--surface4-hsl: var(--main-hue), 60%, 20%;
-		--surface5-hsl: var(--main-hue), 65%, 22.5%;
-		--overlay0-hsl: var(--main-hue), 45%, 30%;
-		--overlay1-hsl: var(--main-hue), 40%, 32.5%;
-		--overlay2-hsl: var(--main-hue), 35%, 35%;
-		--overlay3-hsl: var(--main-hue), 20%, 37.5%;
-		--text-hsl: var(--main-hue), 30%, 95%;
-		--subtext0-hsl: var(--main-hue), 40%, 90%;
-		--subtext1-hsl: var(--main-hue), 15%, 70%;
-		--subtext2-hsl: var(--main-hue), 12.5%, 75%;
-
-		--shadow-soft: hsla(var(--text-hsl), 0.0075);
-		--shadow-medium: hsla(var(--text-hsl), 0.02);
-		--shadow-strong: hsla(var(--text-hsl), 0.05);
-		--shadow-ultra: hsla(var(--text-hsl), 0.07);
-		--shadow-highlight: hsla(var(--surface0-hsl), 0.3);
+		--shadow-soft: hsla(var(--text-hsl), 0.01);
+		--shadow-medium: hsla(var(--text-hsl), 0.025);
+		--shadow-strong: hsla(var(--text-hsl), 0.06);
+		--shadow-ultra: hsla(var(--text-hsl), 0.08);
+		--shadow-highlight: hsla(var(--surface1-hsl), 0.35);
 	}
-}
+/* } */
+
 
 ::selection {
 	background: hsla(var(--accent-hsl), 0.2);
 }
 
-body {
-	font-family: "Adwaita Sans", sans-serif;
-	font-family: var(--font-body);
+html {
 	background: var(--base);
+	background-image: none;
+	overflow: hidden;
+	image-rendering: pixelated;
+	transition: background-image 0.3s ease;
+}
+
+body {
+	font-family: "Helvetica Now", sans-serif;
+	/* font-variation-settings: 'wght' 380, 'wdth' 97, 'opsz' 25; */
+	font-weight: 350;
+	font-stretch: 96%;
+	font-optical-sizing: 1.5em;
+	font-family: var(--font-body);
+	/* background: var(--base); */
 	color: var(--text);
-	color-scheme: light dark;
+	/* color-scheme: light dark; */
+	color-scheme: dark;
 	line-height: 1.8;
 	display: flex;
 	flex-direction: column;
 	justify-content: flex-start;
 	align-items: center;
 	min-height: 100vh;
-	background-image: 
+	overflow: auto;
+	/* background-image: 
 		linear-gradient(to right, var(--grid-lines) 1px, transparent 1px),
-		linear-gradient(to bottom, var(--grid-lines) 1px, transparent 1px);
+		linear-gradient(to bottom, var(--grid-lines) 1px, transparent 1px); */
 		/* radial-gradient(var(--surface0) calc(var(--bgscale) * var(--bgscale) * 1px),transparent 0); */
 	/* background-size: calc(20px * 1) calc(20px * 1);
 	background-size: calc(20px * var(--bgscale)) calc(20px * var(--bgscale)); */
-	background-size: 30px 30px;
+	/* background-size: 30px 30px; */
 	background-position: 0px 0px;
-	background-position: var(--bgmoveX) var(--bgmoveY);
+	/* background-position: var(--bgmoveX) var(--bgmoveY); */
 	background-repeat: repeat;
 	background-attachment: fixed;
 	font-size: 16px;
@@ -121,6 +143,8 @@ body {
 	text-shadow: 0 0.5px 0 hsla(18, 50%, 95%, 0.65);
 	text-shadow: 0 0.5px 0 var(--text-shadow-soft);
 	padding: 0.5rem 1.5rem;
+	scrollbar-color: var(--overlay1) var(--base);
+	scrollbar-width: thin;
 }
 
 h1,
@@ -129,9 +153,10 @@ h3,
 h4,
 h5,
 h6 {
-	font-family: "Apple Garamond", serif;
-	font-family: var(--font-serif);
-	font-weight: bolder;
+	font-family: "CenturyCondensed", serif;
+	font-family: var(--font-display);
+	font-weight: bold;
+	color: var(--supertext);
 }
 
 * {
@@ -164,9 +189,36 @@ main {
 
 header {
 	display: flex;
+}
+
+header.generic-header {
 	align-items: center;
 	justify-content: space-between;
 	flex-wrap: wrap;
+}
+
+header.frontpage-header {
+	flex-direction: column;
+	gap: 2rem;
+	text-align: center;
+	align-items: center;
+}
+
+.title {
+		display: flex;
+		align-items: center;
+		flex-direction: row;
+		justify-content: center;
+		flex-wrap: nowrap;
+		max-width: 100%;
+	}
+
+.title h1 {
+	font-size: clamp(6rem, 15vw, 8rem);
+	text-align: left;
+	line-height: 1;
+	margin: 0;
+	padding-top: 0.2em;
 }
 
 @media (orientation: portrait) {
@@ -185,8 +237,8 @@ main > * {
 }
 
 h1 {
-	font-size: 36px;
-	font-size: clamp(1.75rem, 2.25vw + 1.1rem, 2.5rem);
+	font-size: 48px;
+	font-size: clamp(2.25rem, 3vw + 1.5rem, 3.5rem);
 	margin-block-start: 0.25em;
 	margin-block-end: 0.5em;
 	line-height: 1.2;
@@ -209,13 +261,13 @@ h3 {
 }
 
 h2 {
-	font-size: 24px;
-	font-size: clamp(1.25rem, 1.2vw + 0.9rem, 1.75rem);
+	font-size: 32px;
+	font-size: clamp(1.75rem, 1.8vw + 1.2rem, 2.5rem);
 }
 
 h3 {
-	font-size: 18px;
-	font-size: clamp(1.1rem, 0.9vw + 0.9rem, 1.35rem);
+	font-size: 24px;
+	font-size: clamp(1.4rem, 1.2vw + 1.1rem, 1.8rem);
 }
 
 p {
@@ -223,11 +275,12 @@ p {
 }
 
 code {
-	background: var(--surface0);
+	background: var(--surface1);
 	font-size: 0.95em;
-	border-radius: 0.175em;
+	border-radius: 0;
 	padding: 0.05em 0.25em;
-	border: 0.075rem solid var(--surface2);
+	border: 0.075rem solid var(--surface3);
+	font-family: var(--font-mono);
 }
 
 subt {
@@ -305,7 +358,7 @@ ul.compact a {
 
 a,
 a:visited {
-	color: var(--text);
+	color: var(--supertext);
 	text-decoration-style: wavy !important;
 	text-decoration-thickness: 1.2px !important;
 	text-decoration-color: var(--overlay0) !important;
@@ -323,10 +376,10 @@ a:hover,
 	color: var(--subtext0) !important;
 }
 
-a,
+/* a,
 a:visited {
 	color: inherit;
-}
+} */
 
 .project-image {
 	max-width: 50%;
@@ -350,12 +403,12 @@ a:visited {
 }
 
 .pfp {
-	max-width: 14rem;
-	max-height: 14rem;
-	box-shadow:
+	/* max-width: 14rem;
+	max-height: 14rem; */
+	/* box-shadow:
 		0 0 0 0.025rem var(--image-ring),
 		0 0 1rem var(--shadow-soft);
-	border-radius: 50%;
+	border-radius: 50%; */
 }
 
 .pfp.rear {

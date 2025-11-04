@@ -55,7 +55,7 @@ ProjectView.style = css`
 		max-width: min(50rem, 70vw);
 		width: auto;
 		max-height: 70vh;
-		border-radius: 1rem;
+		border-radius: 0;
 		margin: 0;
 		padding: 0;
 	}

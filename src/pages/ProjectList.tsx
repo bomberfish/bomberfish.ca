@@ -37,7 +37,7 @@ ProjectList.style = css`
 	.projects-group {
 		display: grid;
 		grid-template-columns: repeat(auto-fit, minmax(30rem, 1fr));
-		gap: 0.7rem;
+		gap: 0;
 		margin-top: 1rem;
 		grid-auto-flow: dense;
 	}

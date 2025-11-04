@@ -58,6 +58,10 @@ const archives = [
 		version: "v5.4.1",
 		date: "20251014143924id_",
 	},
+	{
+		version: "v6.2.0",
+		date: "20251031190526",
+	}
 ];
 
 export const AboutView: Component<{}, {}> = function () {
@@ -72,7 +76,7 @@ export const AboutView: Component<{}, {}> = function () {
 						dreamland.js
 					</a>
 					, a small and utilitarian web framework. it leverages the ssg
-					capabilities of version 0.1.0 to pre-render all pages at deploy time, and hydrate them with interactive components on the client side.
+					capabilities first introduced in version 0.1.0 to pre-render all pages at deploy time, and hydrate them with interactive components on the client side.
 				</p>
 				<p>
 					bomberfish.ca is open-source under the MIT license, and

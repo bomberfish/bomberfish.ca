@@ -46,7 +46,7 @@ ProjectCard.style = css<typeof ProjectCard>`
 		padding: 1rem;
 		position: relative;
 		background: var(--card-surface);
-		border-radius: 0.5rem;
+		border-radius: 0;
 		overflow: hidden;
 		transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
 		box-shadow:
@@ -95,7 +95,7 @@ ProjectCard.style = css<typeof ProjectCard>`
 		width: 100%;
 		height: 100%;
 		object-fit: cover;
-		filter: saturate(0.9) brightness(0.5);
+		filter: saturate(0.9) brightness(0.4);
 		transform-origin: center;
 		transition: transform 0.35s ease, filter 0.35s ease;
 		will-change: transform, filter;
@@ -133,14 +133,14 @@ ProjectCard.style = css<typeof ProjectCard>`
 		bottom: 0;
 		width: 110%;
 		height: 110%;
-		background: linear-gradient(
+		/* background: linear-gradient(
 			to top,
-			rgba(0, 0, 0, 0.9) 0%,
+			rgba(20, 0, 0, 0.9) 0%,
 			transparent 60%,
 			transparent 100%
-		);
-		backdrop-filter: blur(2px);
-		mask-image: linear-gradient(to top, black 0%, black 20%, transparent 70%);
+		); */
+		/* backdrop-filter: blur(2px);
+		mask-image: linear-gradient(to top, black 0%, black 20%, transparent 70%); */
 		z-index: 1;
 		transition: opacity 0.35s ease;
 		opacity: 1;
@@ -152,7 +152,7 @@ ProjectCard.style = css<typeof ProjectCard>`
 
 	:scope:hover .project-image {
 		transform: scale(1.01);
-		filter: saturate(1.25) brightness(0.9);
+		filter: saturate(1.25) brightness(0.6);
 	}
 
 	.content {
@@ -194,7 +194,7 @@ ProjectCard.style = css<typeof ProjectCard>`
 		font-size: 20px;
 		font-size: clamp(1.1rem, 1.2vw + 1rem, 1.5rem);
 		font-weight: 700;
-		color: var(--surface0);
+		color: var(--surface1);
 		margin: 0;
 		text-shadow: 0 2px 8px var(--shadow-strong);
 		line-height: 1.2;
@@ -204,7 +204,7 @@ ProjectCard.style = css<typeof ProjectCard>`
 	.description {
 		font-size: 14px;
 		font-size: clamp(0.9rem, 0.4vw + 0.8rem, 0.95rem);
-		color: var(--surface4);
+		color: var(--surface5);
 		text-shadow: 0 1px 4px var(--shadow-medium);
 		line-height: 1.4;
 		opacity: 0.95;
@@ -213,7 +213,7 @@ ProjectCard.style = css<typeof ProjectCard>`
 			text-shadow 0.35s ease;
 	}
 
-	@media (prefers-color-scheme: dark) {
+	/* @media (prefers-color-scheme: dark) { */
 		.name {
 			color: var(--text);
 		}
@@ -222,14 +222,6 @@ ProjectCard.style = css<typeof ProjectCard>`
 			color: var(--subtext1);
 		}
 
-		.project-image {
-			filter: saturate(1.1) brightness(0.8);
-		}
-
-		:scope:hover .project-image {
-			filter: saturate(1.3) brightness(1);
-		}
-	}
 
 	@media (prefers-reduced-motion: reduce) {
 		:scope {

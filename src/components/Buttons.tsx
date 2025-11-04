@@ -374,7 +374,7 @@ CopiedToast.style = css`
 		display: flex;
 		align-items: center;
 		gap: 0.5rem;
-		border-radius: 0.5rem;
+		border-radius: 0%;
 		margin: 1rem;
 
 		animation:
