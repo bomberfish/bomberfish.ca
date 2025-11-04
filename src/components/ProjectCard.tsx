@@ -16,7 +16,7 @@ const ProjectCard: Component<
 				}
 				router.navigate(`projects/${this.project.lastPathComponent}`);
 			}}>
-			<Link href={`projects/${this.project.lastPathComponent}`}  class={`project-card card interactable ${this.size}`} class:no-image={!this.project.img}>
+			<Link href={`/projects/${this.project.lastPathComponent}`}  class={`project-card card interactable ${this.size}`} class:no-image={!this.project.img}>
 				{this.project.img && (
 					<div class="media" aria-hidden="true">
 						<img src={this.project.img} alt="" loading="lazy" class="project-image" />
@@ -194,7 +194,7 @@ ProjectCard.style = css<typeof ProjectCard>`
 		font-size: 20px;
 		font-size: clamp(1.1rem, 1.2vw + 1rem, 1.5rem);
 		font-weight: 700;
-		color: var(--surface1);
+		color: var(--supertext);
 		margin: 0;
 		text-shadow: 0 2px 8px var(--shadow-strong);
 		line-height: 1.2;
@@ -204,7 +204,7 @@ ProjectCard.style = css<typeof ProjectCard>`
 	.description {
 		font-size: 14px;
 		font-size: clamp(0.9rem, 0.4vw + 0.8rem, 0.95rem);
-		color: var(--surface5);
+		color: var(--text);
 		text-shadow: 0 1px 4px var(--shadow-medium);
 		line-height: 1.4;
 		opacity: 0.95;
@@ -212,16 +212,6 @@ ProjectCard.style = css<typeof ProjectCard>`
 			opacity 0.35s ease,
 			text-shadow 0.35s ease;
 	}
-
-	/* @media (prefers-color-scheme: dark) { */
-		.name {
-			color: var(--text);
-		}
-
-		.description {
-			color: var(--subtext1);
-		}
-
 
 	@media (prefers-reduced-motion: reduce) {
 		:scope {

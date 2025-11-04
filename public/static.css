@@ -93,7 +93,7 @@ html {
 
 
 ::selection {
-	background: hsla(var(--accent-hsl), 0.2);
+	background: hsla(var(--accent-hsl), 0.6);
 }
 
 html {
@@ -106,10 +106,9 @@ html {
 
 body {
 	font-family: "Helvetica Now", sans-serif;
-	/* font-variation-settings: 'wght' 380, 'wdth' 97, 'opsz' 25; */
+	font-variation-settings: 'opsz' 20;
 	font-weight: 350;
 	font-stretch: 96%;
-	font-optical-sizing: 1.5em;
 	font-family: var(--font-body);
 	/* background: var(--base); */
 	color: var(--text);
@@ -154,7 +153,9 @@ h4,
 h5,
 h6 {
 	font-family: "CenturyCondensed", serif;
+	font-variation-settings: unset;
 	font-family: var(--font-display);
+	font-stretch: 100%;
 	font-weight: bold;
 	color: var(--supertext);
 }
@@ -336,6 +337,16 @@ ul.compact > li:last-child:after {
 	margin: 0;
 }
 
+
+li:not(:has(a)) {
+	transform: translateY(-0.25rem);
+}
+
+li:has(a),
+ul.compact > :is(li > span, li > a) {
+	margin-bottom: 0;
+}
+
 ul.compact a {
 	text-decoration: underline;
 	text-underline-offset: 2px;
@@ -374,6 +385,22 @@ a:hover,
 .tooltip-wrapper:has(.tooltip:hover) a {
 	text-decoration-color: var(--accent) !important;
 	color: var(--subtext0) !important;
+}
+
+a:after {
+	display: inline;
+	content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="hsl(356.05, 95%, 80%)"><path d="M216-144q-29.7 0-50.85-21.15Q144-186.3 144-216v-528q0-29.7 21.15-50.85Q186.3-816 216-816h228q15.3 0 25.65 10.29Q480-795.42 480-780.21t-10.35 25.71Q459.3-744 444-744H216v528h528v-228q0-15.3 10.29-25.65Q764.58-480 779.79-480t25.71 10.35Q816-459.3 816-444v228q0 29.7-21.15 50.85Q773.7-144 744-144H216Zm528-549L412-361q-11 11-25 10.5T362-362q-11-11-11-25.5t11-25.5l331-331h-81q-15.3 0-25.65-10.29Q576-764.58 576-779.79t10.35-25.71Q596.7-816 612-816h168q15.3 0 25.65 10.35Q816-795.3 816-780v168q0 15.3-10.29 25.65Q795.42-576 780.21-576t-25.71-10.35Q744-596.7 744-612v-81Z"/></svg>');
+	margin-left: 0.1em;
+	vertical-align: middle;
+	vertical-align: -webkit-baseline-middle;
+	width: 1em;
+	height: 1em;
+}
+
+a.web-button:after,
+a[href^="/"]:after {
+	display: none;
+	content: "";
 }
 
 /* a,

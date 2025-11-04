@@ -18,6 +18,7 @@ export const WebButton: Component<
 
 	return (
 		<a
+			class="web-button"
 			href={this.href || "#"}
 			target={this.href ? "_blank" : "_self"}
 			on:click={(e: MouseEvent) => {
@@ -48,6 +49,9 @@ WebButton.style = css`
 		-webkit-image-rendering: pixelated;
 		width: auto;
 		height: 100%;
+	}
+	:scope:after {
+		display: none;
 	}
 `;
 
