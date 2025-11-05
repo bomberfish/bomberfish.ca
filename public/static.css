@@ -15,6 +15,7 @@ html {
 	--subtext0: hsl(var(--subtext0-hsl));
 	--subtext1: hsl(var(--subtext1-hsl));
 	--subtext2: hsl(var(--subtext2-hsl));
+	--subtext3: hsl(var(--subtext3-hsl));
 	--accent: hsl(var(--accent-hsl));
 
 	--bgmoveX: 0px;
@@ -62,26 +63,28 @@ html {
 /* @media (prefers-color-scheme: dark) { */
 	html {
 		/* --main-hue: 271; */
-		--main-hue: 0;
+		--main-hue: 356;
 
-		--base-hsl: 0, 0%, 0%; /* hsl(0deg 0% 0%) */
+		--base-hsl: 0, 0%, 0%;
+		--bg-light: var(--main-hue), 100%, 7%;
 		--surface0-hsl: var(--main-hue), 100%, 5%;
-		--surface1-hsl: 356.84, 73.08%, 10.2%;
-		--surface2-hsl: 356.92, 90.7%, 16.86%;
-		--surface3-hsl: 357.09, 78.63%, 25.69%;
-		--surface4-hsl: 357.37, 73.26%, 36.67%;
-		--surface5-hsl: 356.81, 75.81%, 48.63%;
-		--surface6-hsl: 356.81, 70%, 56%; /* extended a touch above surface4 for highlights */
-		--overlay0-hsl: 356.92, 90.7%, 16.86%;
-		--overlay1-hsl: 357.09, 78.63%, 25.69%;
-		--overlay2-hsl: 357.37, 73.26%, 36.67%;
-		--overlay3-hsl: 356.81, 75.81%, 48.63%;
-		--supertext-hsl: 356.05, 100%, 96%;
-		--text-hsl: 356.05, 100%, 85.1%;
-		--subtext0-hsl: 356.05, 95%, 80%;
-		--subtext1-hsl: 356.05, 85%, 72%;
-		--subtext2-hsl: 356.05, 70%, 64%;
-		--accent-hsl: 356.81, 75.81%, 48.63%;
+		--surface1-hsl: var(--main-hue), 73%, 10%;
+		--surface2-hsl: var(--main-hue), 91%, 18%;
+		--surface3-hsl: var(--main-hue), 79%, 26%;
+		--surface4-hsl: var(--main-hue), 73%, 38%;
+		--surface5-hsl: var(--main-hue), 76%, 50%;
+		--surface6-hsl: var(--main-hue), 70%, 56%;
+		--overlay0-hsl: var(--main-hue), 91%, 18%;
+		--overlay1-hsl: var(--main-hue), 79%, 26%;
+		--overlay2-hsl: var(--main-hue), 73%, 38%;
+		--overlay3-hsl: var(--main-hue), 80%, 45%;
+		--supertext-hsl: var(--main-hue), 100%, 96%;
+		--text-hsl: var(--main-hue), 100%, 92%;
+		--subtext0-hsl: var(--main-hue), 90%, 80%;
+		--subtext1-hsl: var(--main-hue), 60%, 70%;
+		--subtext2-hsl: var(--main-hue), 40%, 50%;
+		--subtext3-hsl: var(--main-hue), 50%, 40%;
+		--accent-hsl: var(--main-hue), 80%, 55%;
 
 		--shadow-soft: hsla(var(--text-hsl), 0.01);
 		--shadow-medium: hsla(var(--text-hsl), 0.025);
@@ -105,7 +108,7 @@ html {
 }
 
 body {
-	font-family: "Helvetica Now", sans-serif;
+	font-family: "HelveticaNow", sans-serif;
 	font-variation-settings: 'opsz' 20;
 	font-weight: 350;
 	font-stretch: 96%;
@@ -139,8 +142,8 @@ body {
 	font-kerning: normal;
 	font-variant-ligatures: common-ligatures contextual;
 	text-wrap: pretty;
-	text-shadow: 0 0.5px 0 hsla(18, 50%, 95%, 0.65);
-	text-shadow: 0 0.5px 0 var(--text-shadow-soft);
+	/* text-shadow: 0 0.5px 0 hsla(18, 50%, 95%, 0.65);
+	text-shadow: 0 0.5px 0 var(--text-shadow-soft); */
 	padding: 0.5rem 1.5rem;
 	scrollbar-color: var(--overlay1) var(--base);
 	scrollbar-width: thin;
@@ -174,9 +177,10 @@ main {
     justify-content: space-between;
 
 	transform: translateY(0);
+	filter: blur(0px);
 	opacity: 1;
 	transition:
-		0.2s transform, 0.2s opacity;
+		0.2s transform, 0.2s opacity, 0.2s filter;
 	transform-origin: bottom center;
 	transition-timing-function: cubic-bezier(.2,.2,.8,1);
 }
@@ -184,6 +188,7 @@ main {
 @starting-style {
 	main {
 		transform: translateY(0.7rem);
+		filter: blur(4px);
 		opacity: 0;
 	}
 }
@@ -281,12 +286,15 @@ code {
 	border-radius: 0;
 	padding: 0.05em 0.25em;
 	border: 0.075rem solid var(--surface3);
+	font-variation-settings: unset;
+	font-stretch: 100%;
+	font-family: "IosevkaEtoile", monospace;
 	font-family: var(--font-mono);
 }
 
 subt {
 	font-size: 0.85em;
-	color: var(--subtext1);
+	color: var(--subtext0);
 	line-height: 1.2;
 }
 
@@ -355,6 +363,7 @@ ul.compact a {
 .tooltip {
 	opacity: 0;
 	visibility: hidden;
+	color: var(--text);
 }
 
 .tooltip-wrapper {
@@ -440,4 +449,37 @@ a:visited {
 
 .pfp.rear {
 	display: none;
+}
+
+@keyframes transition-new {
+	from {
+		opacity: 0;
+		transform: translateY(5px);
+		filter: blur(4px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0px);
+		filter: blur(0px);
+	}
+}
+
+@keyframes transition-old {
+	from {
+		opacity: 1;
+		transform: translateY(0px);
+		filter: blur(0px);
+	}
+	to {
+		opacity: 0;
+		transform: translateY(-5px);
+		filter: blur(4px);
+	}
+}
+::view-transition-old(splash-message) {
+	animation: transition-old 0.35s ease forwards;
+}
+
+::view-transition-new(splash-message) {
+	animation: transition-new 0.35s ease forwards;
 }

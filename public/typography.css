@@ -1,30 +1,65 @@
 @font-face {
-	font-family: "Helvetica Now";
+	font-family: "HelveticaNow";
 	font-weight: 50 1000;
 	font-display: swap;
 	src: 
+		 url("/fonts/body/HelveticaNow.eot?#iefix") format("embedded-opentype");
+	src: local("☺"),
 		 url("/fonts/body/HelveticaNow.woff2") format("woff2"),
 		 url("/fonts/body/HelveticaNow.woff") format("woff"),
-		 url("/fonts/body/HelveticaNow.eot") format("embedded-opentype"),
 		 url("/fonts/body/HelveticaNow.ttf") format("truetype");
 }
 
 @font-face {
-	font-family: "Iosevka Etoile";
+	font-family: "IosevkaEtoile";
 	font-style: normal;
 	font-weight: normal;
 	font-display: swap;
-	src: url("/fonts/mono/IosevkaEtoile-Regular.woff2") format("woff2"),
-		 url("/fonts/mono/IosevkaEtoile-Regular.ttc") format("truetype");
+	src: 
+		url("/fonts/mono/Iosevka.eot?#iefix") format("embedded-opentype");
+	src: local("☺"),
+		url("/fonts/mono/Iosevka.woff2") format("woff2"),
+		url("/fonts/mono/Iosevka.woff") format("woff"),
+		url("/fonts/mono/Iosevka.ttf") format("truetype");
 }
 
 @font-face {
-	font-family: "Iosevka Etoile";
+	font-family: "IosevkaEtoile";
 	font-style: normal;
 	font-weight: bold;
 	font-display: swap;
-	src: url("/fonts/mono/IosevkaEtoile-Bold.woff2") format("woff2"),
-		 url("/fonts/mono/IosevkaEtoile-Bold.ttc") format("truetype");
+	src: 
+		url("/fonts/mono/IosevkaBold.eot?#iefix") format("embedded-opentype");
+	src: local("☺"),
+		url("/fonts/mono/IosevkaBold.woff2") format("woff2"),
+		url("/fonts/mono/IosevkaBold.woff") format("woff"),
+		url("/fonts/mono/IosevkaBold.ttf") format("truetype");
+}
+
+@font-face {
+	font-family: "IosevkaEtoile";
+	font-style: italic;
+	font-weight: normal;
+	font-display: swap;
+	src: 
+		url("/fonts/mono/IosevkaItalic.eot?#iefix") format("embedded-opentype");
+	src: local("☺"),
+		url("/fonts/mono/IosevkaItalic.woff2") format("woff2"),
+		url("/fonts/mono/IosevkaItalic.woff") format("woff"),
+		url("/fonts/mono/IosevkaItalic.ttf") format("truetype");
+}
+
+@font-face {
+	font-family: "IosevkaEtoile";
+	font-style: italic;
+	font-weight: bold;
+	font-display: swap;
+	src: 
+		url("/fonts/mono/IosevkaBoldItalic.eot?#iefix") format("embedded-opentype");
+	src: local("☺"),
+		url("/fonts/mono/IosevkaBoldItalic.woff2") format("woff2"),
+		url("/fonts/mono/IosevkaBoldItalic.woff") format("woff"),
+		url("/fonts/mono/IosevkaBoldItalic.ttf") format("truetype");
 }
 
 @font-face {
@@ -32,8 +67,12 @@
 	font-style: normal;
 	font-weight: normal;
 	font-display: swap;
-	src: url("/fonts/serif/Century CondBook Regular.woff2") format("woff2"),
-		 url("/fonts/serif/Century CondBook Regular.otf") format("opentype");
+	src: 
+		url("/fonts/display/CenturyRegular.eot?#iefix") format("embedded-opentype");
+	src: local("☺"),
+		url("/fonts/display/CenturyRegular.woff2") format("woff2"),
+		url("/fonts/display/CenturyRegular.woff") format("woff"),
+		url("/fonts/display/CenturyRegular.ttf") format("truetype");
 }
 
 @font-face {
@@ -41,8 +80,12 @@
 	font-style: normal;
 	font-weight: bold;
 	font-display: swap;
-	src: url("/fonts/serif/Century Schoolbook Condensed Bold.woff2") format("woff2"),
-		 url("/fonts/serif/Century Schoolbook Condensed Bold.otf") format("opentype");
+	src: 
+		url("/fonts/display/CenturyBold.eot?#iefix") format("embedded-opentype");
+	src: local("☺"),
+		url("/fonts/display/CenturyBold.woff2") format("woff2"),
+		url("/fonts/display/CenturyBold.woff") format("woff"),
+		url("/fonts/display/CenturyBold.ttf") format("truetype");
 }
 
 
@@ -52,7 +95,7 @@
 	font-style: normal;
 	font-weight: 400;
 	font-display: block;
-	src: url(https://fonts.gstatic.com/s/materialsymbolsrounded/v181/syl0-zNym6YjUruM-QrEh7-nyTnjDwKNJ_190FjpZIvDmUSVOK7BDB_Qb9vUSzq3wzLK-P0J-V_Zs-QtQth3-jOcbTCVpeRL2w5rwZu2rIelXxc.woff2)
+	src: url("https://fonts.gstatic.com/s/materialsymbolsrounded/v181/syl0-zNym6YjUruM-QrEh7-nyTnjDwKNJ_190FjpZIvDmUSVOK7BDB_Qb9vUSzq3wzLK-P0J-V_Zs-QtQth3-jOcbTCVpeRL2w5rwZu2rIelXxc.woff2")
 		format("woff2");
 }
 
@@ -76,10 +119,10 @@
 :root {
 	--font-display: "CenturyCondensed", "Times New Roman MT Std", var(--font-serif);
 	--font-body:
-		"Helvetica Now", "Helvetica Neue", Helvetica, FreeSans, "Nimbus Sans L", "Nimbus Sans", system-ui, Arial,
+		"HelveticaNow", "Helvetica Neue", Helvetica, FreeSans, "Nimbus Sans L", "Nimbus Sans", system-ui, Arial,
 		sans-serif, "Apple Color Emoji", "Noto Color Emoji", "Segoe UI Emoji";
 	--font-mono:
-		"Iosevka Etoile", ui-monospace, monospace;
+		"IosevkaEtoile", ui-monospace, monospace;
 	--font-serif: "Times New Roman", Times, Tinos, FreeSerif, "Nimbus Roman No9 L", "Nimbus Roman", "Liberation Serif",
 		"Linux Libertine", serif;
 }

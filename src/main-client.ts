@@ -62,7 +62,7 @@ image.onload = () => {
 	};
 	
 	const dark = parseHsl(style.getPropertyValue('--base-hsl'));
-	const light = parseHsl(style.getPropertyValue('--surface0-hsl'));
+	const light = parseHsl(style.getPropertyValue('--bg-light'));
 	
 	// Apply colors
 	for (let i = 0; i < dithered.length; i++) {

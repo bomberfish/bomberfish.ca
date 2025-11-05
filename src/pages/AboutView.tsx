@@ -64,6 +64,25 @@ const archives = [
 	}
 ];
 
+const colors = [
+	"base",
+	"surface0",
+	"surface1",
+	"surface2",
+	"surface3",
+	"overlay0",
+	"overlay1",
+	"overlay2",
+	"overlay3",
+	"supertext",
+	"text",
+	"subtext0",
+	"subtext1",
+	"subtext2",
+	"subtext3",
+	"accent"
+];
+
 export const AboutView: Component<{}, {}> = function () {
 	return (
 		<main>
@@ -125,6 +144,11 @@ export const AboutView: Component<{}, {}> = function () {
 						}
 					})}
 				</ul>
+				<div class="swatches">
+					{colors.map((color) => (
+						<ColorSwatch color={color} />
+					))}
+				</div>
 			</article>
 		</main>
 	);
@@ -135,6 +159,13 @@ AboutView.style = css`
 		max-width: calc(100% - 20rem);
 	}
 
+	.swatches {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.5rem;
+		margin-top: 2rem;
+	}
+
 	@media (max-width: 960px) or (orientation: portrait) {
 		article {
 			max-width: 100%;
@@ -142,4 +173,53 @@ AboutView.style = css`
 			padding: 0 .5rem;
 		}
 	}
-`
+`;
+
+const ColorSwatch: Component<{ color: string }, { value: string }> = function (cx) {
+	this.value = "";
+	cx.mount = () => {
+		this.value = document.documentElement.style.getPropertyValue(`--${this.color}-hsl`);
+	}
+	return (
+		<div
+			class="swatch"
+			style={`color: ${this.color === "supertext" ? "black" : "white"};`}
+		>
+			<div class="preview" style={`background-color: var(--${this.color});`}></div>
+			<span class="label">{this.color}</span>
+			<span class="value">hsl {this.value}</span>
+		</div>
+	);
+};
+
+ColorSwatch.style = css`
+	.swatch {
+		display: inline-flex;
+		flex-direction: column;
+		align-items: flex-end;
+		justify-content: flex-end;
+		width: 100px;
+		height: 100px;
+		position: relative;
+		padding: 0.5rem;
+		box-sizing: border-box;
+	}
+
+	.preview {
+		position: absolute;
+		inset: 0;
+		z-index: -1;
+	}
+
+	.label,
+	.value {
+		font-family: monospace;
+		text-align: right;
+		line-height: 1.2;
+		font-size: 0.75rem;
+	}
+
+	.label {
+		font-weight: bold;
+	}
+`;
