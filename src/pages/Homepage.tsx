@@ -4,7 +4,7 @@ import { WebButton, ButtonList, CopiedToast } from "../components/Buttons";
 import { Link } from "dreamland/router";
 import Footer from "../components/Footer";
 
-const Homepage: Component<{}, {}> = function (cx) {
+const Homepage: Component<{}, {}> = function () {
 	return (
 		<main>
 			{/* <Header /> */}
