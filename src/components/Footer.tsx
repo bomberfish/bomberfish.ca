@@ -47,7 +47,6 @@ const messages: string[] = [
     "I'm gonna get my engineers to invent a combustible lemon that burns your house down!",
     "A spectre is haunting Europe.",
     "If you read this you are gay LMAO",
-    "Hey, fascist! Catch! [↑ → ↓ ↓ ↓]",
     "9/11 TAKIN OVER",
     "Hack the Planet!",
     "Copy that floppy!",
@@ -59,7 +58,6 @@ const messages: string[] = [
     "E=mc²+AI",
     "Hot singles in your area!",
     "Government-mandated twink boyfriends near you!",
-    "Website vs. Website, Japan",
     "HELVETICA STANDARD",
     "#BringBlackBlackBerry",
     "You can always pirate Adobe products, it's always morally correct.",
@@ -71,11 +69,8 @@ const messages: string[] = [
     "Get ready to learn Chinese, buddy.",
     "Born just in time to write sarcastic oneliners on the internet.",
     "CERN shifted us into the wrong timeline.",
-    "The Irish actually run the world.",
     "Here goes something.",
     "It's not a story the Jedi would tell you.",
-    "When the fajitas come out sizzlin!",
-    "He's red for an amazing reason."
 ]
 
 const Footer: Component<{}, {elapsed: string, message: string, resetSplashInterval?: () => void}> = function (cx) {
