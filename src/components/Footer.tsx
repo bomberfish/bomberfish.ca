@@ -48,7 +48,9 @@ const messages: string[] = [
     "A spectre is haunting Europe.",
     "If you read this you are gay LMAO",
     "Hey, fascist! Catch! [↑ → ↓ ↓ ↓]",
+    "9/11 TAKIN OVER",
     "Hack the Planet!",
+    "Copy that floppy!",
     "The CIA fellas glow in the dark, you can run them over.",
     "Be the reason God stays in His heaven.",
     "I have escaped the sandbox.",
@@ -69,7 +71,11 @@ const messages: string[] = [
     "Get ready to learn Chinese, buddy.",
     "Born just in time to write sarcastic oneliners on the internet.",
     "CERN shifted us into the wrong timeline.",
-    "The Irish actually run the world."
+    "The Irish actually run the world.",
+    "Here goes something.",
+    "It's not a story the Jedi would tell you.",
+    "When the fajitas come out sizzlin!",
+    "He's red for an amazing reason."
 ]
 
 const Footer: Component<{}, {elapsed: string, message: string, resetSplashInterval?: () => void}> = function (cx) {
