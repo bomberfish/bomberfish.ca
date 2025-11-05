@@ -94,11 +94,10 @@ export const AboutView: Component<{}, {}> = function () {
 					<a href="https://dreamland.js.org" target="_blank" rel="noopener">
 						dreamland.js
 					</a>
-					, a small and utilitarian web framework. it leverages the ssg
-					capabilities first introduced in version 0.1.0 to pre-render all pages at deploy time, and hydrate them with interactive components on the client side.
+					, a small and utilitarian web framework with full reactivity.
 				</p>
 				<p>
-					bomberfish.ca is open-source under the MIT license, and
+					it's open-source under the MIT license, and
 					you can view the source code{" "}
 					<a
 						href="https://github.com/bomberfish/bomberfish.ca"
@@ -109,8 +108,8 @@ export const AboutView: Component<{}, {}> = function () {
 					</a>
 					.
 				</p>
-				<p>The color scheme is inspired by the "U-571 Code Red" theme from <a href="https://sacred.computer">the SRCL component library</a>, and the typography loosely borrows from the title cards from Neon Genesis Evangelion.</p>
-				<p>The background pulls images from <a href="https://picsum.photos" target="_blank" rel="noopener noreferrer">Lorem Picsum</a> and applies Atkinson dithering as described in <a href="https://beyondloom.com/blog/dither.html" target="_blank" rel="noopener noreferrer">this blogpost</a>.</p>
+				<p>the color scheme is inspired by the "U-571 Code Red" theme from <a href="https://sacred.computer">the SRCL component library</a>, and the typography loosely borrows from the title cards from neon genesis evangelion.</p>
+				<p>the background pulls images from <a href="https://picsum.photos" target="_blank" rel="noopener noreferrer">Lorem Picsum</a> and applies Atkinson dithering as described in <a href="https://beyondloom.com/blog/dither.html" target="_blank" rel="noopener noreferrer">this blogpost</a>.</p>
 				<h2>archive of previous versions</h2>
 				<p>
 					versioning started with v6.0.0. previous versioning applied
@@ -183,11 +182,11 @@ const ColorSwatch: Component<{ color: string }, { value: string }> = function (c
 	return (
 		<div
 			class="swatch"
-			style={`color: ${this.color === "supertext" ? "black" : "white"};`}
+			style={`color: ${this.color.endsWith("text") ? "black" : "white"};`}
 		>
 			<div class="preview" style={`background-color: var(--${this.color});`}></div>
 			<span class="label">{this.color}</span>
-			<span class="value">hsl {this.value}</span>
+			{/* <span class="value">hsl {use(this.value)}</span> */}
 		</div>
 	);
 };
@@ -213,7 +212,7 @@ ColorSwatch.style = css`
 
 	.label,
 	.value {
-		font-family: monospace;
+		font-family: var(--font-mono);
 		text-align: right;
 		line-height: 1.2;
 		font-size: 0.75rem;
