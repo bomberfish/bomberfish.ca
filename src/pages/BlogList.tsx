@@ -22,11 +22,12 @@ const mdxPosts = Object.entries(blogModules)
         if (!match) return null;
 
         const [, date, slug] = match;
-        const title = slug
+        const computedTitle = slug
             .split("-")
             .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
             .join(" ");
 
+        const title = (mod && (mod.title as string)) || computedTitle;
         const description = (mod && mod.description) || undefined;
         const tags = (mod && mod.tags) || undefined;
         const image = (mod && mod.image) || undefined;
