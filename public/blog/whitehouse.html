@@ -1,0 +1,420 @@
+<html lang="en">
+
+<!-- <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Improving the White House Shutdown Clock</title>
+    <meta name="description"
+        content="A better version of the White House's government shutdown clock, which is inaccessible and poorly designed.">
+    <meta name="author" content="bomberfish">
+    <meta name="keywords"
+        content="shutdown, clock, white house, government, trump, democrats, republicans, web design, accessibility">
+    <meta name="robots" content="index, follow"> -->
+    <meta name="theme-color" content="#000000">
+    <style>
+        @font-face {
+            font-family: "Instrument Sans";
+            font-style: normal;
+            font-weight: 400;
+            font-display: swap;
+            src: url('https://www.whitehouse.gov/wp-content/themes/whitehouse/assets/fonts/instrument-sans/InstrumentSans-Regular.woff2') format('woff2'), url('https://www.whitehouse.gov/wp-content/themes/whitehouse/assets/fonts/instrument-sans/InstrumentSans-Regular.woff') format('woff'), url('https://www.whitehouse.gov/wp-content/themes/whitehouse/assets/fonts/instrument-sans/InstrumentSans-Regular.ttf') format('truetype');
+            font-stretch: normal;
+        }
+
+        @font-face {
+            font-family: "Instrument Sans";
+            font-style: italic;
+            font-weight: 400;
+            font-display: swap;
+            src: url('https://www.whitehouse.gov/wp-content/themes/whitehouse/assets/fonts/instrument-sans/InstrumentSans-Italic.woff2') format('woff2'), url('https://www.whitehouse.gov/wp-content/themes/whitehouse/assets/fonts/instrument-sans/InstrumentSans-Italic.woff') format('woff'), url('https://www.whitehouse.gov/wp-content/themes/whitehouse/assets/fonts/instrument-sans/InstrumentSans-Italic.ttf') format('truetype');
+            font-stretch: normal;
+        }
+
+        @font-face {
+            font-family: "Instrument Sans";
+            font-style: normal;
+            font-weight: 500;
+            font-display: swap;
+            src: url('https://www.whitehouse.gov/wp-content/themes/whitehouse/assets/fonts/instrument-sans/InstrumentSans-Medium.woff2') format('woff2'), url('https://www.whitehouse.gov/wp-content/themes/whitehouse/assets/fonts/instrument-sans/InstrumentSans-Medium.woff') format('woff'), url('https://www.whitehouse.gov/wp-content/themes/whitehouse/assets/fonts/instrument-sans/InstrumentSans-Medium.ttf') format('truetype');
+            font-stretch: normal;
+        }
+
+        @font-face {
+            font-family: "Instrument Sans";
+            font-style: italic;
+            font-weight: 500;
+            font-display: swap;
+            src: url('https://www.whitehouse.gov/wp-content/themes/whitehouse/assets/fonts/instrument-sans/InstrumentSans-MediumItalic.woff2') format('woff2'), url('https://www.whitehouse.gov/wp-content/themes/whitehouse/assets/fonts/instrument-sans/InstrumentSans-MediumItalic.woff') format('woff'), url('https://www.whitehouse.gov/wp-content/themes/whitehouse/assets/fonts/instrument-sans/InstrumentSans-MediumItalic.ttf') format('truetype');
+            font-stretch: normal;
+        }
+
+        @font-face {
+            font-family: "Instrument Sans";
+            font-style: normal;
+            font-weight: 600;
+            font-display: swap;
+            src: url('https://www.whitehouse.gov/wp-content/themes/whitehouse/assets/fonts/instrument-sans/InstrumentSans-SemiBold.woff2') format('woff2'), url('https://www.whitehouse.gov/wp-content/themes/whitehouse/assets/fonts/instrument-sans/InstrumentSans-SemiBold.woff') format('woff'), url('https://www.whitehouse.gov/wp-content/themes/whitehouse/assets/fonts/instrument-sans/InstrumentSans-SemiBold.ttf') format('truetype');
+            font-stretch: normal;
+        }
+
+        @font-face {
+            font-family: "Instrument Sans";
+            font-style: italic;
+            font-weight: 600;
+            font-display: swap;
+            src: url('https://www.whitehouse.gov/wp-content/themes/whitehouse/assets/fonts/instrument-sans/InstrumentSans-SemiBoldItalic.woff2') format('woff2'), url('https://www.whitehouse.gov/wp-content/themes/whitehouse/assets/fonts/instrument-sans/InstrumentSans-SemiBoldItalic.woff') format('woff'), url('https://www.whitehouse.gov/wp-content/themes/whitehouse/assets/fonts/instrument-sans/InstrumentSans-SemiBoldItalic.ttf') format('truetype');
+            font-stretch: normal;
+        }
+
+        @font-face {
+            font-family: "Instrument Sans";
+            font-style: normal;
+            font-weight: 700;
+            font-display: swap;
+            src: url('https://www.whitehouse.gov/wp-content/themes/whitehouse/assets/fonts/instrument-sans/InstrumentSans-Bold.woff2') format('woff2'), url('https://www.whitehouse.gov/wp-content/themes/whitehouse/assets/fonts/instrument-sans/InstrumentSans-Bold.woff') format('woff'), url('https://www.whitehouse.gov/wp-content/themes/whitehouse/assets/fonts/instrument-sans/InstrumentSans-Bold.ttf') format('truetype');
+            font-stretch: normal;
+        }
+
+        @font-face {
+            font-family: "Instrument Sans";
+            font-style: italic;
+            font-weight: 700;
+            font-display: swap;
+            src: url('https://www.whitehouse.gov/wp-content/themes/whitehouse/assets/fonts/instrument-sans/InstrumentSans-BoldItalic.woff2') format('woff2'), url('https://www.whitehouse.gov/wp-content/themes/whitehouse/assets/fonts/instrument-sans/InstrumentSans-BoldItalic.woff') format('woff'), url('https://www.whitehouse.gov/wp-content/themes/whitehouse/assets/fonts/instrument-sans/InstrumentSans-BoldItalic.ttf') format('truetype');
+            font-stretch: normal;
+        }
+
+        @font-face {
+            font-family: "Instrument Serif";
+            font-style: normal;
+            font-weight: 400;
+            font-display: swap;
+            src: url('https://www.whitehouse.gov/wp-content/themes/whitehouse/assets/fonts/instrument-serif/InstrumentSerif-Regular.woff2') format('woff2'), url('https://www.whitehouse.gov/wp-content/themes/whitehouse/assets/fonts/instrument-serif/InstrumentSerif-Regular.woff') format('woff'), url('https://www.whitehouse.gov/wp-content/themes/whitehouse/assets/fonts/instrument-serif/InstrumentSerif-Regular.ttf') format('truetype');
+            font-stretch: normal;
+        }
+
+        @font-face {
+            font-family: "Instrument Serif";
+            font-style: italic;
+            font-weight: 400;
+            font-display: swap;
+            src: url('https://www.whitehouse.gov/wp-content/themes/whitehouse/assets/fonts/instrument-serif/InstrumentSerif-Italic.woff2') format('woff2'), url('https://www.whitehouse.gov/wp-content/themes/whitehouse/assets/fonts/instrument-serif/InstrumentSerif-Italic.woff') format('woff'), url('https://www.whitehouse.gov/wp-content/themes/whitehouse/assets/fonts/instrument-serif/InstrumentSerif-Italic.ttf') format('truetype');
+            font-stretch: normal;
+        }
+
+        @font-face {
+            font-family: '7seg';
+            src: url(data:font/woff;charset=utf-8;base64,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) format('woff');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        body {
+            background-color: black;
+            color: white;
+            color-scheme: dark;
+            accent-color: #fbb32c;
+            margin: 0;
+            font-family: 'Instrument Sans', 'Adwaita Sans', sans-serif;
+            font-size: 1.2rem;
+        }
+
+        .site-footer,
+        .site-header {
+            display: none;
+        }
+
+        pre,
+        code {
+            font-family: 'Adwaita Mono', 'Iosveka', monospace;
+            color: white;
+        }
+
+        pre {
+            background: #111;
+            padding: 1em;
+            overflow-x: auto;
+            font-size: 0.9em;
+        }
+
+        * {
+            outline-color: #fbb32c;
+        }
+
+        ::selection {
+            background: #ffecb366;
+        }
+
+        body,
+        .big-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .post-content.e-content {
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .sub {
+            color: #777;
+        }
+
+        @media (prefers-contrast: more) {
+            .sub {
+                color: #999;
+            }
+        }
+
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
+            font-family: 'Instrument Serif', 'Apple Garamond', Garamond, 'EB Garamond', serif;
+            margin: 0;
+            font-weight: normal;
+        }
+
+        h1 {
+            font-size: 2.25rem;
+            max-width: 100vw;
+            text-align: center;
+        }
+
+        h2 {
+            font-size: 1.75rem;
+            max-width: 100vw;
+              text-align: center;
+        }
+
+        a {
+            color: #ffecb3;
+        }
+
+        .clock,
+        a:hover,
+        a:visited {
+            color: #fbb32c;
+        }
+
+        .clock {
+            padding-top: 7.5rem;
+            display: flex;
+            gap: 1vw;
+            font-family: '7seg', monospace;
+            font-size: 12vw;
+            text-shadow:
+                0 0 10px rgba(255, 152, 0, 0.8),
+                0 0 20px rgba(255, 152, 0, 0.6),
+                0 0 30px rgba(255, 152, 0, 0.4),
+                0 0 40px rgba(255, 152, 0, 0.3),
+                0 0 60px rgba(255, 152, 0, 0.2);
+        }
+
+        .digit {
+            position: relative;
+            z-index: 1;
+        }
+
+        .digit::before {
+            /* alt text can be denoted after a slash(/).  */
+            /* These need to be ignored, so screen readers don't read them out. */
+            content: "8" / "";
+            color: #1a1a1a;
+            position: absolute;
+            z-index: -1;
+            text-shadow: none;
+        }
+
+        .group {
+            display: flex;
+            gap: 0.5vw;
+        }
+
+        .sep:not(.lit) {
+            color: #1a1a1a;
+            text-shadow: none;
+        }
+
+        article.main {
+            max-width: 50rem;
+            margin-inline: auto;
+            text-align: justify;
+        }
+
+        .page-content {
+            width: 100vw;
+        }
+
+        @media (orientation: portrait) {
+            article.main {
+                max-width: 90vw;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .clock {
+                font-size: 15vw;
+                gap: 10px;
+            }
+
+            .group {
+                gap: 5px;
+            }
+        }
+    </style>
+<!-- </head>
+
+<body> -->
+    <div class="big-container" style="height: calc(100vh - 13rem);">
+        <div class="clock">
+            <div class="group">
+                <div class="digit" id="d1">
+                </div>
+                <div class="digit" id="d2">
+                </div>
+            </div>
+            <div class="group sep">:</div>
+            <div class="group">
+                <div class="digit" id="d3">
+                </div>
+                <div class="digit" id="d4">
+                </div>
+            </div>
+            <div class="group sep">:</div>
+            <div class="group">
+                <div class="digit" id="d5">
+                </div>
+                <div class="digit" id="d6">
+                </div>
+            </div>
+            <div class="group sep">:</div>
+            <div class="group">
+                <div class="digit" id="d7">
+                </div>
+                <div class="digit" id="d8">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="big-container" style="height: 13rem">
+        <h1>Donald Trump is whining about the Democrats again.</h1>
+        <h2>And the web design team he hired are clearly incompetent.</h2>
+        <div class="sub">(Read article below)</div>
+    </div>
+    <article class="main">
+        <p>On October 1st, 2025, the US government shut down, due to <i>both parties'</i> bills not getting enough votes
+            to
+            pass<sup><a href="https://en.wikipedia.org/wiki/Government_shutdowns_in_the_United_States#2025"
+                    target="_blank" rel="noopener noreferrer">[1]</a></sup> (despite <a
+                href="https://www.whitehouse.gov/articles/2025/10/fact-democrats-shut-down-government-over-free-healthcare-for-illegals/"
+                target="_blank" rel="noopener noreferrer">what the administration wants you
+                to think</a>).</p>
+        <!-- (side note: i cannot believe that actual white house articles are written in a tone this childish. seriously, even mine isn't this bad.) -->
+        <p>Subsequently, a <a target="_blank" rel="noopener noreferrer"
+                href="https://www.whitehouse.gov/government-shutdown-clock/">shutdown counter</a> was put up on the
+            White House's website (<a
+                href="https://web.archive.org/web/20251002142558/https://www.whitehouse.gov/government-shutdown-clock/"
+                target="_blank" rel="noopener noreferrer">Archived</a>). Now, since it's an official government website
+            you'd think the counter would be done well and accessible to screen readers, right? Well, it's surprising
+            just how wrong you'd be.</p>
+        <p>Well, first let's take a look at the HTML structure of just one of the digits, lit up to show a "0":</p>
+        <pre>
+<code class="language-html">&lt;div class=&quot;digit&quot; id=&quot;d1&quot;&gt;
+    &lt;div class=&quot;segment a lit&quot;&gt;&lt;/div&gt;
+    &lt;div class=&quot;segment b lit&quot;&gt;&lt;/div&gt;
+    &lt;div class=&quot;segment c lit&quot;&gt;&lt;/div&gt;
+    &lt;div class=&quot;segment d lit&quot;&gt;&lt;/div&gt;
+    &lt;div class=&quot;segment e lit&quot;&gt;&lt;/div&gt;
+    &lt;div class=&quot;segment f lit&quot;&gt;&lt;/div&gt;
+    &lt;div class=&quot;segment g&quot;&gt;&lt;/div&gt;
+&lt;/div&gt;</code>
+</pre>
+
+        <p>That's right. Every segment of the 7-segment display is a separate div.</p>
+        <p>There's no extra information that a screen reader could possibly make use of.</p>
+        <p>The spacing is all off, so it just looks like a continuous line of numbers, with no grouping to indicate
+            what the numbers mean.</p>
+        <p>Not to mention, the script driving the counter on the original page logs a bunch of debug info to the console
+            every second, which is just unnecessary, especially in production. Here's a quick sampler:</p>
+        <pre>
+<code>updateDisplay called
+Setting digits: d1=0, d2=1, d3=1, d4=0, d5=3, d6=5, d7=5, d8=8
+Setting digit d1 to value 0
+Lit segment .a for digit d1
+Lit segment .b for digit d1
+Lit segment .c for digit d1
+Lit segment .d for digit d1
+Lit segment .e for digit d1
+Lit segment .f for digit d1
+Setting digit d2 to value 1
+Lit segment .b for digit d2
+Lit segment .c for digit d2</code>
+</pre>
+        <br />
+        <p>So, why are we here?</p>
+        <p>The counter at the top of this page is my own version of the White House's counter, but done
+            right.</p>
+        <p>It uses a 7-segment font, and each digit is a single element with the number as its text content.</p>
+        <p>I used the original counter's JavaScript logic as a base, and rewrote it to be more efficient.</p>
+        <p>Additionally, I added colon separators between the groups of digits, to denote days, hours, minutes, and seconds.</p>
+            <br />
+        <p>Now, I'm not saying I'm the greatest web developer in the world. Hell, I'm just a random teenager who knows
+            how to smash their keyboard in the right places.</p>
+        <p>But when a government <span class="sub">(especially the government of what is supposedly the leader of the
+                free world)</span> can't even get something as simple as a counter right, I think it's fair to call them
+            out on it.</p>
+        <p class="sub">From 🇨🇦 with ❤️</p>
+    </article>
+<!-- </body> -->
+<script>
+    function updateDisplay() {
+        const elapsed = new Date() - new Date('2025-10-01T00:00:00');;
+
+        let days = 0;
+        let hours = 0;
+        let minutes = 0;
+        let seconds = 0;
+
+        if (elapsed >= 0) {
+            const totalSeconds = Math.floor(elapsed / 1000);
+            seconds = totalSeconds % 60;
+            minutes = Math.floor(totalSeconds / 60) % 60;
+            const totalHours = Math.floor(totalSeconds / 3600);
+            hours = totalHours % 24;
+            days = Math.floor(totalHours / 24);
+        }
+
+        const d = [
+            Math.floor(days / 10),
+            days % 10,
+            Math.floor(hours / 10),
+            hours % 10,
+            Math.floor(minutes / 10),
+            minutes % 10,
+            Math.floor(seconds / 10),
+            seconds % 10
+        ];
+
+        document.querySelectorAll('.sep').forEach(sep => sep.classList.toggle('lit'));
+
+        d.forEach((value, i) => {
+            const digit = document.getElementById('d' + (i + 1));
+            if (digit) digit.textContent = value > 9 || value < 0 ? 0 : value;
+        });
+    }
+
+    // Initialize display when DOM is ready
+    document.addEventListener('DOMContentLoaded', function () {
+        updateDisplay();
+        setInterval(updateDisplay, 1000);
+    });
+</script>
+
+<!-- </html> -->

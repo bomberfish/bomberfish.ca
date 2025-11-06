@@ -40,9 +40,9 @@ export const TopNav: Component<{}, {}> = function () {
 				<Link href="/projects" class="router-link">
 					Projects&nbsp;
 				</Link>
-				<a href="https://blog.bomberfish.ca" target="_blank">
-					Blog
-				</a>
+				<Link href="/blog" class="router-link">
+					Blog&nbsp;
+				</Link>
 		</nav>
 	)
 }
@@ -56,6 +56,7 @@ TopNav.style = css`
 		user-select: none;
 		-webkit-user-select: none;
 		justify-content: center;
+		height: calc(clamp(1.6rem, 1rem + 2vw, 2.25rem) * 1.1);
 	}
 
 	a,

@@ -9,13 +9,13 @@ const Homepage: Component<{}, {}> = function () {
 		<main>
 			{/* <Header /> */}
 			<header class="frontpage-header">
+			<TopNav />
 			<div class="title">
 				<a href="/me.png" target="_blank">
 					<img src="/pfp-display.gif" class="pfp" title="my profile picture. click to view full color version." />
 				</a>
 				<h1>bomber<br/>fish.ca</h1>
 			</div>
-			<TopNav />
 			</header>
 				<article>
 					<h2>about me</h2>

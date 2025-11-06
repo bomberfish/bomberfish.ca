@@ -1,10 +1,61 @@
 import { defineConfig } from "vite";
 import { devSsr } from "dreamland/vite";
+import { compile } from "@mdx-js/mdx";
 import { literalsHtmlCssMinifier } from "@literals/rollup-plugin-html-css-minifier";
+
+import rehypeStarryNight from "rehype-starry-night";
+import { all as grammars } from "@wooorm/starry-night";
+import { visit } from "estree-util-visit";
+
 import legacy from "@vitejs/plugin-legacy";
 import postCssPresetEnv from "postcss-preset-env";
 import autoprefixer from "autoprefixer";
+
+import { readFile } from "fs/promises";
 import { execSync } from "child_process";
+
+async function compileMdx(content: string, name?: string) {
+	const compiled = await compile(content, {
+		outputFormat: "program",
+		jsxImportSource: "dreamland",
+		rehypePlugins: [[rehypeStarryNight, { grammars }]],
+		recmaPlugins: [
+			() => (tree) =>
+				visit(tree, (node) => {
+					// this is scuffed but works. no idea why mdx doesn't support using class
+					if (
+						node.type === "CallExpression" &&
+						node.callee.type === "Identifier" &&
+						node.callee.name.startsWith("_jsx") &&
+						node.arguments[1]?.type === "ObjectExpression"
+					) {
+						for (let prop of node.arguments[1].properties) {
+							if (
+								prop.type === "Property" &&
+								prop.key.type === "Identifier" &&
+								prop.key.name === "className"
+							) {
+								prop.key.name = "class";
+							}
+						}
+					}
+				}),
+		],
+	});
+
+	return `
+		${compiled.toString().replace("export default", "export")}
+
+		export ${name ? `function ${name}()` : `default function Page()`} {
+			const {wrapper: MDXLayout} = this.components || ({});
+			return (
+				MDXLayout 
+					? _jsx(MDXLayout, { children: [_createMdxContent(this)], ...this })
+					: _createMdxContent(this)
+			)
+		}
+	`;
+}
 
 export default defineConfig({
 	plugins: [
@@ -17,6 +68,20 @@ export default defineConfig({
 		legacy({
 			targets: ["fully supports es6"],
 		}),
+		{
+			name: "mdx-dreamland",
+			enforce: "pre",
+			async load(id) {
+				if (id.endsWith(".mdx")) {
+					const content = await readFile(id, "utf-8");
+
+					return {
+						code: await compileMdx(content),
+						loader: "jsx",
+					};
+				}
+			},
+		},
 	],
 	define: {
 		__APP_VERSION__: JSON.stringify(process.env.npm_package_version),
@@ -25,32 +90,16 @@ export default defineConfig({
 	},
 	build: {
 		target: "es2015",
-		cssMinify: "lightningcss",
+		// cssMinify: "lightningcss",
 		minify: "terser",
 		terserOptions: {
 			ecma: 2015,
 			format: {
 				comments: false,
 			},
-			compress: {
-				arguments: true,
-				unsafe: true,
-				unsafe_proto: true,
-				unsafe_math: true,
-				unsafe_regexp: true,
-			},
-			mangle: true,
 		},
 		sourcemap: true,
 		rolldownOptions: {
-			treeshake: true,
-			logLevel: "info",
-			optimization: {
-				inlineConst: {
-					mode: "smart",
-					pass: 3
-				}
-			},
 			output: {
 				generatedCode: {
 					preset: "es2015",

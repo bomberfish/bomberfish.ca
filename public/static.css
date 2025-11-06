@@ -28,6 +28,13 @@ html {
 	--card-overlay: color-mix(in srgb, var(--overlay3) 70%, var(--text) 30%);
 	--card-surface: hsla(var(--surface1-hsl), 0.90);
 	--card-surface-hover: hsla(var(--surface1-hsl), 0.96);
+
+	/* Shared UI tokens used by components (provide defaults for no-hydrate cases) */
+	--border: hsla(var(--overlay1-hsl), 0.35);
+	--text-secondary: var(--subtext1);
+	--tag-bg: hsla(var(--overlay1-hsl), 0.25);
+	--tag-color: var(--supertext);
+	--code-bg: hsla(var(--surface1-hsl), 0.25);
 }
 
 /* html {
@@ -207,17 +214,17 @@ header.frontpage-header {
 	flex-direction: column;
 	gap: 2rem;
 	text-align: center;
-	align-items: center;
+	align-items: flex-end;
 }
 
 .title {
-		display: flex;
-		align-items: center;
-		flex-direction: row;
-		justify-content: center;
-		flex-wrap: nowrap;
-		max-width: 100%;
-	}
+	display: flex;
+	align-items: center;
+	flex-direction: row;
+	justify-content: center;
+	flex-wrap: nowrap;
+	width: 100%;
+}
 
 .title h1 {
 	font-size: clamp(6rem, 15vw, 8rem);
@@ -410,6 +417,86 @@ a.web-button:after,
 a[href^="/"]:after {
 	display: none;
 	content: "";
+}
+
+/* Blog list & post UI — baseline styles live here so older browsers still look fine */
+.blog-list {
+	width: min(68rem, 100%);
+	margin: 2rem auto 0;
+	display: flex;
+	flex-direction: column;
+	gap: 1.25rem;
+}
+
+.blog-item {
+	border-bottom: 1px solid var(--border);
+	padding-bottom: 1rem;
+}
+
+/* Neutralize global wavy underline for card-style links */
+.blog-list a.blog-link,
+.blog-list a.blog-link:visited,
+.blog-list a.blog-link:hover {
+	text-decoration: none !important;
+	color: inherit !important;
+}
+
+.blog-item h2 {
+	margin: 0 0 0.5rem 0;
+	font-size: clamp(1.25rem, 1.6vw + 0.5rem, 1.75rem);
+}
+
+.blog-list a.blog-link:hover h2 {
+	text-decoration: underline;
+}
+
+.blog-item time {
+	color: var(--text-secondary);
+	font-size: 0.9rem;
+	display: block;
+}
+
+.post-desc {
+	margin-top: 0.5rem;
+	color: var(--text-secondary);
+}
+
+.post-tags {
+	margin-top: 0.5rem;
+	display: flex;
+	gap: 0.5rem;
+	flex-wrap: wrap;
+}
+
+.post-tags .tag {
+	background: var(--tag-bg);
+	color: var(--tag-color);
+	padding: 0.15rem 0.5rem;
+	border-radius: 999px;
+	font-size: 0.8rem;
+	border: 1px solid hsla(var(--overlay2-hsl), 0.3);
+}
+
+/* Single post content baseline */
+article.blog-content {
+	max-width: 800px;
+	margin: 0 auto;
+	padding: 2rem 1rem;
+	line-height: 1.6;
+}
+
+article.blog-content pre {
+	overflow-x: auto;
+	padding: 1rem;
+	border-radius: 0.5rem;
+	background: var(--code-bg);
+}
+
+article.blog-content blockquote {
+	border-left: 4px solid var(--border);
+	padding-left: 1rem;
+	margin-left: 0;
+	font-style: italic;
 }
 
 /* a,

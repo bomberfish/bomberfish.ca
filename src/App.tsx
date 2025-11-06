@@ -8,6 +8,8 @@ import { projects } from "./Projects";
 import ProjectView from "./pages/ProjectView";
 import ProjectList from "./pages/ProjectList";
 import { AboutView } from "./pages/AboutView";
+import BlogList from "./pages/BlogList";
+import BlogPost from "./pages/BlogPost";
 import Oneko from "./Oneko";
 
 let page: Stateful<{
@@ -42,6 +44,25 @@ const App: Component<{}, {}> = function (cx) {
 			path: `projects/${project.lastPathComponent}`,
 			show: <ProjectView project={project} />,
 		})),
+		{ path: "blog/index", show: <BlogList /> },
+
+		// Dynamically create blog post routes from MDX files in src/blog
+		...(() => {
+			const blogModules = import.meta.glob("./blog/*.mdx", { eager: true });
+			const posts = Object.keys(blogModules)
+				.map((path) => {
+					const match = path.match(/\/(\d{4}-\d{2}-\d{2})-(.+)\.mdx$/);
+					if (!match) return null;
+					const [, , slug] = match;
+					return { slug };
+				})
+				.filter((p) => p !== null) as { slug: string }[];
+
+				return posts.map((p) => ({
+					path: `blog/${p.slug}`,
+					show: <BlogPost slug={p.slug} />,
+				}));
+		})(),
 		{ path: "siteinfo", show: <AboutView /> },
 		{ path: "*", show: <NotFoundView /> },
 	];

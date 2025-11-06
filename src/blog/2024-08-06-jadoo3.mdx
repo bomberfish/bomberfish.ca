@@ -1,0 +1,80 @@
+export const tags = ["Writeup"];
+export const image = "/blog-images/jadoo3.webp";
+export const description = "How I gained root access to a Jadoo3 set-top box and what I discovered during the investigation.";
+
+# How I hacked an obscure set-top box from 2013
+
+![Jadoo3](/blog-images/jadoo3.webp)
+
+Hello, friends! Today, I'd like to go over how I got root shell access to the Jadoo3, an obscure set-top box from 2013.
+
+## What is the Jadoo3?
+
+As you can extrapolate from the name, the Jadoo3 is the third set-top box by JadooTV. The device aims to provide on-demand content from South Asia and the Middle East, with the name originating from the Hindi word for "magic".
+
+I've had the device for a while, but haven't found anything to do with it until now. As such, it's been collecting dust in a half-disassembled state for some time.
+
+## Internals
+
+Opening up the device, we can see the heart of the machine.
+
+![Jadoo3 PCB, top view](/blog-images/jadoo3-pcb-1.webp)
+
+In the center, we can see some sort of SoC, with a model number of VSI1871A-CBE3. Searching for this online returns very few results, with no datasheet available.
+
+> **NOTE:** Just off screen to the bottom left of the image, there seems to be a 10-pin header, which could be a debugging interface such as JTAG. However, this was not needed, as will be discussed later in the article.
+
+![Jadoo3 PCB, front-left view](/blog-images/jadoo3-pcb-2.JPEG)
+
+However, in the front-left corner of the PCB, we can see some identifying information. The device seems to be based on the Syabas Popbox V8, another set-top box which is powered by the SMP8670, a MIPS CPU created by Sigma Designs.
+
+## Getting in
+
+Booting the device up and getting it connected to a network, we can run `nmap` to reveal an open telnet service on port 23. This can't be good.
+
+![Love is in the air? Wrong. Exposed root shell on port 23](/blog-images/love-in-the-air.jpg)
+
+That's right, a root shell was exposed on an open, unauthenticated channel. From there, it was as simple as connecting with `nc <ip> 23`.
+
+What's very interesting is that the box seems to run on a flavor of Linux. Running `uname -a` gives us the following output:
+
+```
+Linux JADOO 2.6.29.6-22-sigma #263 PREEMPT Thu Feb 12 17:19:10 MYT 2015 mips GNU/Linux
+```
+
+This seems to confirm this is a MIPS processor by Sigma Designs, as discussed earlier. The contents of `/proc/cpuinfo` gives us more insight:
+
+```
+system type             : Sigma Designs TangoX
+processor               : 0
+cpu model               : MIPS 24Kc V7.12  FPU V0.0
+BogoMIPS                : 466.94
+wait instruction        : yes
+microsecond timers      : yes
+tlb_entries             : 32
+extra interrupt vector  : yes
+hardware watchpoint     : yes, count: 4, address/irw mask: [0x0ffc, 0x0ffc, 0x0ffb, 0x0ffb]
+ASEs implemented        : mips16
+shadow register sets    : 1
+core                    : 0
+VCED exceptions         : not available
+VCEI exceptions         : not available
+
+SMP8XXX Chip ID         : 8671
+SMP8XXX Rev ID          : 2
+System bus frequency    : 351000000 Hz
+CPU frequency           : 702000000 Hz
+DSP frequency           : 351000000 Hz
+```
+
+Specifically, it seems to be a revised version of the SMP8670, called the SMP8671.
+
+Checking `/proc/meminfo` indicates the device comes with ~128MB of RAM.
+
+## What now?
+
+The device's interface is apparently Flash-based, so it might be possible to replace some of the included apps with arbitrary swf files. Additionally, the standard Linux framebuffer is exposed, which could open up the possibility of running non-flash programs (DOOM anyone?).
+
+I will most likely make one or more follow-up posts if I manage to get my own programs running on the device.
+
+For now, this has been BomberFish, and I do declare; end broadcast.
