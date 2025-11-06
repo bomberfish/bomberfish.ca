@@ -91,17 +91,18 @@
 
 
 @font-face {
-	font-family: "Material Symbols Rounded";
+	font-family: "Material Symbols Sharp";
 	font-style: normal;
 	font-weight: 400;
 	font-display: block;
-	src: url("https://fonts.gstatic.com/s/materialsymbolsrounded/v181/syl0-zNym6YjUruM-QrEh7-nyTnjDwKNJ_190FjpZIvDmUSVOK7BDB_Qb9vUSzq3wzLK-P0J-V_Zs-QtQth3-jOcbTCVpeRL2w5rwZu2rIelXxc.woff2")
-		format("woff2");
+	src: url("https://fonts.gstatic.com/s/materialsymbolssharp/v289/gNNBW2J8Roq16WD5tFNRaeLQk6-SHQ_R00k4c2_whPnoY9ruReaU4bHmz74m0ZkGH-VBYe1x0TV6x4yFH8F-H5OdzEL3sVTgJtfbYxOLojCNJ1H7-0Hk.woff") format("woff");
 }
 
 .material-symbols,
+.material-symbols-sharp,
+.material-symbols-outlined,
 .material-symbols-rounded {
-	font-family: "Material Symbols Rounded";
+	font-family: "Material Symbols Sharp";
 	font-weight: normal;
 	font-style: normal;
 	/* font-size: 24px; */
