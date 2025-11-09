@@ -108,7 +108,7 @@ export const AboutView: Component<{}, {}> = function () {
 					</a>
 					.
 				</p>
-				<p>the color scheme is inspired by the "U-571 Code Red" theme from <a href="https://sacred.computer">the SRCL component library</a>, and the typography loosely borrows from the title cards from neon genesis evangelion.</p>
+				<p>the color scheme is inspired by the "U-571 Code Red" theme from <a href="https://sacred.computer">the SRCL component library</a>, and the typography borrows from the title cards from neon genesis evangelion.</p>
 				<p>the background pulls images from <a href="https://picsum.photos" target="_blank" rel="noopener noreferrer">Lorem Picsum</a> and applies Atkinson dithering as described in <a href="https://beyondloom.com/blog/dither.html" target="_blank" rel="noopener noreferrer">this blogpost</a>.</p>
 				<h2>archive of previous versions</h2>
 				<p>
