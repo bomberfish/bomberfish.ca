@@ -40,9 +40,12 @@ export const TopNav: Component<{}, {}> = function () {
 				<Link href="/projects" class="router-link">
 					Projects&nbsp;
 				</Link>
-				<Link href="/blog" class="router-link">
+				{/* <Link href="/blog" class="router-link">
 					Blog&nbsp;
-				</Link>
+				</Link> */}
+				<a href="https://blog.bomberfish.ca" target="_blank">
+					Blog
+				</a>
 		</nav>
 	)
 }
