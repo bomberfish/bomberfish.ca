@@ -89,6 +89,104 @@
 }
 
 
+@font-face {
+	font-family: "NIS-JTC-Win";
+	font-style: normal;
+	font-weight: lighter;
+	font-stretch: normal;
+	font-display: swap;
+	src: 
+		url("/fonts/display/NIS-JTC-Win-M1.eot?#iefix") format("embedded-opentype");
+	src: local("☺"),
+		url("/fonts/display/NIS-JTC-Win-M1.woff2") format("woff2"),
+		url("/fonts/display/NIS-JTC-Win-M1.woff") format("woff"),
+		url("/fonts/display/NIS-JTC-Win-M1.ttf") format("truetype");
+}
+
+@font-face {
+	font-family: "NIS-JTC-Win";
+	font-style: normal;
+	font-weight: normal;
+	font-stretch: normal;
+	font-display: swap;
+	src: 
+		url("/fonts/display/NIS-JTC-Win-M5.eot?#iefix") format("embedded-opentype");
+	src: local("☺"),
+		url("/fonts/display/NIS-JTC-Win-M5.woff2") format("woff2"),
+		url("/fonts/display/NIS-JTC-Win-M5.woff") format("woff"),
+		url("/fonts/display/NIS-JTC-Win-M5.ttf") format("truetype");
+}
+
+
+@font-face {
+	font-family: "NIS-JTC-Win";
+	font-style: normal;
+	font-weight: normal;
+	font-stretch: condensed;
+	font-display: swap;
+	src: 
+		url("/fonts/display/NIS-JTC-Win-M5-Condensed.eot?#iefix") format("embedded-opentype");
+	src: local("☺"),
+		url("/fonts/display/NIS-JTC-Win-M5-Condensed.woff2") format("woff2"),
+		url("/fonts/display/NIS-JTC-Win-M5-Condensed.woff") format("woff"),
+		url("/fonts/display/NIS-JTC-Win-M5-Condensed.ttf") format("truetype");
+}
+
+@font-face {
+	font-family: "NIS-JTC-Win-Condensed";
+	font-style: normal;
+	font-weight: normal;
+	font-stretch: normal;
+	font-display: swap;
+	src: 
+		url("/fonts/display/NIS-JTC-Win-M5-Condensed.eot?#iefix") format("embedded-opentype");
+	src: local("☺"),
+		url("/fonts/display/NIS-JTC-Win-M5-Condensed.woff2") format("woff2"),
+		url("/fonts/display/NIS-JTC-Win-M5-Condensed.woff") format("woff"),
+		url("/fonts/display/NIS-JTC-Win-M5-Condensed.ttf") format("truetype");
+}
+
+@font-face {
+	font-family: "NIS-JTC-Win";
+	font-style: normal;
+	font-weight: bold;
+	font-stretch: normal;
+	font-display: swap;
+	src: 
+		url("/fonts/display/NIS-JTC-Win-M9.eot?#iefix") format("embedded-opentype");
+	src: local("☺"),
+		url("/fonts/display/NIS-JTC-Win-M9.woff2") format("woff2"),
+		url("/fonts/display/NIS-JTC-Win-M9.woff") format("woff"),
+		url("/fonts/display/NIS-JTC-Win-M9.ttf") format("truetype");
+}
+
+@font-face {
+	font-family: "NIS-JTC-Win";
+	font-style: normal;
+	font-weight: bold;
+	font-stretch: condensed;
+	font-display: swap;
+	src: 
+		url("/fonts/display/NIS-JTC-Win-M9-Condensed.eot?#iefix") format("embedded-opentype");
+	src: local("☺"),
+		url("/fonts/display/NIS-JTC-Win-M9-Condensed.woff2") format("woff2"),
+		url("/fonts/display/NIS-JTC-Win-M9-Condensed.woff") format("woff"),
+		url("/fonts/display/NIS-JTC-Win-M9-Condensed.ttf") format("truetype");
+}
+
+@font-face {
+	font-family: "NIS-JTC-Win-Condensed";
+	font-style: normal;
+	font-weight: bold;
+	font-stretch: normal;
+	font-display: swap;
+	src: 
+		url("/fonts/display/NIS-JTC-Win-M9-Condensed.eot?#iefix") format("embedded-opentype");
+	src: local("☺"),
+		url("/fonts/display/NIS-JTC-Win-M9-Condensed.woff2") format("woff2"),
+		url("/fonts/display/NIS-JTC-Win-M9-Condensed.woff") format("woff"),
+		url("/fonts/display/NIS-JTC-Win-M9-Condensed.ttf") format("truetype");
+}
 
 @font-face {
 	font-family: "Material Symbols Sharp";
@@ -118,12 +216,12 @@
 }
 
 :root {
-	--font-display: "CenturyCondensed", "Times New Roman MT Std", var(--font-serif);
+	--font-display: "NIS-JTC-Win-Condensed", var(--font-serif);
 	--font-body:
 		"HelveticaNow", "Helvetica Neue", Helvetica, FreeSans, "Nimbus Sans L", "Nimbus Sans", system-ui, Arial,
 		sans-serif, "Apple Color Emoji", "Noto Color Emoji", "Segoe UI Emoji";
 	--font-mono:
 		"IosevkaEtoile", ui-monospace, monospace;
-	--font-serif: "Times New Roman", Times, Tinos, FreeSerif, "Nimbus Roman No9 L", "Nimbus Roman", "Liberation Serif",
+	--font-serif: "NIS-JTC-Win", "Times New Roman", Times, Tinos, FreeSerif, "Nimbus Roman No9 L", "Nimbus Roman", "Liberation Serif",
 		"Linux Libertine", serif;
 }
