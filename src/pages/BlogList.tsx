@@ -88,27 +88,27 @@ const BlogList: Component<{}, {}> = function () {
 
 BlogList.style = css`
 article {
-max-width: 800px;
-margin: 0 auto;
-padding: 2rem 1rem;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
 }
 
 .blog-list {
-margin-top: 2rem;
-display: flex;
-flex-direction: column;
-gap: 1.5rem;
+    margin-top: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
 }
 
 .blog-item {
-border-bottom: 1px solid var(--border, #ccc);
-padding-bottom: 1rem;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 1rem;
 }
 
 .blog-link {
-text-decoration: none;
-color: inherit;
-display: block;
+    text-decoration: none;
+    color: inherit;
+    display: block;
 }
 
 .blog-link:hover h2 {
@@ -122,13 +122,13 @@ font-size: 1.5rem;
 }
 
 .blog-item time {
-color: var(--text-secondary, #666);
+color: var(--subtext1);
 font-size: 0.9rem;
 }
 
 .post-desc {
     margin: 0.5rem 0 0 0;
-    color: var(--text-secondary, #444);
+    color: var(--subtext1);
 }
 
 .post-tags {
@@ -139,9 +139,8 @@ font-size: 0.9rem;
 }
 
 .post-tags .tag {
-    background: var(--tag-bg, #eee);
-    color: var(--tag-color, #333);
-    padding: 0.15rem 0.5rem;
+    background: var(--tag-bg);
+    color: var(--supertext);
     border-radius: 999px;
     font-size: 0.8rem;
 }

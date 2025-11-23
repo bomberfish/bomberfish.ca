@@ -7,10 +7,8 @@ slug: string;
 
 const BlogPost: Component<BlogPostProps, {}> = function () {
 	const slug = this.slug;
-	// Dynamically import the blog post
 	const blogModules = import.meta.glob("../blog/*.mdx", { eager: true }) as Record<string, any>;
 
-	// Explicitly treat certain slugs as non-MDX posts (served as static pages)
 	if (slug === "whitehouse") {
 		return (
 			<main>
@@ -25,7 +23,6 @@ const BlogPost: Component<BlogPostProps, {}> = function () {
 		);
 	}
 
-	// Find the matching blog post
 	const matchingPath = Object.keys(blogModules).find((path) => path.includes(`-${slug}.mdx`));
 
 	if (!matchingPath) {
@@ -71,10 +68,10 @@ const BlogPost: Component<BlogPostProps, {}> = function () {
 
 BlogPost.style = css`
 article.blog-content {
-max-width: 800px;
-margin: 0 auto;
-padding: 2rem 1rem;
-line-height: 1.6;
+	max-width: 800px;
+	margin: 0 auto;
+	padding: 2rem 1rem;
+	line-height: 1.6;
 }
 
 article.blog-content .post-title {
@@ -83,7 +80,7 @@ article.blog-content .post-title {
 }
 
 article.blog-content h1 {
-margin-top: 0;
+	margin-top: 0;
 }
 
 article.blog-content .post-body {
@@ -95,7 +92,7 @@ article.blog-content .post-body h1:first-of-type {
 }
 
 article.blog-content h2 {
-margin-top: 2rem;
+	margin-top: 2rem;
 }
 
 article.blog-content img {
@@ -103,26 +100,15 @@ max-width: 100%;
 height: auto;
 }
 
-article.blog-content pre {
-overflow-x: auto;
-padding: 1rem;
-border-radius: 0.5rem;
-background: var(--code-bg, #f5f5f5);
-}
-
-article.blog-content code {
-font-family: "Courier New", monospace;
-}
-
 article.blog-content blockquote {
-border-left: 4px solid var(--border, #ccc);
-padding-left: 1rem;
-margin-left: 0;
-font-style: italic;
+	border-left: 4px solid var(--border);
+	padding-left: 1rem;
+	margin-left: 0;
+	font-style: italic;
 }
 
 .post-desc {
-	color: var(--text-secondary, #444);
+	color: var(--subtext1);
 	margin-top: 0.5rem;
 }
 
@@ -133,8 +119,8 @@ font-style: italic;
 }
 
 .post-tags .tag {
-	background: var(--tag-bg, #eee);
-	color: var(--tag-color, #333);
+	background: var(--tag-bg);
+	color: var(--supertext);
 	padding: 0.15rem 0.5rem;
 	border-radius: 999px;
 	font-size: 0.85rem;

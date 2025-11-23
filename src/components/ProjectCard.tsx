@@ -151,7 +151,7 @@ ProjectCard.style = css<typeof ProjectCard>`
 	.project-year {
 		margin: 0;
 		font-size: 0.9rem;
-		color: var(--subtext1);
+		color: var(--subtext2);
 	}
 
 	.project-title {
@@ -179,8 +179,7 @@ ProjectCard.style = css<typeof ProjectCard>`
 		justify-content: center;
 		position: relative;
 		overflow: hidden;
-		clip-path: polygon(5% 0%, 100% 0%, 95% 100%, 0% 100%);
-		/* transform: perspective(900px) rotateY(-6deg) rotateX(1deg); */
+		clip-path: polygon(7% 0%, 100% 0%, 93% 100%, 0% 100%);
 		box-shadow: 0 16px 38px -16px var(--shadow-ultra);
 		transition:
 			transform 0.45s ease,

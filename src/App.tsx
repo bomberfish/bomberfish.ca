@@ -18,7 +18,7 @@ let page: Stateful<{
 }> = createState({});
 
 const App: Component<{}, {}> = function (cx) {
-	// Dynamically create blog post routes from MDX files in src/blog
+	
 	const blogModules = import.meta.glob("./blog/*.mdx", { eager: true });
 	const blogPosts = Object.keys(blogModules)
 		.map((path) => {

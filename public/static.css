@@ -30,10 +30,7 @@ html {
 	--card-surface-hover: hsla(var(--surface1-hsl), 0.96);
 
 	--border: hsla(var(--overlay1-hsl), 0.35);
-	--text-secondary: var(--subtext1);
 	--tag-bg: hsla(var(--overlay1-hsl), 0.25);
-	--tag-color: var(--supertext);
-	--code-bg: hsla(var(--surface1-hsl), 0.25);
 }
 
 :root {
@@ -375,6 +372,7 @@ p {
 	margin-block: 0.3em;
 }
 
+pre,
 code {
 	background: var(--surface1);
 	font-size: 0.95em;
@@ -385,6 +383,11 @@ code {
 	font-stretch: 100%;
 	font-family: "IosevkaEtoile", monospace;
 	font-family: var(--font-mono);
+}
+
+pre {
+	background: var(--surface1);
+	padding: 1rem;
 }
 
 subt {
@@ -760,73 +763,4 @@ a:visited {
 
 ::view-transition-new(splash-message) {
 	animation: transition-new 0.35s ease forwards;
-}
-
-.typing-title {
-	--typing-line-height: 1.05em;
-	display: inline-block;
-	position: relative;
-	text-align: left;
-	min-height: calc(var(--typing-lines, 2) * var(--typing-line-height));
-	min-inline-size: calc(var(--typing-longest-line, 8) * 0.65ch);
-}
-
-.typing-title .typing-shadow {
-	visibility: hidden;
-	opacity: 0;
-	white-space: pre-line;
-	line-height: var(--typing-line-height);
-	pointer-events: none;
-}
-
-.typing-title .typing-overlay {
-	position: absolute;
-	inset: 0 auto auto 0;
-	display: block;
-	width: 100%;
-	pointer-events: none;
-}
-
-.typing-title .typing-content {
-	display: inline;
-	letter-spacing: inherit;
-	line-height: var(--typing-line-height);
-	white-space: pre-line;
-}
-
-.typing-title .typing-cursor {
-	display: inline-block;
-	font-weight: inherit;
-	font-size: 0.9em;
-	margin-left: 0.2ch;
-	text-shadow: 0 0 0.35rem var(--supertext);
-	animation: typing-cursor-blink 0.55s ease-in-out infinite;
-	line-height: 1;
-	transform: translateY(0.05em);
-}
-
-.typing-title[data-typing-running="false"] .typing-cursor {
-	animation-duration: 0.85s;
-	opacity: 0.9;
-}
-
-@keyframes typing-cursor-blink {
-	0% {
-		opacity: 1;
-	}
-	45% {
-		opacity: 0.2;
-	}
-	70% {
-		opacity: 0.85;
-	}
-	100% {
-		opacity: 1;
-	}
-}
-
-@media (prefers-reduced-motion: reduce) {
-	.typing-title .typing-cursor {
-		display: none;
-	}
 }
