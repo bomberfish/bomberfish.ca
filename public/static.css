@@ -222,7 +222,7 @@ h3,
 h4,
 h5,
 h6 {
-	font-family: "NIS-JTC-Win-Condensed", serif;
+	/* font-family: "NIS-JTC-Win-Condensed", serif; */
 	font-family: var(--font-display);
 	font-weight: var(--helvetica-heading-wght);
 	font-stretch: var(--helvetica-heading-stretch);
