@@ -59,6 +59,7 @@ img {
 	pointer-events: none;
 }
 
+
 .tooltip:after {
 	content: "";
 	position: absolute;

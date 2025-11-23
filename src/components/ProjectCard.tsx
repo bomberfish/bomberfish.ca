@@ -1,272 +1,224 @@
 import { Component, css } from "dreamland/core";
 import ProjectCardDetails from "../types/Project";
-import { Link } from "dreamland/router";
-import { router } from "../main-server";
+import TransitionLink from "./TransitionLink";
 
 const ProjectCard: Component<
 	{ project: ProjectCardDetails; size: "small" | "large" },
 	{}
 > = function () {
+
+	const handleCardClick = (event: MouseEvent) => {
+		if (
+			event.defaultPrevented ||
+			event.button !== 0 ||
+			event.metaKey ||
+			event.ctrlKey ||
+			event.shiftKey ||
+			event.altKey
+		) {
+			return;
+		}
+
+		const target = event.target as HTMLElement | null;
+		if (target?.closest("a")) {
+			return;
+		}
+
+		const card = event.currentTarget as HTMLElement | null;
+		const link = card?.querySelector("a[data-card-link]") as HTMLAnchorElement | null;
+		if (!link) return;
+
+		const syntheticClick = new MouseEvent("click", {
+			bubbles: true,
+			cancelable: true,
+			composed: true,
+		});
+		link.dispatchEvent(syntheticClick);
+	};
+
+	const hasImage = Boolean(this.project.img);
+	const yearDisplay = typeof this.project.endYear === "number"
+		? this.project.endYear === this.project.startYear
+			? `${this.project.startYear}`
+			: `${this.project.startYear} — ${this.project.endYear}`
+		: `${this.project.startYear} — present`;
+
 	return (
-		<div on:click={(e: MouseEvent) => {
-				console.log(e.target);
-				if ((e.target as HTMLElement).tagName.toLowerCase() === "a") {
-					// let the link handle the click if one was clicked
-					return;
-				}
-				router.navigate(`projects/${this.project.lastPathComponent}`);
-			}}>
-			<Link href={`/projects/${this.project.lastPathComponent}`}  class={`project-card card interactable ${this.size}`} class:no-image={!this.project.img}>
-				{this.project.img && (
-					<div class="media" aria-hidden="true">
-						<img src={this.project.img} alt="" loading="lazy" class="project-image" />
-					</div>
-				)}
-				<div class="fill-link">
-					<div class="content">
-						<h3 class="name">{this.project.title}</h3>
-						<p class="description">{this.project.blurb}</p>
-					</div>
+		<div class="project-card-wrapper" on:click={handleCardClick}>
+			<TransitionLink
+				href={`/projects/${this.project.lastPathComponent}`}
+				class={`project-card card interactable ${this.size}`}
+				style="display: flex; text-decoration: none;"
+				data-card-link
+				class:no-image={!hasImage}
+			>
+				<div class="project-info">
+					<p class="project-year">{yearDisplay}</p>
+					<h3 class="project-title">{this.project.title}</h3>
+					<p class="project-description">{this.project.blurb}</p>
 				</div>
-			</Link>
+				<div class="project-visual" aria-hidden={hasImage ? "true" : "false"}>
+					{hasImage ? (
+						<img src={this.project.img} alt="" loading="eager" />
+					) : (
+						<span>View project</span>
+					)}
+				</div>
+			</TransitionLink>
 		</div>
 	);
 };
 
 ProjectCard.style = css<typeof ProjectCard>`
 	:scope {
-		display: flex;
-		flex-direction: column;
-		align-items: flex-start;
-		justify-content: flex-end;
-		text-align: left;
-		gap: 0.5rem;
-		min-height: 180px;
-		min-height: clamp(12rem, 27vw, 20rem);
-		padding: 1rem;
-		position: relative;
-		background: var(--card-surface);
-		border-radius: 0;
-		overflow: hidden;
-		transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-		box-shadow:
-			0 4px 6px -1px var(--shadow-medium),
-			0 2px 4px -1px var(--shadow-soft);
-		backdrop-filter: blur(8px);
-		cursor: pointer;
-		color: inherit;
-	}	
-
-	.fill-link {
-		display: flex;
-		flex-direction: column;
-		justify-content: flex-end;
-		align-items: flex-start;
 		width: 100%;
-		height: 100%;
+	}
+
+	:scope:hover img {
+		transform: scale(1.05);
+		filter: saturate(1.1) brightness(1.05);
+	}
+
+	.project-card-wrapper {
+		width: 100%;
+	}
+
+	.project-card {
+		display: flex;
+		width: 100%;
+		align-items: flex-start;
+		justify-content: space-between;
+		gap: clamp(1.25rem, 4vw, 5rem);
+		padding: clamp(1rem, 0.8rem + 0.5vw, 1.5rem) 0;
+		background: transparent;
+		box-shadow: none;
+		backdrop-filter: none;
 		text-decoration: none !important;
+		border-bottom: 1px solid transparent;
 		color: inherit;
 		position: relative;
 	}
 
-	.media {
-		position: absolute;
-		top: 0;
-		left: 0;
-		width: 100%;
-		height: 100%;
-		overflow: hidden;
-		z-index: 0;
-		pointer-events: none;
+	* {
+		text-decoration: none !important;
 	}
 
-	.media::after {
+
+	:scope:hover h3 {
+		text-decoration: underline !important;
+		text-decoration-color: var(--subtext1) !important;
+	}
+
+	.project-card::after {
 		content: "";
 		position: absolute;
-		top: 0;
-		left: 0;
-		width: 100%;
-		height: 100%;
-		transition: opacity 0.35s ease;
-	}
-
-	.project-image {
-		max-width: 100%;
-		width: 100%;
-		height: 100%;
-		object-fit: cover;
-		filter: saturate(0.9) brightness(0.4);
-		transform-origin: center;
-		transition: transform 0.35s ease, filter 0.35s ease;
-		will-change: transform, filter;
-	}
-
-	:scope.small {
-		min-height: 140px;
-		min-height: clamp(8rem, 24vw, 12rem);
-	}
-
-	:scope.no-image {
-		min-height: 100px;
-		min-height: clamp(6rem, 20vw, 8rem);
-		justify-content: center;
-		background-color: var(--card-overlay);
-	}
-
-	:scope:hover {
-		box-shadow:
-			0 25px 50px -12px var(--shadow-ultra),
-			0 0 0 1px var(--shadow-highlight);
-		background: var(--card-surface-hover);
-	}
-
-	:scope.no-image:hover {
-		background-color: var(--card-overlay);
-	}
-
-	:scope::before {
-		content: "";
-		position: absolute;
-		top: 0;
 		left: 0;
 		right: 0;
 		bottom: 0;
-		width: 110%;
-		height: 110%;
-		/* background: linear-gradient(
-			to top,
-			rgba(20, 0, 0, 0.9) 0%,
-			transparent 60%,
-			transparent 100%
-		); */
-		/* backdrop-filter: blur(2px);
-		mask-image: linear-gradient(to top, black 0%, black 20%, transparent 70%); */
-		z-index: 1;
-		transition: opacity 0.35s ease;
-		opacity: 1;
+		height: 1px;
+		background: linear-gradient(
+			90deg,
+			color-mix(in srgb, var(--overlay0) 0%, transparent) 0%,
+			color-mix(in srgb, var(--overlay1) 45%, transparent) 40%,
+			color-mix(in srgb, var(--overlay1) 45%, transparent) 60%,
+			color-mix(in srgb, var(--overlay0) 0%, transparent) 100%
+		);
+		pointer-events: none;
 	}
 
-	:scope:hover::before {
-		opacity: 0.8;
+	.project-card-wrapper:first-of-type .project-card {
+		border-top: 1px solid color-mix(in srgb, var(--overlay1) 45%, transparent);
 	}
 
-	:scope:hover .project-image {
-		transform: scale(1.01);
-		filter: saturate(1.25) brightness(0.6);
+	.project-card-wrapper:last-of-type .project-card::after {
+		opacity: 0;
 	}
 
-	.content {
-		transform: translateY(0);
-		transition: transform 0.35s ease;
+	.project-card:hover .project-title {
+		color: var(--accent);
+	}
+
+	.project-info {
+		display: flex;
+		flex-direction: column;
+		gap: 0.35rem;
+		flex: 1 1 auto;
+		min-width: 0;
+		margin-right: clamp(1rem, 3vw, 2.5rem);
+		justify-content: center;
+	}
+
+	.project-year {
 		margin: 0;
-		position: relative;
-		z-index: 2;
-		
+		font-size: 0.9rem;
+		color: var(--subtext1);
 	}
 
-	p {
-		margin-bottom: 0;
-	}
-
-	*, .content, .name, .description {
-		text-decoration: none !important;
-		text-decoration-style: solid !important;
-	}
-
-	:scope:hover .content {
-		transform: translateY(-0.075rem);
-	}
-
-	:scope:hover .name {
-		text-shadow:
-			0 2px 8px rgba(0, 0, 0, 0.4),
-			0 -0.5px 1px rgba(0, 0, 0, 0.2);
-	}
-
-	.fill-link:hover .description {
-		text-shadow:
-			0 1px 4px rgba(0, 0, 0, 0.4),
-			0 -0.5px 1px rgba(0, 0, 0, 0.2);
-		opacity: 1;
-	}
-
-	.name {
-		font-size: 20px;
-		font-size: clamp(1.1rem, 1.2vw + 1rem, 1.5rem);
+	.project-title {
+		margin: 0;
+		font-size: clamp(1.25rem, 1rem + 1.5vw, 1.9rem);
 		font-weight: 700;
 		color: var(--supertext);
+	}
+
+	.project-description {
 		margin: 0;
-		text-shadow: 0 2px 8px var(--shadow-strong);
-		line-height: 1.2;
-		transition: text-shadow 0.35s ease;
-	}
-
-	.description {
-		font-size: 14px;
-		font-size: clamp(0.9rem, 0.4vw + 0.8rem, 0.95rem);
+		max-width: 60ch;
 		color: var(--text);
-		text-shadow: 0 1px 4px var(--shadow-medium);
-		line-height: 1.4;
 		opacity: 0.95;
+		font-size: clamp(0.95rem, 0.85rem + 0.2vw, 1.05rem);
+	}
+
+	.project-visual {
+		flex-shrink: 0;
+		width: clamp(200px, 28vw, 320px);
+		aspect-ratio: 2 / 1;
+		background: color-mix(in srgb, var(--surface2) 80%, transparent);
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		position: relative;
+		overflow: hidden;
+		clip-path: polygon(5% 0%, 100% 0%, 95% 100%, 0% 100%);
+		/* transform: perspective(900px) rotateY(-6deg) rotateX(1deg); */
+		box-shadow: 0 16px 38px -16px var(--shadow-ultra);
 		transition:
-			opacity 0.35s ease,
-			text-shadow 0.35s ease;
+			transform 0.45s ease,
+			box-shadow 0.45s ease,
+			border-color 0.3s ease,
+			background 0.3s ease;
 	}
 
-	@media (prefers-reduced-motion: reduce) {
-		:scope {
-			transition: none;
-		}
-
-		:scope:hover {
-			transform: none;
-		}
-
-		.media::after {
-			transition: none;
-		}
-
-		.media img {
-			transition: none;
-		}
-
-		:scope:hover .media img {
-			transform: none;
-			filter: saturate(0.9) brightness(0.5);
-		}
+	.project-card:hover .project-visual {
+		transform: perspective(850px) rotateY(-3deg) translateY(-4px) scale(1.015);
+		box-shadow: 0 24px 50px -14px var(--shadow-ultra);
+		border-color: color-mix(in srgb, var(--overlay1) 70%, transparent);
+		background: color-mix(in srgb, var(--surface3) 85%, transparent);
 	}
 
-	@supports (grid-template-rows: masonry) or (grid-template-columns: masonry) or (display: masonry) {
-		:scope:not(.no-image) {
-			width: auto;
-			min-width: 300px;
-			min-height: auto;
-			display: block;
-			padding: 0;
-		}
-
-		:scope:not(.no-image) .media {
-			position: relative;
-			height: auto;
-		}
-
-		.media img {
-			object-fit: cover;
-			width: 100%;
-			height: auto;
-			display: block;
-		}
-
-		:scope:not(.no-image) .fill-link {
-			position: absolute;
-			bottom: 0;
-			left: 0;
-			right: 0;
-			height: auto;
-			padding: 5%;
-		}
+	.project-visual img {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		transition: transform 0.4s ease, filter 0.4s ease;
+		filter: saturate(0.8) brightness(0.75);
 	}
 
+	.project-visual span {
+		font-size: 0.8rem;
+		letter-spacing: 0.2em;
+		text-transform: uppercase;
+		color: var(--subtext0);
+	}
+
+	.project-card.no-image .project-visual {
+		border-style: dashed;
+		clip-path: polygon(8% 0%, 100% 0%, 92% 100%, 0% 100%);
+		transform: none;
+		box-shadow: none;
+	}
+
+ 
 `;
 
 export default ProjectCard;

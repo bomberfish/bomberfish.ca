@@ -1,7 +1,6 @@
 import { Component, css } from "dreamland/core";
 import { TopNav } from "../components/Header";
 import { WebButton, ButtonList, CopiedToast } from "../components/Buttons";
-import { Link } from "dreamland/router";
 import Footer from "../components/Footer";
 
 const Homepage: Component<{}, {}> = function () {
@@ -14,7 +13,15 @@ const Homepage: Component<{}, {}> = function () {
 				<a href="/me.png" target="_blank">
 					<img src="/pfp-display.gif" class="pfp" title="my profile picture. click to view full color version." />
 				</a>
-				<h1>bomber<br/>fish.ca</h1>
+				<h1
+					class="typing-title"
+					data-typing-text={`bomber\nfish.ca`}
+					aria-label="bomberfish.ca"
+				>
+					bomber
+					<br />
+					fish.ca
+				</h1>
 			</div>
 			</header>
 				<article>
@@ -199,7 +206,7 @@ Homepage.style = css`
 		z-index: 1;
 		image-rendering: pixelated;
 	}
-
+	
 	@media (max-width: 960px) or (orientation: portrait) {
 		.title {
 			flex-direction: column;

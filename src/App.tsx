@@ -1,3 +1,4 @@
+// @ts-nocheck ts pmo
 import { Component, createState, Stateful } from "dreamland/core";
 import { Route, router, Router } from "dreamland/router";
 
@@ -16,64 +17,53 @@ let page: Stateful<{
 	url?: string;
 }> = createState({});
 
-// declare global {
-// 	interface Window {
-// 		__bgMoveCleanup?: () => void;
-// 	}
-// }
-
 const App: Component<{}, {}> = function (cx) {
-	cx.init = () => {
-		if (import.meta.env.SSR) {
-			router.route(page.url, "http://127.0.0.1:5173");
-		} else {
-			router.route();
-		}
-	};
+	// Dynamically create blog post routes from MDX files in src/blog
+	const blogModules = import.meta.glob("./blog/*.mdx", { eager: true });
+	const blogPosts = Object.keys(blogModules)
+		.map((path) => {
+			const match = path.match(/\/(\d{4}-\d{2}-\d{2})-(.+)\.mdx$/);
+			if (!match) return null;
+			const [, , slug] = match;
+			return { slug };
+		})
+		.filter((p) => p !== null) as { slug: string }[];
 
-	cx.mount = () => {
-		if (import.meta.env.SSR) {
-			return;
-		}
-	};
+	blogPosts.sort((a, b) => b.slug.localeCompare(a.slug));
 
-	const routes = [
-		{ path: undefined, show: <Homepage /> },
-		{ path: "projects/index", show: <ProjectList /> },
-		...projects.map((project) => ({
-			path: `projects/${project.lastPathComponent}`,
-			show: <ProjectView project={project} />,
-		})),
-		{ path: "blog/index", show: <BlogList /> },
+	const routerInstance = (
+		<Router
+			children={[
+				<Route show={() => <Homepage />} />,
+				<Route path="projects" show={() => <ProjectList />} />,
+				...projects.map((project) => (
+					<Route
+						path={`projects/${project.lastPathComponent}`}
+						show={() => <ProjectView project={project} />}
+					/>
+				)),
+				<Route path="blog" show={() => <BlogList />} />,
+				...blogPosts.map((post) => (
+					<Route
+						path={`blog/${post.slug}`}
+						show={() => <BlogPost slug={post.slug} />}
+					/>
+				)),
+				<Route path="siteinfo" show={() => <AboutView />} />,
+				<Route path="*" show={() => <NotFoundView />} />,
+			]}
+		/>
+	);
 
-		// Dynamically create blog post routes from MDX files in src/blog
-		...(() => {
-			const blogModules = import.meta.glob("./blog/*.mdx", { eager: true });
-			const posts = Object.keys(blogModules)
-				.map((path) => {
-					const match = path.match(/\/(\d{4}-\d{2}-\d{2})-(.+)\.mdx$/);
-					if (!match) return null;
-					const [, , slug] = match;
-					return { slug };
-				})
-				.filter((p) => p !== null) as { slug: string }[];
-
-				return posts.map((p) => ({
-					path: `blog/${p.slug}`,
-					show: <BlogPost slug={p.slug} />,
-				}));
-		})(),
-		{ path: "siteinfo", show: <AboutView /> },
-		{ path: "*", show: <NotFoundView /> },
-	];
+	if (import.meta.env.SSR) {
+		router.route(page.url, "http://127.0.0.1:5173");
+	} else {
+		router.route();
+	}
 
 	return (
 		<app id="app">
-			<Router>
-				{routes.map((route) => (
-					<Route path={route.path} show={route.show} />
-				))}
-			</Router>
+			{routerInstance}
 			<Oneko />
 		</app>
 	);

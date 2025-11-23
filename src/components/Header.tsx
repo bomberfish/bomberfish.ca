@@ -1,12 +1,12 @@
 import { Component, css } from "dreamland/core";
-import { Link } from "dreamland/router";
+import TransitionLink from "./TransitionLink";
 
 const Header: Component<{}, {}> = function () {
 	return (
 		<header class="generic-header">
-			<a href="/" target="_self" rel="noopener noreferrer">
+			<TransitionLink href="/" class="site-title-link" style="text-decoration: none;">
 				<h1>bomberfish.ca</h1>
-			</a>
+			</TransitionLink>
 			<TopNav />
 		</header>
 	);
@@ -22,6 +22,19 @@ Header.style = css`
 		margin-block: 0.1em !important;
 		font-size: 28px !important;
 		font-size: clamp(1.6rem, 2vw + 1rem, 2.25rem)!important;
+		view-transition-name: site-title;
+	}
+
+	.site-title-link {
+		text-decoration: none!important;
+		color: inherit;
+		display: inline-flex;
+		align-items: center;
+	}
+
+	h1:hover {
+		text-decoration: underline !important;
+	text-decoration-color: var(--subtext1) !important;
 	}
 
 	@media (max-width: 520px) {
@@ -34,24 +47,25 @@ Header.style = css`
 export const TopNav: Component<{}, {}> = function () {
 	return (
 		<nav>
-				<Link href="/" class="router-link">
+				<TransitionLink href="/" class="router-link">
 					Home&nbsp;
-				</Link>
-				<Link href="/projects" class="router-link">
+				</TransitionLink>
+				<TransitionLink href="/projects" class="router-link">
 					Projects&nbsp;
-				</Link>
-				{/* <Link href="/blog" class="router-link">
+				</TransitionLink>
+				<TransitionLink href="/blog" class="router-link">
 					Blog&nbsp;
-				</Link> */}
-				<a href="https://blog.bomberfish.ca" target="_blank">
+				</TransitionLink>
+				{/* <a href="https://blog.bomberfish.ca" target="_blank">
 					Blog
-				</a>
+				</a> */}
 		</nav>
 	)
 }
 
 TopNav.style = css`
 	:scope {
+		view-transition-name: nav-links;
 		display: flex;
 		align-items: center;
 		gap: 0.5rem;

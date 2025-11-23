@@ -1,7 +1,6 @@
 import { Component, css } from "dreamland/core";
-import { Link } from "dreamland/router";
 import Header from "../components/Header";
-import Footer from "../components/Footer";
+import TransitionLink from "../components/TransitionLink";
 
 interface BlogPost {
     slug: string;
@@ -55,8 +54,8 @@ const BlogList: Component<{}, {}> = function () {
         <main>
             <Header />
             <article>
-                <h1>Blog</h1>
-                <p>Articles about various projects and topics I'm working on.</p>
+                <h1>blog</h1>
+                <p>articles about various projects and topics i'm working on.</p>
                 <div class="blog-list">
                     {blogPosts.map((post) => (
                         <div class="blog-item">
@@ -68,16 +67,16 @@ const BlogList: Component<{}, {}> = function () {
                                     {post.tags ? (
                                         <div class="post-tags">{post.tags.map((t) => <span class="tag">{t}</span>)}</div>
                                     ) : null}
-                                </a>
-                            ) : (
-                                <Link href={`/blog/${post.slug}`} class="blog-link">
+                                    </a>
+                                ) : (
+                                    <TransitionLink href={`/blog/${post.slug}`} class="blog-link">
                                     <h2>{post.title}</h2>
                                     <time>{post.date}</time>
                                     {post.description ? <p class="post-desc">{post.description}</p> : null}
                                     {post.tags ? (
                                         <div class="post-tags">{post.tags.map((t) => <span class="tag">{t}</span>)}</div>
                                     ) : null}
-                                </Link>
+                                    </TransitionLink>
                             )}
                         </div>
                     ))}
@@ -113,7 +112,8 @@ display: block;
 }
 
 .blog-link:hover h2 {
-text-decoration: underline;
+    text-decoration: underline;
+	text-decoration-color: var(--subtext1) !important;
 }
 
 .blog-item h2 {

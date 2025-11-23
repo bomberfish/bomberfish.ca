@@ -1,6 +1,10 @@
 import {Component, css} from "dreamland/core";
-import { Link } from "dreamland/router";
 import humanizeDuration from "humanize-duration";
+import TransitionLink from "./TransitionLink";
+
+type DocumentWithViewTransition = Document & {
+    startViewTransition?: (callback: () => void | Promise<void>) => ViewTransition;
+};
 
 const messages: string[] = [
     "[Praying to RNGesus...]",
@@ -71,14 +75,46 @@ const Footer: Component<{}, {elapsed: string, message: string, resetSplashInterv
     this.elapsed = `built on ${new Date(__BUILD_DATE__).toLocaleDateString()}`;
     this.message = "Your browser really sucks."
 
-    const shuffleSplash = () => {
+    const runSplashTransition = (update: () => void) => {
+        if (typeof document === "undefined") {
+            update();
+            return;
+        }
+        const doc = document as DocumentWithViewTransition;
+        if (typeof doc.startViewTransition !== "function") {
+            update();
+            return;
+        }
+        const root = document.documentElement;
+        root.dataset.vtScope = "splash";
+        try {
+            const transition = doc.startViewTransition(() => {
+                update();
+            });
+            transition.finished.finally(() => {
+                if (root.dataset.vtScope === "splash") {
+                    delete root.dataset.vtScope;
+                }
+            });
+        } catch (error) {
+            delete root.dataset.vtScope;
+            update();
+            return;
+        }
+    };
+
+    const pickNewSplashMessage = () => {
         const old = this.message;
         let message = old;
         while (message === old) {
             message = messages[Math.floor(Math.random() * messages.length)];
         }
         this.message = message;
-    }
+    };
+
+    const shuffleSplash = () => {
+        runSplashTransition(pickNewSplashMessage);
+    };
 
     cx.mount = () => {
         this.message = messages[Math.floor(Math.random() * messages.length)];
@@ -96,11 +132,7 @@ const Footer: Component<{}, {elapsed: string, message: string, resetSplashInterv
         const startSplashInterval = () => {
             // @ts-ignore lgtm
             splashIntervalId = setInterval(() => {
-                if (!document.startViewTransition) {
-                    shuffleSplash();
-                    return;
-                }
-                document.startViewTransition(shuffleSplash);
+                shuffleSplash();
             }, 5555);
         };
 
@@ -123,18 +155,14 @@ const Footer: Component<{}, {elapsed: string, message: string, resetSplashInterv
         <footer>
             <subt>
                 <span class="tooltip-wrapper">
-                        <Link href="/siteinfo" class="router-link">
+                        <TransitionLink href="/siteinfo" class="router-link">
                             {"bomberfish.ca v" + __APP_VERSION__ + " (" + __COMMIT_HASH__ + ")"}
-                        </Link>
+                        </TransitionLink>
                     <span class="tooltip">{use(this.elapsed)}</span>
                 </span>
                 <span class="divider">{" • "}</span>
                 <span on:click={()=>{
-                    if (!document.startViewTransition) {
-                        shuffleSplash();
-                    } else {
-                        document.startViewTransition(shuffleSplash);
-                    }
+                    shuffleSplash();
                     this.resetSplashInterval?.();
                 }} class="splash">{use(this.message)}</span>
             </subt>

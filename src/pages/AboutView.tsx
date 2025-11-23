@@ -61,6 +61,10 @@ const archives = [
 	{
 		version: "v6.2.0",
 		date: "20251031190526",
+	},
+	{
+		version: "v7.0.3",
+		date: "20251122233719",
 	}
 ];
 
@@ -108,7 +112,7 @@ export const AboutView: Component<{}, {}> = function () {
 					</a>
 					.
 				</p>
-				<p>the color scheme is inspired by the "U-571 Code Red" theme from <a href="https://sacred.computer">the SRCL component library</a>, and the typography borrows from the title cards from neon genesis evangelion.</p>
+				<p>the color scheme and typography borrow some inspiration from colin mcrae rally 2.0 for the playstation 1.</p>
 				<p>the background pulls images from <a href="https://picsum.photos" target="_blank" rel="noopener noreferrer">Lorem Picsum</a> and applies Atkinson dithering as described in <a href="https://beyondloom.com/blog/dither.html" target="_blank" rel="noopener noreferrer">this blogpost</a>.</p>
 				<h2>archive of previous versions</h2>
 				<p>

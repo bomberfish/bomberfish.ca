@@ -1,6 +1,5 @@
 import { Component, css } from "dreamland/core";
 import Header from "../components/Header";
-import Footer from "../components/Footer";
 
 interface BlogPostProps {
 slug: string;
@@ -45,17 +44,26 @@ const BlogPost: Component<BlogPostProps, {}> = function () {
 	const BlogContent = (blogModules[matchingPath] as any).default;
 
 	const meta = (blogModules[matchingPath] as any) || {};
+	const postTitle: string =
+		meta.title ||
+		slug
+			.split("-")
+			.map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+			.join(" ");
 	const postTags: string[] | undefined = meta.tags;
 	const postDescription: string | undefined = meta.description;
 	return (
 		<main>
 			<Header />
 			<article class="blog-content">
+				<h1 class="post-title">{postTitle}</h1>
+				{postDescription ? <p class="post-desc">{postDescription}</p> : null}
 				{postTags ? (
 					<div class="post-tags">{postTags.map((t) => <span class="tag">{t}</span>)}</div>
 				) : null}
-				{postDescription ? <p class="post-desc">{postDescription}</p> : null}
-				<BlogContent />
+				<div class="post-body">
+					<BlogContent />
+				</div>
 			</article>
 		</main>
 	);
@@ -69,8 +77,21 @@ padding: 2rem 1rem;
 line-height: 1.6;
 }
 
+article.blog-content .post-title {
+	margin-top: 0;
+	margin-bottom: 0.75rem;
+}
+
 article.blog-content h1 {
 margin-top: 0;
+}
+
+article.blog-content .post-body {
+	margin-top: 1.5rem;
+}
+
+article.blog-content .post-body h1:first-of-type {
+	display: none;
 }
 
 article.blog-content h2 {

@@ -159,6 +159,16 @@ export const ButtonList: Component<{}, {}> = function () {
 				href="https://invoxiplaygames.uk"
 			/>
 			<WebButton
+				src="/buttons/acon-gets-a-button-animated.gif"
+				title="acon!"
+				href="https://aconlin.com"
+			/>
+			<WebButton
+				src="/buttons/gideon.gif"
+				title="gideon.sh"
+				href="https://gideon.sh"
+			/>
+			<WebButton
 				src="/buttons/aol-sucks.gif"
 				title="Good riddance."
 				href="https://help.aol.com/articles/dial-up-internet-to-be-discontinued"

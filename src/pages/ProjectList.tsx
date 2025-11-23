@@ -9,19 +9,30 @@ const ProjectList: Component<{}, {}> = function () {
 			<Header />
 			<article>
 				<h2>projects</h2>
+				<p>a collection of my work and experiments.</p>
 				<section class="projects-group">
+				<h3>featured</h3>
 					{projects
 						.filter((project) => project.featured)
 						.sort(
 							(a, b) => (a.featuredPosition || 0) - (b.featuredPosition || 0)
 						)
 						.map((project) => (
-							<ProjectCard project={project} size="large" />
+							<>
+								<ProjectCard project={project} size="large" />
+								<hr />
+							</>
 						))}
+				</section>
+				<section class="projects-group">
+					<h3>other projects</h3>
 					{projects
 						.filter((project) => !project.featured)
 						.map((project) => (
-							<ProjectCard project={project} size="small" />
+							<>
+								<ProjectCard project={project} size="small" />
+								<hr />
+							</>
 						))}
 				</section>
 			</article>
@@ -29,35 +40,28 @@ const ProjectList: Component<{}, {}> = function () {
 	);
 };
 
+
 ProjectList.style = css`
 	article {
-		padding-bottom: 2rem;
+		max-width: 1440px;
+		margin: 0 auto;
+		padding: 2rem 1rem;
+	}
+
+	.projects-group {
+		display: flex;
+		flex-direction: column;
+		margin-top: 2rem;
 	}
 	
-	.projects-group {
-		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(30rem, 1fr));
-		gap: 0;
-		margin-top: 1rem;
-		grid-auto-flow: dense;
+	hr {
+		border: none;
+		border-bottom: 1px dashed var(--border);
+		margin: 1rem 0.2rem;
 	}
 
-	@supports (grid-template-rows: masonry) {
-		.projects-group {
-			display: grid;
-			grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr));
-			grid-template-rows: masonry;
-			grid-auto-rows: masonry;
-			grid-auto-flow: dense;
-		}
-	}
-
-	@supports (display: masonry) {
-		.projects-group {
-			display: masonry;
-			masonry-auto-flow: next;
-			grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr));
-		}
+	h3 {
+		margin-bottom: 0;
 	}
 `;
 

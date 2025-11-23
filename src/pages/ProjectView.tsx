@@ -34,21 +34,27 @@ ProjectView.style = css`
 		display: flex;
 		flex-direction: row;
 		align-items: center;
-		justify-content: space-evenly;
-		gap: 0.75rem;
+		justify-content: center;
+		gap: 0;
 		flex-grow: 1;
+		max-width: min(50rem, 70vw);
 	}
 
 	#image {
 		display: flex;
 		align-content: center;
+		align-items: center;
+		justify-content: center;
 		margin: 0;
 		padding: 0;
+		position: relative;
+		overflow: hidden;
 	}
 
 	#details {
 		max-width: 100%;
-		padding-inline: 1rem;
+		padding-inline: 0.5rem;
+		transform: translateY(-0.5rem);
 	}
 
 	img {
@@ -60,19 +66,51 @@ ProjectView.style = css`
 		padding: 0;
 	}
 
-	@media (max-width: 1024px) or (orientation: portrait) {
-		#details {
-			width: unset;
-		}
+	#details {
+		width: unset;
+	}
 
-		article {
-			flex-direction: column;
-		}
+	article {
+		flex-direction: column;
+	}
 
-		img {
-			width: 100%;
-			max-width: unset;
-		}
+	img {
+		width: 100%;
+		max-width: unset;
+	}
+
+	#image img {
+		mask-image: linear-gradient(
+			to bottom,
+			rgba(0, 0, 0, 1) 70%,
+			rgba(0, 0, 0, 0) 98%
+		);
+		-webkit-mask-image: linear-gradient(
+			to bottom,
+			rgba(0, 0, 0, 1) 70%,
+			rgba(0, 0, 0, 0) 98%
+		);
+		mask-mode: alpha;
+		-webkit-mask-mode: alpha;
+	}
+
+	#image::after {
+		content: "";
+		position: absolute;
+		left: -10%;
+		bottom: -10%;
+		height: 20%;
+		width: 120%;
+		pointer-events: none;
+		mask-image: linear-gradient(
+			to bottom,
+			rgba(0, 0, 0, 0) 0%,
+			rgba(0, 0, 0, 1) 100%
+		);
+		mask-mode: alpha;
+		-webkit-mask-mode: alpha;
+		backdrop-filter: blur(18px);
+		-webkit-backdrop-filter: blur(18px);
 	}
 `;
 
