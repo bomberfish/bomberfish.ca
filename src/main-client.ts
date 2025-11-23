@@ -203,6 +203,7 @@ const applyTypingEffect = (title: HTMLElement) => {
 	overlay.append(content, cursor);
 
 	while (title.firstChild) {
+		// @ts-ignore fuck off
 		title.removeChild(title.firstChild);
 	}
 	title.append(shadow, overlay);
