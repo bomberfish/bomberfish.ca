@@ -286,6 +286,9 @@ header.generic-header {
 
 nav {
 	margin-top: 0.35rem;
+	display: flex;
+	align-items: center;
+	gap: 1rem;
 }
 
 header.generic-header nav {
