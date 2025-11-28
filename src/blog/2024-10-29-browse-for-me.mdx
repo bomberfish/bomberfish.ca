@@ -1,6 +1,6 @@
 export const title = "How I hijacked Arc Search";
 export const tags = ["Writeup"];
-export const image = "/blog-images/bfm-fake-quote.png";
+export const image = "/blog-images/bfm-fake-quote.jpg";
 export const description = "How I made an Arc Browse For Me shared link display arbitrary content and why this can be abused.";
 
 # How I hijacked Arc Search
@@ -82,12 +82,12 @@ Transfer-Encoding: chunked
 
 It even works on the Arc Search app, when visiting the shared link:
 
-![Arc Search on iOS showing custom page](/blog-images/bfm-mobile.png)
+![Arc Search on iOS showing custom page](/blog-images/bfm-mobile.jpg)
 
 ## What are the risks?
 The ability to create custom search results brings with it dire consequences, most alarmingly the ability to falsify search results and pass them off as legitimate. For example, my hijacked page includes a fake quote from https://arc.net, which displays a “Verified” tag next to it.
 
-![Fake quote from arc.net](/blog-images/bfm-fake-quote.png)
+![Fake quote from arc.net](/blog-images/bfm-fake-quote.jpg)
 
 This creates a risk of misinformation being spread through Arc Search, while it appears to be a legitimate search result. For example, a search for “Who won the 2020 US election?” could be modified to state the winner was Kermit the Frog. The link could then be shared online, and convince some people of the fabricated result.
 
