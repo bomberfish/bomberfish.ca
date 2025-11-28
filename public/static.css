@@ -738,6 +738,7 @@ a[href^="/"]:after {
 .post-tags {
 	margin-top: 0.5rem;
 	display: flex;
+	align-items: center;
 	gap: 0.5rem;
 	flex-wrap: wrap;
 }
@@ -750,6 +751,7 @@ a[href^="/"]:after {
 	font-size: 0.8rem;
 	border: 1px solid hsla(var(--overlay2-hsl), 0.3);
 }
+
 
 /* Single post content baseline */
 article.blog-content {

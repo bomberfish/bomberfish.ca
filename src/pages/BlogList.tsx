@@ -57,6 +57,29 @@ const BlogList: Component<{}, {}> = function () {
             <article>
                 <h1>blog</h1>
                 <p>articles about various projects and topics i'm working on.</p>
+                <p>
+                    <subt style="display: flex; align-items: center; gap: 0.5rem; margin-block: 0.75rem;">
+                    <span class="material-symbols">rss_feed</span>{" "}
+                    Subscribe:{" "}
+                    <ul class="compact" style="display: inline; margin-left: 0.25rem;">
+                        <li>
+                            <a href="/feed.xml" target="_blank">
+                                RSS
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/atom.xml" target="_blank">
+                                Atom
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/feed.json" target="_blank">
+                                JSON Feed
+                            </a>
+                        </li>
+                    </ul>
+                    </subt>
+                </p>
                 <div class="blog-list">
                     {blogPosts.map((post) => (
                         <div class="blog-item">
@@ -75,7 +98,10 @@ const BlogList: Component<{}, {}> = function () {
                                     <time>{post.date}</time>
                                     {post.description ? <p class="post-desc">{post.description}</p> : null}
                                     {post.tags ? (
-                                        <div class="post-tags">{post.tags.map((t) => <span class="tag">{t}</span>)}</div>
+                                        <div class="post-tags">
+                                            <span class="material-symbols">label_important</span>
+                                            {post.tags.map((t) => <span class="tag">{t}</span>)}
+                                        </div>
                                     ) : null}
                                     </TransitionLink>
                             )}
@@ -92,58 +118,6 @@ article {
     max-width: 800px;
     margin: 0 auto;
     padding: 2rem 1rem;
-}
-
-.blog-list {
-    margin-top: 2rem;
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-}
-
-.blog-item {
-    border-bottom: 1px solid var(--border);
-    padding-bottom: 1rem;
-}
-
-.blog-link {
-    text-decoration: none;
-    color: inherit;
-    display: block;
-}
-
-.blog-link:hover h2 {
-    text-decoration: underline;
-	text-decoration-color: var(--subtext1) !important;
-}
-
-.blog-item h2 {
-margin: 0 0 0.5rem 0;
-font-size: 1.5rem;
-}
-
-.blog-item time {
-color: var(--subtext1);
-font-size: 0.9rem;
-}
-
-.post-desc {
-    margin: 0.5rem 0 0 0;
-    color: var(--subtext1);
-}
-
-.post-tags {
-    margin-top: 0.5rem;
-    display: flex;
-    gap: 0.5rem;
-    flex-wrap: wrap;
-}
-
-.post-tags .tag {
-    background: var(--tag-bg);
-    color: var(--supertext);
-    border-radius: 999px;
-    font-size: 0.8rem;
 }
 `;
 

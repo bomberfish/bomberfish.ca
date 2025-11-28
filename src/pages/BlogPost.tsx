@@ -57,11 +57,37 @@ const BlogPost: Component<BlogPostProps, {}> = function () {
 				<h1 class="post-title">{postTitle}</h1>
 				{postDescription ? <p class="post-desc">{postDescription}</p> : null}
 				{postTags ? (
-					<div class="post-tags">{postTags.map((t) => <span class="tag">{t}</span>)}</div>
+					<div class="post-tags">
+					<span class="material-symbols">label_important</span>
+						{postTags.map((t) => <span class="tag">{t}</span>)}
+					</div>
 				) : null}
 				<div class="post-body">
 					<BlogContent />
 				</div>
+				<p>
+                    <subt style="display: flex; align-items: center; gap: 0.5rem; margin-block: 0.75rem;">
+                    <span class="material-symbols">rss_feed</span>{" "}
+                    Liked this post? Subscribe to this blog:{" "}
+                    <ul class="compact" style="display: inline; margin-left: 0.25rem;">
+                        <li>
+                            <a href="/feed.xml" target="_blank">
+                                RSS
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/atom.xml" target="_blank">
+                                Atom
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/feed.json" target="_blank">
+                                JSON Feed
+                            </a>
+                        </li>
+                    </ul>
+                    </subt>
+                </p>
 			</article>
 		</main>
 	);
@@ -111,20 +137,6 @@ article.blog-content blockquote {
 .post-desc {
 	color: var(--subtext1);
 	margin-top: 0.5rem;
-}
-
-.post-tags {
-	display: flex;
-	gap: 0.5rem;
-	margin-bottom: 0.5rem;
-}
-
-.post-tags .tag {
-	background: var(--tag-bg);
-	color: var(--supertext);
-	padding: 0.15rem 0.5rem;
-	border-radius: 999px;
-	font-size: 0.85rem;
 }
 `;
 
