@@ -11,55 +11,55 @@
 }
 
 @font-face {
-	font-family: "IosevkaEtoile";
+	font-family: "IosevkaFishQuasi";
 	font-style: normal;
 	font-weight: normal;
 	font-display: swap;
 	src: 
-		url("/fonts/mono/Iosevka.eot?#iefix") format("embedded-opentype");
+		url("/fonts/mono/IosevkaFishQuasi-Regular.eot?#iefix") format("embedded-opentype");
 	src: local("☺"),
-		url("/fonts/mono/Iosevka.woff2") format("woff2"),
-		url("/fonts/mono/Iosevka.woff") format("woff"),
-		url("/fonts/mono/Iosevka.ttf") format("truetype");
+		url("/fonts/mono/IosevkaFishQuasi-Regular.woff2") format("woff2"),
+		url("/fonts/mono/IosevkaFishQuasi-Regular.woff") format("woff"),
+		url("/fonts/mono/IosevkaFishQuasi-Regular.ttf") format("truetype");
 }
 
 @font-face {
-	font-family: "IosevkaEtoile";
+	font-family: "IosevkaFishQuasi";
 	font-style: normal;
 	font-weight: bold;
 	font-display: swap;
 	src: 
-		url("/fonts/mono/IosevkaBold.eot?#iefix") format("embedded-opentype");
+		url("/fonts/mono/IosevkaFishQuasi-Bold.eot?#iefix") format("embedded-opentype");
 	src: local("☺"),
-		url("/fonts/mono/IosevkaBold.woff2") format("woff2"),
-		url("/fonts/mono/IosevkaBold.woff") format("woff"),
-		url("/fonts/mono/IosevkaBold.ttf") format("truetype");
+		url("/fonts/mono/IosevkaFishQuasi-Bold.woff2") format("woff2"),
+		url("/fonts/mono/IosevkaFishQuasi-Bold.woff") format("woff"),
+		url("/fonts/mono/IosevkaFishQuasi-Bold.ttf") format("truetype");
 }
 
 @font-face {
-	font-family: "IosevkaEtoile";
+	font-family: "IosevkaFishQuasi";
 	font-style: italic;
 	font-weight: normal;
 	font-display: swap;
 	src: 
-		url("/fonts/mono/IosevkaItalic.eot?#iefix") format("embedded-opentype");
+		url("/fonts/mono/IosevkaFishQuasi-Italic.eot?#iefix") format("embedded-opentype");
 	src: local("☺"),
-		url("/fonts/mono/IosevkaItalic.woff2") format("woff2"),
-		url("/fonts/mono/IosevkaItalic.woff") format("woff"),
-		url("/fonts/mono/IosevkaItalic.ttf") format("truetype");
+		url("/fonts/mono/IosevkaFishQuasi-Italic.woff2") format("woff2"),
+		url("/fonts/mono/IosevkaFishQuasi-Italic.woff") format("woff"),
+		url("/fonts/mono/IosevkaFishQuasi-Italic.ttf") format("truetype");
 }
 
 @font-face {
-	font-family: "IosevkaEtoile";
+	font-family: "IosevkaFishQuasi";
 	font-style: italic;
 	font-weight: bold;
 	font-display: swap;
 	src: 
-		url("/fonts/mono/IosevkaBoldItalic.eot?#iefix") format("embedded-opentype");
+		url("/fonts/mono/IosevkaFishQuasi-BoldItalic.eot?#iefix") format("embedded-opentype");
 	src: local("☺"),
-		url("/fonts/mono/IosevkaBoldItalic.woff2") format("woff2"),
-		url("/fonts/mono/IosevkaBoldItalic.woff") format("woff"),
-		url("/fonts/mono/IosevkaBoldItalic.ttf") format("truetype");
+		url("/fonts/mono/IosevkaFishQuasi-BoldItalic.woff2") format("woff2"),
+		url("/fonts/mono/IosevkaFishQuasi-BoldItalic.woff") format("woff"),
+		url("/fonts/mono/IosevkaFishQuasi-BoldItalic.ttf") format("truetype");
 }
 
 @font-face {
@@ -218,10 +218,10 @@
 :root {
 	--font-display: var(--font-body);
 	--font-body:
-		"HelveticaNow", "Helvetica Neue", Helvetica, FreeSans, "Nimbus Sans L", "Nimbus Sans", system-ui, Arial,
+		"HelveticaNow", Helvetica, "Helvetica Neue", FreeSans, "Nimbus Sans L", "Nimbus Sans", system-ui, Arial,
 		sans-serif, "Apple Color Emoji", "Noto Color Emoji", "Segoe UI Emoji";
 	--font-mono:
-		"IosevkaEtoile", ui-monospace, monospace;
+		"IosevkaFishQuasi", ui-monospace, monospace;
 	--font-serif: "NIS-JTC-Win", "Times New Roman", Times, Tinos, FreeSerif, "Nimbus Roman No9 L", "Nimbus Roman", "Liberation Serif",
 		"Linux Libertine", serif;
 }
