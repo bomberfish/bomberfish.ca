@@ -22,8 +22,10 @@
 		"estree-util-visit": "^2.0.0",
 		"feed": "^5.1.0",
 		"lightningcss": "^1.30.2",
+		"autoprefixer": "^10.4.22",
 		"postcss": "^8.5.6",
 		"postcss-cli": "^11.0.1",
+		"postcss-preset-env": "^10.4.0",
 		"prettier": "next",
 		"react": "^19.2.0",
 		"rehype-starry-night": "^2.2.0",
@@ -32,9 +34,7 @@
 		"vite": "npm:rolldown-vite@^7.2.7"
 	},
 	"dependencies": {
-		"autoprefixer": "^10.4.22",
 		"dreamland": "^0.1.2",
-		"humanize-duration": "^3.33.1",
-		"postcss-preset-env": "^10.4.0"
+		"humanize-duration": "^3.33.1"
 	}
 }

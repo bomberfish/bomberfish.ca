@@ -74,6 +74,16 @@ export const ButtonList: Component<{}, {}> = function () {
 				href="https://anybrowser.org/campaign/index.html"
 			/>
 			<WebButton
+				src="/buttons/valid-rss-rogers.gif"
+				title="View my blog as an RSS feed!"
+				href="/feed.xml"
+			/>
+			<WebButton
+				src="/buttons/valid-atom.gif"
+				title="View my blog as an Atom feed!"
+				href="/atom.xml"
+			/>
+			<WebButton
 				src="/buttons/invalidator.gif"
 				title="HTML parser devs hate this one easy trick!"
 				href="https://validator.w3.org/nu/?doc=http%3A%2F%2Fbomberfish.ca%2F"

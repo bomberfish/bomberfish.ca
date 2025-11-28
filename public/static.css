@@ -381,7 +381,7 @@ code {
 	border: 0.075rem solid var(--surface3);
 	font-variation-settings: unset;
 	font-stretch: 100%;
-	font-family: "IosevkaEtoile", monospace;
+	font-family: "IosevkaFishQuasi", monospace;
 	font-family: var(--font-mono);
 }
 
