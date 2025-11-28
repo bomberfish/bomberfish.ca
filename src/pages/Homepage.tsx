@@ -151,7 +151,7 @@ const Homepage: Component<{}, {}> = function () {
 					</section>
 					<br />
 					<section id="buttons">
-						<div>
+						<div class="mine">
 							<WebButton
 								src="/button.gif"
 								title="Click to copy my button! (HTML code)"
@@ -166,7 +166,7 @@ const Homepage: Component<{}, {}> = function () {
 								}}
 							/>
 							<subt style="font-size: 0.8em; margin-left: 0.5em;">
-								(click to copy)
+								(click to copy! hotlinking encouraged!)
 							</subt>
 						</div>
 						{/* <br /> */}
@@ -207,6 +207,12 @@ Homepage.style = css`
 		object-fit: cover; */
 		z-index: 1;
 		image-rendering: pixelated;
+	}
+
+	.mine {
+		display: flex;
+		align-items: flex-end;
+		padding-bottom: 0.5rem;
 	}
 	
 	@media (max-width: 960px) or (orientation: portrait) {

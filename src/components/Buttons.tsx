@@ -30,8 +30,6 @@ export const WebButton: Component<
 				src={this.src}
 				alt={this.alt || "A web button."}
 				title={this.title || this.alt || ""}
-				referrerpolicy="no-referrer"
-				crossorigin="anonymous"
 			/>
 		</a>
 	);
@@ -104,7 +102,7 @@ export const ButtonList: Component<{}, {}> = function () {
 				href="https://hack.club"
 			/>
 			<WebButton
-				src="/buttons/omada.gif"
+				src="https://omada.cafe/omada.gif"
 				title="omada.cafe, an private and secure alternative provider."
 				href="https://omada.cafe"
 			/>
@@ -124,17 +122,17 @@ export const ButtonList: Component<{}, {}> = function () {
 				href="https://foxmoss.com"
 			/>
 			<WebButton
-				src="/buttons/wearr.gif"
+				src="https://wearr.dev/88x31.gif"
 				title="wearr"
 				href="https://wearr.dev"
 			/>
 			<WebButton
-				src="/buttons/circular-88x31.gif"
+				src="https://circulars.dev/circular-88x31.gif"
 				title="circular"
 				href="https://circulars.dev"
 			/>
 			<WebButton
-				src="/buttons/authenyo.gif"
+				src="https://authenyo.xyz/images/button.gif"
 				title="authenyo"
 				href="https://authenyo.xyz"
 			/>
@@ -144,7 +142,7 @@ export const ButtonList: Component<{}, {}> = function () {
 				href="https://thememesniper.dev"
 			/>
 			<WebButton
-				src="/buttons/cvfd.gif"
+				src="https://notfire.cc/design/images/buttons/notfire-cc-88x31-af.gif"
 				title="notfire"
 				href="https://notfire.cc"
 			/>
@@ -160,8 +158,8 @@ export const ButtonList: Component<{}, {}> = function () {
 			/>
 			<WebButton
 				src="/buttons/melon.gif"
-				title="melontini"
-				href="https://melontini.me"
+				title="zenfyr"
+				href="https://zenfyr.dev"
 			/>
 			<WebButton
 				src="/buttons/ipg.png"
@@ -267,7 +265,7 @@ export const ButtonList: Component<{}, {}> = function () {
 				title="The Windows Mind Virus!"
 			/>
 			<WebButton
-				src="/buttons/smoke.gif"
+				src="https://smokepowered.com/smoke.gif"
 				title="Smokepowered"
 				href="https://smokepowered.com"
 			/>
@@ -310,7 +308,7 @@ export const ButtonList: Component<{}, {}> = function () {
 				href="https://eightyeightthirty.one"
 			/>
 			<WebButton
-				src="/buttons/melankorin.gif"
+				src="https://melankorin.net/assets/img/buttons/button-1.gif?cbh=41d3f8b9b3d143bca8055b959ee0f510"
 				title="melankorin"
 				href="https://melankorin.net"
 			/>
