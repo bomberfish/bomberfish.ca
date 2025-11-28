@@ -6,6 +6,7 @@ const ProjectView: Component<{ project: ProjectCardDetails }, {}> =
 	function () {
 		return (
 			<main>
+				<title>{this.project.title} – bomberfish.ca</title>
 				<Header />
 				<article>
 					<section id="image">

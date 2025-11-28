@@ -51,6 +51,7 @@ const BlogPost: Component<BlogPostProps, {}> = function () {
 	const postDescription: string | undefined = meta.description;
 	return (
 		<main>
+			<title>{postTitle} – bomberfish.ca</title>
 			<Header />
 			<article class="blog-content">
 				<h1 class="post-title">{postTitle}</h1>

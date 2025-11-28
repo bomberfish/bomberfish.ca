@@ -6,6 +6,7 @@ import Header from "../components/Header";
 const ProjectList: Component<{}, {}> = function () {
 	return (
 		<main>
+			<title>projects – bomberfish.ca</title>
 			<Header />
 			<article>
 				<h2>projects</h2>

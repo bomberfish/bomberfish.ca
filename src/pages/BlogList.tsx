@@ -52,6 +52,7 @@ const blogPosts: BlogPost[] = [...mdxPosts, ...manualPosts].sort((a, b) => b.dat
 const BlogList: Component<{}, {}> = function () {
     return (
         <main>
+            <title>blog – bomberfish.ca</title>
             <Header />
             <article>
                 <h1>blog</h1>

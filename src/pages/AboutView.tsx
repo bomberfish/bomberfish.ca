@@ -90,6 +90,7 @@ const colors = [
 export const AboutView: Component<{}, {}> = function () {
 	return (
 		<main>
+			<title>about – bomberfish.ca</title>
 			<Header />
 			<article>
 				<h2>about this website</h2>

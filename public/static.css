@@ -663,7 +663,7 @@ a[href^="/"]:after {
 
 .post-tags .tag {
 	background: var(--tag-bg);
-	color: var(--tag-color);
+	color: var(--supertext);
 	padding: 0.15rem 0.5rem;
 	border-radius: 999px;
 	font-size: 0.8rem;

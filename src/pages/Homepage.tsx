@@ -6,6 +6,8 @@ import Footer from "../components/Footer";
 const Homepage: Component<{}, {}> = function () {
 	return (
 		<main>
+		
+		<title>bomberfish.ca</title>
 			{/* <Header /> */}
 			<header class="frontpage-header">
 			<TopNav />
