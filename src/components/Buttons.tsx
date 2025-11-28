@@ -64,9 +64,9 @@ export const ButtonList: Component<{}, {}> = function () {
 				href="https://dreamland.js.org/?uwu"
 			/>
 			<WebButton
-				src="/buttons/simpleanalytics.svg"
+				src="https://simpleanalyticsbadges.com/bomberfish.ca?mode=dark"
 				title="If you don't like analytics, respectfully fuck off."
-				href="https://dashboard.simpleanalytics.com/bomberfish.ca"
+				href="https://dashboard.simpleanalytics.com/bomberfish.ca?utm_source=bomberfish.ca&utm_content=badge"
 			/>
 			<WebButton
 				src="/buttons/any-browser.gif"
