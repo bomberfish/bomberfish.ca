@@ -68,6 +68,7 @@ const blogModules = await import(resolve("dist/server/main-server.js")).then(asy
                 
                 const titleMatch = content.match(/export\s+const\s+title\s*=\s*["'](.+?)["']/);
                 const descMatch = content.match(/export\s+const\s+description\s*=\s*["'](.+?)["']/);
+				const imageMatch = content.match(/export\s+const\s+image\s*=\s*["'](.+?)["']/);
 				
 				console.log("got post:", slug);
                 
@@ -76,7 +77,8 @@ const blogModules = await import(resolve("dist/server/main-server.js")).then(asy
                     date: new Date(date),
                     title: titleMatch?.[1] || slug.split("-").map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(" "),
                     description: descMatch?.[1] || "",
-                    url: `${blogURL}${slug}`
+                    url: `${blogURL}${slug}`,
+					image: imageMatch?.[1] || null,
                 };
             })
     );
@@ -95,7 +97,7 @@ const feed = new Feed({
 		atom: 'https://bomberfish.ca/atom.xml',
 		json: 'https://bomberfish.ca/feed.json',
 	},
-	author: { name: "bomberfish", link: "https://bomberfish.ca" }
+	author: { name: "bomberfish", link: "https://bomberfish.ca" },
 });
 
 for (const post of blogModules) {
@@ -105,6 +107,7 @@ for (const post of blogModules) {
 		link: post.url,
 		description: post.description,
 		date: post.date,
+		image: post.image ? `https://bomberfish.ca${post.image}` : undefined,
 	});
 }
 
