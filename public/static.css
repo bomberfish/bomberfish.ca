@@ -459,6 +459,12 @@ subt {
 	line-height: 1.2;
 }
 
+strong, b {
+	font-weight: 650;
+	font-variation-settings:
+		"wght" 650;
+}
+
 app {
 	margin: 0;
 	/* width: min(68rem, 100vw - 2rem); */
