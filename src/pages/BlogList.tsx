@@ -5,14 +5,13 @@ import TransitionLink from "../components/TransitionLink";
 interface BlogPost {
     slug: string;
     title: string;
-    date: string; // YYYY-MM-DD
-    href?: string; // Optional direct URL (e.g., to static HTML)
+    date: string;
+    href?: string;
     description?: string;
     tags?: string[];
     image?: string;
 }
 
-// Get all MDX-based blog posts (read metadata from module exports when available)
 const blogModules = import.meta.glob("../blog/*.mdx", { eager: true }) as Record<string, any>;
 
 const mdxPosts = Object.entries(blogModules)
@@ -34,14 +33,14 @@ const mdxPosts = Object.entries(blogModules)
         return { slug, title, date, description, tags, image };
     })
     .filter((post): post is BlogPost => post !== null)
-    // Exclude posts we want to handle manually as static pages
     .filter((post) => post.slug !== "whitehouse");
 
-// Manually-added entries (non-MDX), e.g., prerendered static posts
 const manualPosts: BlogPost[] = [
     {
         slug: "whitehouse",
         title: "Improving the White House Shutdown Clock",
+        description: "Redesigning and enhancing the White House's official government shutdown clock.",
+        tags: ["Design", "Politics" , "Webdev"],
         date: "2025-10-02",
         href: "/blog/whitehouse.html",
     },
@@ -85,7 +84,7 @@ const BlogList: Component<{}, {}> = function () {
                         <div class="blog-item">
                             {post.href ? (
                                 <a href={post.href} class="blog-link">
-                                    <h2>{post.title}</h2>
+                                    <h3>{post.title}</h3>
                                     <time>{post.date}</time>
                                     {post.description ? <p class="post-desc">{post.description}</p> : null}
                                     {post.tags ? (
@@ -94,7 +93,7 @@ const BlogList: Component<{}, {}> = function () {
                                     </a>
                                 ) : (
                                     <TransitionLink href={`/blog/${post.slug}`} class="blog-link">
-                                    <h2>{post.title}</h2>
+                                    <h3>{post.title}</h3>
                                     <time>{post.date}</time>
                                     {post.description ? <p class="post-desc">{post.description}</p> : null}
                                     {post.tags ? (

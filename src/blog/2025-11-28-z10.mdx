@@ -1,0 +1,49 @@
+export const title = "How I dumped a rare version of BlackBerry 10"
+export const description = "Dumping the NAND flash from a BlackBerry Z10 not meant for the public's eyes."
+export const tags = ["Writeup", "Hardware"]
+export const image = "/blog-images/z10_ebay.jpg"
+
+# How I dumped a rare version of BlackBerry 10
+
+![eBay listing](/blog-images/z10_ebay.jpg)
+
+I recently came across an interesting listing on eBay. At first I thought it was a Dev Alpha B, a device sent out to developers before the release of the BlackBerry 10 platform. But upon closer inspection, I realized it more closely resembled a retail Z10, albeit with markings denoting its status as a non-consumer unit. So, I ordered it.
+
+## Initial impressions
+
+The device arrived after a few weeks (as to be expected with international shipping), and the first thing I noticed is that when powering it on, it first showed the initial boot splash, but the screen went dark immediately after with no signs of life afterwards. After a little bit, I decided to press a few buttons, and to my surprise, I accidentally activated the screen reader. This means that the phone booted fine, but some kind of bug prevented it from initializing the display. I then connected it to an older computer and started up BlackBerry Link, and the software recognized the device.
+
+![Z10 in BlackBerry Link](/blog-images/z10_link.jpeg)
+
+The software version however didn't seem right. Instead of starting with "10.x.x", the version number was "127.0.1.7295". I decided to ask around in the [Lunar Project Discord server](https://discord.gg/s5jnytyvRS), and one member suggested running RIM's Command-Line Programmer, also known as cfp.exe. I did so, and some of the output was interesting:
+
+```
+Bootrom Version:       5.35.0.33
+    Hardware ID:       0x8500240A RIM BlackBerry Device
+    HW ID Override:    0x8500240A (OSTypes: 0x00000010)
+    Hardware OS ID:    0x051D0001
+    BR ID:             0xFF009000
+    Supported Bands:   0xFFFF                    ***** WARNING *****
+    Metrics Version:   6.43
+    Build Date:        Feb  7 2013
+    Build Time:        13:29:07
+    Build User:        ec_agent
+    Security:          Disabled
+```
+
+```
+OS Version:            127.0.1.7295 DEV
+    Hardware ID:       0x051D0001 RIM BlackBerry Device
+    Metrics Version:   3.18
+    FS Code Version:   0.0.0.0
+    Package Version:   ""
+    Build Date:        Sep 30 2013
+    Build Time:        13:07:49
+    Build User:        ec_agent
+```
+
+Note the "Security: Disabled" and the "DEV" suffix on the OS version. This meant that it was an internal OS version that had many security features disabled. Someone else suggested trying to connect to the device through the RNDIS network device exposed over the USB connection, which worked. There was a shell exposed over telnet with the credentials root/root, and a separate developer console on HTTP port 8080.
+
+![Dev console and root shell](/blog-images/z10_dev.jpeg)
+
+I then inserted a microSD card and used `dd` to extract various partitions. Finally, I uploaded the created images to the [Internet Archive](https://archive.org/details/z10_nand), where you can download them right now.

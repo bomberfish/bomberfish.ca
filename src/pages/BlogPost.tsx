@@ -98,7 +98,6 @@ article.blog-content {
 	max-width: 800px;
 	margin: 0 auto;
 	padding: 2rem 1rem;
-	line-height: 1.6;
 }
 
 article.blog-content .post-title {
