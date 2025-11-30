@@ -172,7 +172,7 @@ export const ButtonList: Component<{}, {}> = function () {
 				href="https://aconlin.com"
 			/>
 			<WebButton
-				src="/buttons/gideon.gif"
+				src="https://gideon.sh/88x31.gif"
 				title="gideon.sh"
 				href="https://gideon.sh"
 			/>
