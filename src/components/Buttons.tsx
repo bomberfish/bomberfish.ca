@@ -186,6 +186,11 @@ export const ButtonList: Component<{}, {}> = function () {
 				title="<3"
 			/>
 			<WebButton
+				src="https://login.corp.google.com/c/balls.gif"
+				title="Google Single Sign On"
+				href="https://login.corp.google.com"
+			/>
+			<WebButton
 				src="/buttons/cssdif.gif"
 				title="CSS overflow is my mortal enemy."
 			/>
