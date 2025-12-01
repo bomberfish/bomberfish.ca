@@ -794,14 +794,14 @@ a[href^="/"]:after {
 }
 
 .blog-item time {
-	color: var(--text-secondary);
+	color: var(--subtext1);
 	font-size: 0.9rem;
 	display: block;
 }
 
 .post-desc {
 	margin-top: 0.5rem;
-	color: var(--text-secondary);
+	color: var(--subtext0);
 }
 
 .post-tags {
