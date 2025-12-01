@@ -72,6 +72,7 @@ const repaintBackground = () => {
 	const fadeLengthDisplay = Math.min(fadePadding, dh);
 	const fadeLength = Math.max(1, Math.min(h, Math.round(fadeLengthDisplay / Math.max(scaleY, Number.EPSILON))));
 	const fadeStartRow = Math.max(0, h - fadeLength);
+	const topFadeLength = Math.max(1, Math.round(fadeLength / 4));
 	for (let i = 0; i < mask.length; i++) {
 		const isOn = mask[i];
 		const color = isOn ? light : [0, 0, 0];
@@ -80,7 +81,9 @@ const repaintBackground = () => {
 		out[idx + 1] = color[1];
 		out[idx + 2] = color[2];
 		const y = Math.floor(i / w);
-		const fadeFactor = y < fadeStartRow ? 1 : Math.max(0, 1 - (y - fadeStartRow) / Math.max(1, fadeLength));
+		const bottomFadeFactor = y < fadeStartRow ? 1 : Math.max(0, 1 - (y - fadeStartRow) / Math.max(1, fadeLength));
+		const topFadeFactor = y < topFadeLength ? (y / Math.max(1, topFadeLength)) : 1;
+		const fadeFactor = bottomFadeFactor * topFadeFactor;
 		const baseAlpha = isOn ? 255 : 0;
 		out[idx + 3] = Math.round(baseAlpha * fadeFactor);
 	}
