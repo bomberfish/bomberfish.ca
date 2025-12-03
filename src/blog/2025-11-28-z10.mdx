@@ -13,6 +13,9 @@ I recently came across an interesting listing on eBay. At first I thought it was
 
 The device arrived after a few weeks (as to be expected with international shipping), and the first thing I noticed is that when powering it on, it first showed the initial boot splash, but the screen went dark immediately after with no signs of life afterwards. After a little bit, I decided to press a few buttons, and to my surprise, I accidentally activated the screen reader. This means that the phone booted fine, but some kind of bug prevented it from initializing the display. I then connected it to an older computer and started up BlackBerry Link, and the software recognized the device.
 
+> Update (2025-11-31):
+> It turns out that the display backlight was off. Oops.
+
 ![Z10 in BlackBerry Link](/blog-images/z10_link.jpeg)
 
 The software version however didn't seem right. Instead of starting with "10.x.x", the version number was "127.0.1.7295". I decided to ask around in the [Lunar Project Discord server](https://discord.gg/s5jnytyvRS), and one member suggested running RIM's Command-Line Programmer, also known as cfp.exe. I did so, and some of the output was interesting:

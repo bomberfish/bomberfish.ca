@@ -177,6 +177,11 @@ export const ButtonList: Component<{}, {}> = function () {
 				href="https://gideon.sh"
 			/>
 			<WebButton
+				src="https://kagi.com/smallweb/static/UseKagiV4C.gif"
+				title="Use Kagi!"
+				href="https://kagi.com/welcome"
+			/>
+			<WebButton
 				src="/buttons/aol-sucks.gif"
 				title="Good riddance."
 				href="https://help.aol.com/articles/dial-up-internet-to-be-discontinued"
