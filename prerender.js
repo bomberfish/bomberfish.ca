@@ -88,7 +88,7 @@ const blogModules = await import(resolve("dist/server/main-server.js")).then(asy
 
 const feed = new Feed({
     title: "bomberfish's blog",
-	description: "articles about various projects and topics i'm working on.",
+	description: "articles about various projects i'm working on, along with an occasional rant or two.",
 	id: blogURL,
 	link: blogURL,
 	language: 'en',

@@ -55,7 +55,7 @@ const BlogList: Component<{}, {}> = function () {
             <Header />
             <article>
                 <h1>blog</h1>
-                <p>articles about various projects and topics i'm working on.</p>
+                <p>articles about various projects i'm working on, along with an occasional rant or two.<br/>obligatory disclaimer: all opinions are my own, and do not reflect those of my employer.</p>
                 <p>
                     <subt style="display: flex; align-items: center; gap: 0.5rem; margin-block: 0.75rem;">
                     <span class="material-symbols">rss_feed</span>{" "}
@@ -114,9 +114,13 @@ const BlogList: Component<{}, {}> = function () {
 
 BlogList.style = css`
 article {
-    max-width: 800px;
+    max-width: 960px;
     margin: 0 auto;
     padding: 2rem 1rem;
+}
+
+p {
+    line-height: 1.8;
 }
 `;
 

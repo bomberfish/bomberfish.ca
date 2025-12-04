@@ -3,8 +3,6 @@ export const description = "Dumping the NAND flash from a BlackBerry Z10 not mea
 export const tags = ["Writeup", "Hardware"]
 export const image = "/blog-images/z10_dev.jpeg"
 
-# How I dumped a rare version of BlackBerry 10
-
 ![eBay listing](/blog-images/z10_ebay.jpg)
 
 I recently came across an interesting listing on eBay. At first I thought it was a Dev Alpha B, a device sent out to developers before the release of the BlackBerry 10 platform. But upon closer inspection, I realized it more closely resembled a retail Z10, albeit with markings denoting its status as a non-consumer unit. So, I ordered it.
@@ -50,5 +48,3 @@ Note the "Security: Disabled" and the "DEV" suffix on the OS version. This meant
 ![Dev console and root shell](/blog-images/z10_dev.jpeg)
 
 I then inserted a microSD card and used `dd` to extract various partitions. Finally, I uploaded the created images to the [Internet Archive](https://archive.org/details/z10_nand), where you can download them right now.
-
-For now, this has been BomberFish, and I do declare; end broadcast.

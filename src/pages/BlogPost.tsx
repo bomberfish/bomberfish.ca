@@ -1,4 +1,4 @@
-import { Component, css } from "dreamland/core";
+import { Component } from "dreamland/core";
 import Header from "../components/Header";
 
 interface BlogPostProps {
@@ -92,51 +92,5 @@ const BlogPost: Component<BlogPostProps, {}> = function () {
 		</main>
 	);
 };
-
-BlogPost.style = css`
-article.blog-content {
-	max-width: 800px;
-	margin: 0 auto;
-	padding: 2rem 1rem;
-}
-
-article.blog-content .post-title {
-	margin-top: 0;
-	margin-bottom: 0.75rem;
-}
-
-article.blog-content h1 {
-	margin-top: 0;
-}
-
-article.blog-content .post-body {
-	margin-top: 1.5rem;
-}
-
-article.blog-content .post-body h1:first-of-type {
-	display: none;
-}
-
-article.blog-content h2 {
-	margin-top: 2rem;
-}
-
-article.blog-content img {
-max-width: 100%;
-height: auto;
-}
-
-article.blog-content blockquote {
-	border-left: 4px solid var(--border);
-	padding-left: 1rem;
-	margin-left: 0;
-	font-style: italic;
-}
-
-.post-desc {
-	color: var(--subtext1);
-	margin-top: 0.5rem;
-}
-`;
 
 export default BlogPost;
