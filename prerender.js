@@ -9,6 +9,13 @@ import autoprefixer from 'autoprefixer';
 import postCssPresetEnv from 'postcss-preset-env';
 import cssnano from 'cssnano';
 
+import { evaluate } from "@mdx-js/mdx";
+import rehypeStarryNight from "rehype-starry-night";
+import { all as grammars } from "@wooorm/starry-night";
+import * as runtime from "react/jsx-runtime";
+import { renderToStaticMarkup } from "react-dom/server";
+import { createElement } from "react";
+
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const resolve = (p) => resolvePath(__dirname, p);
 
@@ -51,6 +58,29 @@ await rm(resolve("dist/static/.vite"), { recursive: true });
 
 const blogURL = "https://bomberfish.ca/blog/";
 
+// Helper function to compile MDX content to HTML
+async function mdxToHtml(content) {
+	// Remove export statements from the content for the body
+	const bodyContent = content
+		.replace(/^export\s+const\s+\w+\s*=\s*["'][^"']*["'];?\s*$/gm, '')
+		.replace(/^export\s+const\s+\w+\s*=\s*\[[^\]]*\];?\s*$/gm, '')
+		.trim();
+	
+	// Use evaluate to compile and run MDX at runtime
+	const { default: Content } = await evaluate(bodyContent, {
+		...runtime,
+		rehypePlugins: [[rehypeStarryNight, { grammars }]],
+	});
+	
+	// Render the content to static HTML
+	const html = renderToStaticMarkup(createElement(Content));
+	
+	// Make all relative URLs absolute
+	return html
+		.replace(/src="\/(?!\/)/g, 'src="https://bomberfish.ca/')
+		.replace(/href="\/(?!\/)/g, 'href="https://bomberfish.ca/');
+}
+
 const blogModules = await import(resolve("dist/server/main-server.js")).then(async () => {
     const { readdir } = await import("node:fs/promises");
     const blogDir = resolve("src/blog");
@@ -70,7 +100,14 @@ const blogModules = await import(resolve("dist/server/main-server.js")).then(asy
                 const descMatch = content.match(/export\s+const\s+description\s*=\s*["'](.+?)["']/);
 				const imageMatch = content.match(/export\s+const\s+image\s*=\s*["'](.+?)["']/);
 				
-				console.log("got post:", slug);
+				// Compile MDX to HTML for full content feed
+				let htmlContent = null;
+				try {
+					htmlContent = await mdxToHtml(content);
+					console.log("compiled post:", slug);
+				} catch (e) {
+					console.warn(`failed to compile ${slug} to HTML:`, e.message);
+				}
                 
                 return {
                     slug,
@@ -79,6 +116,7 @@ const blogModules = await import(resolve("dist/server/main-server.js")).then(asy
                     description: descMatch?.[1] || "",
                     url: `${blogURL}${slug}`,
 					image: imageMatch?.[1] || null,
+					htmlContent,
                 };
             })
     );
@@ -86,6 +124,7 @@ const blogModules = await import(resolve("dist/server/main-server.js")).then(asy
     return posts.filter(Boolean).sort((a, b) => b.date - a.date);
 });
 
+// Create full content feed
 const feed = new Feed({
     title: "bomberfish's blog",
 	description: "articles about various projects i'm working on, along with an occasional rant or two.",
@@ -100,22 +139,59 @@ const feed = new Feed({
 	author: { name: "bomberfish", link: "https://bomberfish.ca" },
 });
 
+// Create lite feed (no full content, for slow connections)
+const feedLite = new Feed({
+    title: "bomberfish's blog (lite)",
+	description: "articles about various projects i'm working on, along with an occasional rant or two. (lite version - titles and descriptions only)",
+	id: blogURL,
+	link: blogURL,
+	language: 'en',
+	feedLinks: {
+		rss2: 'https://bomberfish.ca/feed-lite.xml',
+		atom: 'https://bomberfish.ca/atom-lite.xml',
+		json: 'https://bomberfish.ca/feed-lite.json',
+	},
+	author: { name: "bomberfish", link: "https://bomberfish.ca" },
+});
+
 for (const post of blogModules) {
+	// Full content feed item
 	feed.addItem({
 		title: post.title,
 		id: post.url,
 		link: post.url,
 		description: post.description,
+		content: post.htmlContent || undefined,
+		date: post.date,
+		image: post.image ? `https://bomberfish.ca${post.image}` : undefined,
+	});
+	
+	// Lite feed item (no content)
+	feedLite.addItem({
+		title: post.title,
+		id: post.url,
+		link: post.url,
+		description: post.description,
+		content: undefined,
 		date: post.date,
 		image: post.image ? `https://bomberfish.ca${post.image}` : undefined,
 	});
 }
 
+// Write full content feeds
 await writeFile(resolve("dist/static/feed.xml"), feed.rss2());
-console.log("Generated feed.xml.");
+console.log("Generated feed.xml (full content).");
 await writeFile(resolve("dist/static/atom.xml"), feed.atom1());
-console.log("Generated atom.xml.");
+console.log("Generated atom.xml (full content).");
 await writeFile(resolve("dist/static/feed.json"), feed.json1());
-console.log("Generated feed.json.");
+console.log("Generated feed.json (full content).");
 
-console.log("Generated all blog feeds.");
+// Write lite feeds
+await writeFile(resolve("dist/static/feed-lite.xml"), feedLite.rss2());
+console.log("Generated feed-lite.xml.");
+await writeFile(resolve("dist/static/atom-lite.xml"), feedLite.atom1());
+console.log("Generated atom-lite.xml.");
+await writeFile(resolve("dist/static/feed-lite.json"), feedLite.json1());
+console.log("Generated feed-lite.json.");
+
+console.log("Generated all blog feeds (full and lite versions).");
