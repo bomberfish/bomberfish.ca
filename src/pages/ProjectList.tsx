@@ -57,7 +57,7 @@ ProjectList.style = css`
 	
 	hr {
 		border: none;
-		border-bottom: 1px dashed var(--border);
+		border-bottom: 1px dotted var(--surface3);
 		margin: 1rem 0.2rem;
 	}
 

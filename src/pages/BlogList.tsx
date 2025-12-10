@@ -1,6 +1,7 @@
 import { Component, css } from "dreamland/core";
 import Header from "../components/Header";
 import TransitionLink from "../components/TransitionLink";
+import { ContactLinks } from "./Homepage";
 
 interface BlogPost {
     slug: string;
@@ -107,6 +108,8 @@ const BlogList: Component<{}, {}> = function () {
                         </div>
                     ))}
                 </div>
+                <br/>
+                <span style="font-size: 0.9rem; color: var(--subtext1);">get in touch:{"    "}<ContactLinks /></span>
             </article>
         </main>
     );

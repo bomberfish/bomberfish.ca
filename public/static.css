@@ -763,7 +763,7 @@ a[href^="/"]:after {
 }
 
 .blog-item {
-	border-bottom: 1px solid var(--overlay1);
+	border-bottom: 1px dotted var(--surface3);
 	padding-bottom: 1rem;
 }
 

@@ -62,7 +62,42 @@ const Homepage: Component<{}, {}> = function () {
 						<subt>
 							(hover for relevant info, underlined items are also hyperlinks)
 						</subt>
-						<ul class="compact">
+						<br/>
+						<ContactLinks />
+					</section>
+					<br />
+					<section id="buttons">
+						<div class="mine">
+							<WebButton
+								src="/button.gif"
+								title="Click to copy my button! (HTML code)"
+								on:click={(e: MouseEvent) => {
+									e.preventDefault();
+									try {
+										navigator.clipboard.writeText('<a href="https://bomberfish.ca">\n<img src="https://bomberfish.ca/button.gif" alt="BomberFish" title="BomberFish" />\n</a>');
+										document.body.appendChild(<CopiedToast />);
+									} catch {
+										console.error(e);
+									}
+								}}
+							/>
+							<subt style="font-size: 0.8em; margin-left: 0.5em;">
+								(click to copy! hotlinking encouraged!)
+							</subt>
+						</div>
+						{/* <br /> */}
+						<ButtonList />
+					</section>
+					<Footer />
+				</article>
+			<div></div>
+		</main>
+	);
+};
+
+export const ContactLinks: Component<{}, {}> = function () {
+	return (
+		<ul class="compact">
 							<li>
 								<span class="tooltip-wrapper">
 									<a href="mailto:me@bomberfish.ca">email</a>
@@ -147,37 +182,15 @@ const Homepage: Component<{}, {}> = function () {
 									<span class="tooltip">@one.337</span>
 								</span>
 							</li>
-						</ul>
-					</section>
-					<br />
-					<section id="buttons">
-						<div class="mine">
-							<WebButton
-								src="/button.gif"
-								title="Click to copy my button! (HTML code)"
-								on:click={(e: MouseEvent) => {
-									e.preventDefault();
-									try {
-										navigator.clipboard.writeText('<a href="https://bomberfish.ca">\n<img src="https://bomberfish.ca/button.gif" alt="BomberFish" title="BomberFish" />\n</a>');
-										document.body.appendChild(<CopiedToast />);
-									} catch {
-										console.error(e);
-									}
-								}}
-							/>
-							<subt style="font-size: 0.8em; margin-left: 0.5em;">
-								(click to copy! hotlinking encouraged!)
-							</subt>
-						</div>
-						{/* <br /> */}
-						<ButtonList />
-					</section>
-					<Footer />
-				</article>
-			<div></div>
-		</main>
+				</ul>
 	);
 };
+
+ContactLinks.style = css`
+	:scope {
+		display: inline-flex;
+	}
+`;
 
 Homepage.style = css`
 	li {
