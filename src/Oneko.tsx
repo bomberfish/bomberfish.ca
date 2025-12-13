@@ -436,7 +436,7 @@ Oneko.style = css`
         width: ${NEKO_REM.toString()}rem;
         height: ${NEKO_REM.toString()}rem;
         pointer-events: none;
-        background-image: url(/oneko.gif);
+        background-image: url(/oneko-custom.gif);
         background-repeat: no-repeat;
         background-size: ${(NEKO_REM * 8).toString()}rem ${(NEKO_REM * 4).toString()}rem;
         image-rendering: pixelated;
