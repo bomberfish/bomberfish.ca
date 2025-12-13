@@ -82,7 +82,7 @@ const Homepage: Component<{}, {}> = function () {
 								}}
 							/>
 							<subt style="font-size: 0.8em; margin-left: 0.5em;">
-								(click to copy! hotlinking encouraged!)
+								(click to copy code! hotlinking strongly encouraged!)
 							</subt>
 						</div>
 						{/* <br /> */}
