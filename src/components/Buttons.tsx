@@ -58,7 +58,7 @@ export const ButtonList: Component<{}, {}> = function () {
 		<span class="webbtns">
 			<WebButton
 				src="/buttons/dreamland-new.gif"
-				title="Made with dreamland.js"
+				title="Made with dreamland.js, a small, utilitarian web framework"
 				href="https://dreamland.js.org/?uwu"
 			/>
 			<WebButton
@@ -102,19 +102,14 @@ export const ButtonList: Component<{}, {}> = function () {
 				href="https://hack.club"
 			/>
 			<WebButton
-				src="https://omada.cafe/omada.gif"
-				title="omada.cafe, an private and secure alternative provider."
-				href="https://omada.cafe"
+				src="/buttons/acon-gets-a-button-animated.gif"
+				title="acon! (made my pfp!)"
+				href="https://aconlin.com"
 			/>
 			<WebButton
 				src="/buttons/ce88x31.gif"
 				title="velzie.d"
 				href="https://velzie.rip"
-			/>
-			<WebButton
-				src="/buttons/thinlqd.gif"
-				title="ThinLiquid"
-				href="https://thinliquid.dev"
 			/>
 			<WebButton
 				src="/buttons/foxmossbutton.gif"
@@ -130,6 +125,21 @@ export const ButtonList: Component<{}, {}> = function () {
 				src="https://circulars.dev/circular-88x31.gif"
 				title="circular"
 				href="https://circulars.dev"
+			/>
+			<WebButton
+				src="/buttons/kopper.png"
+				title="kopper"
+				href="https://w.on-t.work"
+			/>
+			<WebButton
+				src="/buttons/thinlqd.gif"
+				title="ThinLiquid"
+				href="https://thinliquid.dev"
+			/>
+			<WebButton
+				src="https://gideon.sh/88x31.gif"
+				title="gideon.sh"
+				href="https://gideon.sh"
 			/>
 			<WebButton
 				src="https://authenyo.xyz/images/button.gif"
@@ -152,11 +162,6 @@ export const ButtonList: Component<{}, {}> = function () {
 				href="https://dispherical.com"
 			/>
 			<WebButton
-				src="/buttons/kopper.png"
-				title="kopper"
-				href="https://w.on-t.work"
-			/>
-			<WebButton
 				src="/buttons/melon.gif"
 				title="zenfyr"
 				href="https://zenfyr.dev"
@@ -167,19 +172,54 @@ export const ButtonList: Component<{}, {}> = function () {
 				href="https://invoxiplaygames.uk"
 			/>
 			<WebButton
-				src="/buttons/acon-gets-a-button-animated.gif"
-				title="acon!"
-				href="https://aconlin.com"
-			/>
-			<WebButton
-				src="https://gideon.sh/88x31.gif"
-				title="gideon.sh"
-				href="https://gideon.sh"
+				src="https://melankorin.net/assets/img/buttons/button-1.gif?cbh=41d3f8b9b3d143bca8055b959ee0f510"
+				title="melankorin"
+				href="https://melankorin.net"
 			/>
 			<WebButton
 				src="https://kagi.com/smallweb/static/UseKagiV4C.gif"
 				title="Use Kagi!"
 				href="https://kagi.com/welcome"
+			/>
+			<WebButton
+				src="https://omada.cafe/omada.gif"
+				title="omada.cafe, an private and secure alternative provider."
+				href="https://omada.cafe"
+			/>
+			<WebButton
+				src="/buttons/newgrounds.gif"
+				href="https://newgrounds.com"
+				title="Newgrounds!"
+			/>
+			<WebButton
+				src="/buttons/modarchive.gif"
+				href="https://modarchive.org"
+				title="The Mod Archive"
+			/>
+			<WebButton
+				src="/buttons/beos_now_anim.gif"
+				title="Download Haiku! (It's basically just BeOS!)"
+				href="https://haiku-os.org"
+			/>
+			<WebButton
+				src="/buttons/github.gif"
+				href="https://github.com"
+				title="Social Coding!"
+			/>
+			<WebButton
+				src="/buttons/xkcd.gif"
+				title="XKCD"
+				href="https://xkcd.com"
+			/>
+			<WebButton
+				src="/buttons/eightyeightthirtyone.gif"
+				title="88x31"
+				href="https://eightyeightthirty.one"
+			/>
+			<WebButton
+				src="/buttons/lucida-2.gif"
+				title="Lucida: Free Music. No BS."
+				href="https://lucida.to"
 			/>
 			<WebButton
 				src="/buttons/aol-sucks.gif"
@@ -285,11 +325,6 @@ export const ButtonList: Component<{}, {}> = function () {
 				href="https://epicblazed.com"
 			/>
 			<WebButton
-				src="/buttons/beos_now_anim.gif"
-				title="Download Haiku!"
-				href="https://haiku-os.org"
-			/>
-			<WebButton
 				src="/buttons/mariokart.gif"
 				title="Play some Mario Kart!"
 				href="https://bomberfish.ca/N64Wasm"
@@ -308,26 +343,6 @@ export const ButtonList: Component<{}, {}> = function () {
 				href="https://necoarc.dev"
 			/>
 			<WebButton
-				src="/buttons/xkcd.gif"
-				title="XKCD"
-				href="https://xkcd.com"
-			/>
-			<WebButton
-				src="/buttons/eightyeightthirtyone.gif"
-				title="88x31"
-				href="https://eightyeightthirty.one"
-			/>
-			<WebButton
-				src="https://melankorin.net/assets/img/buttons/button-1.gif?cbh=41d3f8b9b3d143bca8055b959ee0f510"
-				title="melankorin"
-				href="https://melankorin.net"
-			/>
-			<WebButton
-				src="/buttons/lucida-2.gif"
-				title="Lucida: Free Music. No BS."
-				href="https://lucida.to"
-			/>
-			<WebButton
 				src="/buttons/talker.gif"
 				title="This website really does talk!"
 				on:click={()=>{
@@ -342,21 +357,6 @@ export const ButtonList: Component<{}, {}> = function () {
 						alert("your browser sucks!")
 					}
 				}}
-			/>
-			<WebButton
-				src="/buttons/newgrounds.gif"
-				href="https://newgrounds.com"
-				title="Newgrounds!"
-			/>
-			<WebButton
-				src="/buttons/modarchive.gif"
-				href="https://modarchive.org"
-				title="The Mod Archive"
-			/>
-			<WebButton
-				src="/buttons/github.gif"
-				href="https://github.com"
-				title="Social Coding!"
 			/>
 			<WebButton
 				src="/buttons/stop.gif"
