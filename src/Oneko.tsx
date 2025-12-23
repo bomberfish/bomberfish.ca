@@ -160,10 +160,10 @@ const Oneko: Component<{}, OnekoState> = function (cx) {
 			if (this.posY < 16 * NEKO_REM - 20) {
 				availableAnimations.push("scratchWallN");
 			}
-			if (this.posX > window.innerWidth - (16 * NEKO_REM - 20)) {
+			if (this.posX > document.body.clientWidth - (16 * NEKO_REM - 20)) {
 				availableAnimations.push("scratchWallE");
 			}
-			if (this.posY > window.innerHeight - (16 * NEKO_REM - 20)) {
+			if (this.posY > document.body.clientHeight - (16 * NEKO_REM - 20)) {
 				availableAnimations.push("scratchWallS");
 			}
 
@@ -242,13 +242,13 @@ const Oneko: Component<{}, OnekoState> = function (cx) {
 		this.posX -= (diffX / distance) * this.nekoSpeed;
 		this.posY -= (diffY / distance) * this.nekoSpeed;
 
-		this.posX = Math.min(Math.max(16, this.posX), window.innerWidth - 16);
-		this.posY = Math.min(Math.max(16, this.posY), window.innerHeight - 16);
+		this.posX = Math.min(Math.max(16, this.posX), document.body.clientWidth - 16);
+		this.posY = Math.min(Math.max(16, this.posY), document.body.clientHeight - 16);
 	};
 
 	const handleMouseMove = (event: MouseEvent) => {
-		this.mouseX = event.clientX;
-		this.mouseY = event.clientY;
+		this.mouseX = event.pageX;
+		this.mouseY = event.pageY;
 	};
 
 	const cleanup = () => {
