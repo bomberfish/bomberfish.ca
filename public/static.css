@@ -813,6 +813,10 @@ a[href^="/"]:after {
 	border: 1px solid hsla(var(--overlay2-hsl), 0.3);
 }
 
+.post-tags .material-symbols {
+	color: var(--subtext0);
+}
+
 article.blog-content blockquote {
 	border-left: 4px solid var(--overlay1);
 	padding-left: 1rem;
@@ -851,11 +855,22 @@ article.blog-content p {
 }
 
 article.blog-content img {
-	max-width: 100%;
+	width: 100%;
 	height: auto;
 	image-rendering: pixelated;
 }
 
+subt.image {
+	color: var(--subtext1)
+}
+
+subt.image .material-symbols {
+	vertical-align: middle;
+	padding-right: 5px;
+	padding-bottom: 3px;
+	font-size: 1.5em;
+	color: var(--subtext0);
+}
 
 .post-desc {
 	color: var(--subtext1);
