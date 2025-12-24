@@ -12,6 +12,7 @@ html {
 	--overlay3: hsl(var(--overlay3-hsl));
 	--supertext: hsl(var(--supertext-hsl));
 	--text: hsl(var(--text-hsl));
+	--text1: hsl(var(--text1-hsl));
 	--subtext0: hsl(var(--subtext0-hsl));
 	--subtext1: hsl(var(--subtext1-hsl));
 	--subtext2: hsl(var(--subtext2-hsl));
@@ -84,10 +85,11 @@ html {
 	--overlay3-hsl: var(--main-hue), 12%, 92%;
 	--supertext-hsl: 218, 22%, 97%;
 	--text-hsl: 218, 18%, 90%;
-	--subtext0-hsl: 218, 14%, 78%;
-	--subtext1-hsl: 218, 12%, 68%;
-	--subtext2-hsl: 218, 10%, 58%;
-	--subtext3-hsl: 218, 9%, 48%;
+	--text1-hsl: 218, 17%, 80%;
+	--subtext0-hsl: 218, 14%, 74%;
+	--subtext1-hsl: 218, 12%, 64%;
+	--subtext2-hsl: 218, 10%, 54%;
+	--subtext3-hsl: 218, 9%, 44%;
 	--accent-hsl: 210, 30%, 74%;
 
 	--shadow-soft: hsla(var(--overlay0-hsl), 0.16);
@@ -117,9 +119,10 @@ html {
 		--overlay3-hsl: var(--main-hue), 24%, 84%;
 		--supertext-hsl: 210, 32%, 96%;
 		--text-hsl: 210, 24%, 88%;
-		--subtext0-hsl: var(--main-hue), 18%, 72%;
-		--subtext1-hsl: var(--main-hue), 16%, 64%;
-		--subtext2-hsl: var(--main-hue), 14%, 52%;
+		--text1-hsl: 210, 22%, 74%;
+		--subtext0-hsl: var(--main-hue), 18%, 68%;
+		--subtext1-hsl: var(--main-hue), 16%, 60%;
+		--subtext2-hsl: var(--main-hue), 14%, 48%;
 		--subtext3-hsl: var(--main-hue), 12%, 44%;
 		--accent-hsl: 200, 40%, 70%;
 
@@ -742,9 +745,13 @@ a:after {
 	content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="hsl(210, 30%, 74%)"><path d="M144-144v-672h336v72H216v528h528v-264h72v336H144Zm243-192-51-51 357-357H576v-72h240v240h-72v-117L387-336Z"/></svg>');
 	margin-left: 0.1em;
 	vertical-align: middle;
-	vertical-align: -webkit-baseline-middle;
 	width: 1em;
 	height: 1em;
+	transform: translateY(-2px);
+}
+
+li a:after {
+	vertical-align: -webkit-baseline-middle;
 }
 
 a.web-button:after,
@@ -753,7 +760,6 @@ a[href^="/"]:after {
 	content: "";
 }
 
-/* Blog list & post UI — baseline styles live here so older browsers still look fine */
 .blog-list {
 	width: min(68rem, 100%);
 	margin: 2rem auto 0;

@@ -1,5 +1,6 @@
-import { Component } from "dreamland/core";
+import { Component, css } from "dreamland/core";
 import Header from "../components/Header";
+import { ContactLinks } from "./Homepage";
 
 interface BlogPostProps {
 slug: string;
@@ -66,7 +67,7 @@ const BlogPost: Component<BlogPostProps, {}> = function () {
 					<BlogContent />
 				</div>
 				<p>
-                    <subt style="display: flex; align-items: center; gap: 0.5rem; margin-block: 0.75rem;">
+                    <subt class="bottom">
                     <span class="material-symbols">rss_feed</span>{" "}
                     Liked this post? Subscribe to this blog:{" "}
                     <ul class="compact" style="display: inline; margin-left: 0.25rem;">
@@ -86,11 +87,22 @@ const BlogPost: Component<BlogPostProps, {}> = function () {
                             </a>
                         </li>
                     </ul>
-                    </subt>
+					<br />
+					</subt>
+					<subt class="bottom">
+					<span class="material-symbols">email</span>{" "}
+					or, get in touch:{"    "}<ContactLinks />
+					</subt>
                 </p>
 			</article>
 		</main>
 	);
 };
+
+BlogPost.style = css`
+	subt.bottom {
+		display: flex; align-items: center; gap: 0.5rem; margin-block: 0.75rem;
+	}
+`
 
 export default BlogPost;

@@ -40,7 +40,7 @@ const manualPosts: BlogPost[] = [
     {
         slug: "whitehouse",
         title: "Improving the White House Shutdown Clock",
-        description: "Redesigning and enhancing the White House's official government shutdown clock.",
+        description: "Redesigning and enhancing the White House’s official government shutdown clock.",
         tags: ["Design", "Politics" , "Webdev"],
         date: "2025-10-02",
         href: "/blog/whitehouse.html",
@@ -56,7 +56,8 @@ const BlogList: Component<{}, {}> = function () {
             <Header />
             <article>
                 <h1>blog</h1>
-                <p>articles about various projects i'm working on, along with an occasional rant or two.<br/>obligatory disclaimer: all opinions are my own, and do not reflect those of my employer.</p>
+                <p style="font-size: 1.05em;">articles about various projects i'm working on, along with an occasional rant or two.</p>
+                <subt style="font-size: 0.95rem; color: var(--text1)">(**obligatory disclaimer: all opinions are my own, and do not reflect those of my employer.)</subt>
                 <p>
                     <subt style="display: flex; align-items: center; gap: 0.5rem; margin-block: 0.75rem;">
                     <span class="material-symbols">rss_feed</span>{" "}
@@ -109,7 +110,7 @@ const BlogList: Component<{}, {}> = function () {
                     ))}
                 </div>
                 <br/>
-                <span style="font-size: 0.9rem; color: var(--subtext1);">get in touch:{"    "}<ContactLinks /></span>
+                <span style="font-size: 0.9rem; color: var(--subtext1);"><span class="material-symbols">email</span>{" "}get in touch:{"    "}<ContactLinks /></span>
             </article>
         </main>
     );
