@@ -272,9 +272,10 @@ header.generic-header {
 
 nav {
 	margin-top: 0.35rem;
-	display: flex;
-	align-items: center;
-	gap: 1rem;
+}
+
+nav a {
+	margin-left: 1rem;
 }
 
 header.generic-header nav {
@@ -291,21 +292,34 @@ header.frontpage-header {
 }
 
 .title {
+	width: 100%;
+	text-align: center;
 	display: flex;
 	align-items: center;
 	flex-direction: row;
 	justify-content: center;
-	flex-wrap: nowrap;
-	width: 100%;
+	flex-wrap: wrap;
+}
+
+.title > a {
+	margin-right: 0.5rem;
 }
 
 .title h1 {
+	font-size: 6rem;
 	font-size: clamp(6rem, 15vw, 8rem);
 	text-align: left;
 	line-height: 1;
 	margin: 0;
 	margin-top: 0.2em;
 	letter-spacing: -0.02em;
+}
+
+.title .pfp {
+	height: 100%;
+	max-width: 100%;
+	z-index: 1;
+	image-rendering: pixelated;
 }
 
 @media (orientation: portrait) {

@@ -50,10 +50,10 @@ export const TopNav: Component<{}, {}> = function () {
 				<TransitionLink href="/" class="router-link">
 					Home
 				</TransitionLink>
-				<TransitionLink href="/projects.html" class="router-link">
+				<TransitionLink href="/projects/index.html" class="router-link">
 					Projects
 				</TransitionLink>
-				<TransitionLink href="/blog.html" class="router-link">
+				<TransitionLink href="/blog/index.html" class="router-link">
 					Blog
 				</TransitionLink>
 				{/* <a href="https://blog.bomberfish.ca" target="_blank">
@@ -68,7 +68,6 @@ TopNav.style = css`
 		view-transition-name: nav-links;
 		display: flex;
 		align-items: center;
-		gap: 1rem;
 		flex-wrap: wrap;
 		user-select: none;
 		-webkit-user-select: none;

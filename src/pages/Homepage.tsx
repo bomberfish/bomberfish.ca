@@ -109,20 +109,6 @@ Homepage.style = css`
 		margin-bottom: 0.5rem;
 	}
 
-	.pfp {
-		/* aspect-ratio: 1/1; */
-		/* width: clamp(30rem, 15vw, 8rem); */
-		height: 100%;
-		max-width: 100%;
-		z-index: 1;
-		/* position: absolute;
-		top: 0;
-		left: 0;
-		object-fit: cover; */
-		z-index: 1;
-		image-rendering: pixelated;
-	}
-
 	.mine {
 		display: flex;
 		align-items: flex-end;
@@ -130,10 +116,6 @@ Homepage.style = css`
 	}
 	
 	@media (max-width: 960px) or (orientation: portrait) {
-		.title {
-			flex-direction: column;
-		}
-
 		article {
 			max-width: 100%;
 			width: 100%;

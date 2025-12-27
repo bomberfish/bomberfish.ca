@@ -19,7 +19,7 @@ export const WebButton: Component<
 	return (
 		<a
 			class="web-button"
-			href={this.href || "#"}
+			href={this.href || ""}
 			target={this.href ? "_blank" : "_self"}
 			on:click={(e: MouseEvent) => {
 				this["on:click"]!(e);
@@ -152,14 +152,19 @@ export const ButtonList: Component<{}, {}> = function () {
 				href="https://thememesniper.dev"
 			/>
 			<WebButton
-				src="https://notfire.cc/design/images/buttons/notfire-cc-88x31-af.gif"
-				title="notfire"
-				href="https://notfire.cc"
-			/>
-			<WebButton
 				src="/buttons/dispherical.gif"
 				title="dispherical"
 				href="https://dispherical.com"
+			/>
+			<WebButton
+				src="https://egg.l5.ca/assets/buttons/enderman0125.gif"
+				title="enderman0125"
+				href="https://egg.l5.ca"
+			/>
+			<WebButton
+				src="https://notfire.cc/design/images/buttons/notfire-cc-88x31-af.gif"
+				title="notfire"
+				href="https://notfire.cc"
 			/>
 			<WebButton
 				src="/buttons/melon.gif"
@@ -177,6 +182,11 @@ export const ButtonList: Component<{}, {}> = function () {
 				href="https://melankorin.net"
 			/>
 			<WebButton
+				src="/buttons/wdw.gif"
+				title="Wet-Dry World"
+				href="https://wetdry.world"
+			/>
+			<WebButton
 				src="https://kagi.com/smallweb/static/UseKagiV4C.gif"
 				title="Use Kagi!"
 				href="https://kagi.com/welcome"
@@ -187,14 +197,19 @@ export const ButtonList: Component<{}, {}> = function () {
 				href="https://omada.cafe"
 			/>
 			<WebButton
-				src="/buttons/newgrounds.gif"
-				href="https://newgrounds.com"
-				title="Newgrounds!"
+				src="/buttons/eightyeightthirtyone.gif"
+				title="88x31"
+				href="https://eightyeightthirty.one"
 			/>
 			<WebButton
 				src="/buttons/modarchive.gif"
 				href="https://modarchive.org"
 				title="The Mod Archive"
+			/>
+			<WebButton
+				src="/buttons/newgrounds.gif"
+				href="https://newgrounds.com"
+				title="Newgrounds!"
 			/>
 			<WebButton
 				src="/buttons/beos_now_anim.gif"
@@ -210,11 +225,6 @@ export const ButtonList: Component<{}, {}> = function () {
 				src="/buttons/xkcd.gif"
 				title="XKCD"
 				href="https://xkcd.com"
-			/>
-			<WebButton
-				src="/buttons/eightyeightthirtyone.gif"
-				title="88x31"
-				href="https://eightyeightthirty.one"
 			/>
 			<WebButton
 				src="/buttons/lucida-2.gif"
@@ -365,6 +375,7 @@ export const ButtonList: Component<{}, {}> = function () {
 			<WebButton
 				src="/buttons/javanow.gif"
 				title="Java is underrated"
+				href="https://www.java.com/en/"
 			/>
 		</span>
 	);
