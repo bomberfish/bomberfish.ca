@@ -36,11 +36,12 @@ const buildClassName = (componentInstance: Record<string, unknown>) => {
 };
 
 const normalizePath = (path: string) => {
-	const normalized = path.replace(/\/+$/, "");
+	let normalized = path.replace(/\/+$/, "");
+	normalized = normalized.replace(/\/index\.html?$/i, "");
 	return normalized.length === 0 ? "/" : normalized;
 };
 
-const NAV_PATHS = ["/", "/projects/index.html", "/blog/index.html", "/siteinfo.html"];
+const NAV_PATHS = ["/", "/projects", "/blog", "/siteinfo"];
 
 const getNavigationOrder = (path: string): number | undefined => {
 	const normalized = normalizePath(path);

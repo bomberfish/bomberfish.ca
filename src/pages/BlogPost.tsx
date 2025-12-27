@@ -10,20 +10,6 @@ const BlogPost: Component<BlogPostProps, {}> = function () {
 	const slug = this.slug;
 	const blogModules = import.meta.glob("../blog/*.mdx", { eager: true }) as Record<string, any>;
 
-	if (slug === "whitehouse") {
-		return (
-			<main>
-				<Header />
-				<article>
-					<h1>Blog Post Not Found</h1>
-					<p>
-						This post is available as a static page. Open it directly: <a href="/blog/whitehouse.html">/blog/whitehouse.html</a>
-					</p>
-				</article>
-			</main>
-		);
-	}
-
 	const matchingPath = Object.keys(blogModules).find((path) => path.includes(`-${slug}.mdx`));
 
 	if (!matchingPath) {

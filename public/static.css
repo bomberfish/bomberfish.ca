@@ -67,7 +67,7 @@ html {
 } */
 
 html {
-	--main-hue: 222;
+	--main-hue: 218;
 	--grid-lines: hsla(var(--main-hue), 10%, 46%);
 
 	--base-hsl: var(--main-hue), 20%, 33%;
@@ -83,14 +83,14 @@ html {
 	--overlay1-hsl: var(--main-hue), 12%, 78%;
 	--overlay2-hsl: var(--main-hue), 12%, 84%;
 	--overlay3-hsl: var(--main-hue), 12%, 92%;
-	--supertext-hsl: 218, 22%, 97%;
-	--text-hsl: 218, 18%, 90%;
-	--text1-hsl: 218, 17%, 80%;
-	--subtext0-hsl: 218, 14%, 74%;
-	--subtext1-hsl: 218, 12%, 64%;
-	--subtext2-hsl: 218, 10%, 54%;
-	--subtext3-hsl: 218, 9%, 44%;
-	--accent-hsl: 210, 30%, 74%;
+	--supertext-hsl: 206, 22%, 97%;
+	--text-hsl: 206, 18%, 90%;
+	--text1-hsl: 206, 17%, 80%;
+	--subtext0-hsl: 206, 14%, 74%;
+	--subtext1-hsl: 206, 12%, 64%;
+	--subtext2-hsl: 206, 10%, 54%;
+	--subtext3-hsl: 206, 9%, 44%;
+	--accent-hsl: 205, 40%, 70%;
 
 	--shadow-soft: hsla(var(--overlay0-hsl), 0.16);
 	--shadow-medium: hsla(var(--overlay0-hsl), 0.26);
@@ -757,7 +757,7 @@ a:hover,
 
 a:after {
 	display: inline;
-	content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="hsl(210, 30%, 74%)"><path d="M144-144v-672h336v72H216v528h528v-264h72v336H144Zm243-192-51-51 357-357H576v-72h240v240h-72v-117L387-336Z"/></svg>');
+	content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="hsl(205, 40%, 70%)"><path d="M144-144v-672h336v72H216v528h528v-264h72v336H144Zm243-192-51-51 357-357H576v-72h240v240h-72v-117L387-336Z"/></svg>');
 	margin-left: 0.1em;
 	vertical-align: middle;
 	width: 1em;
@@ -880,17 +880,17 @@ article.blog-content img {
 	height: auto;
 	image-rendering: pixelated;
 }
-
-subt.image {
-	color: var(--subtext1)
-}
-
-subt.image .material-symbols {
+cap subt .material-symbols {
 	vertical-align: middle;
 	padding-right: 5px;
 	padding-bottom: 3px;
 	font-size: 1.5em;
-	color: var(--subtext0);
+	color: var(--subtext1);
+}
+
+cap subt:not(:has(.material-symbols)) {
+	padding-left: 1.5rem;
+	color: var(--subtext1);
 }
 
 .post-desc {

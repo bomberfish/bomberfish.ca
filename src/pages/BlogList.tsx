@@ -56,8 +56,8 @@ const BlogList: Component<{}, {}> = function () {
             <Header />
             <article>
                 <h1>blog</h1>
-                <p style="font-size: 1.05em;">articles about various projects i'm working on, along with an occasional rant or two.</p>
-                <subt style="font-size: 0.95rem; color: var(--text1)">(**obligatory disclaimer: all opinions are my own, and do not reflect those of my employer.)</subt>
+                <p style="font-size: 1.05em;">rants about whatever's on my mind* and writeups on whatever i've been up to.</p>
+                <subt style="font-size: 0.95rem; color: var(--text1)">*obligatory disclaimer: all opinions are my own, and do not reflect those of my employer.</subt>
                 <p>
                     <subt style="display: flex; align-items: center; gap: 0.5rem; margin-block: 0.75rem;">
                     <span class="material-symbols">rss_feed</span>{" "}
