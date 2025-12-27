@@ -1,13 +1,15 @@
 import { defineConfig } from "vite";
 import { devSsr } from "dreamland/vite";
 import { compile } from "@mdx-js/mdx";
+
 import { literalsHtmlCssMinifier } from "@literals/rollup-plugin-html-css-minifier";
+import legacy from "@vitejs/plugin-legacy";
+import htmlMinifier from 'vite-plugin-html-minifier'
 
 import rehypeStarryNight from "rehype-starry-night";
 import { all as grammars } from "@wooorm/starry-night";
 import { visit } from "estree-util-visit";
 
-import legacy from "@vitejs/plugin-legacy";
 import postCssPresetEnv from "postcss-preset-env";
 import autoprefixer from "autoprefixer";
 
@@ -67,6 +69,22 @@ export default defineConfig({
 		}),
 		legacy({
 			targets: ["fully supports es6"],
+		}),
+		htmlMinifier({
+			minify: {
+				collapseWhitespace: true,
+				keepClosingSlash: true,
+
+				removeComments: false,
+				removeRedundantAttributes: false,
+				removeScriptTypeAttributes: false,
+				removeStyleLinkTypeAttributes: false,
+				removeEmptyAttributes: false,
+				useShortDoctype: false,
+				minifyCSS: false,
+				minifyJS: false,
+				minifyURLs: false,
+			},
 		}),
 		{
 			name: "mdx-dreamland",

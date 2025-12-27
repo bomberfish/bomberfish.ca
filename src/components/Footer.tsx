@@ -106,7 +106,7 @@ const Footer: Component<{}, {elapsed: string, message: string, resetSplashInterv
         <footer>
             <subt>
                 <span class="tooltip-wrapper">
-                        <TransitionLink href="/siteinfo" class="router-link">
+                        <TransitionLink href="/siteinfo.html" class="router-link">
                             {"bomberfish.ca v" + __APP_VERSION__ + " (" + __COMMIT_HASH__ + ")"}
                         </TransitionLink>
                     <span class="tooltip">{use(this.elapsed)}</span>

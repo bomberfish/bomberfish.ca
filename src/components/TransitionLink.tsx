@@ -40,7 +40,7 @@ const normalizePath = (path: string) => {
 	return normalized.length === 0 ? "/" : normalized;
 };
 
-const NAV_PATHS = ["/", "/projects", "/blog", "/siteinfo"];
+const NAV_PATHS = ["/", "/projects/index.html", "/blog/index.html", "/siteinfo.html"];
 
 const getNavigationOrder = (path: string): number | undefined => {
 	const normalized = normalizePath(path);

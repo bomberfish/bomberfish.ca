@@ -513,6 +513,7 @@ li:not(:has(a)) {
 }
 
 li:has(a),
+ul.compact > :-webkit-any(li > span, li > a),
 ul.compact > :is(li > span, li > a) {
 	margin-bottom: 0;
 }

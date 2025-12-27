@@ -16,8 +16,6 @@ const Homepage: Component<{}, {}> = function () {
 					<img src="/pfp-display.gif" class="pfp" title="my profile picture. click to view full color version." />
 				</a>
 				<h1
-					class="typing-title"
-					data-typing-text={`bomber\nfish.ca`}
 					aria-label="bomberfish.ca"
 				>
 					bomber
@@ -58,7 +56,7 @@ const Homepage: Component<{}, {}> = function () {
 
 					<section>
 						<h2>get in touch!</h2>
-						{/* i feel like having to explain this is a total ux fail but oh well */}
+						{/* i feel like having to explain this is an epic ux fail but oh well */}
 						<subt>
 							(hover for relevant info, underlined items are also hyperlinks)
 						</subt>
@@ -94,6 +92,67 @@ const Homepage: Component<{}, {}> = function () {
 		</main>
 	);
 };
+
+Homepage.style = css`
+	li {
+		margin-bottom: 0.5rem;
+	}
+
+	article {
+		max-width: calc(100% - 20rem);
+	}
+
+	.buttons > div {
+		display: flex; 
+		align-items: center; 
+		height: max(31px,2.25rem); 
+		margin-bottom: 0.5rem;
+	}
+
+	.pfp {
+		/* aspect-ratio: 1/1; */
+		/* width: clamp(30rem, 15vw, 8rem); */
+		height: 100%;
+		max-width: 100%;
+		z-index: 1;
+		/* position: absolute;
+		top: 0;
+		left: 0;
+		object-fit: cover; */
+		z-index: 1;
+		image-rendering: pixelated;
+	}
+
+	.mine {
+		display: flex;
+		align-items: flex-end;
+		padding-bottom: 0.5rem;
+	}
+	
+	@media (max-width: 960px) or (orientation: portrait) {
+		.title {
+			flex-direction: column;
+		}
+
+		article {
+			max-width: 100%;
+			width: 100%;
+			padding: 0 0.5rem;
+		}
+
+		.img-wrapper {
+			margin-inline: auto;
+		}
+
+		.contact-list > li {
+			white-space: normal;
+		}
+	}
+
+	#buttons {
+		width: 100%;
+	}
+`;
 
 export const ContactLinks: Component<{}, {}> = function () {
 	return (
@@ -192,65 +251,5 @@ ContactLinks.style = css`
 	}
 `;
 
-Homepage.style = css`
-	li {
-		margin-bottom: 0.5rem;
-	}
-
-	article {
-		max-width: calc(100% - 20rem);
-	}
-
-	.buttons > div {
-		display: flex; 
-		align-items: center; 
-		height: max(31px,2.25rem); 
-		margin-bottom: 0.5rem;
-	}
-
-	.pfp {
-		/* aspect-ratio: 1/1; */
-		/* width: clamp(30rem, 15vw, 8rem); */
-		height: 100%;
-		max-width: 100%;
-		z-index: 1;
-		/* position: absolute;
-		top: 0;
-		left: 0;
-		object-fit: cover; */
-		z-index: 1;
-		image-rendering: pixelated;
-	}
-
-	.mine {
-		display: flex;
-		align-items: flex-end;
-		padding-bottom: 0.5rem;
-	}
-	
-	@media (max-width: 960px) or (orientation: portrait) {
-		.title {
-			flex-direction: column;
-		}
-
-		article {
-			max-width: 100%;
-			width: 100%;
-			padding: 0 0.5rem;
-		}
-
-		.img-wrapper {
-			margin-inline: auto;
-		}
-
-		.contact-list > li {
-			white-space: normal;
-		}
-	}
-
-	#buttons {
-		width: 100%;
-	}
-`;
 
 export default Homepage;
