@@ -81,6 +81,9 @@ importers:
       vite:
         specifier: npm:rolldown-vite@^7.2.7
         version: rolldown-vite@7.2.7(@types/node@24.10.1)(esbuild@0.25.12)(terser@5.44.1)(yaml@2.8.1)
+      vite-plugin-html-minifier:
+        specifier: ^1.0.5
+        version: 1.0.5(rolldown-vite@7.2.7(@types/node@24.10.1)(esbuild@0.25.12)(terser@5.44.1)(yaml@2.8.1))
 
 packages:
 
@@ -2734,6 +2737,12 @@ packages:
 
   vfile@6.0.3:
     resolution: {integrity: sha512-KzIbH/9tXat2u30jf+smMwFCsno4wHVdNmzFyL+T/L3UGqqk6JKfVqOFOZEpZSHADH1k40ab6NUIXZq422ov3Q==}
+
+  vite-plugin-html-minifier@1.0.5:
+    resolution: {integrity: sha512-Yv50z65w4wTyu799Iw8f5jb3rkYJM4LllPdxU1GLXkqrn/GGPmIJlFwEvS6Pnxl5CCn7JkIWvoxPp+zGSuowDQ==}
+    engines: {node: '>=20.10.0', pnpm: '>=9.0.4'}
+    peerDependencies:
+      vite: '>=3.0.0'
 
   vscode-oniguruma@2.0.1:
     resolution: {integrity: sha512-poJU8iHIWnC3vgphJnrLZyI3YdqRlR27xzqDmpPXYzA93R4Gk8z7T6oqDzDoHjoikA2aS82crdXFkjELCdJsjQ==}
@@ -5831,6 +5840,11 @@ snapshots:
     dependencies:
       '@types/unist': 3.0.3
       vfile-message: 4.0.3
+
+  vite-plugin-html-minifier@1.0.5(rolldown-vite@7.2.7(@types/node@24.10.1)(esbuild@0.25.12)(terser@5.44.1)(yaml@2.8.1)):
+    dependencies:
+      html-minifier-terser: 7.2.0
+      vite: rolldown-vite@7.2.7(@types/node@24.10.1)(esbuild@0.25.12)(terser@5.44.1)(yaml@2.8.1)
 
   vscode-oniguruma@2.0.1: {}
 

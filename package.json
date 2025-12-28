@@ -32,7 +32,8 @@
 		"rehype-starry-night": "^2.2.0",
 		"terser": "^5.44.1",
 		"typescript": "next",
-		"vite": "npm:rolldown-vite@^7.2.7"
+		"vite": "npm:rolldown-vite@^7.2.7",
+		"vite-plugin-html-minifier": "^1.0.5"
 	},
 	"dependencies": {
 		"dreamland": "^0.1.2",
