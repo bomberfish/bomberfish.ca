@@ -50,10 +50,10 @@ export const TopNav: Component<{}, {}> = function () {
 				<TransitionLink href="/" class="router-link">
 					Home
 				</TransitionLink>
-				<TransitionLink href="/projects/" class="router-link">
+				<TransitionLink href="/projects" class="router-link">
 					Projects
 				</TransitionLink>
-				<TransitionLink href="/blog/" class="router-link">
+				<TransitionLink href="/blog" class="router-link">
 					Blog
 				</TransitionLink>
 				{/* <a href="https://blog.bomberfish.ca" target="_blank">

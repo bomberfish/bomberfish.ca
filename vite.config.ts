@@ -70,22 +70,22 @@ export default defineConfig({
 		legacy({
 			targets: ["fully supports es6"],
 		}),
-		htmlMinifier({
-			minify: {
-				collapseWhitespace: true,
-				keepClosingSlash: true,
+		// htmlMinifier({
+		// 	minify: {
+		// 		collapseWhitespace: true,
+		// 		keepClosingSlash: true,
 
-				removeComments: false,
-				removeRedundantAttributes: false,
-				removeScriptTypeAttributes: false,
-				removeStyleLinkTypeAttributes: false,
-				removeEmptyAttributes: false,
-				useShortDoctype: false,
-				minifyCSS: false,
-				minifyJS: false,
-				minifyURLs: false,
-			},
-		}),
+		// 		removeComments: false,
+		// 		removeRedundantAttributes: false,
+		// 		removeScriptTypeAttributes: false,
+		// 		removeStyleLinkTypeAttributes: false,
+		// 		removeEmptyAttributes: false,
+		// 		useShortDoctype: false,
+		// 		minifyCSS: false,
+		// 		minifyJS: false,
+		// 		minifyURLs: false,
+		// 	},
+		// }),
 		{
 			name: "mdx-dreamland",
 			enforce: "pre",
