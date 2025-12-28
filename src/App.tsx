@@ -35,14 +35,14 @@ const App: Component<{}, {}> = function (cx) {
 		<Router
 			children={[
 				<Route path="" show={() => <Homepage />} />,
-				<Route path="projects/index" show={() => <ProjectList />} />,
+				<Route path="projects" show={() => <ProjectList />} />,
 				...projects.map((project) => (
 					<Route
 						path={`projects/${project.lastPathComponent}`}
 						show={() => <ProjectView project={project} />}
 					/>
 				)),
-				<Route path="blog/index" show={() => <BlogList />} />,
+				<Route path="blog" show={() => <BlogList />} />,
 				...blogPosts.map((post) => (
 					<Route
 						path={`blog/${post.slug}`}
