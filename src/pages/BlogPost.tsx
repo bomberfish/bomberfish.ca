@@ -77,7 +77,7 @@ const BlogPost: Component<BlogPostProps, {}> = function () {
 					</subt>
 					<subt class="bottom">
 					<span class="material-symbols">email</span>{" "}
-					or, get in touch:{"    "}<ContactLinks />
+					Or, get in touch:{"    "}<ContactLinks />
 					</subt>
                 </p>
 			</article>
