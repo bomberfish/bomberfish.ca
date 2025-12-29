@@ -172,14 +172,14 @@ ProjectCard.style = css<typeof ProjectCard>`
 	.project-visual {
 		flex-shrink: 0;
 		width: clamp(200px, 28vw, 320px);
-		aspect-ratio: 2 / 1;
+		aspect-ratio: 19 / 10;
 		background: color-mix(in srgb, var(--surface2) 80%, transparent);
 		display: flex;
 		align-items: center;
 		justify-content: center;
 		position: relative;
 		overflow: hidden;
-		clip-path: polygon(7% 0%, 100% 0%, 93% 100%, 0% 100%);
+		clip-path: polygon(5.5% 0%, 100% 0%, 94.5% 100%, 0% 100%);
 		box-shadow: 0 16px 38px -16px var(--shadow-ultra);
 		transition:
 			transform 0.45s ease,

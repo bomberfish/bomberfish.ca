@@ -10,7 +10,7 @@ const ProjectList: Component<{}, {}> = function () {
 			<Header />
 			<article>
 				<h2>projects</h2>
-				<p>a collection of my work and experiments.</p>
+				<p>a collection of my major projects, along with various smaller utilities, experiments, and explorations.</p>
 				<section class="projects-group">
 				<h3>featured</h3>
 					{projects

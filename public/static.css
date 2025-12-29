@@ -101,7 +101,7 @@ html {
 
 @media (prefers-color-scheme: dark) { */
 	html {
-		--main-hue: 220;
+		--main-hue: 225;
 		--grid-lines: hsla(var(--main-hue), 12%, 16%);
 
 		--base-hsl: var(--main-hue), 20%, 12%;
@@ -117,14 +117,14 @@ html {
 		--overlay1-hsl: var(--main-hue), 20%, 66%;
 		--overlay2-hsl: var(--main-hue), 22%, 74%;
 		--overlay3-hsl: var(--main-hue), 24%, 84%;
-		--supertext-hsl: 210, 32%, 96%;
-		--text-hsl: 210, 24%, 88%;
-		--text1-hsl: 210, 22%, 74%;
+		--supertext-hsl: 215, 32%, 96%;
+		--text-hsl: 215, 24%, 88%;
+		--text1-hsl: 215, 22%, 74%;
 		--subtext0-hsl: var(--main-hue), 18%, 68%;
 		--subtext1-hsl: var(--main-hue), 16%, 60%;
 		--subtext2-hsl: var(--main-hue), 14%, 48%;
 		--subtext3-hsl: var(--main-hue), 12%, 44%;
-		--accent-hsl: 200, 40%, 70%;
+		--accent-hsl: 205, 40%, 70%;
 
 		--shadow-soft: hsla(var(--text-hsl), 0.14);
 		--shadow-medium: hsla(var(--text-hsl), 0.24);

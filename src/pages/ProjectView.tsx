@@ -38,7 +38,7 @@ ProjectView.style = css`
 		justify-content: center;
 		gap: 0;
 		flex-grow: 1;
-		max-width: min(50rem, 70vw);
+		width: min(50rem, 70vw);
 	}
 
 	#image {
@@ -50,10 +50,15 @@ ProjectView.style = css`
 		padding: 0;
 		position: relative;
 		overflow: hidden;
+		/* aspect-ratio: 16 / 9; */
+		max-height: 40vh;
+		min-width: min(50rem, 70vw);
+		object-fit: contain;
+		object-position: 0 0;
 	}
 
 	#details {
-		max-width: 100%;
+		width: 100%;
 		padding-inline: 0.5rem;
 		transform: translateY(-0.5rem);
 	}
@@ -61,15 +66,15 @@ ProjectView.style = css`
 	img {
 		max-width: min(50rem, 70vw);
 		width: auto;
-		max-height: 70vh;
 		border-radius: 0;
 		margin: 0;
 		padding: 0;
+		object-position: 0 0;
 	}
 
-	#details {
+	/* #details {
 		width: unset;
-	}
+	} */
 
 	article {
 		flex-direction: column;
