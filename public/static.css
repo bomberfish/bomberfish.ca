@@ -66,7 +66,7 @@ html {
 	--shadow-highlight: hsla(var(--surface0-hsl), 0.70);
 } */
 
-html {
+/* html {
 	--main-hue: 218;
 	--grid-lines: hsla(var(--main-hue), 10%, 46%);
 
@@ -99,7 +99,7 @@ html {
 	--shadow-highlight: hsla(var(--surface0-hsl), 0.72);
 }
 
-@media (prefers-color-scheme: dark) {
+@media (prefers-color-scheme: dark) { */
 	html {
 		--main-hue: 220;
 		--grid-lines: hsla(var(--main-hue), 12%, 16%);
@@ -136,7 +136,7 @@ html {
 	body {
 		color-scheme: dark;
 	}
-}
+/* } */
 
 
 ::selection {
@@ -758,7 +758,7 @@ a:hover,
 
 a:after {
 	display: inline;
-	content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="hsl(205, 40%, 70%)"><path d="M144-144v-672h336v72H216v528h528v-264h72v336H144Zm243-192-51-51 357-357H576v-72h240v240h-72v-117L387-336Z"/></svg>');
+	content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="hsl(200, 40%, 70%)"><path d="M144-144v-672h336v72H216v528h528v-264h72v336H144Zm243-192-51-51 357-357H576v-72h240v240h-72v-117L387-336Z"/></svg>');
 	margin-left: 0.1em;
 	vertical-align: middle;
 	width: 1em;
