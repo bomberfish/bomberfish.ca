@@ -18,7 +18,8 @@ const ProjectView: Component<{ project: ProjectCardDetails }, {}> =
 						<ul class="compact">
 							{this.project.links?.map((link) => (
 								<li>
-									<a href={link.url} target="_blank" rel="noopener">
+									<a href={link.url} class="link" target="_blank" rel="noopener">
+										<span class="material-symbols">{link.icon}</span>
 										{link.name}
 									</a>
 								</li>
@@ -70,6 +71,13 @@ ProjectView.style = css`
 		margin: 0;
 		padding: 0;
 		object-position: 0 0;
+	}
+
+	.material-symbols {
+		vertical-align: middle;
+		padding-right: 0.3rem;
+		font-size: 1.2rem;
+		padding-bottom: 0.1rem;
 	}
 
 	/* #details {
