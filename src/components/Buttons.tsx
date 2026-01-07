@@ -37,7 +37,7 @@ export const WebButton: Component<
 
 WebButton.style = css`
 	:scope {
-		width: max-content;
+		min-width: max(88px, calc(6.5rem));
 		height: max(31px, 2.3rem);
 		border: none !important;
 		display: inline-block;
@@ -132,7 +132,7 @@ export const ButtonList: Component<{}, {}> = function () {
 				href="https://w.on-t.work"
 			/>
 			<WebButton
-				src="/https://thinliquid.dev/buttons/btn.gif"
+				src="https://thinliquid.dev/buttons/btn.gif"
 				title="ThinLiquid"
 				href="https://thinliquid.dev"
 			/>
@@ -241,7 +241,7 @@ export const ButtonList: Component<{}, {}> = function () {
 				title="<3"
 			/>
 			<WebButton
-				src="https://login.corp.google.com/c/balls.gif"
+				src="/buttons/balls.gif"
 				title="Google Single Sign On"
 				href="https://login.corp.google.com"
 			/>

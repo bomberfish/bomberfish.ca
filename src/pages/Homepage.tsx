@@ -10,7 +10,9 @@ const Homepage: Component<{}, {}> = function () {
 				<Sidebar active="home" />
 				<div class="main-content">
 					<section class="about-section">
-						<img src="/me.png" class="pfp" title="my profile picture!" />
+						<a href="/me.png" target="_blank" rel="noopener">
+							<img src="/me.min.png" class="pfp" title="my profile picture! click to view full size." alt="profile picture" />
+						</a>
 						<h2>about me!</h2>
 						<p>
 							i'm hariz (he/they), a 17 y/o high school student living in

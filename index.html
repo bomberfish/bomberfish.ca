@@ -4,8 +4,8 @@
 		<link rel="stylesheet" href="/static.css" />
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width,initial-scale=1" />
-		<link rel="preconnect" href="https://fonts.googleapis.com" />
-		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<!-- <link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin /> -->
 		<meta name="theme-color" content="#434d65" media="(prefers-color-scheme: light)" />
 		<meta name="theme-color" content="#181d25" media="(prefers-color-scheme: dark)" />
 		<meta name="description" content="bomberfish's personal website" />
@@ -14,7 +14,6 @@
 		<link rel="apple-touch-icon" href="me.jpg">
 		<meta name="darkreader-lock" />
 		<base target="_blank" />
-		<link rel="stylesheet" type="text/css" href="/typography.css" />
 		<script type="speculationrules">{"prerender": [{"where": { "href_matches": "/projects" },"eagerness": "eager"}]}</script>
 		<link rel="alternate" type="application/rss+xml" title="bomberfish's blog" href="/feed.xml" />
 		<link rel="alternate" type="application/atom+xml" title="bomberfish's blog" href="/atom.xml" />
@@ -28,7 +27,7 @@
 	<body>
 		<!--ssr-body-->
 		<script type="module" src="/src/main-client.ts"></script>
-		
+		<link rel="stylesheet" type="text/css" defer href="/typography.css" />
 		<script
 			async
 			defer

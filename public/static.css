@@ -172,8 +172,9 @@ html {
 }
 
 body {
-	font-family: "HelveticaNow", sans-serif;
-	font-family: var(--font-body);
+	font-family: "HelveticaNow", Helvetica, "Helvetica Neue", FreeSans, "Nimbus Sans L", "Nimbus Sans", system-ui, Arial,
+	sans-serif, "Apple Color Emoji", "Noto Color Emoji", "Segoe UI Emoji";
+	/* font-family: var(--font-body); */
 	font-weight: 330;
 	font-stretch: 96%;
 	font-variation-settings:

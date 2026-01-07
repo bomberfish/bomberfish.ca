@@ -11,7 +11,7 @@ const Sidebar: Component<{ active?: PageCategory }, {}> = function () {
 		<aside class="sidebar">
 			<TransitionLink href="/" class="site-title-link">
 				<h1 class="site-title">
-                    <img src="/pfp-display-crop.gif" height="52" class="site-title-pfp" />
+                    <img src="/pfp-display-crop.gif" height="52" class="site-title-pfp" alt="my profile picture" />
                     bomberfish.ca
                 </h1>
 			</TransitionLink>
