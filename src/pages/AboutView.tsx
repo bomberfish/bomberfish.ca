@@ -117,7 +117,6 @@ export const AboutView: Component<{}, {}> = function () {
 						</a>
 						.
 					</p>
-					<p>the color scheme and typography borrow some inspiration from colin mcrae rally 2.0 for the playstation 1.</p>
 					<p>the body font is Helvetica Now, and the monospace font is a custom variant of <a href="https://typeof.net/Iosevka/" target="_blank" rel="noopener noreferrer">Iosevka</a> i created for my own use.</p>
 					<p>the background pulls images from <a href="https://picsum.photos" target="_blank" rel="noopener noreferrer">Lorem Picsum</a> and applies Atkinson dithering as described in <a href="https://beyondloom.com/blog/dither.html" target="_blank" rel="noopener noreferrer">this blogpost</a>.</p>
 					<h2>archive of previous versions</h2>
