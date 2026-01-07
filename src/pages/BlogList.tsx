@@ -34,20 +34,20 @@ const mdxPosts = Object.entries(blogModules)
         return { slug, title, date, description, tags, image };
     })
     .filter((post): post is BlogPost => post !== null)
-    .filter((post) => post.slug !== "whitehouse");
+    // .filter((post) => post.slug !== "whitehouse");
 
-const manualPosts: BlogPost[] = [
-    {
-        slug: "whitehouse",
-        title: "Improving the White House Shutdown Clock",
-        description: "Redesigning and enhancing the White House’s official government shutdown clock.",
-        tags: ["Design", "Politics" , "Webdev"],
-        date: "2025-10-02",
-        href: "/blog/whitehouse.html",
-    },
-];
+// const manualPosts: BlogPost[] = [
+//     {
+//         slug: "whitehouse",
+//         title: "Improving the White House Shutdown Clock",
+//         description: "Redesigning and enhancing the White House’s official government shutdown clock.",
+//         tags: ["Design", "Politics" , "Webdev"],
+//         date: "2025-10-02",
+//         href: "/blog/whitehouse.html",
+//     },
+// ];
 
-const blogPosts: BlogPost[] = [...mdxPosts, ...manualPosts].sort((a, b) => b.date.localeCompare(a.date));
+const blogPosts: BlogPost[] = mdxPosts.sort((a, b) => b.date.localeCompare(a.date));
 
 const BlogList: Component<{}, {}> = function () {
     return (

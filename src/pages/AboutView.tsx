@@ -118,7 +118,7 @@ export const AboutView: Component<{}, {}> = function () {
 						.
 					</p>
 					<p>the body font is Helvetica Now, and the monospace font is a custom variant of <a href="https://typeof.net/Iosevka/" target="_blank" rel="noopener noreferrer">Iosevka</a> i created for my own use.</p>
-					<p>the background pulls images from <a href="https://picsum.photos" target="_blank" rel="noopener noreferrer">Lorem Picsum</a> and applies Atkinson dithering as described in <a href="https://beyondloom.com/blog/dither.html" target="_blank" rel="noopener noreferrer">this blogpost</a>.</p>
+					{/* <p>the background pulls images from <a href="https://picsum.photos" target="_blank" rel="noopener noreferrer">Lorem Picsum</a> and applies Atkinson dithering as described in <a href="https://beyondloom.com/blog/dither.html" target="_blank" rel="noopener noreferrer">this blogpost</a>.</p> */}
 					<h2>archive of previous versions</h2>
 					<p>
 						versioning started with v6.0.0. previous versioning applied

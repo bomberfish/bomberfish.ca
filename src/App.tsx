@@ -17,6 +17,12 @@ let page: Stateful<{
 	url?: string;
 }> = createState({});
 
+declare global {
+	interface Window {
+		__bgMoveCleanup?: () => void;
+	}
+}
+
 const App: Component<{}, {}> = function (cx) {
 	
 	const blogModules = import.meta.glob("./blog/*.mdx", { eager: true });
@@ -50,7 +56,7 @@ const App: Component<{}, {}> = function (cx) {
 					/>
 				)),
 				<Route path="siteinfo" show={() => <AboutView />} />,
-				<Route path="*" show={() => <NotFoundView />} />,
+				// <Route path="*" show={() => <NotFoundView />} />,
 			]}
 		/>
 	);
@@ -60,6 +66,95 @@ const App: Component<{}, {}> = function (cx) {
 	} else {
 		router.route();
 	}
+
+	cx.mount = () => {
+		if (import.meta.env.SSR) {
+			return;
+		}
+
+		window.__bgMoveCleanup?.();
+
+		const root = document.documentElement;
+		const reduceMotionQuery = window.matchMedia(
+			"(prefers-reduced-motion: reduce)"
+		);
+		let posX = window.innerWidth / 10;
+		let posY = window.innerHeight / 10;
+		let targetX = posX;
+		let targetY = posY;
+		let velX = 0;
+		let velY = 0;
+		let rafId = 0;
+
+		const updateCssVars = () => {
+			root.style.setProperty("--bgmoveX", `${posX}px`);
+			root.style.setProperty("--bgmoveY", `${posY}px`);
+		};
+
+		const resetPosition = () => {
+			posX = window.innerWidth / 10;
+			posY = window.innerHeight / 10;
+			targetX = posX;
+			targetY = posY;
+			updateCssVars();
+		};
+
+		const step = () => {
+			if (!reduceMotionQuery.matches) {
+				const obedience = 0.03;
+				velX = obedience * (targetX - posX);
+				velY = obedience * (targetY - posY);
+				posX += velX;
+				posY += velY;
+				updateCssVars();
+			}
+			rafId = window.requestAnimationFrame(step);
+		};
+
+		const handlePointerMove = (event: PointerEvent) => {
+			if (reduceMotionQuery.matches) {
+				return;
+			}
+			targetX = event.clientX / 8;
+			targetY = event.clientY / 8;
+		};
+
+		const handleResize = () => {
+			resetPosition();
+		};
+		const handleMotionPreferenceChange = () => {
+			if (reduceMotionQuery.matches) {
+				resetPosition();
+			}
+		};
+
+		document.addEventListener("pointermove", handlePointerMove, {
+			passive: true,
+		});
+		window.addEventListener("resize", handleResize);
+		if (reduceMotionQuery.addEventListener) {
+			reduceMotionQuery.addEventListener(
+				"change",
+				handleMotionPreferenceChange
+			);
+		} else if (reduceMotionQuery.addListener) {
+			reduceMotionQuery.addListener(handleMotionPreferenceChange);
+		}
+
+		resetPosition();
+		rafId = window.requestAnimationFrame(step);
+
+		window.__bgMoveCleanup = () => {
+			document.removeEventListener("pointermove", handlePointerMove);
+			window.removeEventListener("resize", handleResize);
+			reduceMotionQuery.removeEventListener(
+				"change",
+				handleMotionPreferenceChange
+			);
+			window.cancelAnimationFrame(rafId);
+			window.__bgMoveCleanup = undefined;
+		};
+	};
 
 	return (
 		<app id="app">
