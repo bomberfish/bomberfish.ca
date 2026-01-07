@@ -1,36 +1,38 @@
 import { Component, css } from "dreamland/core";
+import { TransitionLink } from "../components/TransitionLink";
+import Sidebar from "../components/Sidebar";
 
 const NotFoundView: Component = function () {
 	return (
 		<main>
 			<title>404 – bomberfish.ca</title>
-			<article>
-				<h1>404</h1>
-				<p>The page you are looking for does not exist.</p>
-			</article>
+			<div class="layout-container">
+				<Sidebar />
+				<div class="main-content">
+					<h1 class="error-code">404</h1>
+					<p>The page you are looking for does not exist.</p>
+					<TransitionLink href="/">← Go home</TransitionLink>
+				</div>
+			</div>
 		</main>
 	);
 };
 
 NotFoundView.style = css`
-	article h1 {
-		font-size: 15vw;
-		margin: 1rem;
-	}
-
-	article p {
-		font-size: 1.5rem;
-	}
-
-	article {
-		inset: 0;
-		overflow: 0;
-		width: 100vw;
-		height: 100vh;
-		display: flex;
-		flex-direction: column;
-		align-items: center;
+	.main-content {
 		justify-content: center;
+	}
+
+	.error-code {
+		font-size: 6rem;
+		margin: 0;
+		line-height: 1;
+	}
+
+	@media (orientation: portrait) {
+		.error-code {
+			font-size: 4rem;
+		}
 	}
 `;
 

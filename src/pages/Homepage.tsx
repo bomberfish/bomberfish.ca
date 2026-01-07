@@ -1,70 +1,57 @@
 import { Component, css } from "dreamland/core";
-import { TopNav } from "../components/Header";
 import { WebButton, ButtonList, CopiedToast } from "../components/Buttons";
-import Footer from "../components/Footer";
+import Sidebar from "../components/Sidebar";
 
 const Homepage: Component<{}, {}> = function () {
 	return (
 		<main>
-		
-		<title>bomberfish.ca</title>
-			{/* <Header /> */}
-			<header class="frontpage-header">
-			<TopNav />
-			<div class="title">
-				<a href="/me.png" target="_blank">
-					<img src="/pfp-display.gif" class="pfp" title="my profile picture. click to view full color version." />
-				</a>
-				<h1
-					aria-label="bomberfish.ca"
-				>
-					bomber
-					<br />
-					fish.ca
-				</h1>
-			</div>
-			</header>
-				<article>
-					<h2>about me</h2>
-					<div>
-						<section id="about">
-							<p>
-								i'm hariz (he/they), a 17 y/o high school student living in
-								waterloo, canada.
-							</p>
-							<p>
-								i sometimes make <code>use(ful|less)</code> projects, among
-								other stuff :3
-							</p>
-							<p>
-								i'm interested in webdev, frontend design, embedded systems, and
-								hardware.
-							</p>
-							<p>
-								i'm fluent in javascript, swift, and c++, and i'm also part of{" "}
-								<a href="https://mercurywork.shop" target="blank">
-									mercury workshop
-								</a>
-								, a software development collective best known for the{" "}
-								<a href="https://sh1mmer.me" target="blank">
-									sh1mmer
-								</a>{" "}
-								chromebook exploit.
-							</p>
-						</section>
-					</div>
+			<title>bomberfish.ca</title>
+			<div class="layout-container">
+				<Sidebar active="home" />
 
-					<section>
+				{/* Main content */}
+				<div class="main-content">
+					<section class="about-section">
+						<div class="about-header">
+							{/* <a href="/me.png" target="_blank" class="pfp-link">
+								<img src="/pfp-display.gif" class="pfp" title="my profile picture. click to view full color version." />
+							</a> */}
+							<img src="/me.png" class="pfp" title="my profile picture" />
+							<div class="about-text">
+								<h2>about me!</h2>
+								<p>
+									i'm hariz (he/they), a 17 y/o high school student living in
+									waterloo, canada.
+								</p>
+								<p>
+									i sometimes make <code>use(ful|less)</code> projects, among
+									other stuff :3
+								</p>
+								<p>
+									i'm interested in webdev, frontend design, embedded systems, and
+									hardware.
+								</p>
+							</div>
+						</div>
+						<p class="about-full">
+							i'm fluent in javascript, swift, and c++, and i'm also part of{" "}
+							<a href="https://mercurywork.shop" target="_blank">
+								mercury workshop
+							</a>
+							, a software development collective best known for the{" "}
+							<a href="https://sh1mmer.me" target="_blank">
+								sh1mmer
+							</a>{" "}
+							chromebook exploit.
+						</p>
+					</section>
+
+					<section class="contact-section">
 						<h2>get in touch!</h2>
-						{/* i feel like having to explain this is an epic ux fail but oh well */}
-						<subt>
-							(hover for relevant info, underlined items are also hyperlinks)
-						</subt>
-						<br/>
 						<ContactLinks />
 					</section>
 					<br />
-					<section id="buttons">
+					<section class="buttons-section">
 						<div class="mine">
 							<WebButton
 								src="/button.gif"
@@ -83,153 +70,128 @@ const Homepage: Component<{}, {}> = function () {
 								(click to copy code! hotlinking strongly encouraged!)
 							</subt>
 						</div>
-						{/* <br /> */}
 						<ButtonList />
 					</section>
-					<Footer />
-				</article>
-			<div></div>
+				</div>
+			</div>
 		</main>
 	);
 };
 
 Homepage.style = css`
-	li {
-		margin-bottom: 0.5rem;
+
+	.about-section {
+		display: flex;
+		flex-direction: column;
 	}
 
-	article {
-		max-width: calc(100% - 20rem);
+	.about-header {
+		display: flex;
+		gap: 1rem;
+		align-items: flex-start;
 	}
 
-	.buttons > div {
-		display: flex; 
-		align-items: center; 
-		height: max(31px,2.25rem); 
-		margin-bottom: 0.5rem;
+	.pfp-link {
+		flex-shrink: 0;
+	}
+
+	.pfp-link:after {
+		display: none !important;
+	}
+
+	.pfp {
+		width: 100px;
+		height: 100px;
+		border: 2px solid var(--surface3);
+	}
+
+	.about-text {
+		flex: 1;
+	}
+
+	.about-text h2 {
+		margin: 0 0 0.5rem 0;
+		font-size: 1.4rem;
+	}
+
+	.about-text p {
+		font-size: 0.95rem;
+		line-height: 1.5;
+	}
+
+	.about-full {
+		font-size: 0.95rem;
+		line-height: 1.5;
+	}
+
+	.contact-section h2 {
+		margin: 0 0 0.25rem 0;
+		font-size: 1.2rem;
+	}
+
+	.buttons-section {
+		background: var(--base);
+		border: 1px solid var(--surface2);
+		padding: 0.75rem;
+		margin-top: auto;
 	}
 
 	.mine {
 		display: flex;
-		align-items: flex-end;
+		align-items: center;
 		padding-bottom: 0.5rem;
-	}
-	
-	@media (max-width: 960px) or (orientation: portrait) {
-		article {
-			max-width: 100%;
-			width: 100%;
-			padding: 0 0.5rem;
-		}
-
-		.img-wrapper {
-			margin-inline: auto;
-		}
-
-		.contact-list > li {
-			white-space: normal;
-		}
+		border-bottom: 1px solid var(--surface2);
+		margin-bottom: 0.5rem;
 	}
 
-	#buttons {
-		width: 100%;
+	@media (orientation: portrait) {
+		.about-header {
+			flex-direction: column;
+			align-items: center;
+			text-align: center;
+		}
+
+		.about-text {
+			text-align: center;
+		}
 	}
 `;
 
 export const ContactLinks: Component<{}, {}> = function () {
 	return (
-		<ul class="compact">
-							<li>
-								<span class="tooltip-wrapper">
-									<a href="mailto:me@bomberfish.ca">email</a>
-									<span class="tooltip">me@bomberfish.ca</span>
-								</span>
-							</li>
-							<li>
-								<span class="tooltip-wrapper">
-									<a
-										href="https://github.com/BomberFish"
-										target="_blank"
-										rel="me noopener noreferrer"
-									>
-										github
-									</a>
-									<span class="tooltip">@bomberfish</span>
-								</span>
-							</li>
-							<li>
-								<span class="tooltip-wrapper">
-									<a
-										href="https://wetdry.world/@fish"
-										target="_blank"
-										rel="me noopener noreferrer"
-									>
-										fediverse
-									</a>
-									<span class="tooltip">@fish@wetdry.world</span>
-								</span>
-							</li>
-							<li>
-								<span class="tooltip-wrapper">
-									<a
-										href="https://x.com/bomberfish77"
-										target="_blank"
-										rel="me noopener noreferrer"
-									>
-										X
-									</a>
-									<span class="tooltip">@bomberfish77</span>
-								</span>
-							</li>
-							<li>
-								<span class="tooltip-wrapper">
-									<a
-										href="https://bsky.app/profile/bomberfish.ca"
-										target="_blank"
-										rel="noopener noreferrer"
-									>
-										bluesky
-									</a>
-									<span class="tooltip">@bomberfish.ca</span>
-								</span>
-							</li>
-							<li>
-								<span class="tooltip-wrapper">
-									<a
-										href="https://matrix.to/#/@me:bomberfish.ca"
-										target="_blank"
-										rel="me noopener noreferrer"
-									>
-										matrix
-									</a>
-									<span class="tooltip">@me:bomberfish.ca</span>
-								</span>
-							</li>
-							<li>
-								<span class="tooltip-wrapper">
-									discord
-									<span class="tooltip">@bomberfish</span>
-								</span>
-							</li>
-							<li>
-								<span class="tooltip-wrapper">
-									<a
-										href="https://signal.me/#eu/Hj17C2gxd-rMfhgGYLZADiwtnP9y1xDF9waDfQxJudgShHBOqThJXLLHV4ZPmPny"
-										target="_blank"
-										rel="me noopener noreferrer"
-									>
-										signal
-									</a>
-									<span class="tooltip">@one.337</span>
-								</span>
-							</li>
-				</ul>
+		<span class="contact-links">
+			<a href="mailto:me@bomberfish.ca" class="contact-item">email</a>
+			<span class="sep">/</span>
+			<a href="https://github.com/BomberFish" target="_blank" rel="me noopener noreferrer" class="contact-item">github</a>
+			<span class="sep">/</span>
+			<a href="https://wetdry.world/@fish" target="_blank" rel="me noopener noreferrer" class="contact-item">fediverse</a>
+			<span class="sep">/</span>
+			<a href="https://x.com/bomberfish77" target="_blank" rel="me noopener noreferrer" class="contact-item">X</a>
+			<span class="sep">/</span>
+			<a href="https://bsky.app/profile/bomberfish.ca" target="_blank" rel="noopener noreferrer" class="contact-item">bluesky</a>
+		</span>
 	);
 };
 
 ContactLinks.style = css`
 	:scope {
-		display: inline-flex;
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: 0.25rem;
+	}
+
+	.contact-item {
+		text-decoration: underline !important;
+	}
+
+	.contact-item:after {
+		display: none !important;
+	}
+
+	.sep {
+		color: var(--subtext2);
+		margin: 0 0.25rem;
 	}
 `;
 

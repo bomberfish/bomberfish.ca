@@ -1,5 +1,5 @@
 import { Component, css } from "dreamland/core";
-import Header from "../components/Header";
+import Sidebar from "../components/Sidebar";
 
 const archives = [
 	{
@@ -91,92 +91,82 @@ export const AboutView: Component<{}, {}> = function () {
 	return (
 		<main>
 			<title>about – bomberfish.ca</title>
-			<Header />
-			<article>
-				<h2>about this website</h2>
-				<p>
-					i built this website using{" "}
-					<a href="https://dreamland.js.org" target="_blank" rel="noopener">
-						dreamland.js
-					</a>
-					, a small and utilitarian web framework with full reactivity.
-				</p>
-				<p>
-					it's open-source under the MIT license, and
-					you can view the source code{" "}
-					<a
-						href="https://github.com/bomberfish/bomberfish.ca"
-						target="_blank"
-						rel="noopener"
-					>
-						here
-					</a>
-					.
-				</p>
-				<p>the color scheme and typography borrow some inspiration from colin mcrae rally 2.0 for the playstation 1.</p>
-				<p>the body font is Helvetica Now, and the monospace font is a custom variant of <a href="https://typeof.net/Iosevka/" target="_blank" rel="noopener noreferrer">Iosevka</a> i created for my own use.</p>
-				<p>the background pulls images from <a href="https://picsum.photos" target="_blank" rel="noopener noreferrer">Lorem Picsum</a> and applies Atkinson dithering as described in <a href="https://beyondloom.com/blog/dither.html" target="_blank" rel="noopener noreferrer">this blogpost</a>.</p>
-				<h2>archive of previous versions</h2>
-				<p>
-					versioning started with v6.0.0. previous versioning applied
-					retroactively.
-				</p>
-				<ul class="compact">
-					{archives.map((archive) => {
-						if (!archive.date) {
-							return <li>{archive.version} (no archived version exists)</li>;
-						} else if (archive.date?.endsWith("id_")) {
-							return (
-								<li>
-									<a
-										href={`https://web.archive.org/web/${archive.date}/https://bomberfish.ca/`}
-									>
-										{archive.version}
-									</a>{" "}
-									(broken archive)
-								</li>
-							);
-						} else {
-							return (
-								<li>
-									<a
-										href={`https://web.archive.org/web/${archive.date}/${archive.origin || "https://bomberfish.ca/"}`}
-									>
-										{archive.version}
-									</a>
-								</li>
-							);
-						}
-					})}
-				</ul>
-				<div class="swatches">
-					{colors.map((color) => (
-						<ColorSwatch color={color} />
-					))}
+			<div class="layout-container">
+				<Sidebar />
+				<div class="main-content">
+					<h2>about this website</h2>
+					<p>
+						i built this website using{" "}
+						<a href="https://dreamland.js.org" target="_blank" rel="noopener">
+							dreamland.js
+						</a>
+						, a small and utilitarian web framework with full reactivity.
+					</p>
+					<p>
+						it's open-source under the MIT license, and
+						you can view the source code{" "}
+						<a
+							href="https://github.com/bomberfish/bomberfish.ca"
+							target="_blank"
+							rel="noopener"
+						>
+							here
+						</a>
+						.
+					</p>
+					<p>the color scheme and typography borrow some inspiration from colin mcrae rally 2.0 for the playstation 1.</p>
+					<p>the body font is Helvetica Now, and the monospace font is a custom variant of <a href="https://typeof.net/Iosevka/" target="_blank" rel="noopener noreferrer">Iosevka</a> i created for my own use.</p>
+					<p>the background pulls images from <a href="https://picsum.photos" target="_blank" rel="noopener noreferrer">Lorem Picsum</a> and applies Atkinson dithering as described in <a href="https://beyondloom.com/blog/dither.html" target="_blank" rel="noopener noreferrer">this blogpost</a>.</p>
+					<h2>archive of previous versions</h2>
+					<p>
+						versioning started with v6.0.0. previous versioning applied
+						retroactively.
+					</p>
+					<ul class="compact">
+						{archives.map((archive) => {
+							if (!archive.date) {
+								return <li>{archive.version} (no archived version exists)</li>;
+							} else if (archive.date?.endsWith("id_")) {
+								return (
+									<li>
+										<a
+											href={`https://web.archive.org/web/${archive.date}/https://bomberfish.ca/`}
+										>
+											{archive.version}
+										</a>{" "}
+										(broken archive)
+									</li>
+								);
+							} else {
+								return (
+									<li>
+										<a
+											href={`https://web.archive.org/web/${archive.date}/${archive.origin || "https://bomberfish.ca/"}`}
+										>
+											{archive.version}
+										</a>
+									</li>
+								);
+							}
+						})}
+					</ul>
+					<div class="swatches">
+						{colors.map((color) => (
+							<ColorSwatch color={color} />
+						))}
+					</div>
 				</div>
-			</article>
+			</div>
 		</main>
 	);
 };
 
 AboutView.style = css`
-	article {
-		max-width: calc(100% - 20rem);
-	}
-
 	.swatches {
 		display: flex;
 		flex-wrap: wrap;
 		gap: 0.5rem;
-		margin-top: 2rem;
-	}
-
-	@media (max-width: 960px) or (orientation: portrait) {
-		article {
-			max-width: 100%;
-			width: 100%;
-			padding: 0 .5rem;
-		}
+		margin-top: 1rem;
 	}
 `;
 

@@ -41,10 +41,10 @@ WebButton.style = css`
 		height: max(31px, 2.3rem);
 		border: none !important;
 		display: inline-block;
+		font-size: 0;
 	}
 	img {
 		image-rendering: pixelated;
-		-webkit-image-rendering: pixelated;
 		width: auto;
 		height: 100%;
 	}

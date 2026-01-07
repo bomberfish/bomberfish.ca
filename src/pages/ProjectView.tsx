@@ -1,5 +1,5 @@
 import { Component, css } from "dreamland/core";
-import Header from "../components/Header";
+import Sidebar from "../components/Sidebar";
 import ProjectCardDetails from "../types/Project";
 
 const ProjectView: Component<{ project: ProjectCardDetails }, {}> =
@@ -7,41 +7,33 @@ const ProjectView: Component<{ project: ProjectCardDetails }, {}> =
 		return (
 			<main>
 				<title>{this.project.title} – bomberfish.ca</title>
-				<Header />
-				<article>
-					<section id="image">
-						<img src={this.project.img} />
-					</section>
-					<section id="details">
-						<h1 class="name">{this.project.title}</h1>
-						<p class="description">{this.project.largeDesc}</p>
-						<ul class="compact">
-							{this.project.links?.map((link) => (
-								<li>
-									<a href={link.url} class="link" target="_blank" rel="noopener">
-										<span class="material-symbols">{link.icon}</span>
-										{link.name}
-									</a>
-								</li>
-							))}
-						</ul>
-					</section>
-				</article>
+				<div class="layout-container">
+					<Sidebar active="projects" />
+					<div class="main-content">
+						<section id="image">
+							<img src={this.project.img} />
+						</section>
+						<section id="details">
+							<h1 class="name">{this.project.title}</h1>
+							<p class="description">{this.project.largeDesc}</p>
+							<ul class="compact">
+								{this.project.links?.map((link) => (
+									<li>
+										<a href={link.url} class="link" target="_blank" rel="noopener">
+											<span class="material-symbols">{link.icon}</span>
+											{link.name}
+										</a>
+									</li>
+								))}
+							</ul>
+						</section>
+					</div>
+				</div>
 			</main>
 		);
 	};
 
 ProjectView.style = css`
-	article {
-		display: flex;
-		flex-direction: row;
-		align-items: center;
-		justify-content: center;
-		gap: 0;
-		flex-grow: 1;
-		width: min(50rem, 70vw);
-	}
-
 	#image {
 		display: flex;
 		align-content: center;
@@ -51,49 +43,13 @@ ProjectView.style = css`
 		padding: 0;
 		position: relative;
 		overflow: hidden;
-		/* aspect-ratio: 16 / 9; */
 		max-height: 40vh;
-		min-width: min(50rem, 70vw);
-		object-fit: contain;
-		object-position: 0 0;
-	}
-
-	#details {
-		width: 100%;
-		padding-inline: 0.5rem;
-		transform: translateY(-0.5rem);
-	}
-
-	img {
-		max-width: min(50rem, 70vw);
-		width: auto;
-		border-radius: 0;
-		margin: 0;
-		padding: 0;
-		object-position: 0 0;
-	}
-
-	.material-symbols {
-		vertical-align: middle;
-		padding-right: 0.3rem;
-		font-size: 1.2rem;
-		padding-bottom: 0.1rem;
-	}
-
-	/* #details {
-		width: unset;
-	} */
-
-	article {
-		flex-direction: column;
-	}
-
-	img {
-		width: 100%;
-		max-width: unset;
 	}
 
 	#image img {
+		width: 100%;
+		height: auto;
+		object-fit: contain;
 		mask-image: linear-gradient(
 			to bottom,
 			rgba(0, 0, 0, 1) 70%,
@@ -104,27 +60,17 @@ ProjectView.style = css`
 			rgba(0, 0, 0, 1) 70%,
 			rgba(0, 0, 0, 0) 98%
 		);
-		mask-mode: alpha;
-		-webkit-mask-mode: alpha;
 	}
 
-	#image::after {
-		content: "";
-		position: absolute;
-		left: -10%;
-		bottom: -10%;
-		height: 20%;
-		width: 120%;
-		pointer-events: none;
-		mask-image: linear-gradient(
-			to bottom,
-			rgba(0, 0, 0, 0) 0%,
-			rgba(0, 0, 0, 1) 100%
-		);
-		mask-mode: alpha;
-		-webkit-mask-mode: alpha;
-		backdrop-filter: blur(18px);
-		-webkit-backdrop-filter: blur(18px);
+	#details {
+		width: 100%;
+	}
+
+	.material-symbols {
+		vertical-align: middle;
+		padding-right: 0.3rem;
+		font-size: 1.2rem;
+		padding-bottom: 0.1rem;
 	}
 `;
 

@@ -1,6 +1,6 @@
 import { Component, css } from "dreamland/core";
-import Header from "../components/Header";
 import { ContactLinks } from "./Homepage";
+import Sidebar from "../components/Sidebar";
 
 interface BlogPostProps {
 slug: string;
@@ -15,11 +15,14 @@ const BlogPost: Component<BlogPostProps, {}> = function () {
 	if (!matchingPath) {
 		return (
 			<main>
-				<Header />
-				<article>
-					<h1>Blog Post Not Found</h1>
-					<p>The blog post you're looking for doesn't exist.</p>
-				</article>
+				<title>404 – bomberfish.ca</title>
+				<div class="layout-container">
+					<Sidebar active="blog" />
+					<div class="main-content">
+						<h1>Blog Post Not Found</h1>
+						<p>The blog post you're looking for doesn't exist.</p>
+					</div>
+				</div>
 			</main>
 		);
 	}
@@ -39,48 +42,52 @@ const BlogPost: Component<BlogPostProps, {}> = function () {
 	return (
 		<main>
 			<title>{postTitle} – bomberfish.ca</title>
-			<Header />
-			<article class="blog-content">
-				<h1 class="post-title">{postTitle}</h1>
-				{postDescription ? <p class="post-desc">{postDescription}</p> : null}
-				{postTags ? (
-					<div class="post-tags">
-					<span class="material-symbols">label_important</span>
-						{postTags.map((t) => <span class="tag">{t}</span>)}
-					</div>
-				) : null}
-				<div class="post-body">
-					<BlogContent />
+			<div class="layout-container">
+				<Sidebar active="blog" />
+				<div class="main-content">
+					<article class="blog-content">
+						<h1 class="post-title">{postTitle}</h1>
+						{postDescription ? <p class="post-desc">{postDescription}</p> : null}
+						{postTags ? (
+							<div class="post-tags">
+							<span class="material-symbols">label_important</span>
+								{postTags.map((t) => <span class="tag">{t}</span>)}
+							</div>
+						) : null}
+						<div class="post-body">
+							<BlogContent />
+						</div>
+						<p>
+							<subt class="bottom">
+							<span class="material-symbols">rss_feed</span>{" "}
+							Liked this post? Subscribe to this blog:{" "}
+							<ul class="compact" style="display: inline; margin-left: 0.25rem;">
+								<li>
+									<a href="/feed.xml" target="_blank">
+										RSS
+									</a>
+								</li>
+								<li>
+									<a href="/atom.xml" target="_blank">
+										Atom
+									</a>
+								</li>
+								<li>
+									<a href="/feed.json" target="_blank">
+										JSON Feed
+									</a>
+								</li>
+							</ul>
+							<br />
+							</subt>
+							<subt class="bottom">
+							<span class="material-symbols">email</span>{" "}
+							Or, get in touch:{"    "}<ContactLinks />
+							</subt>
+						</p>
+					</article>
 				</div>
-				<p>
-                    <subt class="bottom">
-                    <span class="material-symbols">rss_feed</span>{" "}
-                    Liked this post? Subscribe to this blog:{" "}
-                    <ul class="compact" style="display: inline; margin-left: 0.25rem;">
-                        <li>
-                            <a href="/feed.xml" target="_blank">
-                                RSS
-                            </a>
-                        </li>
-                        <li>
-                            <a href="/atom.xml" target="_blank">
-                                Atom
-                            </a>
-                        </li>
-                        <li>
-                            <a href="/feed.json" target="_blank">
-                                JSON Feed
-                            </a>
-                        </li>
-                    </ul>
-					<br />
-					</subt>
-					<subt class="bottom">
-					<span class="material-symbols">email</span>{" "}
-					Or, get in touch:{"    "}<ContactLinks />
-					</subt>
-                </p>
-			</article>
+			</div>
 		</main>
 	);
 };

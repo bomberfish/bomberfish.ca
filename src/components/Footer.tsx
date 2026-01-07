@@ -123,41 +123,47 @@ const Footer: Component<{}, {elapsed: string, message: string, resetSplashInterv
 
 Footer.style = css`
     :scope {
-		margin-top: 1.25rem;
-		font-size: 0.875rem;
+		margin-top: auto;
+		font-size: 0.75rem;
         user-select: none;
+		width: 100%;
 	}
 
     subt {
         display: flex;
+        flex-direction: column;
         gap: 0.25rem;
     }
 
     .divider {
-        color: var(--subtext1);
-        font-weight: 800;
-        font-size: 1em;
-        margin-inline: 0.15em;
-        animation: breathe 2.5s ease-in-out infinite;
-    }
-
-    @keyframes breathe {
-        0%, 100% {
-            color: var(--subtext3);
-        }
-        50% {
-            color: var(--subtext1);
-        }
+        display: none;
     }
 
     .splash {
         color: var(--subtext2);
         cursor: pointer;
-        flex: 1;
         view-transition-name: splash-message;
-        white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
+    }
+
+    @media (orientation: portrait) {
+        :scope {
+            font-size: 0.8rem;
+        }
+
+        subt {
+            flex-direction: row;
+            flex-wrap: wrap;
+        }
+
+        .divider {
+            display: inline;
+            color: var(--subtext1);
+            font-weight: 800;
+            font-size: 1em;
+            margin-inline: 0.15em;
+        }
     }
 `
 
