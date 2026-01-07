@@ -10,25 +10,21 @@ const Homepage: Component<{}, {}> = function () {
 				<Sidebar active="home" />
 				<div class="main-content">
 					<section class="about-section">
-						<div class="about-header">
-							<img src="/me.png" class="pfp" title="my profile picture!" />
-							<div class="about-text">
-								<h2>about me!</h2>
-								<p>
-									i'm hariz (he/they), a 17 y/o high school student living in
-									waterloo, canada.
-								</p>
-								<p>
-									i sometimes make <code>use(ful|less)</code> projects, among
-									other stuff :3
-								</p>
-								<p>
-									i'm interested in webdev, frontend design, embedded systems, and
-									hardware.
-								</p>
-							</div>
-						</div>
-						<p class="about-full">
+						<img src="/me.png" class="pfp" title="my profile picture!" />
+						<h2>about me!</h2>
+						<p>
+							i'm hariz (he/they), a 17 y/o high school student living in
+							waterloo, canada.
+						</p>
+						<p>
+							i sometimes make <code>use(ful|less)</code> projects, among
+							other stuff :3
+						</p>
+						<p>
+							i'm interested in webdev, frontend design, embedded systems, and
+							hardware.
+						</p>
+						<p>
 							i'm fluent in javascript, swift, and c++, and i'm also part of{" "}
 							<a href="https://mercurywork.shop" target="_blank">
 								mercury workshop
@@ -75,49 +71,34 @@ const Homepage: Component<{}, {}> = function () {
 
 Homepage.style = css`
 
-	.about-section {
-		display: flex;
-		flex-direction: column;
+	.about-section::after {
+		content: "";
+		display: table;
+		clear: both;
 	}
 
-	.about-header {
-		display: flex;
-		gap: 1rem;
-		align-items: flex-start;
-	}
-
-	.pfp-link {
-		flex-shrink: 0;
-	}
-
-	.pfp-link:after {
-		display: none !important;
-	}
-
-	.pfp {
-		width: 100px;
-		height: 100px;
-		border: 2px solid var(--surface3);
-		margin-top: 0.35rem;
-	}
-
-	.about-text {
-		flex: 1;
-	}
-
-	.about-text h2 {
+	.about-section h2 {
 		margin: 0 0 0.5rem 0;
 		font-size: 1.4rem;
 	}
 
-	.about-text p {
+	.about-section p {
 		font-size: 0.95rem;
 		line-height: 1.5;
+		margin: 0 0 0.5rem 0;
 	}
 
-	.about-full {
-		font-size: 0.95rem;
-		line-height: 1.5;
+	.main-content {
+		max-height: min(60vh, 40rem);
+	}
+
+	.pfp {
+		float: left;
+		width: 100px;
+		height: 100px;
+		border: 2px solid var(--surface3);
+		margin: 0.25rem 1rem 0.5rem 0;
+		shape-outside: margin-box;
 	}
 
 	.contact-section h2 {
@@ -141,13 +122,13 @@ Homepage.style = css`
 	}
 
 	@media (orientation: portrait) {
-		.about-header {
-			flex-direction: column;
-			align-items: center;
-			text-align: center;
+		.pfp {
+			float: none;
+			display: block;
+			margin: 0 auto 1rem auto;
 		}
 
-		.about-text {
+		.about-section {
 			text-align: center;
 		}
 	}

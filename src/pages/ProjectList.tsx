@@ -49,6 +49,11 @@ ProjectList.style = css`
 		flex-direction: column;
 		margin-top: 1rem;
 	}
+
+
+	.main-content {
+		max-height: min(90vh, 60rem);
+	}
 	
 	hr {
 		border: none;

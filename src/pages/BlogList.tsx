@@ -123,6 +123,10 @@ BlogList.style = css`
         margin: 0;
         margin-bottom: 0.5rem;
     }
+
+    .main-content {
+		max-height: min(80vh, 70rem);
+	}
 `;
 
 export default BlogList;
