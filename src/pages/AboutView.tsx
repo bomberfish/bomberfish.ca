@@ -65,6 +65,9 @@ const archives = [
 	{
 		version: "v7.0.3",
 		date: "20251122233719",
+	}, {
+		version: "v8.0.0",
+		date: "20251225232714"
 	}
 ];
 
