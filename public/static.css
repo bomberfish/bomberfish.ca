@@ -1,4 +1,5 @@
 html {
+	--crust: hsl(var(--crust-hsl));
 	--base: hsl(var(--base-hsl));
 	--surface0: hsl(var(--surface0-hsl));
 	--surface1: hsl(var(--surface1-hsl));
@@ -106,26 +107,27 @@ html {
 		--main-hue: 205;
 		--grid-lines: hsla(var(--main-hue), 12%, 16%);
 
-		--base-hsl: var(--main-hue), 20%, 12%;
-		--bg-light: var(--main-hue), 21%, 16%;
+		--crust-hsl: var(--main-hue), 20%, 7.5%;
+		--base-hsl: var(--main-hue), 20%, 12.5%;
+		--bg-light: var(--main-hue), 21%, 15%;
 		--surface0-hsl: var(--main-hue), 18%, 14%;
-		--surface1-hsl: var(--main-hue), 18%, 18%;
-		--surface2-hsl: var(--main-hue), 16%, 24%;
-		--surface3-hsl: var(--main-hue), 15%, 30%;
-		--surface4-hsl: var(--main-hue), 14%, 36%;
-		--surface5-hsl: var(--main-hue), 14%, 42%;
-		--surface6-hsl: var(--main-hue), 14%, 52%;
-		--overlay0-hsl: var(--main-hue), 18%, 58%;
-		--overlay1-hsl: var(--main-hue), 20%, 66%;
-		--overlay2-hsl: var(--main-hue), 22%, 74%;
-		--overlay3-hsl: var(--main-hue), 24%, 84%;
-		--supertext-hsl: var(--main-hue), 32%, 96%;
+		--surface1-hsl: var(--main-hue), 18%, 17.5%;
+		--surface2-hsl: var(--main-hue), 16%, 25%;
+		--surface3-hsl: var(--main-hue), 15%, 27.5%;
+		--surface4-hsl: var(--main-hue), 14%, 35%;
+		--surface5-hsl: var(--main-hue), 14%, 40%;
+		--surface6-hsl: var(--main-hue), 14%, 50%;
+		--overlay0-hsl: var(--main-hue), 18%, 57.5%;
+		--overlay1-hsl: var(--main-hue), 20%, 65%;
+		--overlay2-hsl: var(--main-hue), 22%, 75%;
+		--overlay3-hsl: var(--main-hue), 24%, 85%;
+		--supertext-hsl: var(--main-hue), 32%, 95%;
 		--text-hsl: var(--main-hue), 24%, 88%;
 		--text1-hsl: var(--main-hue), 22%, 74%;
-		--subtext0-hsl: var(--main-hue), 18%, 68%;
+		--subtext0-hsl: var(--main-hue), 18%, 70%;
 		--subtext1-hsl: var(--main-hue), 16%, 60%;
-		--subtext2-hsl: var(--main-hue), 14%, 48%;
-		--subtext3-hsl: var(--main-hue), 12%, 44%;
+		--subtext2-hsl: var(--main-hue), 14%, 50%;
+		--subtext3-hsl: var(--main-hue), 12%, 45%;
 		--accent-hsl: var(--main-hue), 40%, 70%;
 
 		--shadow-soft: hsla(var(--text-hsl), 0.14);
@@ -211,7 +213,6 @@ h3,
 h4,
 h5,
 h6 {
-	/* font-family: "NIS-JTC-Win-Condensed", serif; */
 	font-family: var(--font-display);
 	color: var(--supertext);
 	text-rendering: optimizeLegibility;
@@ -343,8 +344,7 @@ main > * {
 h1 {
 	font-size: 52px;
 	font-size: clamp(2.5rem, 3.5vw + 1.75rem, 4rem);
-	margin-block-start: 0.25em;
-	margin-block-end: 0.5em;
+	margin-block: 0.25em;
 	line-height: 1.18;
 	font-weight: 770;
 	font-stretch: 90%;
@@ -779,7 +779,7 @@ a[href^="/"]:after {
 
 .blog-list {
 	width: min(68rem, 100%);
-	margin: 2rem auto 0;
+	margin: .8rem auto 0;
 	display: flex;
 	flex-direction: column;
 	gap: 1.25rem;
@@ -1023,8 +1023,7 @@ main {
 .layout-container {
 	display: table;
 	table-layout: fixed;
-	background: hsla(var(--surface0-hsl), 0.85);
-	background: rgba(20, 22, 30, 0.85); /* fallback for older browsers */
+	background: hsla(var(--crust-hsl), 0.85);
 	border: 1px solid var(--surface2);
 	padding: 1.5rem;
 	width: 900px;

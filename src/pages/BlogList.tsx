@@ -59,8 +59,8 @@ const BlogList: Component<{}, {}> = function () {
                     <h1>blog</h1>
                     <p style="font-size: 1.05em;">rants about whatever's on my mind* and writeups on whatever i've been up to.</p>
                     <subt style="font-size: 0.95rem; color: var(--text1)">*obligatory disclaimer: all opinions are my own, and do not reflect those of my employer.</subt>
-                    <p>
-                        <subt style="display: flex; align-items: center; gap: 0.5rem; margin-block: 0.75rem;">
+                    <p style="margin-bottom: 0; margin-top: 0.5rem;">
+                        <subt style="display: flex; align-items: center; gap: 0.5rem; margin-top: 0.75rem; margin-bottom: 0;">
                         <span class="material-symbols">rss_feed</span>{" "}
                         Subscribe:{" "}
                         <ul class="compact" style="display: inline; margin-left: 0.25rem;">
@@ -120,7 +120,8 @@ const BlogList: Component<{}, {}> = function () {
 
 BlogList.style = css`
     p {
-        line-height: 1.8;
+        margin: 0;
+        margin-bottom: 0.5rem;
     }
 `;
 

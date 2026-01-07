@@ -8,15 +8,10 @@ const Homepage: Component<{}, {}> = function () {
 			<title>bomberfish.ca</title>
 			<div class="layout-container">
 				<Sidebar active="home" />
-
-				{/* Main content */}
 				<div class="main-content">
 					<section class="about-section">
 						<div class="about-header">
-							{/* <a href="/me.png" target="_blank" class="pfp-link">
-								<img src="/pfp-display.gif" class="pfp" title="my profile picture. click to view full color version." />
-							</a> */}
-							<img src="/me.png" class="pfp" title="my profile picture" />
+							<img src="/me.png" class="pfp" title="my profile picture!" />
 							<div class="about-text">
 								<h2>about me!</h2>
 								<p>
@@ -103,6 +98,7 @@ Homepage.style = css`
 		width: 100px;
 		height: 100px;
 		border: 2px solid var(--surface3);
+		margin-top: 0.35rem;
 	}
 
 	.about-text {
