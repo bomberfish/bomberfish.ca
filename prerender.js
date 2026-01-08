@@ -91,11 +91,11 @@ for (const [route, path] of paths) {
 }
 
 // Process static.css with PostCSS in dist/static
-const cssPath = resolve("dist/static/static.css");
-const css = await readFile(cssPath, "utf8");
-const result = await postcssProcessor.process(css, { from: cssPath, to: cssPath });
-await writeFile(cssPath, result.css);
-console.log(`processed: static.css\t${(new TextEncoder().encode(result.css).byteLength / 1024).toFixed(2)}kb`);
+// const cssPath = resolve("dist/static/static.css");
+// const css = await readFile(cssPath, "utf8");
+// const result = await postcssProcessor.process(css, { from: cssPath, to: cssPath });
+// await writeFile(cssPath, result.css);
+// console.log(`processed: static.css\t${(new TextEncoder().encode(result.css).byteLength / 1024).toFixed(2)}kb`);
 
 await rm(resolve("dist/static/.vite"), { recursive: true });
 

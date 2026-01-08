@@ -108,10 +108,25 @@ export default defineConfig({
 	},
 	build: {
 		target: "es2015",
-		// cssMinify: "lightningcss",
 		minify: "terser",
 		terserOptions: {
 			ecma: 2015,
+			compress: {
+				drop_console: true,
+				arguments: true,
+				passes: 3,
+				unsafe: true,
+				unsafe_comps: true,
+				unsafe_Function: true,
+				unsafe_math: true,
+				unsafe_proto: true,
+				unsafe_regexp: true,
+				unsafe_undefined: true,
+			},
+			mangle: {
+				eval: true,
+				safari10: true,
+			},
 			format: {
 				comments: false,
 			},
@@ -122,8 +137,10 @@ export default defineConfig({
 				generatedCode: {
 					preset: "es2015",
 				}
-			}
-		}
+			},
+			treeshake: true,
+		},
+		cssMinify: "lightningcss"
 	},
 	css: {
 		postcss: {
@@ -138,6 +155,19 @@ export default defineConfig({
 					grid: "autoplace"
 				}),
 			]
+		},
+		lightningcss: {
+			targets:  {
+				chrome: 4,
+				firefox: 2,
+				ie: 6,
+				safari: 3,
+				edge: 12,
+				ios_saf: 3,
+				opera: 10,
+				android: 2,
+				samsung: 0
+			}
 		}
 	}
 });

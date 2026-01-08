@@ -1,11 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 	<head>
-		<link rel="stylesheet" href="/static.css" />
+		<!--ssr-head-->
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width,initial-scale=1" />
-		<!-- <link rel="preconnect" href="https://fonts.googleapis.com" />
-		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin /> -->
 		<meta name="theme-color" content="#434d65" media="(prefers-color-scheme: light)" />
 		<meta name="theme-color" content="#181d25" media="(prefers-color-scheme: dark)" />
 		<meta name="description" content="bomberfish's personal website" />
@@ -21,20 +19,11 @@
 		<link rel="alternate" type="application/rss+xml" title="bomberfish's blog (lite)" href="/feed-lite.xml" />
 		<link rel="alternate" type="application/atom+xml" title="bomberfish's blog (lite)" href="/atom-lite.xml" />
 		<link rel="alternate" type="application/feed+json" title="bomberfish's blog (lite)" href="/feed-lite.json" />
-		<!--ssr-head-->
 	</head>
 
 	<body>
 		<!--ssr-body-->
 		<script type="module" src="/src/main-client.ts"></script>
-		<link rel="stylesheet" type="text/css" defer href="/typography.css" />
-		<script
-			async
-			defer
-			data-collect-dnt="true"
-			data-allow-params="higherdimension"
-			src="https://site-stats.bomberfish.ca/latest.js"
-		></script>
 		<noscript
 			><img
 				allow-params="higherdimension"
@@ -45,5 +34,13 @@
 				alt=""
 				referrerpolicy="no-referrer-when-downgrade"
 		/></noscript>
+		<link rel="stylesheet" type="text/css" defer href="/typography.css" />
+		<script
+			async
+			defer
+			data-collect-dnt="true"
+			data-allow-params="higherdimension"
+			src="https://site-stats.bomberfish.ca/latest.js"
+		></script>
 	</body>
 </html>
