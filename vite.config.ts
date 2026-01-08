@@ -3,18 +3,29 @@ import { devSsr } from "dreamland/vite";
 import { compile } from "@mdx-js/mdx";
 
 import { literalsHtmlCssMinifier } from "@literals/rollup-plugin-html-css-minifier";
-// import legacy from "@vitejs/plugin-legacy";
-// import htmlMinifier from 'vite-plugin-html-minifier'
+import postCssPresetEnv from "postcss-preset-env";
+import litePreset from "cssnano-preset-lite";
 
 import rehypeStarryNight from "rehype-starry-night";
 import { all as grammars } from "@wooorm/starry-night";
 import { visit } from "estree-util-visit";
 
-import postCssPresetEnv from "postcss-preset-env";
-import autoprefixer from "autoprefixer";
 
 import { readFile } from "fs/promises";
 import { execSync } from "child_process";
+
+import cssnanoPlugin from "cssnano";
+import calc from "postcss-calc";
+import normalizeCharset from "postcss-normalize-charset";
+import mergeLonghand from "postcss-merge-longhand";
+import discardComments from "postcss-discard-comments";
+import svgo from "postcss-svgo";
+import uniqueSelectors from "postcss-unique-selectors";
+import convertValues from "postcss-convert-values";
+import cssDeclarationSorter from "css-declaration-sorter";
+import mergeRules from "postcss-merge-rules";
+import minifyParams from "postcss-minify-params";
+import minifySelectors from "postcss-minify-selectors";
 
 async function compileMdx(content: string, name?: string) {
 	const compiled = await compile(content, {
@@ -107,14 +118,16 @@ export default defineConfig({
 		__COMMIT_HASH__: JSON.stringify(execSync('git rev-parse --short HEAD').toString().trim()),
 	},
 	build: {
-		target: "es2015",
+		target: "chrome79",
+		cssTarget: "ie11",
+		cssMinify: false,
 		minify: "terser",
 		terserOptions: {
 			ecma: 2015,
 			compress: {
 				drop_console: true,
 				arguments: true,
-				passes: 3,
+				// passes: 3,
 				unsafe: true,
 				unsafe_comps: true,
 				unsafe_Function: true,
@@ -148,12 +161,28 @@ export default defineConfig({
 				postCssPresetEnv({
 					features: {},
 					browsers: [">= 0.00%"],
-					stage: 0
+					stage: 2,
+					autoprefixer: {
+						grid: "autoplace",
+						remove: false,
+					},
 				}),
-				autoprefixer({
-					overrideBrowserslist: [">= 0.00%"],
-					grid: "autoplace"
-				}),
+				cssnanoPlugin({
+					preset: litePreset,
+					plugins: [
+						calc, 
+						normalizeCharset, 
+						mergeLonghand, 
+						discardComments, 
+						svgo, 
+						uniqueSelectors, 
+						convertValues, 
+						cssDeclarationSorter, 
+						mergeRules, 
+						minifyParams, 
+						minifySelectors
+					],
+				})
 			]
 		},
 		// lightningcss: {

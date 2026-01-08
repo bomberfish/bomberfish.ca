@@ -181,6 +181,8 @@ ProjectCard.style = css<typeof ProjectCard>`
 
 	.project-visual {
 		flex-shrink: 0;
+		width: 320px;
+		max-width: 320px;
 		width: clamp(200px, 28vw, 320px);
 		aspect-ratio: 19 / 10;
 		background: color-mix(in srgb, var(--surface2) 80%, transparent);
