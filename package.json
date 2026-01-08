@@ -20,7 +20,7 @@
 		"autoprefixer": "^10.4.22",
 		"cssnano": "^7.1.2",
 		"cssnano-preset-lite": "^4.0.4",
-		"esbuild": "^0.25.12",
+		"esbuild": "^0.27.0",
 		"estree-util-visit": "^2.0.0",
 		"feed": "^5.1.0",
 		"lightningcss": "^1.30.2",
