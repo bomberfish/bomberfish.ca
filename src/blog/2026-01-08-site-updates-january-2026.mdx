@@ -1,0 +1,35 @@
+import TransitionLink from "../components/TransitionLink"
+export const title = "Changelog 1: New Year, New Look"
+export const description = "A look at all the new features introduced in version 9 of bomberfish.ca."
+export const image = "/blog-images/site-v9.jpg"
+export const tags = ["Meta", "Changelog"]
+
+![A screenshot of this website.](/blog-images/site-v9.jpg)
+
+It's 2026, and it's time I redesigned this website for the 4th time since last fall. Let's take a look at what's new.
+
+> I've decided to start doing update logs on the website now. Stay tuned for future updates!
+
+## New layout
+
+In 9.0, I opted for a much cleaner and more compact layout, with a centered content box. On mobile, the box occupies the entire screen for visual neatness. It also adapts well to smaller displays and older browsers.
+
+## Refined visual language
+
+Since 9.0 is mainly a layout overhaul, the general visual language of 8.x has been mostly left intact, with tweaks to how elevated surface colors are used. More iconography is present throughout the site, and the appearance of things like borders has been consolidated.
+
+## Adjusted colour palette
+
+The palette from 8.x has been tweaked a considerable amount, being somewhat darkened and with the hue shifted to match that of <a href="/me.png" target="_blank">my new profile picture</a>. Additionally, I've refractored how certain colors are computed, adding more flexibility to the palette. You can even temporarily hue-rotate the palette using the slider in the "<TransitionLink href="/siteinfo" class="router-link">About This Website</TransitionLink>" page. Note that it does not persist on a full reload.
+
+## Updated background
+
+Gone is the slow-to-load dithered background from 7.x and 8.x. In 9.1 (which was released the day after 9.0), it's been replaced with the grid from late 6.x, which in it of itself it a modified version of the dot grid of 5.x. A couple of the parameters were tweaked to match the vibe of version 9, but it remains largely unchanged from its 6.2 incarnation.
+
+## Overhauled projects page
+
+Keeping with the theme of bringing back older design decisions, the projects page's grid layout from 6.x and 7.x has been brought back in 9.2 (released 2 days after 9.0). Additionally, support has been added for the [finalized version of CSS masonry](https://webkit.org/blog/17660/introducing-css-grid-lanes/), meaning an even more beautiful layout will be coming soon to a modern browser near you!
+
+## Performance and compatibility
+
+I've been hard at work improving performance. That's why I'm glad to announce that bomberfish.ca has achieved a perfect score across all categories in Lighthouse desktop performance! Font loading was optimized to lazily load web fonts, with the page using the system's installed version of the regular Helvetica font and swapping Helvetica Now in when it loads. I've also removed various unused assets, and while the CSS bundle size has risen since last time, I was able to increase browser compatibility. I can now confirm that the site [functions with a near-perfect layout](https://wetdry.world/@fish/115858737045320286) on Firefox 10!

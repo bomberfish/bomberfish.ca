@@ -48,188 +48,112 @@ const ProjectCard: Component<
 			<TransitionLink
 				href={`/projects/${this.project.lastPathComponent}`}
 				class={`project-card card interactable ${this.size}`}
-				style="display: flex; text-decoration: none;"
+				style="text-decoration: none; color: inherit;"
 				data-card-link
 				class:no-image={!hasImage}
 			>
-				<div class="project-info">
-					<p class="project-year">
-						<span class="material-symbols">calendar_month</span>
-						{yearDisplay}
-					</p>
-					<h3 class="project-title">{this.project.title}</h3>
-					<p class="project-description">{this.project.blurb}</p>
-				</div>
-				<div class="project-visual" aria-hidden={hasImage ? "true" : "false"}>
-					{hasImage ? (
+					<div class="image-wrapper">
 						<img src={this.project.img} alt="" loading="eager" />
-					) : (
-						<span>View project</span>
-					)}
-				</div>
+					</div>
+					<div class="project-info">
+						<p class="project-year">
+							<span class="material-symbols">calendar_month</span>
+							{yearDisplay}
+							{this.project.featured ? (
+								<span class="featured-indicator">
+									•
+									<span class="material-symbols">trophy</span>{" "}
+									Featured
+								</span>
+							) : null}
+						</p>
+						<h3 class="project-title">{this.project.title}</h3>
+						<p class="project-description">{this.project.blurb}</p>
+					</div>
 			</TransitionLink>
 		</div>
 	);
 };
 
 ProjectCard.style = css<typeof ProjectCard>`
-	:scope {
+	:scope, :scope:visited {
 		width: 100%;
+		background: var(--base);
+		border: 1px solid var(--surface3);
+		overflow: hidden;
+		font-size: 0.9rem;
+		text-decoration: none!important;
+		transform: scale(1) translateY(0);
+		transition: transform 0.2s, border-color 0.2s;
+		z-index: 10;
 	}
 
-	:scope:hover img {
-		transform: scale(1.05);
-		filter: saturate(1.1) brightness(1.05);
+	:scope:hover {
+		border-color: var(--overlay0);
+		transform: scale(1.01) translateY(-2px);
 	}
 
-	.project-card-wrapper {
-		width: 100%;
+	:scope:hover h1 {
+		text-decoration: underline!important;
 	}
 
-	.project-card {
-		display: flex;
-		width: 100%;
-		align-items: flex-start;
-		justify-content: space-between;
-		gap: clamp(1.25rem, 4vw, 5rem);
-		padding: clamp(1rem, 0.8rem + 0.5vw, 1.5rem) 0;
-		background: transparent;
-		box-shadow: none;
-		backdrop-filter: none;
-		text-decoration: none !important;
-		border-bottom: 1px solid transparent;
-		color: inherit;
-		position: relative;
+	@media (orientation: portrait) {
+		:scope {
+			width: 100%;
+		}
 	}
-
-	* {
-		text-decoration: none !important;
-	}
-
-
-	:scope:hover h3 {
-		text-decoration: underline !important;
-		text-decoration-color: var(--subtext1) !important;
-	}
-
-	.project-card::after {
-		content: "";
-		position: absolute;
-		left: 0;
-		right: 0;
-		bottom: 0;
-		height: 1px;
-		background: linear-gradient(
-			90deg,
-			color-mix(in srgb, var(--overlay0) 0%, transparent) 0%,
-			color-mix(in srgb, var(--overlay1) 45%, transparent) 40%,
-			color-mix(in srgb, var(--overlay1) 45%, transparent) 60%,
-			color-mix(in srgb, var(--overlay0) 0%, transparent) 100%
-		);
-		pointer-events: none;
-	}
-
-	.project-card-wrapper:first-of-type .project-card {
-		border-top: 1px solid color-mix(in srgb, var(--overlay1) 45%, transparent);
-	}
-
-	.project-card-wrapper:last-of-type .project-card::after {
-		opacity: 0;
-	}
-
-	.project-card:hover .project-title {
-		color: var(--accent);
-	}
-
+	
 	.project-info {
+		padding: 1rem;
+		padding-top: 0.5rem;
 		display: flex;
 		flex-direction: column;
-		gap: 0.35rem;
-		flex: 1 1 auto;
-		min-width: 0;
-		margin-right: clamp(1rem, 3vw, 2.5rem);
-		justify-content: center;
-	}
-
-	.project-year {
-		margin: 0;
-		font-size: 0.8rem;
-		color: var(--subtext2);
-		display: flex;
-		align-items: center;
 		gap: 0.3rem;
 	}
 
-	.project-year span.material-symbols {
-		font-size: 1rem;
+	.project-description,
+	.project-year {
+		color: var(--subtext1)!important;
 	}
 
-	.project-title {
-		margin: 0;
-		font-size: clamp(1.25rem, 1rem + 1.5vw, 1.9rem);
-		font-weight: 700;
-		color: var(--supertext);
-	}
-
-	.project-description {
-		margin: 0;
-		max-width: 60ch;
-		color: var(--text);
-		opacity: 0.95;
-		font-size: clamp(0.95rem, 0.85rem + 0.2vw, 1.05rem);
-	}
-
-	.project-visual {
-		flex-shrink: 0;
-		width: 320px;
-		max-width: 320px;
-		width: clamp(200px, 28vw, 320px);
-		aspect-ratio: 19 / 10;
-		background: color-mix(in srgb, var(--surface2) 80%, transparent);
-		display: flex;
+	.featured-indicator {
+		display: inline-flex;
 		align-items: center;
-		justify-content: center;
-		position: relative;
+		gap: 0.25rem;
+		padding-left: 0.25rem;
+	}
+
+	p {
+		font-size: 0.8rem;
+	}
+
+	* {
+		margin: 0!important;
+		text-decoration: none  !important;
+	}
+
+	.image-wrapper {
+		aspect-ratio: 16 / 9;
 		overflow: hidden;
-		clip-path: polygon(5.5% 0%, 100% 0%, 94.5% 100%, 0% 100%);
-		box-shadow: 0 16px 38px -16px var(--shadow-ultra);
-		transition:
-			transform 0.45s ease,
-			box-shadow 0.45s ease,
-			border-color 0.3s ease,
-			background 0.3s ease;
 	}
 
-	.project-card:hover .project-visual {
-		transform: perspective(850px) rotateY(-3deg) translateY(-4px) scale(1.015);
-		box-shadow: 0 24px 50px -14px var(--shadow-ultra);
-		border-color: color-mix(in srgb, var(--overlay1) 70%, transparent);
-		background: color-mix(in srgb, var(--surface3) 85%, transparent);
+	@supports (grid-template-rows: masonry) or (display: masonry) or (display: grid-lanes) {
+		.image-wrapper {
+			aspect-ratio: auto;
+			overflow: visible;
+		}
 	}
 
-	.project-visual img {
+	img {
 		width: 100%;
 		height: 100%;
 		object-fit: cover;
-		transition: transform 0.4s ease, filter 0.4s ease;
-		filter: saturate(0.8) brightness(0.75);
+		border-bottom: 1px solid var(--surface0);
 	}
 
-	.project-visual span {
-		font-size: 0.8rem;
-		letter-spacing: 0.2em;
-		text-transform: uppercase;
-		color: var(--subtext0);
+	h1 {
+		font-size: 1.15rem;
 	}
-
-	.project-card.no-image .project-visual {
-		border-style: dashed;
-		clip-path: polygon(8% 0%, 100% 0%, 92% 100%, 0% 100%);
-		transform: none;
-		box-shadow: none;
-	}
-
- 
 `;
 
 export default ProjectCard;

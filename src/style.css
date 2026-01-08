@@ -601,7 +601,7 @@ a:visited {
 a:hover,
 .tooltip-wrapper:has(.tooltip:hover) a {
 	text-decoration-color: var(--accent) !important;
-	color: var(--subtext0) !important;
+	color: var(--subtext0);
 }
 
 a:after {
@@ -823,6 +823,7 @@ main {
 	background: hsla(var(--crust-hsl), 0.6);
 	border: 1px solid var(--surface2);
 	padding: 1.5rem;
+	padding-right: 0;
 	width: 900px;
 	max-width: 100%;
 	max-width: calc(100% - 2rem);
@@ -835,7 +836,6 @@ main {
 @supports (display: flex) {
 	.layout-container {
 		display: flex;
-		gap: 2rem;
 		width: clamp(800px, 40vw + 200px, 1100px);
 	}
 }
@@ -934,16 +934,16 @@ main {
 .main-content {
 	display: table-cell;
 	vertical-align: top;
-	padding-left: 2rem;
+	padding-inline: 2rem;
 	box-sizing: border-box;
 }
 
 .main-content {
+	overflow-x: visible;
 	overflow-y: auto;
 	overscroll-behavior: contain;
 	
 		min-width: 0;
-		padding-left: 0;
 		view-transition-name: page-content;
 		scrollbar-color: var(--overlay1) transparent;
 		scrollbar-width: thin;

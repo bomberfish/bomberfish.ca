@@ -12,29 +12,23 @@ const ProjectList: Component<{}, {}> = function () {
 				<div class="main-content">
 					<h2>projects</h2>
 					<p>a collection of my major projects, along with various smaller utilities, experiments, and explorations.</p>
+						{/* <h3>featured</h3> */}
 					<section class="projects-group">
-						<h3>featured</h3>
 						{projects
 							.filter((project) => project.featured)
 							.sort(
 								(a, b) => (a.featuredPosition || 0) - (b.featuredPosition || 0)
 							)
 							.map((project) => (
-								<>
 									<ProjectCard project={project} size="large" />
-									<hr />
-								</>
 							))}
-					</section>
-					<section class="projects-group">
-						<h3>other projects</h3>
+					{/* </section>
+					<h3>other projects</h3>
+					<section class="projects-group"> */}
 						{projects
 							.filter((project) => !project.featured)
 							.map((project) => (
-								<>
-									<ProjectCard project={project} size="small" />
-									<hr />
-								</>
+								<ProjectCard project={project} size="small" />
 							))}
 					</section>
 				</div>
@@ -46,10 +40,53 @@ const ProjectList: Component<{}, {}> = function () {
 ProjectList.style = css`
 	.projects-group {
 		display: flex;
-		flex-direction: column;
+		flex-wrap: wrap;
+		gap: 1rem;
 		margin-top: 1rem;
 	}
 
+	@supports (display: grid) {
+		.projects-group {
+			display: grid;
+			grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
+			gap: 1rem;
+			margin-top: 1rem;
+			grid-auto-flow: dense;
+		}
+	}
+
+	@supports (grid-template-rows: masonry) {
+		.projects-group {
+			display: grid;
+			grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr));
+			grid-template-rows: masonry;
+			grid-auto-rows: masonry;
+			grid-auto-flow: dense;
+		}
+	}
+
+	@supports (display: masonry) {
+		.projects-group {
+			display: masonry;
+			masonry-auto-flow: next;
+			grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr));
+		}
+	}
+
+	@supports (display: grid-lanes) {
+		.projects-group {
+			display: grid-lanes;
+			grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr));
+		}
+	}
+
+	@media (orientation: portrait) {
+		.projects-group {
+			display: flex;
+			flex-direction: column;
+			gap: 1rem;
+		}
+	}
 
 	.main-content {
 		max-height: min(90vh, 60rem);
