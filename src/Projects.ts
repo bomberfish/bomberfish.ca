@@ -147,8 +147,7 @@ export const projects = [
 		"/proj-thumbnails/mergeflow.jpg",
 		"MergeFlow",
 		"Gemini-powered Git merge conflict resolution",
-		// straight bullshitting ngl
-		"In 2025, me and a small team created MergeFlow, a smart Git merge conflict resolution tool powered by Gemini. It uses advanced AI algorithms to automatically resolve merge conflicts, making the process faster and more efficient. This was created for Hack Canada 2025.",
+		"In 2025, me and a small team created MergeFlow, a smart Git merge conflict resolution tool powered by Gemini. Based on the conflict markers in the code, it automatically resolves merge conflicts, making development workflows faster and more efficient. The program was created for Hack Canada 2025.",
 		2025,
 		2025,
 		[
@@ -188,7 +187,7 @@ export const projects = [
 		"/proj-thumbnails/fez.jpg",
 		"fez-wasm",
 		"Port of Fez (2012) to WebAssembly",
-		"fez-wasm is a WebAssembly port of Fez, a puzzle-platformer first released in 2012. It is a heavy work in progress, with many portions non-functional.",
+		"fez-wasm was an attempt to port Fez to WebAssembly. Fez is a puzzle-platformer first released in 2012. The webport was abandoned due to various technical limitations. However, I learned a lot about WebAssembly and .NET during the process.",
 		2025,
 		2025,
 		[
@@ -222,7 +221,7 @@ export const projects = [
 		"/proj-thumbnails/qs.jpg",
 		"QuickSign",
 		"iOS Sideloading App",
-		"In late 2024 I joined the development of QuickSign, an app to sign sideloaded iOS apps. Development was cancelled in mid 2025 due to Apple mass terminating developer accounts and general disinterest.",
+		"In late 2024 I joined the development of QuickSign, an app to sign sideloaded iOS apps. Development fizzled out in mid 2025 due to various factors, including Apple cracking down on sideloading and general disinterest.",
 		2024,
 		2025,
 		[
@@ -241,7 +240,7 @@ export const projects = [
 		"/proj-thumbnails/celeste.jpeg",
 		"Webleste",
 		"Port of Celeste (2018) to WebAssembly",
-		"Webleste (formerly celeste-wasm) is a port of the popular platformer game Celeste to WebAssembly. I was responsible for the browser frontend during its initial development in May 2024, and with the development of version 2.0 in April 2025. It is a complete port of the game, using experimental WASM support in .NET and the FNA game engine. I worked with my fellow colleagues at Mercury Workshop to help with porting the game.",
+		"Webleste (formerly celeste-wasm) is a port of the popular platformer game Celeste to WebAssembly. I was responsible for the browser frontend during its initial development in May 2024, and with the development of version 2.0 in April 2025. It is a complete port of the game, using experimental WASM support in .NET and the FNA game engine. I worked with my fellow colleagues at Mercury Workshop to help with porting the game. The port also gained lots of attention from a Hackaday article written about it.",
 		2024,
 		2025,
 		[
@@ -253,6 +252,11 @@ export const projects = [
 			{
 				name: "Writeup",
 				url: "https://velzie.rip/blog/celeste-wasm",
+				icon: "article",
+			},
+			{
+				name: "Hackaday Article",
+				url: "https://hackaday.com/2025/10/17/a-new-golden-age-of-browser-games/",
 				icon: "article",
 			},
 			{
@@ -318,7 +322,7 @@ export const projects = [
 		"/proj-thumbnails/picasso.jpeg",
 		"Picasso",
 		"iOS customization app with 100k+ peak MAU",
-		"Picasso was a customization app for iOS 15.0-17.0, taking advantage of various security vulnerabilities to allow for deep customization. At its peak, it had over 100,000 active users. I worked with sourcelocation to develop it, and it was first released in August 2023 on our own third-party marketplace separate from Apple's App Store.",
+		"Picasso was a customization app for iOS 15.0-17.0, taking advantage of various security vulnerabilities to allow for deep customization. At its peak, it had over 100,000 monthly active users. I worked with sourcelocation to develop it, and it was first released in August 2023 on our own fully-custom third-party marketplace separate from Apple's App Store.",
 		2023,
 		2024,
 		[
@@ -360,7 +364,7 @@ export const projects = [
 		"/proj-thumbnails/cowabunga.jpeg",
 		"Cowabunga",
 		"Major contributor to customization app",
-		"Cowabunga was a major project I contributed to in 2023. It was a customization app for iOS 14.0-16.1.2, using the MacDirtyCow vunerability to allow for deep customization. My contributions included adding tools such as an enterprise certificate blacklist remover, and a tool to remove the three-app limit on developer-signed apps.",
+		"Cowabunga was a major project I contributed to in 2023. It was a customization app for iOS 14.0-16.1.2, using the CVE-2022-46689 vunerability to allow for deep customization. My contributions included adding tools such as an enterprise certificate blacklist remover, and a tool to remove the three-app limit on developer-signed apps.",
 		2022,
 		2023,
 		[

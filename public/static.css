@@ -45,116 +45,57 @@ html {
 	--vt-direction: 1;
 }
 
+
 @property --main-hue {
 	syntax: "<number>";
 	initial-value: 210;
 	inherits: true;
 }
 
-/* html {
-	--main-hue: 20;
-
-	--grid-lines: hsla(var(--main-hue), 40%, 92.5%);
-
-	--base-hsl: var(--main-hue), 25%, 96.5%;
-	--surface0-hsl: var(--main-hue), 40%, 92%;
-	--surface1-hsl: var(--main-hue), 50%, 90%;
-	--surface2-hsl: var(--main-hue), 45%, 87.5%;
-	--surface3-hsl: var(--main-hue), 35%, 85%;
-	--surface4-hsl: var(--main-hue), 30%, 82.5%;
-	--surface5-hsl: var(--main-hue), 20%, 80%;
-	--overlay0-hsl: var(--main-hue), 20%, 70%;
-	--overlay1-hsl: var(--main-hue), 25%, 60%;
-	--overlay2-hsl: var(--main-hue), 30%, 50%;
-	--overlay3-hsl: var(--main-hue), 35%, 40%;
-	--text-hsl: var(--main-hue), 40%, 25%;
-	--subtext0-hsl: var(--main-hue), 20%, 35%;
-	--subtext1-hsl: var(--main-hue), 30%, 45%;
-	--subtext2-hsl: var(--main-hue), 25%, 55%;
-	--accent-hsl: var(--main-hue), 77%, 70%;
-
-	
-	--shadow-soft: hsla(var(--overlay0-hsl), 0.25);
-	--shadow-medium: hsla(var(--overlay0-hsl), 0.40);
-	--shadow-strong: hsla(var(--overlay0-hsl), 0.55);
-	--shadow-ultra: hsla(var(--overlay0-hsl), 0.65);
-	--shadow-highlight: hsla(var(--surface0-hsl), 0.70);
-} */
-
-/* html {
-	--main-hue: 218;
-	--grid-lines: hsla(var(--main-hue), 10%, 46%);
-
-	--base-hsl: var(--main-hue), 20%, 33%;
-	--bg-light: var(--main-hue), 20%, 37%;
-	--surface0-hsl: var(--main-hue), 18%, 36%;
-	--surface1-hsl: var(--main-hue), 16%, 40%;
-	--surface2-hsl: var(--main-hue), 15%, 45%;
-	--surface3-hsl: var(--main-hue), 14%, 50%;
-	--surface4-hsl: var(--main-hue), 13%, 56%;
-	--surface5-hsl: var(--main-hue), 12%, 61%;
-	--surface6-hsl: var(--main-hue), 12%, 66%;
-	--overlay0-hsl: var(--main-hue), 12%, 72%;
-	--overlay1-hsl: var(--main-hue), 12%, 78%;
-	--overlay2-hsl: var(--main-hue), 12%, 84%;
-	--overlay3-hsl: var(--main-hue), 12%, 92%;
-	--supertext-hsl: 206, 22%, 97%;
-	--text-hsl: 206, 18%, 90%;
-	--text1-hsl: 206, 17%, 80%;
-	--subtext0-hsl: 206, 14%, 74%;
-	--subtext1-hsl: 206, 12%, 64%;
-	--subtext2-hsl: 206, 10%, 54%;
-	--subtext3-hsl: 206, 9%, 44%;
-	--accent-hsl: 205, 40%, 70%;
-
-	--shadow-soft: hsla(var(--overlay0-hsl), 0.16);
-	--shadow-medium: hsla(var(--overlay0-hsl), 0.26);
-	--shadow-strong: hsla(var(--overlay0-hsl), 0.36);
-	--shadow-ultra: hsla(var(--overlay0-hsl), 0.48);
-	--shadow-highlight: hsla(var(--surface0-hsl), 0.72);
+.pfp {
+	filter: hue-rotate(calc(calc(var(--main-hue) - 204) * 1deg));
 }
 
-@media (prefers-color-scheme: dark) { */
-	html {
-		--main-hue: 204;
-		--grid-lines: hsla(var(--main-hue), 12%, 16%);
+html {
+	--main-hue: 204;
+	--grid-lines: hsla(var(--main-hue), 12%, 16%);
 
-		--mantle-hsl: var(--main-hue), 20%, 2.5%;
-		--crust-hsl: var(--main-hue), 20%, 6%;
-		--base-hsl: var(--main-hue), 20%, 8%;
-		--bg-light: var(--main-hue), 21%, 9.75%;
-		--surface0-hsl: var(--main-hue), 18%, 13%;
-		--surface1-hsl: var(--main-hue), 18%, 17%;
-		--surface2-hsl: var(--main-hue), 16%, 24%;
-		--surface3-hsl: var(--main-hue), 15%, 27%;
-		--surface4-hsl: var(--main-hue), 14%, 33.5%;
-		--surface5-hsl: var(--main-hue), 14%, 37.5%;
-		--surface6-hsl: var(--main-hue), 14%, 47%;
-		--overlay0-hsl: calc(var(--main-hue) - 11), 18%, 57.5%;
-		--overlay1-hsl: calc(var(--main-hue) - 11), 20%, 65%;
-		--overlay2-hsl: calc(var(--main-hue) - 11), 22%, 75%;
-		--overlay3-hsl: calc(var(--main-hue) - 11), 24%, 85%;
-		--supertext-hsl: calc(var(--main-hue) - 26), 50%, 95%;
-		--text-hsl: calc(var(--main-hue) - 21), 24%, 88%;
-		--text1-hsl: calc(var(--main-hue) - 21), 22%, 74%;
-		--subtext0-hsl: calc(var(--main-hue) - 17), 18%, 70%;
-		--subtext1-hsl: calc(var(--main-hue) - 17), 16%, 60%;
-		--subtext2-hsl: calc(var(--main-hue) - 17), 14%, 50%;
-		--subtext3-hsl: calc(var(--main-hue) - 17), 12%, 45%;
-		--accent-hsl: calc(var(--main-hue) - 17), 40%, 70%;
-		--shadow-soft: hsla(var(--text-hsl), 0.14);
-		--shadow-medium: hsla(var(--text-hsl), 0.24);
-		--shadow-strong: hsla(var(--text-hsl), 0.34);
-		--shadow-ultra: hsla(var(--text-hsl), 0.44);
-		--shadow-highlight: hsla(var(--surface1-hsl), 0.55);
-	}
+	--mantle-hsl: var(--main-hue), 20%, 2.5%;
+	--crust-hsl: var(--main-hue), 20%, 6%;
+	--base-hsl: var(--main-hue), 20%, 8%;
+	--bg-light: var(--main-hue), 21%, 9.75%;
+	--surface0-hsl: var(--main-hue), 18%, 13%;
+	--surface1-hsl: var(--main-hue), 18%, 17%;
+	--surface2-hsl: var(--main-hue), 16%, 24%;
+	--surface3-hsl: var(--main-hue), 15%, 27%;
+	--surface4-hsl: var(--main-hue), 14%, 33.5%;
+	--surface5-hsl: var(--main-hue), 14%, 37.5%;
+	--surface6-hsl: var(--main-hue), 14%, 47%;
+	--overlay0-hsl: calc(var(--main-hue) - 11), 18%, 57.5%;
+	--overlay1-hsl: calc(var(--main-hue) - 11), 20%, 65%;
+	--overlay2-hsl: calc(var(--main-hue) - 11), 22%, 75%;
+	--overlay3-hsl: calc(var(--main-hue) - 11), 24%, 85%;
+	--supertext-hsl: calc(var(--main-hue) - 26), 50%, 95%;
+	--text-hsl: calc(var(--main-hue) - 21), 24%, 88%;
+	--text1-hsl: calc(var(--main-hue) - 21), 22%, 74%;
+	--subtext0-hsl: calc(var(--main-hue) - 17), 18%, 70%;
+	--subtext1-hsl: calc(var(--main-hue) - 17), 16%, 60%;
+	--subtext2-hsl: calc(var(--main-hue) - 17), 14%, 50%;
+	--subtext3-hsl: calc(var(--main-hue) - 17), 12%, 45%;
+	--accent-hsl: calc(var(--main-hue) - 17), 40%, 70%;
+	--shadow-soft: hsla(var(--text-hsl), 0.14);
+	--shadow-medium: hsla(var(--text-hsl), 0.24);
+	--shadow-strong: hsla(var(--text-hsl), 0.34);
+	--shadow-ultra: hsla(var(--text-hsl), 0.44);
+	--shadow-highlight: hsla(var(--surface1-hsl), 0.55);
+}
 
-	body {
-		color-scheme: dark;
-		padding: 0;
+body {
+	color-scheme: dark;
+	padding: 0;
 	margin: 0;
-	}
-/* } */
+}
+
 
 
 ::selection {

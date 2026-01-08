@@ -23,7 +23,7 @@ const Homepage: Component<{}, {}> = function () {
 							other stuff :3
 						</p>
 						<p>
-							i'm interested in webdev, frontend design, embedded systems, and
+							i'm interested in webdev, UI design, embedded systems, and
 							hardware.
 						</p>
 						<p>

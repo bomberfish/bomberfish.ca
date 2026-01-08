@@ -42,11 +42,17 @@ WebButton.style = css`
 		border: none !important;
 		display: inline-block;
 		font-size: 0;
+		/* display: flex;
+		justify-content: center;
+		align-items: center; */
 	}
 	img {
 		image-rendering: pixelated;
 		width: auto;
 		height: 100%;
+		/* display: flex;
+		justify-content: center;
+		align-items: center; */
 	}
 	:scope:after {
 		display: none;
