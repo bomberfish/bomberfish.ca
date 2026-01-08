@@ -101,6 +101,7 @@ body {
 }
 
 html {
+	color: var(--text);
 	background: var(--base);
 	background-image: none;
 	overflow-x: hidden;
@@ -128,7 +129,6 @@ body {
 		"wdth" 98,
 		"wght" 330;
 	letter-spacing: 0.01em;
-	color: var(--text);
 	color-scheme: light;
 	line-height: 1.6;
 	display: flex;
