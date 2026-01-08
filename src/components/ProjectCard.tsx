@@ -39,9 +39,9 @@ const ProjectCard: Component<
 	const hasImage = Boolean(this.project.img);
 	const yearDisplay = typeof this.project.endYear === "number"
 		? this.project.endYear === this.project.startYear
-			? `${this.project.startYear}`
-			: `${this.project.startYear} — ${this.project.endYear}`
-		: `${this.project.startYear} — present`;
+			? ` ${this.project.startYear}`
+			: ` ${this.project.startYear} — ${this.project.endYear}`
+		: ` ${this.project.startYear} — present`;
 
 	return (
 		<div class="project-card-wrapper" on:click={handleCardClick}>
@@ -53,7 +53,10 @@ const ProjectCard: Component<
 				class:no-image={!hasImage}
 			>
 				<div class="project-info">
-					<p class="project-year">{yearDisplay}</p>
+					<p class="project-year">
+						<span class="material-symbols">calendar_month</span>
+						{yearDisplay}
+					</p>
 					<h3 class="project-title">{this.project.title}</h3>
 					<p class="project-description">{this.project.blurb}</p>
 				</div>
@@ -150,8 +153,15 @@ ProjectCard.style = css<typeof ProjectCard>`
 
 	.project-year {
 		margin: 0;
-		font-size: 0.9rem;
+		font-size: 0.8rem;
 		color: var(--subtext2);
+		display: flex;
+		align-items: center;
+		gap: 0.3rem;
+	}
+
+	.project-year span.material-symbols {
+		font-size: 1rem;
 	}
 
 	.project-title {

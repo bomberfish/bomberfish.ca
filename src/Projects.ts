@@ -18,25 +18,28 @@ export const jobs = [
 ];
 
 export const projects = [
-	// new ProjectCardDetails(
-	//   "/proj-thumbnails/celeste.jpeg",
-	//   "Webshot",
-	//   "Port of OneShot to WebAssembly",
-	//   "Webshot is a port of OneShot: World Machine Edition to WebAssembly. Like fez-wasm and Webleste, it leverages WebAssembly support in .NET and FNA to run the game in a web browser. Unlike Webleste, I led the porting efforts."
-	//   2024,
-	//   [
-	//     {
-	//       name: "GitHub",
-	//       url: "https://github.com/MercuryWorkshop/webshot",
-	//       icon: "code",
-	//     },
-	//     {
-	//       name: "Demo",
-	//       url: "https://youtube.com/watch?v=dQw4w9WgXcQ",
-	//       icon: "stadia_controller",
-	//     },
-	//   ],
-	// ),
+	new ProjectCardDetails(
+	  "/proj-thumbnails/webshot.jpg",
+	  "Webshot",
+	  "Port of OneShot to WebAssembly",
+	  "Webshot is a port of OneShot: World Machine Edition to WebAssembly. Like Webleste and fez-wasm, it leverages WebAssembly support in .NET and FNA to run the game in a web browser. I collaborated with r58Playz (who did the initial port), and I worked on the browser frontend as well as a few runtime patches to the game's C# codebase.",
+	  2026,
+	  2026,
+	  [
+	    {
+	      name: "GitHub",
+	      url: "https://github.com/MercuryWorkshop/webshot",
+	      icon: "code",
+	    },
+	    {
+	      name: "Demo",
+	      url: "https://oneshot.r58playz.dev",
+	      icon: "stadia_controller",
+	    },
+	  ],
+	  true,
+	  2
+	),
 	new ProjectCardDetails(
 		"/proj-thumbnails/steed.jpg",
 		"Steed",
@@ -259,7 +262,7 @@ export const projects = [
 			},
 		],
 		true,
-		2
+		3
 	),
 	new ProjectCardDetails(
 		"/proj-thumbnails/anura.jpeg",
@@ -275,7 +278,7 @@ export const projects = [
 			},
 		],
 		true,
-		3
+		4
 	),
 	new ProjectCardDetails(
 		"/proj-thumbnails/mandelapro.jpeg",
