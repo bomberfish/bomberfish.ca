@@ -11,7 +11,7 @@ const Homepage: Component<{}, {}> = function () {
 				<div class="main-content">
 					<section class="about-section">
 						<a href="/me.png" target="_blank" rel="noopener">
-							<img src="/me.min.png" class="pfp" title="my profile picture! click to view full size." alt="profile picture" />
+							<img src="/me.min.png" class="pfp" title="my profile picture! click to view full size." width="100" height="100" loading="lazy" alt="profile picture" />
 						</a>
 						<h2>about me!</h2>
 						<p>
