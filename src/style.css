@@ -54,6 +54,7 @@ html {
 
 .pfp {
 	filter: hue-rotate(calc(calc(var(--main-hue) - 205) * 1deg));
+	image-rendering: pixelated;
 }
 
 html {
