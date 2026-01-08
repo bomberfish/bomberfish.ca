@@ -92,11 +92,7 @@
 
 :root {
 	--font-display: var(--font-body);
-	--font-body:
-		"HelveticaNow", Helvetica, "Helvetica Neue", FreeSans, "Nimbus Sans L", "Nimbus Sans", system-ui, Arial,
-		sans-serif, "Apple Color Emoji", "Noto Color Emoji", "Segoe UI Emoji";
-	--font-mono:
-		"IosevkaFishQuasi", ui-monospace, monospace;
-	--font-serif:  "Times New Roman", Times, Tinos, FreeSerif, "Nimbus Roman No9 L", "Nimbus Roman", "Liberation Serif",
-		"Linux Libertine", serif;
+	--font-body: "HelveticaNow", "Helvetica Now Var", "Helvetica Now", "Nimbus Sans L", "Nimbus Sans", Helvetica, "Helvetica Neue", "MS Sans Serif", Arial, "Liberation Sans", FreeSans, system-ui, sans-serif, "Apple Color Emoji", "Noto Color Emoji", "Segoe UI Emoji";
+	--font-mono: "IosevkaFishQuasi", ui-monospace, monospace;
+	--font-serif:  "Times New Roman", Times, Tinos, FreeSerif, "Nimbus Roman No9 L", "Nimbus Roman", "Liberation Serif", "Linux Libertine", serif;
 }
