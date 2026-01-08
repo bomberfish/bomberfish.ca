@@ -2,19 +2,20 @@ import { defineConfig } from "vite";
 import { devSsr } from "dreamland/vite";
 import { compile } from "@mdx-js/mdx";
 
-import { literalsHtmlCssMinifier } from "@literals/rollup-plugin-html-css-minifier";
-import postCssPresetEnv from "postcss-preset-env";
-import litePreset from "cssnano-preset-lite";
-
 import rehypeStarryNight from "rehype-starry-night";
 import { all as grammars } from "@wooorm/starry-night";
 import { visit } from "estree-util-visit";
 
-
 import { readFile } from "fs/promises";
 import { execSync } from "child_process";
 
+import { literalsHtmlCssMinifier } from "@literals/rollup-plugin-html-css-minifier";
+import postCssPresetEnv from "postcss-preset-env";
+import colorHslaFallback from "postcss-color-hsla-fallback";
+import postcss from "postcss";
+
 import cssnanoPlugin from "cssnano";
+import litePreset from "cssnano-preset-lite";
 import calc from "postcss-calc";
 import normalizeCharset from "postcss-normalize-charset";
 import mergeLonghand from "postcss-merge-longhand";
@@ -26,6 +27,7 @@ import cssDeclarationSorter from "css-declaration-sorter";
 import mergeRules from "postcss-merge-rules";
 import minifyParams from "postcss-minify-params";
 import minifySelectors from "postcss-minify-selectors";
+import discardDuplicates from "postcss-discard-duplicates";
 
 async function compileMdx(content: string, name?: string) {
 	const compiled = await compile(content, {
@@ -102,12 +104,25 @@ export default defineConfig({
 			enforce: "pre",
 			async load(id) {
 				if (id.endsWith(".mdx")) {
+					console.log("Compiling MDX file:", id);
 					const content = await readFile(id, "utf-8");
-
 					return {
 						code: await compileMdx(content),
 						loader: "jsx",
 					};
+				}
+			},
+		},
+		{
+			name: "postcss-hsla-fallback",
+			enforce: "post",
+			async generateBundle(_, bundle) {
+				for (const [fileName, chunk] of Object.entries(bundle)) {
+					if (fileName.endsWith(".css") && chunk.type === "asset" && typeof chunk.source === "string") {
+						console.log("Processing bundled CSS for HSLA fallbacks:", fileName);
+						const result = await postcss([colorHslaFallback(),cssnanoPlugin({preset: litePreset})]).process(chunk.source, { from: fileName });
+						chunk.source = result.css;
+					}
 				}
 			},
 		},
@@ -163,6 +178,7 @@ export default defineConfig({
 					browsers: [">= 0.00%"],
 					stage: 2,
 					autoprefixer: {
+						overrideBrowserslist: [">= 0.00%"],
 						grid: "autoplace",
 						remove: false,
 					},
@@ -180,9 +196,10 @@ export default defineConfig({
 						cssDeclarationSorter, 
 						mergeRules, 
 						minifyParams, 
-						minifySelectors
+						minifySelectors,
+						discardDuplicates
 					],
-				})
+				}),
 			]
 		},
 		// lightningcss: {

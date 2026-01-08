@@ -8,9 +8,6 @@ importers:
 
   .:
     dependencies:
-      cssnano-preset-lite:
-        specifier: ^4.0.4
-        version: 4.0.4(postcss@8.5.6)
       dreamland:
         specifier: ^0.1.2
         version: 0.1.2
@@ -42,6 +39,9 @@ importers:
       cssnano:
         specifier: ^7.1.2
         version: 7.1.2(postcss@8.5.6)
+      cssnano-preset-lite:
+        specifier: ^4.0.4
+        version: 4.0.4(postcss@8.5.6)
       esbuild:
         specifier: ^0.25.12
         version: 0.25.12
@@ -60,9 +60,9 @@ importers:
       postcss-cli:
         specifier: ^11.0.1
         version: 11.0.1(postcss@8.5.6)
-      postcss-minify:
-        specifier: ^1.2.0
-        version: 1.2.0(postcss@8.5.6)
+      postcss-color-hsla-fallback:
+        specifier: ^1.0.0
+        version: 1.0.0(postcss@8.5.6)
       postcss-preset-env:
         specifier: ^10.4.0
         version: 10.4.0(postcss@8.5.6)
@@ -2115,6 +2115,12 @@ packages:
     peerDependencies:
       postcss: ^8.4
 
+  postcss-color-hsla-fallback@1.0.0:
+    resolution: {integrity: sha512-7UIbCOjMYAn6KgGGMPE1eeFJwzQYqReEq6nkdWU4hfmmAg0WkREalAkUSOekxw3K/z4mxibVER6aDLZRUfi2PA==}
+    engines: {node: '>= 12', npm: '>= 6'}
+    peerDependencies:
+      postcss: ^8.2.8
+
   postcss-color-rebeccapurple@10.0.0:
     resolution: {integrity: sha512-JFta737jSP+hdAIEhk1Vs0q0YF5P8fFcj+09pweS8ktuGuZ8pPlykHsk6mPxZ8awDl4TrcxUqJo9l1IhVr/OjQ==}
     engines: {node: '>=18'}
@@ -2278,11 +2284,6 @@ packages:
     engines: {node: ^18.12.0 || ^20.9.0 || >=22.0}
     peerDependencies:
       postcss: ^8.4.32
-
-  postcss-minify@1.2.0:
-    resolution: {integrity: sha512-Cvyz+hW5eBG0okSSOGDeussQy4v9mZHRhMevP2jwADqDS1v2gfoLo94+g4fCeVYtESZKqr+ViMPv3yPkWZFmFQ==}
-    peerDependencies:
-      postcss: ^8.0
 
   postcss-nesting@13.0.2:
     resolution: {integrity: sha512-1YCI290TX+VP0U/K/aFxzHzQWHWURL+CtHMSbex1lCdpXD1SoR2sYuxDu5aNI9lPoXpKTCggFZiDJbwylU0LEQ==}
@@ -5139,6 +5140,11 @@ snapshots:
       postcss: 8.5.6
       postcss-value-parser: 4.2.0
 
+  postcss-color-hsla-fallback@1.0.0(postcss@8.5.6):
+    dependencies:
+      postcss: 8.5.6
+      postcss-value-parser: 4.2.0
+
   postcss-color-rebeccapurple@10.0.0(postcss@8.5.6):
     dependencies:
       '@csstools/utilities': 2.0.0(postcss@8.5.6)
@@ -5296,12 +5302,6 @@ snapshots:
       cssesc: 3.0.0
       postcss: 8.5.6
       postcss-selector-parser: 7.1.0
-
-  postcss-minify@1.2.0(postcss@8.5.6):
-    dependencies:
-      postcss: 8.5.6
-      postcss-selector-parser: 7.1.0
-      postcss-value-parser: 4.2.0
 
   postcss-nesting@13.0.2(postcss@8.5.6):
     dependencies:

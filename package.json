@@ -26,6 +26,7 @@
 		"lightningcss": "^1.30.2",
 		"postcss": "^8.5.6",
 		"postcss-cli": "^11.0.1",
+		"postcss-color-hsla-fallback": "^1.0.0",
 		"postcss-preset-env": "^10.4.0",
 		"prettier": "next",
 		"react": "^19.2.1",

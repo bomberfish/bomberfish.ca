@@ -101,22 +101,46 @@ await rm(resolve("dist/static/.vite"), { recursive: true });
 
 const blogURL = "https://bomberfish.ca/blog/";
 
+const mdxComponents = {
+	TransitionLink: ({ href, children, className, class: classAttr, ...props }) =>
+		createElement("a", { ...props, href, className: className ?? classAttr }, children),
+};
+
+function sanitizeMdxForFeed(content) {
+	const lines = content.split(/\r?\n/);
+	const kept = [];
+	let inFence = false;
+
+	for (const line of lines) {
+		const trimmed = line.trim();
+
+		if (trimmed.startsWith("```") || trimmed.startsWith("~~~")) {
+			inFence = !inFence;
+			kept.push(line);
+			continue;
+		}
+
+		if (!inFence && (/^import\s+/.test(trimmed) || /^export\s+const\s+\w+\s*=/.test(trimmed))) {
+			continue;
+		}
+
+		kept.push(line);
+	}
+
+	return kept.join("\n").trim();
+}
+
 // Helper function to compile MDX content to HTML
 async function mdxToHtml(content) {
-	// Remove export statements from the content for the body
-	const bodyContent = content
-		.replace(/^export\s+const\s+\w+\s*=\s*["'][^"']*["'];?\s*$/gm, '')
-		.replace(/^export\s+const\s+\w+\s*=\s*\[[^\]]*\];?\s*$/gm, '')
-		.trim();
-	
-	// Use evaluate to compile and run MDX at runtime
+	const bodyContent = sanitizeMdxForFeed(content);
+
 	const { default: Content } = await evaluate(bodyContent, {
 		...runtime,
 		rehypePlugins: [[rehypeStarryNight, { grammars }]],
+		useMDXComponents: () => mdxComponents,
 	});
-	
-	// Render the content to static HTML
-	const html = renderToStaticMarkup(createElement(Content));
+
+	const html = renderToStaticMarkup(createElement(Content, { components: mdxComponents }));
 	
 	// Make all relative URLs absolute
 	return html
