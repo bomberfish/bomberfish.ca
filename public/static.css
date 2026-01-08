@@ -748,7 +748,7 @@ a[href^="/"]:after {
 }
 
 .blog-item {
-	border-bottom: 1px dotted var(--surface3);
+	border-bottom: 1px solid var(--surface3);
 	padding-bottom: 1rem;
 }
 
@@ -894,16 +894,16 @@ a:visited {
 .fill-link {
 	text-decoration: none;
 }
-
-.router-link {
+/* 
+.nav-link {
 	text-decoration: none;
 	color: inherit;
 }
 
-.router-link:hover {
+.nav-link:hover {
 	text-decoration: underline;
 	text-decoration-color: var(--subtext1) !important;
-}
+} */
 
 .img-wrapper {
 	margin-block: 1.5rem;

@@ -101,7 +101,7 @@ const App: Component<{}, {}> = function (cx) {
 
 		const step = () => {
 			if (!reduceMotionQuery.matches) {
-				const obedience = 0.03;
+				const obedience = 0.025;
 				velX = obedience * (targetX - posX);
 				velY = obedience * (targetY - posY);
 				posX += velX;
@@ -115,8 +115,8 @@ const App: Component<{}, {}> = function (cx) {
 			if (reduceMotionQuery.matches) {
 				return;
 			}
-			targetX = event.clientX / 8;
-			targetY = event.clientY / 8;
+			targetX = event.clientX / 6;
+			targetY = event.clientY / 6;
 		};
 
 		const handleResize = () => {

@@ -193,6 +193,10 @@ AboutView.style = css`
 		gap: 0.5rem;
 		margin-top: 1rem;
 	}
+
+	.main-content {
+		max-height: min(65vh, 50rem);
+	}
 `;
 
 const ColorSwatch: Component<{ color: string }, {}> = function (cx) {
