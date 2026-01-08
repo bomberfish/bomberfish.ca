@@ -206,79 +206,12 @@ main {
 	transition-timing-function: cubic-bezier(.2,.2,.8,1);
 }
 
-/* @starting-style {
-	main {
-		transform: translateY(0.7rem);
-		filter: blur(4px);
-		opacity: 0;
-	}
-} */
-
-header {
-	display: flex;
-	width: 100%;
-	margin-bottom: clamp(1rem, 1vw + 0.5rem, 1.5rem);
-}
-
-header.generic-header {
-	view-transition-name: site-header;
-	align-items: flex-start;
-	justify-content: space-between;
-	flex-wrap: wrap;
-	gap: 0.5rem 1rem;
-	padding-block: 0.35rem 0.5rem;
-	min-height: clamp(3.25rem, 1.5vw + 2.5rem, 4.75rem);
-}
-
 nav {
 	margin-top: 0.35rem;
 }
 
 nav a {
 	margin-left: 1rem;
-}
-
-header.generic-header nav {
-	align-self: flex-start;
-	margin-top: 0;
-	margin-left: auto;
-}
-
-header.frontpage-header {
-	flex-direction: column;
-	gap: 2rem;
-	text-align: center;
-	align-items: flex-end;
-}
-
-.title {
-	width: 100%;
-	text-align: center;
-	display: flex;
-	align-items: center;
-	flex-direction: row;
-	justify-content: center;
-	flex-wrap: wrap;
-}
-
-.title > a {
-	margin-right: 0.5rem;
-}
-
-.title h1 {
-	font-size: 6rem;
-	font-size: clamp(6rem, 15vw, 8rem);
-	text-align: left;
-	line-height: 1;
-	margin: 0;
-	margin-top: 0.2em;
-	letter-spacing: -0.02em;
-}
-
-.title .pfp {
-	height: 100%;
-	max-width: 100%;
-	z-index: 1;
 }
 
 @media (orientation: portrait) {
@@ -535,13 +468,7 @@ ul.compact > :is(li > span, li > a) {
 :root[data-vt-scope="splash"] ::view-transition-old(root),
 :root[data-vt-scope="splash"] ::view-transition-new(root),
 :root[data-vt-scope="splash"] ::view-transition-old(page),
-:root[data-vt-scope="splash"] ::view-transition-new(page),
-:root[data-vt-scope="splash"] ::view-transition-old(site-header),
-:root[data-vt-scope="splash"] ::view-transition-new(site-header),
-:root[data-vt-scope="splash"] ::view-transition-old(site-title),
-:root[data-vt-scope="splash"] ::view-transition-new(site-title),
-:root[data-vt-scope="splash"] ::view-transition-old(nav-links),
-:root[data-vt-scope="splash"] ::view-transition-new(nav-links) {
+:root[data-vt-scope="splash"] ::view-transition-new(page) {
 	animation: none !important;
 	animation-duration: 0ms !important;
 	opacity: 1 !important;
@@ -551,45 +478,10 @@ ul.compact > :is(li > span, li > a) {
 }
 
 :root[data-vt-scope="splash"] main,
-:root[data-vt-scope="splash"] header,
-:root[data-vt-scope="splash"] header *,
 :root[data-vt-scope="splash"] nav,
 :root[data-vt-scope="splash"] nav *,
 :root[data-vt-scope="splash"] h1 {
 	view-transition-name: none !important;
-}
-
-
-::view-transition-old(site-header),
-::view-transition-new(site-header) {
-	animation: none !important;
-	mix-blend-mode: normal;
-}
-
-::view-transition-old(nav-links),
-::view-transition-new(nav-links) {
-	animation-duration: 0ms !important;
-	animation-delay: 0ms !important;
-	animation-name: none !important;
-	mix-blend-mode: normal;
-}
-
-@keyframes vt-site-title-out {
-	from { opacity: 1; }
-	to { opacity: 0; }
-}
-
-@keyframes vt-site-title-in {
-	from { opacity: 0; }
-	to { opacity: 1; }
-}
-
-::view-transition-old(site-title) {
-	animation: vt-site-title-out var(--vt-duration) ease forwards;
-}
-
-::view-transition-new(site-title) {
-	animation: vt-site-title-in var(--vt-duration) ease forwards;
 }
 
 ul.compact a {
@@ -879,50 +771,6 @@ cap subt:not(:has(.material-symbols)) {
 	margin-top: 0.5rem;
 }
 
-/* a,
-a:visited {
-	color: inherit;
-} */
-
-.project-image {
-	max-width: 50%;
-}
-
-.fill-link {
-	text-decoration: none;
-}
-/* 
-.nav-link {
-	text-decoration: none;
-	color: inherit;
-}
-
-.nav-link:hover {
-	text-decoration: underline;
-	text-decoration-color: var(--subtext1) !important;
-} */
-
-.img-wrapper {
-	margin-block: 1.5rem;
-}
-
-/* .pfp { */
-	/* max-width: 14rem;
-	max-height: 14rem; */
-	/* box-shadow:
-		0 0 0 0.025rem var(--image-ring),
-		0 0 1rem var(--shadow-soft);
-	border-radius: 50%; */
-/* } */
-
-.pfp.rear {
-	display: none;
-}
-
-/* .site-title-pfp {
-
-} */
-
 @keyframes transition-new {
 	from {
 		opacity: 0;
@@ -956,8 +804,6 @@ a:visited {
 	animation: transition-new 0.35s ease forwards;
 }
 
-/* Shared layout styles */
-/* Page wrapper styles - applied to all page :scope */
 main {
 	display: block;
 	min-height: 100vh;
@@ -972,24 +818,20 @@ main {
 	}
 }
 
-
-/* Base: table layout for maximum compatibility (IE8+) */
 .layout-container {
 	display: table;
-	table-layout: fixed;
 	background: hsla(var(--crust-hsl), 0.6);
 	border: 1px solid var(--surface2);
 	padding: 1.5rem;
 	width: 900px;
 	max-width: 100%;
 	max-width: calc(100% - 2rem);
-	max-height: 100vh;
 	max-height: calc(100vh - 4rem);
 	margin: 0 auto;
 	box-sizing: border-box;
+	overflow: hidden;
 }
 
-/* Progressive enhancement: use flexbox if supported */
 @supports (display: flex) {
 	.layout-container {
 		display: flex;
@@ -1006,27 +848,16 @@ main {
 	border-right: 1px solid var(--surface2);
 	padding-right: 1.5rem;
 	box-sizing: border-box;
-}
-
-@supports (display: flex) {
-	.sidebar {
-		display: flex;
-		flex-direction: column;
-		gap: 1rem;
-		flex-shrink: 0;
-		flex-grow: 0;
-	}
+	position: relative;
 }
 
 .sidebar footer {
-	margin-top: 2rem;
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	right: 1.5rem;
 }
 
-@supports (display: flex) {
-	.sidebar footer {
-		margin-top: auto;
-	}
-}
 
 .sidebar-nav {
 	margin-top: 1rem;
@@ -1036,8 +867,7 @@ main {
 	.sidebar-nav {
 		display: flex;
 		flex-direction: column;
-		gap: 0.25rem;
-		margin-top: 0;
+		gap: 0.5rem;
 	}
 }
 
@@ -1045,8 +875,14 @@ main {
 	display: block;
 	color: var(--accent) !important;
 	text-decoration: underline !important;
-	padding: 0.25rem 0;
+	margin: 0.5rem 0;
 	font-size: 1rem;
+}
+
+@supports (display: flex) {
+	.nav-link {
+		margin: 0;
+	}
 }
 
 .nav-link svg {
@@ -1099,24 +935,19 @@ main {
 	display: table-cell;
 	vertical-align: top;
 	padding-left: 2rem;
-	overscroll-behavior: contain;
-	overflow-y: auto;
 	box-sizing: border-box;
 }
 
-@supports (display: flex) {
-	.main-content {
-		flex: 1;
-		display: flex;
-		flex-direction: column;
+.main-content {
+	overflow-y: auto;
+	overscroll-behavior: contain;
+	
 		min-width: 0;
 		padding-left: 0;
 		view-transition-name: page-content;
 		scrollbar-color: var(--overlay1) transparent;
 		scrollbar-width: thin;
-	}
 }
-
 @media (orientation: portrait) {
 	.layout-container {
 		display: block;

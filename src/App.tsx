@@ -4,7 +4,6 @@ import { Route, router, Router } from "dreamland/router";
 
 import "./style.css";
 import Homepage from "./pages/Homepage";
-import NotFoundView from "./pages/404View";
 import { projects } from "./Projects";
 import ProjectView from "./pages/ProjectView";
 import ProjectList from "./pages/ProjectList";
@@ -87,8 +86,8 @@ const App: Component<{}, {}> = function (cx) {
 		let rafId = 0;
 
 		const updateCssVars = () => {
-			root.style.setProperty("--bgmoveX", `${posX}px`);
-			root.style.setProperty("--bgmoveY", `${posY}px`);
+			root.style.setProperty("--bgmoveX", `${posX.toFixed(1)}px`);
+			root.style.setProperty("--bgmoveY", `${posY.toFixed(1)}px`);
 		};
 
 		const resetPosition = () => {
