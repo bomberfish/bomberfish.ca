@@ -140,7 +140,7 @@ export default defineConfig({
 			},
 			treeshake: true,
 		},
-		cssMinify: "lightningcss"
+		// cssMinify: "lightningcss"
 	},
 	css: {
 		postcss: {
@@ -156,18 +156,18 @@ export default defineConfig({
 				}),
 			]
 		},
-		lightningcss: {
-			targets:  {
-				chrome: 4,
-				firefox: 2,
-				ie: 6,
-				safari: 3,
-				edge: 12,
-				ios_saf: 3,
-				opera: 10,
-				android: 2,
-				samsung: 0
-			}
-		}
+		// lightningcss: {
+		// 	targets:  {
+		// 		chrome: 4,
+		// 		firefox: 2,
+		// 		ie: 6,
+		// 		safari: 3,
+		// 		edge: 12,
+		// 		ios_saf: 3,
+		// 		opera: 10,
+		// 		android: 2,
+		// 		samsung: 0
+		// 	}
+		// }
 	}
 });

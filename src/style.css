@@ -130,9 +130,8 @@ body {
 		"wdth" 98,
 		"wght" 330;
 	letter-spacing: 0.01em;
-	/* background: var(--base); */
+	color: white;
 	color: var(--text);
-	/* color-scheme: light dark; */
 	color-scheme: light;
 	line-height: 1.6;
 	display: flex;
