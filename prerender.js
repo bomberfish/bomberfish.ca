@@ -19,27 +19,7 @@ import { createElement } from "react";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const resolve = (p) => resolvePath(__dirname, p);
 
-const entry = await import(resolve("dist/server/main-server.js"));
-
-entry.default("/");
-const paths = entry.router.ssgables();
-
-let template = await readFile(resolve("dist/static/index.html"), "utf8");
-
-for (const [route, path] of paths) {
-	const rendered = await renderSsr(template, () => entry.default(route));
-	console.log(
-		`prerendered: ${route}\t${(new TextEncoder().encode(rendered).byteLength / 1024).toFixed(2)}kb`
-	);
-	let resolved = resolve("dist/static/" + path);
-	await mkdir(dirname(resolved), { recursive: true });
-	await writeFile(resolved, rendered);
-}
-
-// Process static.css with PostCSS in dist/static
-const cssPath = resolve("dist/static/static.css");
-const css = await readFile(cssPath, "utf8");
-const result = await postcss([
+const postcssProcessor = postcss([
 	postCssPresetEnv({
 		features: {},
 		browsers: [">= 0.00%"],
@@ -50,7 +30,70 @@ const result = await postcss([
 		grid: "autoplace"
 	}),
 	cssnano(),
-]).process(css, { from: cssPath, to: cssPath });
+]);
+
+function shouldProcessStyleTag(attrs = "") {
+	if (/data-no-postcss\b/i.test(attrs)) return false;
+	const typeMatch = attrs.match(/\stype\s*=\s*["']?([^"'\s>]+)["']?/i);
+	if (typeMatch && !/^(text\/css|application\/postcss)$/i.test(typeMatch[1])) return false;
+	return true;
+}
+
+async function processInlineStyles(html) {
+	const styleRegex = /<style([^>]*)>([\s\S]*?)<\/style>/gi;
+	let lastIndex = 0;
+	let match;
+	let output = "";
+	let touched = false;
+
+	while ((match = styleRegex.exec(html)) !== null) {
+		const [fullMatch, attrs = "", cssContent = ""] = match;
+		output += html.slice(lastIndex, match.index);
+		lastIndex = match.index + fullMatch.length;
+
+		if (!shouldProcessStyleTag(attrs)) {
+			output += fullMatch;
+			continue;
+		}
+
+		try {
+			const processed = await postcssProcessor.process(cssContent, { from: undefined });
+			output += `<style${attrs}>${processed.css}</style>`;
+			touched = true;
+		} catch (err) {
+			console.warn("failed to postcss inline <style>:", err?.message ?? err);
+			output += fullMatch;
+		}
+	}
+
+	if (lastIndex === 0) return html;
+	output += html.slice(lastIndex);
+
+	return output;
+}
+
+const entry = await import(resolve("dist/server/main-server.js"));
+
+entry.default("/");
+const paths = entry.router.ssgables();
+
+let template = await readFile(resolve("dist/static/index.html"), "utf8");
+
+for (const [route, path] of paths) {
+	const rendered = await renderSsr(template, () => entry.default(route));
+	const renderedWithPostcss = await processInlineStyles(rendered);
+	console.log(
+		`prerendered: ${route}\t${(new TextEncoder().encode(renderedWithPostcss).byteLength / 1024).toFixed(2)}kb`
+	);
+	let resolved = resolve("dist/static/" + path);
+	await mkdir(dirname(resolved), { recursive: true });
+	await writeFile(resolved, renderedWithPostcss);
+}
+
+// Process static.css with PostCSS in dist/static
+const cssPath = resolve("dist/static/static.css");
+const css = await readFile(cssPath, "utf8");
+const result = await postcssProcessor.process(css, { from: cssPath, to: cssPath });
 await writeFile(cssPath, result.css);
 console.log(`processed: static.css\t${(new TextEncoder().encode(result.css).byteLength / 1024).toFixed(2)}kb`);
 
