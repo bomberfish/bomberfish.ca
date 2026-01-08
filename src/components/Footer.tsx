@@ -146,25 +146,6 @@ Footer.style = css`
         overflow: hidden;
         text-overflow: ellipsis;
     }
-
-    @media (orientation: portrait) {
-        :scope {
-            font-size: 0.8rem;
-        }
-
-        subt {
-            flex-direction: row;
-            flex-wrap: wrap;
-        }
-
-        .divider {
-            display: inline;
-            color: var(--subtext1);
-            font-weight: 800;
-            font-size: 1em;
-            margin-inline: 0.15em;
-        }
-    }
 `
 
 export default Footer;
