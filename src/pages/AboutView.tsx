@@ -1,4 +1,4 @@
-import { Component, css } from "dreamland/core";
+import { Component, createState, css, Stateful } from "dreamland/core";
 import Sidebar from "../components/Sidebar";
 
 const archives = [
@@ -90,7 +90,30 @@ const colors = [
 	"accent"
 ];
 
-export const AboutView: Component<{}, {}> = function () {
+const brightColors = [
+	"supertext",
+	"text",
+	"subtext0",
+	"subtext1",
+	"overlay3",
+	"overlay2"
+]
+
+let aboutState: Stateful<{ customHue: string }> = createState({
+	customHue: "210",
+});
+
+export const AboutView: Component<{}, {}> = function (cx) {
+	
+	cx.init = () => {
+		if (import.meta.env.SSR) return;
+
+		aboutState.customHue = getComputedStyle(document.documentElement).getPropertyValue('--main-hue') || "210";
+		use(aboutState.customHue).listen((newHue) => {
+			console.log("updating hue to", newHue);
+			document.documentElement.style.setProperty('--main-hue', newHue);
+		})
+	};
 	return (
 		<main>
 			<title>about – bomberfish.ca</title>
@@ -151,6 +174,7 @@ export const AboutView: Component<{}, {}> = function () {
 							}
 						})}
 					</ul>
+					<input type="range" min="0" max="360" value={use(aboutState.customHue)} />
 					<div class="swatches">
 						{colors.map((color) => (
 							<ColorSwatch color={color} />
@@ -171,19 +195,45 @@ AboutView.style = css`
 	}
 `;
 
-const ColorSwatch: Component<{ color: string }, { value: string }> = function (cx) {
-	this.value = "";
+const ColorSwatch: Component<{ color: string }, {}> = function (cx) {
+	let state: Stateful<{ value: string }> = createState({
+		value: "",
+	});
+
 	cx.mount = () => {
-		this.value = document.documentElement.style.getPropertyValue(`--${this.color}-hsl`);
+		// updateValue();
+
+		use(aboutState.customHue).listen(() => {
+			updateValue();
+		});
 	}
+
+	const updateValue = () => {
+		if (import.meta.env.SSR) return;
+		console.log("updating color swatch for", this.color);
+		const computedStyle = getComputedStyle(document.documentElement);
+		let val = computedStyle.getPropertyValue(`--${this.color}`).trim();
+		console.log(val);
+		let hsl = val.replaceAll(", ", ",").match(/hsl\(([^,]+),([^,]+)%,([^)]+)%\)/);
+		if (hsl) {
+			let [, hue, sat, lum] = hsl;
+			console.log(hue, sat, lum);
+			if (hue.includes("calc")) {
+				hue = eval(hue.replace("calc", ""));
+			}
+			val = `hsl(${hue},${sat}%,${lum}%)`;
+		}
+		state.value = val;
+	}
+
 	return (
 		<div
 			class="swatch"
-			style={`color: ${this.color.endsWith("text") ? "black" : "white"};`}
+			style={`color: ${brightColors.includes(this.color) ? "black" : "white"};`}
 		>
 			<div class="preview" style={`background-color: var(--${this.color});`}></div>
+			<span class="value">{use(state.value)}</span>
 			<span class="label">{this.color}</span>
-			{/* <span class="value">hsl {use(this.value)}</span> */}
 		</div>
 	);
 };
@@ -194,8 +244,8 @@ ColorSwatch.style = css`
 		flex-direction: column;
 		align-items: flex-end;
 		justify-content: flex-end;
-		width: 100px;
-		height: 100px;
+		width: 8rem;
+		height: 8rem;
 		position: relative;
 		padding: 0.5rem;
 		box-sizing: border-box;

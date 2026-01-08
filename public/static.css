@@ -45,6 +45,12 @@ html {
 	--vt-direction: 1;
 }
 
+@property --main-hue {
+	syntax: "<number>";
+	initial-value: 210;
+	inherits: true;
+}
+
 /* html {
 	--main-hue: 20;
 
@@ -124,18 +130,18 @@ html {
 		--surface4-hsl: var(--main-hue), 14%, 33.5%;
 		--surface5-hsl: var(--main-hue), 14%, 37.5%;
 		--surface6-hsl: var(--main-hue), 14%, 47%;
-		--overlay0-hsl: 193, 18%, 57.5%;
-		--overlay1-hsl: 193, 20%, 65%;
-		--overlay2-hsl: 193, 22%, 75%;
-		--overlay3-hsl: 193, 24%, 85%;
-		--supertext-hsl: 178, 50%, 95%;
-		--text-hsl: 183, 24%, 88%;
-		--text1-hsl: 183, 22%, 74%;
-		--subtext0-hsl: 187, 18%, 70%;
-		--subtext1-hsl: 187, 16%, 60%;
-		--subtext2-hsl: 187, 14%, 50%;
-		--subtext3-hsl: 187, 12%, 45%;
-		--accent-hsl: 187, 40%, 70%;
+		--overlay0-hsl: calc(var(--main-hue) - 11), 18%, 57.5%;
+		--overlay1-hsl: calc(var(--main-hue) - 11), 20%, 65%;
+		--overlay2-hsl: calc(var(--main-hue) - 11), 22%, 75%;
+		--overlay3-hsl: calc(var(--main-hue) - 11), 24%, 85%;
+		--supertext-hsl: calc(var(--main-hue) - 26), 50%, 95%;
+		--text-hsl: calc(var(--main-hue) - 21), 24%, 88%;
+		--text1-hsl: calc(var(--main-hue) - 21), 22%, 74%;
+		--subtext0-hsl: calc(var(--main-hue) - 17), 18%, 70%;
+		--subtext1-hsl: calc(var(--main-hue) - 17), 16%, 60%;
+		--subtext2-hsl: calc(var(--main-hue) - 17), 14%, 50%;
+		--subtext3-hsl: calc(var(--main-hue) - 17), 12%, 45%;
+		--accent-hsl: calc(var(--main-hue) - 17), 40%, 70%;
 		--shadow-soft: hsla(var(--text-hsl), 0.14);
 		--shadow-medium: hsla(var(--text-hsl), 0.24);
 		--shadow-strong: hsla(var(--text-hsl), 0.34);
@@ -163,7 +169,8 @@ html {
 	image-rendering: pixelated;
 	transition: background-image 0.3s ease;
 
-	
+	accent-color: var(--accent);
+
 	background-image: 
 		linear-gradient(to right, hsl(var(--bg-light)) 1px, transparent 1px),
 		linear-gradient(to bottom, hsl(var(--bg-light)) 1px, transparent 1px);
@@ -768,12 +775,16 @@ a:hover,
 }
 
 a:after {
-	display: inline;
-	content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="hsl(207, 40%, 70%)"><path d="M144-144v-672h336v72H216v528h528v-264h72v336H144Zm243-192-51-51 357-357H576v-72h240v240h-72v-117L387-336Z"/></svg>');
-	margin-left: 0.1em;
-	vertical-align: middle;
+	content: "";
+	display: inline-block;
 	width: 1em;
 	height: 1em;
+	background-color: var(--accent);
+	mask-size: contain;
+	mask-repeat: no-repeat;
+	mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="black"><path d="M144-144v-672h336v72H216v528h528v-264h72v336H144Zm243-192-51-51 357-357H576v-72h240v240h-72v-117L387-336Z"/></svg>');
+	margin-left: 0.1em;
+	vertical-align: middle;
 	transform: translateY(-2px);
 }
 
