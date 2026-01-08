@@ -223,7 +223,7 @@ const ColorSwatch: Component<{ color: string }, {}> = function (cx) {
 			let [, hue, sat, lum] = hsl;
 			console.log(hue, sat, lum);
 			if (hue.includes("calc")) {
-				hue = eval(hue.replace("calc", ""));
+				hue = (0, eval)(hue.replace("calc", ""));
 			}
 			val = `hsl(${hue},${sat}%,${lum}%)`;
 		}
