@@ -162,11 +162,11 @@ export const ButtonList: Component<{}, {}> = function () {
 				title="dispherical"
 				href="https://dispherical.com"
 			/>
-			<WebButton
+			{/* <WebButton
 				src="https://egg.l5.ca/assets/buttons/enderman0125.gif"
 				title="enderman0125"
 				href="https://egg.l5.ca"
-			/>
+			/> */}
 			<WebButton
 				src="https://notfire.cc/design/images/buttons/notfire-cc-88x31-af.gif"
 				title="notfire"
