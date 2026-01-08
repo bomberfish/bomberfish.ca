@@ -48,16 +48,16 @@ html {
 
 @property --main-hue {
 	syntax: "<number>";
-	initial-value: 210;
+	initial-value: 205;
 	inherits: true;
 }
 
 .pfp {
-	filter: hue-rotate(calc(calc(var(--main-hue) - 204) * 1deg));
+	filter: hue-rotate(calc(calc(var(--main-hue) - 205) * 1deg));
 }
 
 html {
-	--main-hue: 204;
+	--main-hue: 205;
 	--grid-lines: hsla(var(--main-hue), 12%, 16%);
 
 	--mantle-hsl: var(--main-hue), 20%, 2.5%;
@@ -71,18 +71,18 @@ html {
 	--surface4-hsl: var(--main-hue), 14%, 33.5%;
 	--surface5-hsl: var(--main-hue), 14%, 37.5%;
 	--surface6-hsl: var(--main-hue), 14%, 47%;
-	--overlay0-hsl: calc(var(--main-hue) - 11), 18%, 57.5%;
-	--overlay1-hsl: calc(var(--main-hue) - 11), 20%, 65%;
-	--overlay2-hsl: calc(var(--main-hue) - 11), 22%, 75%;
-	--overlay3-hsl: calc(var(--main-hue) - 11), 24%, 85%;
-	--supertext-hsl: calc(var(--main-hue) - 26), 50%, 95%;
-	--text-hsl: calc(var(--main-hue) - 21), 24%, 90%;
-	--text1-hsl: calc(var(--main-hue) - 21), 22%, 74%;
-	--subtext0-hsl: calc(var(--main-hue) - 17), 18%, 70%;
-	--subtext1-hsl: calc(var(--main-hue) - 17), 16%, 60%;
-	--subtext2-hsl: calc(var(--main-hue) - 17), 14%, 50%;
-	--subtext3-hsl: calc(var(--main-hue) - 17), 12%, 45%;
-	--accent-hsl: calc(var(--main-hue) - 17), 40%, 70%;
+	--overlay0-hsl: calc(var(--main-hue) - 10), 18%, 57.5%;
+	--overlay1-hsl: calc(var(--main-hue) - 10), 20%, 65%;
+	--overlay2-hsl: calc(var(--main-hue) - 10), 22%, 75%;
+	--overlay3-hsl: calc(var(--main-hue) - 10), 24%, 85%;
+	--supertext-hsl: calc(var(--main-hue) - 25), 50%, 95%;
+	--text-hsl: calc(var(--main-hue) - 20), 24%, 90%;
+	--text1-hsl: calc(var(--main-hue) - 22.5), 22%, 74%;
+	--subtext0-hsl: calc(var(--main-hue) - 17.5), 18%, 70%;
+	--subtext1-hsl: calc(var(--main-hue) - 17.5), 16%, 60%;
+	--subtext2-hsl: calc(var(--main-hue) - 17.5), 14%, 50%;
+	--subtext3-hsl: calc(var(--main-hue) - 17.5), 12%, 45%;
+	--accent-hsl: calc(var(--main-hue) - 20), 40%, 70%;
 	--shadow-soft: hsla(var(--text-hsl), 0.14);
 	--shadow-medium: hsla(var(--text-hsl), 0.24);
 	--shadow-strong: hsla(var(--text-hsl), 0.34);
