@@ -255,13 +255,13 @@ const ColorSwatch: Component<{ color: string }, {}> = function (cx) {
 };
 
 ColorSwatch.style = css`
-	.swatch {
+	:scope {
 		display: inline-flex;
 		flex-direction: column;
 		align-items: flex-end;
 		justify-content: flex-end;
-		width: 8rem;
-		height: 8rem;
+		width: 9rem;
+		height: 9rem;
 		position: relative;
 		padding: 0.5rem;
 		box-sizing: border-box;
