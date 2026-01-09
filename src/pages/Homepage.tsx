@@ -139,15 +139,30 @@ Homepage.style = css`
 export const ContactLinks: Component<{}, {}> = function () {
 	return (
 		<span class="contact-links">
-			<a href="mailto:me@bomberfish.ca" class="contact-item">email</a>
+			<span class="tooltip-wrapper">
+				<a href="mailto:me@bomberfish.ca" class="contact-item">email</a>
+				<span class="tooltip">me@bomberfish.ca</span>
+			</span>
 			<span class="sep">/</span>
-			<a href="https://github.com/BomberFish" target="_blank" rel="me noopener noreferrer" class="contact-item">github</a>
+			<span class="tooltip-wrapper">
+				<a href="https://github.com/bomberfish" target="_blank" rel="me noopener noreferrer" class="contact-item">github</a>
+				<span class="tooltip">bomberfish</span>
+			</span>
 			<span class="sep">/</span>
-			<a href="https://wetdry.world/@fish" target="_blank" rel="me noopener noreferrer" class="contact-item">fediverse</a>
+			<span class="tooltip-wrapper">
+				<a href="https://wetdry.world/@fish" target="_blank" rel="me noopener noreferrer" class="contact-item">fediverse</a>
+				<span class="tooltip">@fish@wetdry.world</span>
+			</span>
 			<span class="sep">/</span>
-			<a href="https://x.com/bomberfish77" target="_blank" rel="me noopener noreferrer" class="contact-item">X</a>
+			<span class="tooltip-wrapper">
+				<a href="https://x.com/bomberfish77" target="_blank" rel="me noopener noreferrer" class="contact-item">X</a>
+				<span class="tooltip">@bomberfish77</span>
+			</span>
 			<span class="sep">/</span>
-			<a href="https://bsky.app/profile/bomberfish.ca" target="_blank" rel="noopener noreferrer" class="contact-item">bluesky</a>
+			<span class="tooltip-wrapper">
+				<a href="https://bsky.app/profile/bomberfish.ca" target="_blank" rel="noopener noreferrer" class="contact-item">bluesky</a>
+				<span class="tooltip">@bomberfish.ca</span>
+			</span>
 		</span>
 	);
 };
