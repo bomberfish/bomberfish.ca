@@ -635,6 +635,36 @@ ul.compact a {
 	transform: translateX(-50%) translateY(0);
 }
 
+.tooltip.top {
+	top: auto;
+	bottom: calc(100% + 0.5rem);
+	transform: translateX(-50%) translateY(0.25rem);
+}
+
+.tooltip.top:after {
+	bottom: auto;
+	top: 100%;
+	border-bottom-color: transparent;
+	border-top-color: var(--overlay0);
+}
+
+.tooltip.top:before {
+	bottom: auto;
+	top: calc(100% - 1px);
+	border-bottom-color: transparent;
+	border-top-color: var(--surface0);
+}
+
+.tooltip.top:hover,
+.tooltip-wrapper:hover .tooltip.top {
+	transform: translateX(-50%) translateY(0);
+}
+
+.tooltip-wrapper:has(.tooltip.top):before {
+	top: auto;
+	bottom: 100%;
+}
+
 a,
 a:visited {
 	color: var(--supertext);

@@ -109,7 +109,7 @@ const Footer: Component<{}, {elapsed: string, message: string, resetSplashInterv
                         <TransitionLink href="/siteinfo.html" class="router-link">
                             {"bomberfish.ca v" + __APP_VERSION__ + " (" + __COMMIT_HASH__ + ")"}
                         </TransitionLink>
-                    <span class="tooltip">{use(this.elapsed)}</span>
+                    <span class="tooltip top">{use(this.elapsed)}</span>
                 </span>
                 <span class="divider">{" • "}</span>
                 <span on:click={()=>{
