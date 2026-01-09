@@ -130,7 +130,11 @@ export default defineConfig({
 	define: {
 		__APP_VERSION__: JSON.stringify(process.env.npm_package_version),
 		__BUILD_DATE__: JSON.stringify(new Date().toISOString()),
-		__COMMIT_HASH__: JSON.stringify(execSync('git rev-parse --short HEAD').toString().trim()),
+		__COMMIT_HASH__: JSON.stringify(
+			process.env.NODE_ENV === "development"
+				? "DEV"
+				: execSync("git rev-parse --short HEAD").toString().trim()
+		),
 	},
 	build: {
 		target: "chrome79",
