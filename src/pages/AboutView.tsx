@@ -72,17 +72,24 @@ const archives = [
 ];
 
 const colors = [
+	"core",
+	"mantle",
+	"crust",
 	"base",
 	"surface0",
 	"surface1",
 	"surface2",
 	"surface3",
+	"surface4",
+	"surface5",
+	"surface6",
 	"overlay0",
 	"overlay1",
 	"overlay2",
 	"overlay3",
 	"supertext",
 	"text",
+	"text1",
 	"subtext0",
 	"subtext1",
 	"subtext2",
@@ -93,6 +100,7 @@ const colors = [
 const brightColors = [
 	"supertext",
 	"text",
+	"text1",
 	"subtext0",
 	"subtext1",
 	"overlay3",
@@ -210,6 +218,10 @@ const ColorSwatch: Component<{ color: string }, {}> = function (cx) {
 		use(aboutState.customHue).listen(() => {
 			updateValue();
 		});
+
+		window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+			updateValue();
+		});
 	}
 
 	const updateValue = () => {
@@ -233,7 +245,7 @@ const ColorSwatch: Component<{ color: string }, {}> = function (cx) {
 	return (
 		<div
 			class="swatch"
-			style={`color: ${brightColors.includes(this.color) ? "black" : "white"};`}
+			style={`color: ${brightColors.includes(this.color) ? "var(--mantle)" : "var(--text)"};`}
 		>
 			<div class="preview" style={`background-color: var(--${this.color});`}></div>
 			<span class="value">{use(state.value)}</span>
@@ -243,13 +255,13 @@ const ColorSwatch: Component<{ color: string }, {}> = function (cx) {
 };
 
 ColorSwatch.style = css`
-	.swatch {
+	:scope {
 		display: inline-flex;
 		flex-direction: column;
 		align-items: flex-end;
 		justify-content: flex-end;
-		width: 8rem;
-		height: 8rem;
+		width: 9rem;
+		height: 9rem;
 		position: relative;
 		padding: 0.5rem;
 		box-sizing: border-box;
