@@ -68,27 +68,27 @@ html {
 	--main-hue: 200;
 	--grid-lines: hsla(var(--main-hue), 12%, 16%);
 
-	--core-hsl: var(--main-hue), 100%, 98%;
-	--mantle-hsl: var(--main-hue), 20%, 96%;
-	--crust-hsl: var(--main-hue), 15%, 91%;
-	--base-hsl: var(--main-hue), 10%, 88%;
-	--bg-light: var(--main-hue), 7.5%, 86%;
+	--core-hsl: var(--main-hue), 100%, 99%;
+	--mantle-hsl: var(--main-hue), 65%, 98%;
+	--crust-hsl: var(--main-hue), 50%, 95%;
+	--base-hsl: var(--main-hue), 35%, 92%;
+	--bg-light: var(--main-hue), 20%, 90%;
 
-	--surface0-hsl: var(--main-hue), 15%, 87%;
-	--surface1-hsl: calc(var(--main-hue) - 2.5), 12.5%, 82%;
-	--surface2-hsl: calc(var(--main-hue) - 2.5), 15%, 80%;
-	--surface3-hsl: calc(var(--main-hue) - 5), 15%, 77%;
-	--surface4-hsl: calc(var(--main-hue) - 5), 15%, 73%;
-	--surface5-hsl: calc(var(--main-hue) - 7.5), 17.5%, 70%;
-	--surface6-hsl: calc(var(--main-hue) - 7.5), 20%, 67%;
+	--surface0-hsl: var(--main-hue), 35%, 87%;
+	--surface1-hsl: calc(var(--main-hue) - 2.5), 40%, 84%;
+	--surface2-hsl: calc(var(--main-hue) - 2.5), 25%, 81%;
+	--surface3-hsl: calc(var(--main-hue) - 5), 25%, 78%;
+	--surface4-hsl: calc(var(--main-hue) - 5), 20%, 75%;
+	--surface5-hsl: calc(var(--main-hue) - 7.5), 25%, 73%;
+	--surface6-hsl: calc(var(--main-hue) - 7.5), 17.5%, 70%;
 
-	--overlay0-hsl: calc(var(--main-hue) - 7.5), 12.5%, 60%;
-	--overlay1-hsl: calc(var(--main-hue) - 7.5), 15%, 50%;
-	--overlay2-hsl: calc(var(--main-hue) - 7.5), 17.5%, 40%;
-	--overlay3-hsl: calc(var(--main-hue) - 7.5), 20%, 35%;
+	--overlay0-hsl: calc(var(--main-hue) - 7.5), 20%, 60%;
+	--overlay1-hsl: calc(var(--main-hue) - 7.5), 25%, 50%;
+	--overlay2-hsl: calc(var(--main-hue) - 7.5), 27.5%, 40%;
+	--overlay3-hsl: calc(var(--main-hue) - 7.5), 30%, 35%;
 
-	--supertext-hsl: calc(var(--main-hue) - 25), 50%, 3%;
-	--text-hsl: calc(var(--main-hue) - 17.5), 40%, 8%;
+	--supertext-hsl: calc(var(--main-hue) - 25), 100%, 3%;
+	--text-hsl: calc(var(--main-hue) - 17.5), 60%, 8%;
 	--text1-hsl: calc(var(--main-hue) - 20), 14%, 15%;
 	--subtext0-hsl: calc(var(--main-hue) - 15), 10%, 20%;
 	--subtext1-hsl: calc(var(--main-hue) - 15), 12.5%, 35%;
