@@ -10,23 +10,26 @@ const ProjectView: Component<{ project: ProjectCardDetails }, {}> =
 				<div class="layout-container">
 					<Sidebar active="projects" />
 					<div class="main-content">
-						<section id="image">
-							<img src={this.project.img} />
-						</section>
-						<section id="details">
-							<h1 class="name">{this.project.title}</h1>
-							<p class="description">{this.project.largeDesc}</p>
-							<ul class="compact">
-								{this.project.links?.map((link) => (
-									<li>
-										<a href={link.url} class="link" target="_blank" rel="noopener">
-											<span class="material-symbols">{link.icon}</span>
-											{link.name}
-										</a>
-									</li>
-								))}
-							</ul>
-						</section>
+						<div class="project-view-container">
+							<section id="image">
+								<a href={this.project.img}><img title="Click to open full-size" alt={this.project.title} src={this.project.img} /><img hidden class="blur" src={this.project.img} /></a>
+								
+							</section>
+							<section id="details">
+								<h1 class="name">{this.project.title}</h1>
+								<p class="description">{this.project.largeDesc}</p>
+								<ul class="compact">
+									{this.project.links?.map((link) => (
+										<li>
+											<a href={link.url} class="link" target="_blank" rel="noopener">
+												<span class="material-symbols">{link.icon}</span>
+												{link.name}
+											</a>
+										</li>
+									))}
+								</ul>
+							</section>
+						</div>
 					</div>
 				</div>
 			</main>
@@ -34,6 +37,18 @@ const ProjectView: Component<{ project: ProjectCardDetails }, {}> =
 	};
 
 ProjectView.style = css`
+    .main-content {
+		min-height: min(60vh, 70rem);
+		display: flex;
+		align-content: center;
+		align-items: center;
+		justify-content: center;
+	}
+
+	/* .project-view-container {
+		max-height: 60%;
+	} */
+
 	#image {
 		display: flex;
 		align-content: center;
@@ -42,24 +57,26 @@ ProjectView.style = css`
 		margin: 0;
 		padding: 0;
 		position: relative;
-		overflow: hidden;
-		max-height: 40vh;
+		overflow: visible;
+		width: 100%;
 	}
 
-	#image img {
+	#image > a > img {
 		width: 100%;
 		height: auto;
-		object-fit: contain;
-		mask-image: linear-gradient(
-			to bottom,
-			rgba(0, 0, 0, 1) 70%,
-			rgba(0, 0, 0, 0) 98%
-		);
-		-webkit-mask-image: linear-gradient(
-			to bottom,
-			rgba(0, 0, 0, 1) 70%,
-			rgba(0, 0, 0, 0) 98%
-		);
+	}
+
+	#image .blur {
+		display: block;
+		position: absolute;
+		top: .5%;
+		left: 50%;
+		transform: translateX(-50%);
+		width: auto;
+		height: 100%;
+		filter: blur(12px) contrast(1.5) brightness(0.8) opacity(0.225);
+		overflow: visible;
+		z-index: -1;
 	}
 
 	#details {

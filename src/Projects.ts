@@ -221,7 +221,7 @@ export const projects = [
 		"/proj-thumbnails/qs.jpg",
 		"QuickSign",
 		"iOS Sideloading App",
-		"In late 2024 I joined the development of QuickSign, an app to sign sideloaded iOS apps. Development fizzled out in mid 2025 due to various factors, including Apple cracking down on sideloading and general disinterest.",
+		"In late 2024 I joined the development team of QuickSign, an app to sign sideloaded iOS apps. Development was paused for the second half of 2025 due to various App Store policy changes, but resumed in early 2026 due to a renewed need for sideloading solutions.",
 		2024,
 		2025,
 		[
@@ -234,7 +234,9 @@ export const projects = [
 				url: "https://twitter.com/QuickSigniOS",
 				icon: "alternate_email",
 			},
-		]
+		],
+		true,
+		5
 	),
 	new ProjectCardDetails(
 		"/proj-thumbnails/celeste.jpeg",
