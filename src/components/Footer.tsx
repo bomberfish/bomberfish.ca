@@ -68,6 +68,10 @@ const Footer: Component<{}, {elapsed: string, message: string, resetSplashInterv
     };
 
     cx.mount = () => {
+        if (import.meta.env.SSR) {
+			return;
+		}
+        
         this.message = messages[Math.floor(Math.random() * messages.length)];
         const buildDate = new Date(__BUILD_DATE__);
         const updateElapsed = () => {

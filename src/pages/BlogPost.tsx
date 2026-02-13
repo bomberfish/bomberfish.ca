@@ -93,6 +93,11 @@ const BlogPost: Component<BlogPostProps, {}> = function () {
 };
 
 BlogPost.style = css`
+	.main-content {
+		width: 1000px;
+		width: clamp(640px, 48vw - 1rem, 1000px);
+	}
+
 	subt.bottom {
 		display: flex; align-items: center; gap: 0.5rem; margin-block: 0.75rem;
 	}

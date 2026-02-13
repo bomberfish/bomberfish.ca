@@ -771,7 +771,7 @@ article.blog-content blockquote {
 }
 
 article.blog-content {
-	max-width: 960px;
+	max-width: 1080px;
 	margin: 0 auto;
 	padding: 2rem 1rem;
 	line-height: 1.9;
@@ -894,7 +894,8 @@ main {
 	border: 1px solid var(--surface2);
 	padding: 1.5rem;
 	padding-right: 0;
-	width: 900px;
+	width: auto;
+	width: fit-content;
 	max-width: 100%;
 	max-width: calc(100% - 2rem);
 	max-height: calc(100vh - 4rem);
@@ -906,7 +907,6 @@ main {
 @supports (display: flex) {
 	.layout-container {
 		display: flex;
-		width: clamp(800px, 40vw + 200px, 1100px);
 	}
 }
 
@@ -1006,6 +1006,9 @@ main {
 	vertical-align: top;
 	padding-inline: 2rem;
 	box-sizing: border-box;
+	width: 884px;
+	width: clamp(584px, 40vw - 1rem, 884px);
+	max-width: 100%;
 }
 
 .main-content {
@@ -1013,10 +1016,10 @@ main {
 	overflow-y: auto;
 	overscroll-behavior: contain;
 	
-		min-width: 0;
-		view-transition-name: page-content;
-		scrollbar-color: var(--overlay1) transparent;
-		scrollbar-width: thin;
+	min-width: 0;
+	view-transition-name: page-content;
+	scrollbar-color: var(--overlay1) transparent;
+	scrollbar-width: thin;
 }
 @media (orientation: portrait) {
 	.layout-container {
@@ -1108,6 +1111,7 @@ main {
 
 	.main-content {
 		display: block;
+		width: auto;
 		padding-left: 0;
 		overflow-y: auto;
 		max-height: none!important;

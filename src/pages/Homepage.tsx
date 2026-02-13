@@ -91,6 +91,8 @@ Homepage.style = css`
 	}
 
 	.main-content {
+		width: 820px;
+		width: clamp(520px, 36vw - 1rem, 820px);
 		max-height: min(60vh, 40rem);
 	}
 

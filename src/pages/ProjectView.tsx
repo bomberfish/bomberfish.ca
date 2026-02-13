@@ -38,6 +38,8 @@ const ProjectView: Component<{ project: ProjectCardDetails }, {}> =
 
 ProjectView.style = css`
     .main-content {
+		width: 884px;
+		width: clamp(584px, 40vw - 1rem, 884px);
 		min-height: min(60vh, 70rem);
 		display: flex;
 		align-content: center;

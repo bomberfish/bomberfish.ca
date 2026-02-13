@@ -125,6 +125,8 @@ BlogList.style = css`
     }
 
     .main-content {
+        width: 884px;
+        width: clamp(584px, 40vw - 1rem, 884px);
 		max-height: min(80vh, 70rem);
 	}
 `;
