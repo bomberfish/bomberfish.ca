@@ -138,11 +138,6 @@ export const ButtonList: Component<{}, {}> = function () {
 				href="https://w.on-t.work"
 			/>
 			<WebButton
-				src="https://thinliquid.dev/buttons/btn.gif"
-				title="ThinLiquid"
-				href="https://thinliquid.dev"
-			/>
-			<WebButton
 				src="https://gideon.sh/88x31.gif"
 				title="gideon.sh"
 				href="https://gideon.sh"
