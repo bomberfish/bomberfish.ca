@@ -57,8 +57,8 @@ const BlogList: Component<{}, {}> = function () {
                 <Sidebar active="blog" />
                 <div class="main-content">
                     <h1>blog</h1>
-                    <p style="font-size: 1.05em;">rants about whatever's on my mind* and writeups on whatever i've been up to.</p>
-                    <subt style="font-size: 0.95rem; color: var(--text1)">*obligatory disclaimer: all opinions are my own, and do not reflect those of my employer.</subt>
+                    <p style="font-size: 1.05em;">various assorted thoughts and ramblings.</p>
+                    <subt style="font-size: 0.95rem; color: var(--text1)">*obligatory disclaimer: all opinions are my own, and do not reflect those of any employer.</subt>
                     <p style="margin-bottom: 0; margin-top: 0.5rem;">
                         <subt style="display: flex; align-items: center; gap: 0.5rem; margin-top: 0.75rem; margin-bottom: 0;">
                         <span class="material-symbols">rss_feed</span>{" "}

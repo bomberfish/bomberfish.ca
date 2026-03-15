@@ -194,7 +194,7 @@ const blogModules = await import(resolve("dist/server/main-server.js")).then(asy
 // Create full content feed
 const feed = new Feed({
     title: "bomberfish's blog",
-	description: "articles about various projects i'm working on, along with an occasional rant or two.",
+	description: "various assorted thoughts and ramblings.",
 	id: blogURL,
 	link: blogURL,
 	language: 'en',
@@ -209,7 +209,7 @@ const feed = new Feed({
 // Create lite feed (no full content, for slow connections)
 const feedLite = new Feed({
     title: "bomberfish's blog (lite)",
-	description: "articles about various projects i'm working on, along with an occasional rant or two. (lite version - titles and descriptions only)",
+	description: "various assorted thoughts and ramblings. (lite version - titles and descriptions only)",
 	id: blogURL,
 	link: blogURL,
 	language: 'en',
