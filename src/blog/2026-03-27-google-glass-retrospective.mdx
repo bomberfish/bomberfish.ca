@@ -1,18 +1,25 @@
+import { PhotoSphere } from "../components/PhotoSphere"
 export const title = "Google Glass was ahead of it's time, actually"
 export const description = "Some thoughts on a device that came out too soon."
 export const tags = ["Review", "Retrospective", "Opinion"]
 export const image = "/blog-images/glass-pano.png"
 
-
-![Panoramic photo of the entire Google Glass team](/blog-images/glass-pano.png)
-> Google Glass team. Extracted from the [easter egg](https://www.youtube.com/watch?v=D-nJMt3vAdM).
+{/* ![Panoramic photo of the entire Google Glass team](/blog-images/glass-pano.png) */}
+<PhotoSphere src="/blog-images/glass_team_sphere.jpg" fallback="/blog-images/glass-pano.png" />
+<cap>
+    <subt><span class="material-symbols">info</span>Image credit: Google.</subt><br />
+    <subt>Extracted from the Glass OS [easter egg.](https://www.youtube.com/watch?v=ndFySj-wrGw)</subt>
+</cap>
 
 I recently bought a sealed pair of Google Glass from eBay. They've been slowly entering the used market as people start clearing out old drawers, and they can be often found around 100 dollars (a far cry from their MSRP of $1500). I managed to snag my pair from a seller who seemed to be selling a couple hundred units that were supposed to be corporate gifts.
 
-We'll probably never know who was supposed to get these since the seller tried to redact the barcode and other info on the shrink wrap, but after some shipping delays it arrived in one piece. My unit was the XE-C, which meant it had 2GB of ram instead of the 1GB on earlier models.
+We'll probably never know who was supposed to get these since the seller tried to redact the barcode and other info on the shrink wrap, but after some shipping delays it arrived in one piece. My unit was the XE-C, which meant it had 2GB of ram instead of the 1GB on earlier models. All Explorer Edition models also shipped with 16GB of onboard storage, and were powered by Texas Instruments' OMAP 4430, a dual-core ARM processor clocked at 1.2 GHz.
 
 ![Google Glass, Exploded view](/blog-images/glass-teardown-exploded-top.jpg)
-> Image by Scott Torborg and Star Simpson, licensed under CC BY-NC-SA 3.0. [Source](http://www.catwig.com/google-glass-teardown/)
+<cap>
+    <subt><span class="material-symbols">info</span>Image credit: Scott Torborg and Star Simpson.</subt><br />
+    <subt>Licenced under CC BY-NC-SA 3.0 [Source](http://www.catwig.com/google-glass-teardown/)</subt>
+</cap>
 
 It's really impressive how in 2012 they were able to fit that much compute into a segment about as big as my index finger. Admittedly that's not a great point of reference, as I have rather small hands.
 

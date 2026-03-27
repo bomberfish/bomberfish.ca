@@ -241,7 +241,6 @@ main {
     align-items: center;
     justify-content: space-between;
 
-	/* contain: paint; */
 	transform-style: preserve-3d;
 	will-change: transform, opacity, filter;
 
@@ -822,6 +821,10 @@ article.blog-content .image-item  img {
 cap {
 	display: block;
 }
+/* 
+cap subt {
+	display: block;
+} */
 
 cap subt .material-symbols {
 	vertical-align: middle;
@@ -1111,7 +1114,7 @@ main {
 
 	.main-content {
 		display: block;
-		width: auto;
+		width: auto!important;
 		padding-left: 0;
 		padding-right: 0;
 		overflow-y: auto;

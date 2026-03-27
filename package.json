@@ -38,6 +38,8 @@
 		"vite-plugin-html-minifier": "^1.0.5"
 	},
 	"dependencies": {
+		"@photo-sphere-viewer/autorotate-plugin": "^5.14.1",
+		"@photo-sphere-viewer/core": "^5.14.1",
 		"dreamland": "^0.1.2",
 		"humanize-duration": "^3.33.1"
 	}

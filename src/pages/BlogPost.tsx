@@ -95,7 +95,7 @@ const BlogPost: Component<BlogPostProps, {}> = function () {
 BlogPost.style = css`
 	.main-content {
 		width: 1000px;
-		width: clamp(640px, 48vw - 1rem, 1000px);
+		width: clamp(640px, 48vw - 1rem, 1000px)!important;
 	}
 
 	subt.bottom {
