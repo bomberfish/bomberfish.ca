@@ -1,0 +1,39 @@
+export const title = "Google Glass was ahead of it's time, actually"
+export const description = "Some thoughts on a device that came out too soon."
+export const tags = ["Review", "Retrospective", "Opinion"]
+export const image = "/blog-images/glass-pano.png"
+
+
+![Panoramic photo of the entire Google Glass team](/blog-images/glass-pano.png)
+> Google Glass team. Extracted from the [easter egg](https://www.youtube.com/watch?v=D-nJMt3vAdM).
+
+I recently bought a sealed pair of Google Glass from eBay. They've been slowly entering the used market as people start clearing out old drawers, and they can be often found around 100 dollars (a far cry from their MSRP of $1500). I managed to snag my pair from a seller who seemed to be selling a couple hundred units that were supposed to be corporate gifts.
+
+We'll probably never know who was supposed to get these since the seller tried to redact the barcode and other info on the shrink wrap, but after some shipping delays it arrived in one piece. My unit was the XE-C, which meant it had 2GB of ram instead of the 1GB on earlier models.
+
+![Google Glass, Exploded view](/blog-images/glass-teardown-exploded-top.jpg)
+> Image by Scott Torborg and Star Simpson, licensed under CC BY-NC-SA 3.0. [Source](http://www.catwig.com/google-glass-teardown/)
+
+It's really impressive how in 2012 they were able to fit that much compute into a segment about as big as my index finger. Admittedly that's not a great point of reference, as I have rather small hands.
+
+Booting it for the first time, I was immediately met with a setup screen that I couldn't progress through due to the Glass-specific authentication servers being shut down years ago. Fortunately, before the servers were shut down, Google released [one final software update](https://support.google.com/glass/answer/9649198) which removed the reliance on those servers, which I installed via `fastboot`. I never thought I'd say this, but more companies should take notes from Google on how to properly discontinue a product.
+
+Surprisingly, there was still a small albeit passionate group of Glass enthusiasts who were still doing new things with the device. I was able to find some useful apps such as a YouTube client, an OpenStreetMap-based maps app, a replacement for the now-dead mobile companion app, and a game or two.
+
+With a bit of help from the community, I was also able to bootstrap creating my own Glassware (yes, that's the actual name, truly amazing stuff) using the latest version of Android Studio. At the time of writing, I've been creating [a Mastodon client](http://glasstodon.bomberfish.ca/?ref=blog). With that endeavour I've actually been trying out a new approach to using LLMs in programming, and I might make that a separate blogpost even, so stay tuned.
+
+Anyway, after Glass Explorer Edition flopped and got discontinued in 2015, Google ended up bringing the team (shown at the top of this post) back together to create a couple follow-ups meant for enterprise customers.
+
+The first Enterprise Edition device, released in 2017, is widely regarded as what Explorer Edition "should have been", with various spec bumps across the board. What's really interesting about EE1 is that it used an Intel Atom CPU, which being an x86 design is an odd choice for the form factor.
+
+They followed it up with the Explorer Edition 2 in 2019, which brought more substantial upgrades to things like the camera and microphones, and a switch back to a more reasonable Qualcomm Snapdragon XR1 SoC. Support for both EE1 and EE2 were discontinued in 2023, though, which marked the end of the line for Glass.
+
+The Enterprise Edition models usually fetch much higher prices second hand, which is why I got an Explorer Edition instead. Maybe sometime I might get an EE2 if I can find use cases with my XE.
+
+It's a real shame how the platform failed, but it did make sense. The form factor was odd, made you [look like a dweeb](https://www.youtube.com/watch?v=2Tvy_Pbe5NA&t=121s), and worst of all, it couldn't even tell you someone's [power level!](https://www.youtube.com/watch?v=SiMHTK15Pik&t=8)
+
+That being said, recent developments in AR display tech, namely waveguide displays, might bring back the notion of AR wearables. You can already buy the [Meta Ray-Ban Display](https://www.meta.com/ca/ai-glasses/meta-ray-ban-display/), and [signs](https://www.androidauthority.com/glasses-companion-app-3631808/) point to more similar devices might be coming out this year. 
+
+Unfortunately for the hopes of widespread adoption, most companies are branding them as "AI Glasses" (which is gonna leave a bad taste in everyone's mouth), and there's already been [various](https://www.wired.com/story/the-rise-of-the-ray-ban-meta-creep/) [scandals](https://9to5mac.com/2026/03/03/meta-ray-ban-smart-glasses-send-sensitive-videos-to-human-data-annotators/) about the cameras in these devices.
+
+Maybe I'll revisit this when something happens.
