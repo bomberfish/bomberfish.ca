@@ -129,7 +129,7 @@ Homepage.style = css`
 		.pfp {
 			float: none;
 			display: block;
-			margin: 0 auto 1rem auto;
+			margin: 1rem auto;
 		}
 
 		.about-section {

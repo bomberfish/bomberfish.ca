@@ -1113,8 +1113,10 @@ main {
 		display: block;
 		width: auto;
 		padding-left: 0;
+		padding-right: 0;
 		overflow-y: auto;
 		max-height: none!important;
+		max-width: calc(100vw - 2rem)!important;
 	}
 
 	@supports (display: flex) {
