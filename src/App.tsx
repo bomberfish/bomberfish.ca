@@ -10,6 +10,7 @@ import ProjectList from "./pages/ProjectList";
 import { AboutView } from "./pages/AboutView";
 import BlogList from "./pages/BlogList";
 import BlogPost from "./pages/BlogPost";
+import PhotoSphereTool from "./pages/PhotoSphereTool";
 import Oneko from "./Oneko";
 
 let page: Stateful<{
@@ -23,7 +24,6 @@ declare global {
 }
 
 const App: Component<{}, {}> = function (cx) {
-	
 	const blogModules = import.meta.glob("./blog/*.mdx", { eager: true });
 	const blogPosts = Object.keys(blogModules)
 		.map((path) => {
@@ -55,6 +55,7 @@ const App: Component<{}, {}> = function (cx) {
 					/>
 				)),
 				<Route path="siteinfo" show={() => <AboutView />} />,
+				<Route path="tools/photosphere" show={() => <PhotoSphereTool />} />,
 				// <Route path="*" show={() => <NotFoundView />} />,
 			]}
 		/>

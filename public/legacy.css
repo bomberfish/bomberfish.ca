@@ -8,20 +8,21 @@
 @import url("/typography.css");
 
 body {
-	background: #000000;
-	color: #fbf9fb;
+	background: #101518;
+	color: #dfebec;
 	font-family: var(--font-body), sans-serif;
+	accent-color: #94ccd1;
 }
 
 h1,
 h2,
 h3,
 h4 {
-	font-family: var(--font-serif), serif;
+	font-family: var(--font-display), serif;
 }
 
 nav {
-	background: #110f11;
+	background: #242d33;
 	position: fixed;
 	top: 0;
 	left: 0;
@@ -96,30 +97,31 @@ img.circle {
 
 a,
 a:visited:hover {
-	color: #eba6ff;
+	color: #85b8bc;
 }
 
 a:visited {
-	color: #cba6f7;
+	color: #94ccd1;
 }
 
 @media (prefers-color-scheme: light) {
 	body {
-		background: #eff1f5;
-		color: #4c4f69;
+		background: #e3edf2;
+		color: #082021;
+		accent-color: #339199;
 	}
 
 	a,
 	a:visited:hover {
-		color: #8839ef;
+		color: #4faab2;
 	}
 
 	a:visited {
-		color: #a16be6;
+		color: #339199;
 	}
 
 	nav {
-		background: #e6e9ef;
+		background: #d2e2e9;
 	}
 }
 
@@ -131,5 +133,5 @@ h0 {
 }
 
 * {
-	outline-color: #eba6ff;
+	outline-color: #85b8bc;
 }

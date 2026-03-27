@@ -1,79 +1,90 @@
-import { Viewer } from "@photo-sphere-viewer/core";
-import { AutorotatePlugin } from "@photo-sphere-viewer/autorotate-plugin";
+import { Viewer, ViewerConfig } from "@photo-sphere-viewer/core";
+import {
+	AutorotatePlugin,
+	AutorotatePluginConfig,
+} from "@photo-sphere-viewer/autorotate-plugin";
 import "@photo-sphere-viewer/core/index.css";
 import { Component, css } from "dreamland/core";
 
-export const PhotoSphere: Component<{ src: string; fallback?: string }, {}> =
-	function (cx) {
-		let viewer: Viewer | null = null;
+interface PhotoSphereProps {
+	src: string;
+	fallback?: string;
+	viewerConfig?: Partial<
+		Omit<ViewerConfig, "container" | "panorama" | "plugins">
+	>;
+	autorotateConfig?: Partial<AutorotatePluginConfig>;
+}
 
-		cx.mount = () => {
-			const container = cx.root.querySelector(
-				".photo-sphere-viewer"
-			) as HTMLElement;
-			const fallbackEl = cx.root.querySelector(
-				".photo-sphere-fallback"
-			) as HTMLElement;
-			const hintEl = cx.root.querySelector(".photo-sphere-hint") as HTMLElement;
+export const PhotoSphere: Component<PhotoSphereProps, {}> = function (cx) {
+	let viewer: Viewer | null = null;
 
-			if (container) {
-				viewer = new Viewer({
-					container,
-					panorama: this.src,
-					navbar: false,
-					mousewheel: false,
-					defaultPitch: 0,
-					defaultYaw: 0,
-					plugins: [
-						[
-							AutorotatePlugin,
-							{
-								autorotateSpeed: "0.5rpm",
-								autostartDelay: 1000,
-								autostartOnIdle: true,
-							},
-						],
+	cx.mount = () => {
+		const container = cx.root.querySelector(
+			".photo-sphere-viewer"
+		) as HTMLElement;
+		const fallbackEl = cx.root.querySelector(
+			".photo-sphere-fallback"
+		) as HTMLElement;
+		const hintEl = cx.root.querySelector(".photo-sphere-hint") as HTMLElement;
+
+		if (container) {
+			viewer = new Viewer({
+				navbar: false,
+				mousewheel: false,
+				...this.viewerConfig,
+				container,
+				panorama: this.src,
+				plugins: [
+					[
+						AutorotatePlugin,
+						{
+							autorotateSpeed: "0.5rpm",
+							autostartDelay: 1000,
+							autostartOnIdle: true,
+							...this.autorotateConfig,
+						},
 					],
-				});
+				],
+			});
 
-				viewer.addEventListener("ready", () => {
-					if (fallbackEl) {
-						fallbackEl.style.display = "none";
-					}
-					container.style.opacity = "1";
+			viewer.addEventListener("ready", () => {
+				if (fallbackEl) {
+					fallbackEl.style.display = "none";
+				}
+				container.style.opacity = "1";
 
-					if (hintEl) {
-						hintEl.classList.add("visible");
-						setTimeout(() => {
-							hintEl.classList.remove("visible");
-						}, 2000);
-					}
-				});
-			}
-		};
-
-		const isMobile =
-			typeof navigator !== "undefined" &&
-			/iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-		const hintText = isMobile
-			? "Drag to look around"
-			: "Click and drag to look around";
-
-		return (
-			<div class="photo-sphere">
-				<img
-					class="photo-sphere-fallback"
-					src={this.fallback ?? this.src}
-					alt="360° panorama"
-				/>
-				<div class="photo-sphere-viewer"></div>
-				<div class="photo-sphere-hint">
-					<span class="material-symbols">panorama_photosphere</span>
-					<span>{hintText}</span>
-				</div>
-			</div>
-		);
+				if (hintEl) {
+					hintEl.classList.add("visible");
+					setTimeout(() => {
+						hintEl.classList.remove("visible");
+					}, 2000);
+				}
+			});
+		}
 	};
+
+	const isMobile =
+		typeof navigator !== "undefined" &&
+		/iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+	const hintText = isMobile
+		? "Drag to look around"
+		: "Click and drag to look around";
+
+	return (
+		<div class="photo-sphere">
+			<img
+				class="photo-sphere-fallback"
+				src={this.fallback ?? this.src}
+				alt="360° panorama"
+			/>
+			<div class="photo-sphere-viewer"></div>
+			<div class="photo-sphere-hint">
+				<span class="material-symbols">panorama_photosphere</span>
+				<span>{hintText}</span>
+			</div>
+		</div>
+	);
+};
 
 PhotoSphere.style = css`
 	:scope {
