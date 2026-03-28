@@ -16,7 +16,7 @@ const ProjectView: Component<{ project: ProjectCardDetails }, {}> =
 								
 							</section>
 							<section id="details">
-								<h1 class="name">{this.project.title}</h1>
+								<h2 class="name">{this.project.title}</h2>
 								<p class="description">{this.project.largeDesc}</p>
 								<ul class="compact">
 									{this.project.links?.map((link) => (
@@ -51,6 +51,10 @@ ProjectView.style = css`
 		max-height: 60%;
 	} */
 
+	h2 {
+		margin-bottom: 0.2em!important;
+	}
+
 	#image {
 		display: flex;
 		align-content: center;
@@ -61,6 +65,7 @@ ProjectView.style = css`
 		position: relative;
 		overflow: visible;
 		width: 100%;
+		transform: scale(1.001);
 	}
 
 	#image > a > img {

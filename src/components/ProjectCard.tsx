@@ -78,7 +78,7 @@ const ProjectCard: Component<
 ProjectCard.style = css<typeof ProjectCard>`
 	:scope, :scope:visited {
 		width: 100%;
-		background: var(--base);
+		background: hsla(var(--crust-hsl), 0.5);
 		border: 1px solid var(--surface3);
 		overflow: hidden;
 		font-size: 0.9rem;

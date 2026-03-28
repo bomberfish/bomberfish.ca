@@ -68,6 +68,9 @@ const archives = [
 	}, {
 		version: "v8.0.0",
 		date: "20251225232714"
+	}, {
+		version: "v9.3.2",
+		date: "20260328000543"
 	}
 ];
 
@@ -128,7 +131,7 @@ export const AboutView: Component<{}, {}> = function (cx) {
 			<div class="layout-container">
 				<Sidebar />
 				<div class="main-content">
-					<h2>about this website</h2>
+					<h1>about this website</h1>
 					<p>
 						i built this website using{" "}
 						<a href="https://dreamland.js.org" target="_blank" rel="noopener">
@@ -148,7 +151,14 @@ export const AboutView: Component<{}, {}> = function (cx) {
 						</a>
 						.
 					</p>
-					<p>the body font is Helvetica Now, and the monospace font is a custom variant of <a href="https://typeof.net/Iosevka/" target="_blank" rel="noopener noreferrer">Iosevka</a> i created for my own personal use.</p>
+					{/* <p>the body font is Helvetica Now, and the monospace font is a custom variant of <a href="https://typeof.net/Iosevka/" target="_blank" rel="noopener noreferrer">Iosevka</a> i created for my own personal use.</p> */}
+					<h3>typography</h3>
+					<ul>
+						<li>display font: <a href="https://commercialtype.com/catalog/neue_haas_grotesk" target="_blank" rel="noopener">Neue Haas Grotesk Display</a></li>
+						<li style="font-family: var(--font-body)">subheading/ui font: <a href="https://www.monotype.com/fonts/helvetica-now" target="_blank" rel="noopener">Helvetica Now</a></li>
+						<li style="font-family: var(--font-serif)">body copy font: <a href="https://klim.co.nz/fonts/tiempos-text/" target="_blank" rel="noopener">Tiempos Text</a></li>
+						<li style="font-family: var(--font-mono)">monospace font: custom variant of <a href="https://typeof.net/Iosevka/" target="_blank" rel="noopener">Iosevka</a></li>
+					</ul>
 					<h2>archive of previous versions</h2>
 					<p>
 						versioning started with v6.0.0. previous versioning applied

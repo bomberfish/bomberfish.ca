@@ -13,7 +13,7 @@ const Homepage: Component<{}, {}> = function () {
 						<a href="/me.png" target="_blank" rel="noopener">
 							<img src="/me.min.png" class="pfp" title="my profile picture! click to view full size." width="100" height="100" loading="lazy" alt="profile picture" />
 						</a>
-						<h2>about me!</h2>
+						<h3>about me!</h3>
 						<p>
 							i'm hariz (he/they), a 17 y/o high school student living in
 							waterloo, canada.
@@ -40,7 +40,7 @@ const Homepage: Component<{}, {}> = function () {
 					</section>
 
 					<section class="contact-section">
-						<h2>get in touch!</h2>
+						<h3>get in touch!</h3>
 						<ContactLinks />
 					</section>
 					<br />
@@ -79,7 +79,7 @@ Homepage.style = css`
 		clear: both;
 	}
 
-	.about-section h2 {
+	.about-section h3 {
 		margin: 0 0 0.5rem 0;
 		font-size: 1.4rem;
 	}
@@ -105,7 +105,7 @@ Homepage.style = css`
 		shape-outside: margin-box;
 	}
 
-	.contact-section h2 {
+	.contact-section h3 {
 		margin: 0 0 0.25rem 0;
 		font-size: 1.2rem;
 	}

@@ -10,7 +10,7 @@ const ProjectList: Component<{}, {}> = function () {
 			<div class="layout-container">
 				<Sidebar active="projects" />
 				<div class="main-content">
-					<h2>projects</h2>
+					<h1>projects</h1>
 					<p>a collection of my major projects, along with various smaller utilities, experiments, and explorations.</p>
 						{/* <h3>featured</h3> */}
 					<section class="projects-group">

@@ -128,7 +128,7 @@ export const PhotoSphereTool: Component<{}, {}> = function () {
 								autorotateConfig={state.autorotateConfig}
 							/>
 						) : (
-							<p>upload an image to view</p>
+							<span>upload an image to view</span>
 						)
 					)}
 				</div>

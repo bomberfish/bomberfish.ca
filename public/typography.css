@@ -1,13 +1,237 @@
 @font-face {
+	font-family: "NeueHaasDisplay";
+	font-weight: 100;
+	font-style: normal;
+	font-display: swap;
+	src: url("/fonts/display/NeueHaasDisplayXXThin.eot?#iefix")
+		format("embedded-opentype");
+	src:
+		local("☺"),
+		url("/fonts/display/NeueHaasDisplayXXThin.woff2") format("woff2"),
+		url("/fonts/display/NeueHaasDisplayXXThin.woff") format("woff"),
+		url("/fonts/display/NeueHaasDisplayXXThin.ttf") format("truetype");
+}
+
+@font-face {
+	font-family: "NeueHaasDisplay";
+	font-weight: 100;
+	font-style: italic;
+	font-display: swap;
+	src: url("/fonts/display/NeueHaasDisplayXXThinItalic.eot?#iefix")
+		format("embedded-opentype");
+	src:
+		local("☺"),
+		url("/fonts/display/NeueHaasDisplayXXThinItalic.woff2") format("woff2"),
+		url("/fonts/display/NeueHaasDisplayXXThinItalic.woff") format("woff"),
+		url("/fonts/display/NeueHaasDisplayXXThinItalic.ttf") format("truetype");
+}
+
+@font-face {
+	font-family: "NeueHaasDisplay";
+	font-weight: 200;
+	font-style: normal;
+	font-display: swap;
+	src: url("/fonts/display/NeueHaasDisplayXThin.eot?#iefix")
+		format("embedded-opentype");
+	src:
+		local("☺"),
+		url("/fonts/display/NeueHaasDisplayXThin.woff2") format("woff2"),
+		url("/fonts/display/NeueHaasDisplayXThin.woff") format("woff"),
+		url("/fonts/display/NeueHaasDisplayXThin.ttf") format("truetype");
+}
+
+@font-face {
+	font-family: "NeueHaasDisplay";
+	font-weight: 200;
+	font-style: italic;
+	font-display: swap;
+	src: url("/fonts/display/NeueHaasDisplayXThinItalic.eot?#iefix")
+		format("embedded-opentype");
+	src:
+		local("☺"),
+		url("/fonts/display/NeueHaasDisplayXThinItalic.woff2") format("woff2"),
+		url("/fonts/display/NeueHaasDisplayXThinItalic.woff") format("woff"),
+		url("/fonts/display/NeueHaasDisplayXThinItalic.ttf") format("truetype");
+}
+
+@font-face {
+	font-family: "NeueHaasDisplay";
+	font-weight: 300;
+	font-style: normal;
+	font-display: swap;
+	src: url("/fonts/display/NeueHaasDisplayThin.eot?#iefix")
+		format("embedded-opentype");
+	src:
+		local("☺"),
+		url("/fonts/display/NeueHaasDisplayThin.woff2") format("woff2"),
+		url("/fonts/display/NeueHaasDisplayThin.woff") format("woff"),
+		url("/fonts/display/NeueHaasDisplayThin.ttf") format("truetype");
+}
+
+@font-face {
+	font-family: "NeueHaasDisplay";
+	font-weight: 300;
+	font-style: italic;
+	font-display: swap;
+	src: url("/fonts/display/NeueHaasDisplayThinItalic.eot?#iefix")
+		format("embedded-opentype");
+	src:
+		local("☺"),
+		url("/fonts/display/NeueHaasDisplayThinItalic.woff2") format("woff2"),
+		url("/fonts/display/NeueHaasDisplayThinItalic.woff") format("woff"),
+		url("/fonts/display/NeueHaasDisplayThinItalic.ttf") format("truetype");
+}
+
+@font-face {
+	font-family: "NeueHaasDisplay";
+	font-weight: 350;
+	font-style: normal;
+	font-display: swap;
+	src: url("/fonts/display/NeueHaasDisplayLight.eot?#iefix")
+		format("embedded-opentype");
+	src:
+		local("☺"),
+		url("/fonts/display/NeueHaasDisplayLight.woff2") format("woff2"),
+		url("/fonts/display/NeueHaasDisplayLight.woff") format("woff"),
+		url("/fonts/display/NeueHaasDisplayLight.ttf") format("truetype");
+}
+
+@font-face {
+	font-family: "NeueHaasDisplay";
+	font-weight: 350;
+	font-style: italic;
+	font-display: swap;
+	src: url("/fonts/display/NeueHaasDisplayLightItalic.eot?#iefix")
+		format("embedded-opentype");
+	src:
+		local("☺"),
+		url("/fonts/display/NeueHaasDisplayLightItalic.woff2") format("woff2"),
+		url("/fonts/display/NeueHaasDisplayLightItalic.woff") format("woff"),
+		url("/fonts/display/NeueHaasDisplayLightItalic.ttf") format("truetype");
+}
+
+@font-face {
+	font-family: "NeueHaasDisplay";
+	font-weight: 400;
+	font-style: normal;
+	font-display: swap;
+	src: url("/fonts/display/NeueHaasDisplayRoman.eot?#iefix")
+		format("embedded-opentype");
+	src:
+		local("☺"),
+		url("/fonts/display/NeueHaasDisplayRoman.woff2") format("woff2"),
+		url("/fonts/display/NeueHaasDisplayRoman.woff") format("woff"),
+		url("/fonts/display/NeueHaasDisplayRoman.ttf") format("truetype");
+}
+
+@font-face {
+	font-family: "NeueHaasDisplay";
+	font-weight: 400;
+	font-style: italic;
+	font-display: swap;
+	src: url("/fonts/display/NeueHaasDisplayRomanItalic.eot?#iefix")
+		format("embedded-opentype");
+	src:
+		local("☺"),
+		url("/fonts/display/NeueHaasDisplayRomanItalic.woff2") format("woff2"),
+		url("/fonts/display/NeueHaasDisplayRomanItalic.woff") format("woff"),
+		url("/fonts/display/NeueHaasDisplayRomanItalic.ttf") format("truetype");
+}
+
+@font-face {
+	font-family: "NeueHaasDisplay";
+	font-weight: 500;
+	font-style: normal;
+	font-display: swap;
+	src: url("/fonts/display/NeueHaasDisplayMediu.eot?#iefix")
+		format("embedded-opentype");
+	src:
+		local("☺"),
+		url("/fonts/display/NeueHaasDisplayMediu.woff2") format("woff2"),
+		url("/fonts/display/NeueHaasDisplayMediu.woff") format("woff"),
+		url("/fonts/display/NeueHaasDisplayMediu.ttf") format("truetype");
+}
+
+@font-face {
+	font-family: "NeueHaasDisplay";
+	font-weight: 500;
+	font-style: italic;
+	font-display: swap;
+	src: url("/fonts/display/NeueHaasDisplayMediumItalic.eot?#iefix")
+		format("embedded-opentype");
+	src:
+		local("☺"),
+		url("/fonts/display/NeueHaasDisplayMediumItalic.woff2") format("woff2"),
+		url("/fonts/display/NeueHaasDisplayMediumItalic.woff") format("woff"),
+		url("/fonts/display/NeueHaasDisplayMediumItalic.ttf") format("truetype");
+}
+
+@font-face {
+	font-family: "NeueHaasDisplay";
+	font-weight: 700;
+	font-style: normal;
+	font-display: swap;
+	src: url("/fonts/display/NeueHaasDisplayBold.eot?#iefix")
+		format("embedded-opentype");
+	src:
+		local("☺"),
+		url("/fonts/display/NeueHaasDisplayBold.woff2") format("woff2"),
+		url("/fonts/display/NeueHaasDisplayBold.woff") format("woff"),
+		url("/fonts/display/NeueHaasDisplayBold.ttf") format("truetype");
+}
+
+@font-face {
+	font-family: "NeueHaasDisplay";
+	font-weight: 700;
+	font-style: italic;
+	font-display: swap;
+	src: url("/fonts/display/NeueHaasDisplayBoldItalic.eot?#iefix")
+		format("embedded-opentype");
+	src:
+		local("☺"),
+		url("/fonts/display/NeueHaasDisplayBoldItalic.woff2") format("woff2"),
+		url("/fonts/display/NeueHaasDisplayBoldItalic.woff") format("woff"),
+		url("/fonts/display/NeueHaasDisplayBoldItalic.ttf") format("truetype");
+}
+
+@font-face {
+	font-family: "NeueHaasDisplay";
+	font-weight: 900;
+	font-style: normal;
+	font-display: swap;
+	src: url("/fonts/display/NeueHaasDisplayBlack.eot?#iefix")
+		format("embedded-opentype");
+	src:
+		local("☺"),
+		url("/fonts/display/NeueHaasDisplayBlack.woff2") format("woff2"),
+		url("/fonts/display/NeueHaasDisplayBlack.woff") format("woff"),
+		url("/fonts/display/NeueHaasDisplayBlack.ttf") format("truetype");
+}
+
+@font-face {
+	font-family: "NeueHaasDisplay";
+	font-weight: 900;
+	font-style: italic;
+	font-display: swap;
+	src: url("/fonts/display/NeueHaasDisplayBlackItalic.eot?#iefix")
+		format("embedded-opentype");
+	src:
+		local("☺"),
+		url("/fonts/display/NeueHaasDisplayBlackItalic.woff2") format("woff2"),
+		url("/fonts/display/NeueHaasDisplayBlackItalic.woff") format("woff"),
+		url("/fonts/display/NeueHaasDisplayBlackItalic.ttf") format("truetype");
+}
+
+@font-face {
 	font-family: "HelveticaNow";
 	font-weight: 50 1000;
 	font-display: swap;
-	src: 
-		 url("/fonts/body/HelveticaNow.eot?#iefix") format("embedded-opentype");
-	src: local("☺"),
-		 url("/fonts/body/HelveticaNow.woff2") format("woff2"),
-		 url("/fonts/body/HelveticaNow.woff") format("woff"),
-		 url("/fonts/body/HelveticaNow.ttf") format("truetype");
+	src: url("/fonts/body/HelveticaNow.eot?#iefix") format("embedded-opentype");
+	src:
+		local("☺"),
+		url("/fonts/body/HelveticaNow.woff2") format("woff2"),
+		url("/fonts/body/HelveticaNow.woff") format("woff"),
+		url("/fonts/body/HelveticaNow.ttf") format("truetype");
 }
 
 @font-face {
@@ -15,9 +239,10 @@
 	font-style: normal;
 	font-weight: normal;
 	font-display: swap;
-	src: 
-		url("/fonts/mono/IosevkaFishQuasi-Regular.eot?#iefix") format("embedded-opentype");
-	src: local("☺"),
+	src: url("/fonts/mono/IosevkaFishQuasi-Regular.eot?#iefix")
+		format("embedded-opentype");
+	src:
+		local("☺"),
 		url("/fonts/mono/IosevkaFishQuasi-Regular.woff2") format("woff2"),
 		url("/fonts/mono/IosevkaFishQuasi-Regular.woff") format("woff"),
 		url("/fonts/mono/IosevkaFishQuasi-Regular.ttf") format("truetype");
@@ -28,9 +253,10 @@
 	font-style: normal;
 	font-weight: bold;
 	font-display: swap;
-	src: 
-		url("/fonts/mono/IosevkaFishQuasi-Bold.eot?#iefix") format("embedded-opentype");
-	src: local("☺"),
+	src: url("/fonts/mono/IosevkaFishQuasi-Bold.eot?#iefix")
+		format("embedded-opentype");
+	src:
+		local("☺"),
 		url("/fonts/mono/IosevkaFishQuasi-Bold.woff2") format("woff2"),
 		url("/fonts/mono/IosevkaFishQuasi-Bold.woff") format("woff"),
 		url("/fonts/mono/IosevkaFishQuasi-Bold.ttf") format("truetype");
@@ -41,9 +267,10 @@
 	font-style: italic;
 	font-weight: normal;
 	font-display: swap;
-	src: 
-		url("/fonts/mono/IosevkaFishQuasi-Italic.eot?#iefix") format("embedded-opentype");
-	src: local("☺"),
+	src: url("/fonts/mono/IosevkaFishQuasi-Italic.eot?#iefix")
+		format("embedded-opentype");
+	src:
+		local("☺"),
 		url("/fonts/mono/IosevkaFishQuasi-Italic.woff2") format("woff2"),
 		url("/fonts/mono/IosevkaFishQuasi-Italic.woff") format("woff"),
 		url("/fonts/mono/IosevkaFishQuasi-Italic.ttf") format("truetype");
@@ -54,12 +281,40 @@
 	font-style: italic;
 	font-weight: bold;
 	font-display: swap;
-	src: 
-		url("/fonts/mono/IosevkaFishQuasi-BoldItalic.eot?#iefix") format("embedded-opentype");
-	src: local("☺"),
+	src: url("/fonts/mono/IosevkaFishQuasi-BoldItalic.eot?#iefix")
+		format("embedded-opentype");
+	src:
+		local("☺"),
 		url("/fonts/mono/IosevkaFishQuasi-BoldItalic.woff2") format("woff2"),
 		url("/fonts/mono/IosevkaFishQuasi-BoldItalic.woff") format("woff"),
 		url("/fonts/mono/IosevkaFishQuasi-BoldItalic.ttf") format("truetype");
+}
+
+@font-face {
+	font-family: "Tiempos Text";
+	font-weight: 400 700;
+	font-style: normal;
+	font-display: swap;
+	src: url("/fonts/serif/TiemposText.eot?#iefix") format("embedded-opentype");
+	src:
+		local("☺"),
+		url("/fonts/serif/TiemposText.woff2") format("woff2"),
+		url("/fonts/serif/TiemposText.woff") format("woff"),
+		url("/fonts/serif/TiemposText.ttf") format("truetype");
+}
+
+@font-face {
+	font-family: "Tiempos Text";
+	font-weight: 400 700;
+	font-style: italic;
+	font-display: swap;
+	src: url("/fonts/serif/TiemposText-Italic.eot?#iefix")
+		format("embedded-opentype");
+	src:
+		local("☺"),
+		url("/fonts/serif/TiemposText-Italic.woff2") format("woff2"),
+		url("/fonts/serif/TiemposText-Italic.woff") format("woff"),
+		url("/fonts/serif/TiemposText-Italic.ttf") format("truetype");
 }
 
 @font-face {
@@ -67,7 +322,8 @@
 	font-style: normal;
 	font-weight: 400;
 	font-display: block;
-	src: url("https://fonts.gstatic.com/s/materialsymbolssharp/v289/gNNBW2J8Roq16WD5tFNRaeLQk6-SHQ_R00k4c2_whPnoY9ruReaU4bHmz74m0ZkGH-VBYe1x0TV6x4yFH8F-H5OdzEL3sVTgJtfbYxOLojCNJ1H7-0Hk.woff") format("woff");
+	src: url("https://fonts.gstatic.com/s/materialsymbolssharp/v289/gNNBW2J8Roq16WD5tFNRaeLQk6-SHQ_R00k4c2_whPnoY9ruReaU4bHmz74m0ZkGH-VBYe1x0TV6x4yFH8F-H5OdzEL3sVTgJtfbYxOLojCNJ1H7-0Hk.woff")
+		format("woff");
 }
 
 .material-symbols,
@@ -91,8 +347,17 @@
 }
 
 :root {
-	--font-display: var(--font-body);
-	--font-body: "HelveticaNow", "Helvetica Now Var", "Helvetica Now", "Nimbus Sans L", "Nimbus Sans", Helvetica, "Helvetica Neue", "MS Sans Serif", Arial, "Liberation Sans", FreeSans, system-ui, sans-serif, "Apple Color Emoji", "Noto Color Emoji", "Segoe UI Emoji";
+	--font-display:
+		"NeueHaasDisplay", "Neue Haas Grotesk Display", "Helvetica Neue", Helvetica,
+		Arial, system-ui, sans-serif;
+	--font-body:
+		"HelveticaNow", "Helvetica Now Var", "Helvetica Now", "Nimbus Sans L",
+		"Nimbus Sans", Helvetica, "Helvetica Neue", "MS Sans Serif", Arial,
+		"Liberation Sans", FreeSans, system-ui, sans-serif, "Apple Color Emoji",
+		"Noto Color Emoji", "Segoe UI Emoji";
 	--font-mono: "IosevkaFishQuasi", ui-monospace, monospace;
-	--font-serif:  "Times New Roman", Times, Tinos, FreeSerif, "Nimbus Roman No9 L", "Nimbus Roman", "Liberation Serif", "Linux Libertine", serif;
+	--font-serif:
+		"Tiempos Text", "Times New Roman", Times, Tinos, FreeSerif,
+		"Nimbus Roman No9 L", "Nimbus Roman", "Liberation Serif", "Linux Libertine",
+		serif;
 }
