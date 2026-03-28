@@ -681,13 +681,11 @@ a[href^="/"]:after {
 
 .blog-item {
 	border-bottom: 1px solid var(--surface3);
-	padding: 1.25rem 0;
+	padding: 1rem 1.25rem 1rem .75rem;
 	position: relative;
 }
 
 .blog-item.has-cover {
-	padding: 1.25rem 1rem;
-	/* border-bottom: none; */
 	overflow: hidden;
 }
 
@@ -989,10 +987,10 @@ main {
 }
 
 .site-title {
-	font-size: 1.5rem;
+	font-size: 1.4rem;
 	margin: 0.25rem 0 1rem 0;
 	padding: 0.5rem;
-	background: var(--surface0);
+	background: hsla(var(--crust-hsl), 0.5);
 	border: 1px solid var(--surface2);
 	text-align: center;
 	line-height: 1.2;

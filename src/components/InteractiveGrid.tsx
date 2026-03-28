@@ -5,16 +5,40 @@ const TARGET_BY_DIST = [0.7, 0.5, 0.35, 0.2, 0.1, 0.05];
 const MAX_DIST = TARGET_BY_DIST.length - 1;
 const LERP = 0.1;
 
-// Ripple settings
-const RIPPLE_SPEED = 0.11;
-const RIPPLE_MAX_RADIUS = 28;
+// Ripple settings (for clicks)
+const RIPPLE_SPEED = 0.125;
+const RIPPLE_MAX_RADIUS = 36;
 const RIPPLE_WIDTH = 3;
-const RIPPLE_BRIGHTNESS = 0.4;
+const RIPPLE_BRIGHTNESS = 0.5;
+
+// Wake settings (for dragging)
+const WAKE_FADE = 0.05;
+const WAKE_BRIGHTNESS = 0.7;
+const WAKE_LENGTH = 2; // Length along movement direction
+const WAKE_WIDTH = 4; // Width perpendicular to movement
+
+// Side ripple settings (small waves that spawn from wake trail)
+const WAKE_RIPPLE_OFFSET = 2.5; // How far out perpendicular the side ripples spawn
+const WAKE_RIPPLE_INTERVAL = 3; // Spawn side ripples every N wake points
+const WAKE_RIPPLE_MAX_RADIUS = 8; // Smaller than click ripples
+const WAKE_RIPPLE_SPEED = 0.1; // Slower than click ripples
+const WAKE_RIPPLE_BRIGHTNESS = 0.1; // Dimmer than click ripples
 
 interface Ripple {
 	x: number;
 	y: number;
 	r: number;
+	maxRadius?: number; // Defaults to RIPPLE_MAX_RADIUS
+	speed?: number; // Defaults to RIPPLE_SPEED
+	brightness?: number; // Defaults to RIPPLE_BRIGHTNESS
+}
+
+interface WakePoint {
+	x: number;
+	y: number;
+	dx: number; // Direction of movement
+	dy: number;
+	intensity: number;
 }
 
 const InteractiveGrid: Component<{}, {}> = function (cx) {
@@ -38,6 +62,7 @@ const InteractiveGrid: Component<{}, {}> = function (cx) {
 	let cur: Float32Array[] = [];
 	let tgt: Float32Array[] = [];
 	let ripples: Ripple[] = [];
+	let wake: WakePoint[] = [];
 
 	let activeX = -1;
 	let activeY = -1;
@@ -122,11 +147,17 @@ const InteractiveGrid: Component<{}, {}> = function (cx) {
 			return;
 		}
 
-		// Update ripples
-		ripples.forEach((rip) => (rip.r += RIPPLE_SPEED));
-		ripples = ripples.filter((rip) => rip.r < RIPPLE_MAX_RADIUS);
+		// Update ripples (each can have its own speed)
+		ripples.forEach((rip) => (rip.r += rip.speed ?? RIPPLE_SPEED));
+		ripples = ripples.filter(
+			(rip) => rip.r < (rip.maxRadius ?? RIPPLE_MAX_RADIUS)
+		);
 
-		let anyMoving = ripples.length > 0;
+		// Update wake - fade out and remove dead points
+		wake.forEach((w) => (w.intensity -= WAKE_FADE));
+		wake = wake.filter((w) => w.intensity > 0.01);
+
+		let anyMoving = ripples.length > 0 || wake.length > 0;
 		const { hue, lightness } = getGridColor();
 
 		for (let r = 0; r < rows; r++) {
@@ -141,14 +172,38 @@ const InteractiveGrid: Component<{}, {}> = function (cx) {
 				for (const rip of ripples) {
 					const dist = Math.sqrt((r - rip.y) ** 2 + (c - rip.x) ** 2);
 					const diff = Math.abs(dist - rip.r);
+					const maxR = rip.maxRadius ?? RIPPLE_MAX_RADIUS;
+					const brightness = rip.brightness ?? RIPPLE_BRIGHTNESS;
 
 					if (diff < RIPPLE_WIDTH) {
 						// Steeper falloff using quadratic decay
-						const fade = Math.pow(1 - rip.r / RIPPLE_MAX_RADIUS, 2);
+						const fade = Math.pow(1 - rip.r / maxR, 2);
 						// Smooth bell curve falloff
 						const strength = (1 - diff / RIPPLE_WIDTH) * fade;
-						rippleIntensity += strength * RIPPLE_BRIGHTNESS;
+						rippleIntensity += strength * brightness;
 						waveCount++;
+					}
+				}
+
+				// Calculate wake influence (trail from dragging)
+				// Wake is elongated perpendicular to movement direction
+				let wakeIntensity = 0;
+				for (const w of wake) {
+					const relX = c - w.x;
+					const relY = r - w.y;
+
+					// Project onto movement direction and perpendicular
+					const alongDir = relX * w.dx + relY * w.dy;
+					const perpDir = relX * -w.dy + relY * w.dx;
+
+					// Elliptical falloff: shorter along movement, wider perpendicular
+					const normalizedDist = Math.sqrt(
+						(alongDir / WAKE_LENGTH) ** 2 + (perpDir / WAKE_WIDTH) ** 2
+					);
+
+					if (normalizedDist < 1) {
+						const strength = (1 - normalizedDist) * w.intensity;
+						wakeIntensity = Math.max(wakeIntensity, strength * WAKE_BRIGHTNESS);
 					}
 				}
 
@@ -167,7 +222,7 @@ const InteractiveGrid: Component<{}, {}> = function (cx) {
 					cur[r][c] = t;
 				}
 
-				const finalOpacity = Math.min(v + rippleIntensity, 1);
+				const finalOpacity = Math.min(v + rippleIntensity + wakeIntensity, 1);
 				const cell = cells[r]?.[c];
 				if (cell) {
 					if (finalOpacity < 0.001) {
@@ -203,10 +258,60 @@ const InteractiveGrid: Component<{}, {}> = function (cx) {
 		return { x, y };
 	};
 
+	let isPointerDown = false;
+	let lastWakeX = -1;
+	let lastWakeY = -1;
+	let wakePointCount = 0; // Counter to spawn side ripples at intervals
+
 	const onPointerMove = (e: PointerEvent) => {
 		isHovered = true;
 		const coords = getGridCoords(e);
 		if (coords.x !== activeX || coords.y !== activeY) {
+			// Create wake trail while dragging (like a stick through water)
+			if (isPointerDown && lastWakeX >= 0 && lastWakeY >= 0) {
+				// Calculate movement direction
+				let dx = coords.x - lastWakeX;
+				let dy = coords.y - lastWakeY;
+				const len = Math.sqrt(dx * dx + dy * dy);
+				if (len > 0) {
+					dx /= len;
+					dy /= len;
+				} else {
+					dx = 1;
+					dy = 0;
+				}
+				wake.push({ x: coords.x, y: coords.y, dx, dy, intensity: 1 });
+				wakePointCount++;
+
+				// Spawn side ripples perpendicular to movement at intervals
+				if (wakePointCount % WAKE_RIPPLE_INTERVAL === 0) {
+					// Perpendicular direction (rotate 90 degrees)
+					const perpX = -dy;
+					const perpY = dx;
+
+					// Spawn ripple on both sides of the wake
+					ripples.push({
+						x: coords.x + perpX * WAKE_RIPPLE_OFFSET,
+						y: coords.y + perpY * WAKE_RIPPLE_OFFSET,
+						r: 0,
+						maxRadius: WAKE_RIPPLE_MAX_RADIUS,
+						speed: WAKE_RIPPLE_SPEED,
+						brightness: WAKE_RIPPLE_BRIGHTNESS,
+					});
+					ripples.push({
+						x: coords.x - perpX * WAKE_RIPPLE_OFFSET,
+						y: coords.y - perpY * WAKE_RIPPLE_OFFSET,
+						r: 0,
+						maxRadius: WAKE_RIPPLE_MAX_RADIUS,
+						speed: WAKE_RIPPLE_SPEED,
+						brightness: WAKE_RIPPLE_BRIGHTNESS,
+					});
+				}
+
+				lastWakeX = coords.x;
+				lastWakeY = coords.y;
+			}
+
 			activeX = coords.x;
 			activeY = coords.y;
 			updateTargets();
@@ -215,15 +320,34 @@ const InteractiveGrid: Component<{}, {}> = function (cx) {
 	};
 
 	const onPointerDown = (e: PointerEvent) => {
+		isPointerDown = true;
 		const coords = getGridCoords(e);
-		ripples.push({ x: coords.x, y: coords.y, r: 0 });
+		lastWakeX = coords.x;
+		lastWakeY = coords.y;
 		startTick();
+	};
+
+	const onPointerUp = (e: PointerEvent) => {
+		// Create a ripple on release (like lifting a stick from water)
+		if (isPointerDown) {
+			const coords = getGridCoords(e);
+			ripples.push({ x: coords.x, y: coords.y, r: 0 });
+			startTick();
+		}
+		isPointerDown = false;
+		lastWakeX = -1;
+		lastWakeY = -1;
+		wakePointCount = 0;
 	};
 
 	const onPointerLeave = () => {
 		isHovered = false;
+		isPointerDown = false;
 		activeX = -1;
 		activeY = -1;
+		lastWakeX = -1;
+		lastWakeY = -1;
+		wakePointCount = 0;
 		updateTargets();
 		startTick();
 	};
@@ -234,22 +358,34 @@ const InteractiveGrid: Component<{}, {}> = function (cx) {
 		resizeTimer = setTimeout(buildGrid, 150);
 	};
 
+	// Check if we should disable the effect (mobile/touch devices)
+	const isMobile = () => {
+		return window.matchMedia("(max-width: 768px), (pointer: coarse)").matches;
+	};
+
 	cx.mount = () => {
+		// Skip initialization on mobile - CSS fallback grid will be used
+		if (isMobile()) return;
+
 		buildGrid();
 		document.body.classList.add("grid-loaded");
 
 		document.addEventListener("pointermove", onPointerMove, { passive: true });
 		document.addEventListener("pointerdown", onPointerDown, { passive: true });
+		document.addEventListener("pointerup", onPointerUp);
 		document.addEventListener("pointerleave", onPointerLeave);
 		window.addEventListener("resize", onResize);
 		isDarkMode.addEventListener("change", () => startTick());
 	};
 
 	cx.cleanup = () => {
+		if (isMobile()) return;
+
 		if (rafId) cancelAnimationFrame(rafId);
 		clearTimeout(resizeTimer);
 		document.removeEventListener("pointermove", onPointerMove);
 		document.removeEventListener("pointerdown", onPointerDown);
+		document.removeEventListener("pointerup", onPointerUp);
 		document.removeEventListener("pointerleave", onPointerLeave);
 		window.removeEventListener("resize", onResize);
 		document.body.classList.remove("grid-loaded");
@@ -273,6 +409,12 @@ InteractiveGrid.style = css`
 	}
 
 	@media (prefers-reduced-motion: reduce) {
+		:scope {
+			display: none;
+		}
+	}
+
+	@media (max-width: 768px), (pointer: coarse) {
 		:scope {
 			display: none;
 		}
