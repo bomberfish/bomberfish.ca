@@ -38,9 +38,6 @@ export const PhotoSphere: Component<PhotoSphereProps, {}> = function (cx) {
 					[
 						AutorotatePlugin,
 						{
-							autorotateSpeed: "0.5rpm",
-							autostartDelay: 1000,
-							autostartOnIdle: true,
 							...this.autorotateConfig,
 						},
 					],
@@ -57,7 +54,7 @@ export const PhotoSphere: Component<PhotoSphereProps, {}> = function (cx) {
 					hintEl.classList.add("visible");
 					setTimeout(() => {
 						hintEl.classList.remove("visible");
-					}, 2000);
+					}, 3000);
 				}
 			});
 		}
@@ -90,16 +87,17 @@ PhotoSphere.style = css`
 	:scope {
 		position: relative;
 		width: 100%;
-		height: 400px;
+		min-height: 400px;
 		overflow: hidden;
 	}
 
 	.photo-sphere-fallback {
 		position: absolute;
 		top: 0;
-		left: 0;
-		width: 100%;
+		left: 50%;
+		transform: translateX(-50%);
 		height: 100%;
+		min-width: 100%;
 		object-fit: cover;
 	}
 
@@ -118,17 +116,22 @@ PhotoSphere.style = css`
 		top: 50%;
 		left: 50%;
 		transform: translate(-50%, -50%);
+		font-size: 1.75rem;
+		font-family: var(--font-display);
+		font-weight: 500;
 		display: flex;
 		align-items: center;
-		gap: 0.5rem;
+		justify-content: center;
+		gap: 0.5em;
 		padding: 0.75rem 1rem;
 		background: rgba(0, 0, 0, 0.7);
 		color: white;
-		border-radius: 0.5rem;
-		font-size: 0.875rem;
+		border-radius: 0;
+		width: 100%;
+		height: 100%;
 		pointer-events: none;
 		opacity: 0;
-		transition: opacity 0.3s ease;
+		transition: opacity 1s ease-out;
 		z-index: 10;
 	}
 
@@ -137,7 +140,7 @@ PhotoSphere.style = css`
 	}
 
 	.photo-sphere-hint .material-symbols {
-		font-size: 1.25rem;
+		font-size: 3rem;
 	}
 `;
 

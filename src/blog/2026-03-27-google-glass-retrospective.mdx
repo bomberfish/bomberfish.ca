@@ -5,7 +5,13 @@ export const tags = ["Review", "Retrospective", "Opinion"]
 export const image = "/blog-images/glass-pano.png"
 
 {/* ![Panoramic photo of the entire Google Glass team](/blog-images/glass-pano.png) */}
-<PhotoSphere src="/blog-images/glass_team_sphere.jpg" fallback="/blog-images/glass-pano.png" />
+<PhotoSphere src="/blog-images/glass_team_sphere.jpg" fallback="/blog-images/glass-pano.png" autorotateConfig={
+    {
+        autorotateSpeed: "0.3rpm",
+        autostartDelay: 0,
+        autostartOnIdle: false,
+    }
+} />
 <cap>
     <subt><span class="material-symbols">info</span>Image credit: Google.</subt><br />
     <subt>Extracted from the Glass OS [easter egg.](https://www.youtube.com/watch?v=ndFySj-wrGw)</subt>
