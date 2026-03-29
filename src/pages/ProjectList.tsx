@@ -1,9 +1,9 @@
-import { Component, css } from "dreamland/core";
+import { FC, css } from "dreamland/core";
 import ProjectCard from "../components/ProjectCard";
 import { projects } from "../Projects";
 import Sidebar from "../components/Sidebar";
 
-const ProjectList: Component<{}, {}> = function () {
+function ProjectList(this: FC) {
 	return (
 		<main>
 			<title>projects – bomberfish.ca</title>
@@ -35,7 +35,7 @@ const ProjectList: Component<{}, {}> = function () {
 			</div>
 		</main>
 	);
-};
+}
 
 ProjectList.style = css`
 	.projects-group {

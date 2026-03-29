@@ -1,4 +1,4 @@
-import { Component, css } from "dreamland/core";
+import { FC, css } from "dreamland/core";
 import isMobile from "./IsMobile";
 
 const NEKO_REM = 2.75;
@@ -97,7 +97,7 @@ declare global {
 	}
 }
 
-const Oneko: Component<{}, OnekoState> = function (cx) {
+function Oneko(this: FC<{}, OnekoState>) {
 	this.posX = 0;
 	this.posY = 0;
 	this.mouseX = 0;
@@ -299,7 +299,7 @@ const Oneko: Component<{}, OnekoState> = function (cx) {
 			return;
 		}
 
-		if (!cx.root.isConnected) {
+		if (!this.root.isConnected) {
 			cleanup();
 			return;
 		}
@@ -316,7 +316,7 @@ const Oneko: Component<{}, OnekoState> = function (cx) {
 		}
 	};
 
-	cx.mount = () => {
+	this.cx.mount = () => {
 		if (typeof window === "undefined") {
 			return;
 		}
@@ -358,7 +358,7 @@ const Oneko: Component<{}, OnekoState> = function (cx) {
 		this.opacity = 0;
 
 		this.mutationObserver = new MutationObserver(() => {
-			if (!cx.root.isConnected) {
+			if (!this.root.isConnected) {
 				cleanup();
 			}
 		});
@@ -426,7 +426,7 @@ const Oneko: Component<{}, OnekoState> = function (cx) {
 			on:click={handleWake}
 		/>
 	);
-};
+}
 
 Oneko.style = css`
     :scope {

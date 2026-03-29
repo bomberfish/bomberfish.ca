@@ -4,7 +4,7 @@ import {
 	AutorotatePluginConfig,
 } from "@photo-sphere-viewer/autorotate-plugin";
 import "@photo-sphere-viewer/core/index.css";
-import { Component, css } from "dreamland/core";
+import { FC, css } from "dreamland/core";
 
 interface PhotoSphereProps {
 	src: string;
@@ -15,17 +15,17 @@ interface PhotoSphereProps {
 	autorotateConfig?: Partial<AutorotatePluginConfig>;
 }
 
-export const PhotoSphere: Component<PhotoSphereProps, {}> = function (cx) {
+export function PhotoSphere(this: FC<PhotoSphereProps>) {
 	let viewer: Viewer | null = null;
 
-	cx.mount = () => {
-		const container = cx.root.querySelector(
+	this.cx.mount = () => {
+		const container = this.root.querySelector(
 			".photo-sphere-viewer"
 		) as HTMLElement;
-		const fallbackEl = cx.root.querySelector(
+		const fallbackEl = this.root.querySelector(
 			".photo-sphere-fallback"
 		) as HTMLElement;
-		const hintEl = cx.root.querySelector(".photo-sphere-hint") as HTMLElement;
+		const hintEl = this.root.querySelector(".photo-sphere-hint") as HTMLElement;
 
 		if (container) {
 			viewer = new Viewer({
@@ -81,7 +81,7 @@ export const PhotoSphere: Component<PhotoSphereProps, {}> = function (cx) {
 			</div>
 		</div>
 	);
-};
+}
 
 PhotoSphere.style = css`
 	:scope {

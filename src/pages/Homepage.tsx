@@ -1,8 +1,8 @@
-import { Component, css } from "dreamland/core";
+import { FC, css } from "dreamland/core";
 import { WebButton, ButtonList, CopiedToast } from "../components/Buttons";
 import Sidebar from "../components/Sidebar";
 
-const Homepage: Component<{}, {}> = function () {
+function Homepage(this: FC) {
 	return (
 		<main>
 			<title>bomberfish.ca</title>
@@ -69,7 +69,7 @@ const Homepage: Component<{}, {}> = function () {
 			</div>
 		</main>
 	);
-};
+}
 
 Homepage.style = css`
 
@@ -138,7 +138,7 @@ Homepage.style = css`
 	}
 `;
 
-export const ContactLinks: Component<{}, {}> = function () {
+export function ContactLinks(this: FC) {
 	return (
 		<span class="contact-links">
 			<span class="tooltip-wrapper">
@@ -167,7 +167,7 @@ export const ContactLinks: Component<{}, {}> = function () {
 			</span>
 		</span>
 	);
-};
+}
 
 ContactLinks.style = css`
 	:scope {

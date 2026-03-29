@@ -1,6 +1,6 @@
 // @ts-nocheck ts pmo
-import { Component, createState, Stateful } from "dreamland/core";
-import { Route, router, Router } from "dreamland/router";
+import { FC } from "dreamland/core";
+import { Route, Router } from "dreamland/router";
 
 import "./style.css";
 import Homepage from "./pages/Homepage";
@@ -14,11 +14,11 @@ import PhotoSphereTool from "./pages/PhotoSphereTool";
 import Oneko from "./Oneko";
 import InteractiveGrid from "./components/InteractiveGrid";
 
-let page: Stateful<{
-	url?: string;
-}> = createState({});
+type AppProps = {
+	initial?: [path: string, origin: string];
+};
 
-const App: Component<{}, {}> = function (cx) {
+function App(this: FC<AppProps>) {
 	const blogModules = import.meta.glob("./blog/*.mdx", { eager: true });
 	const blogPosts = Object.keys(blogModules)
 		.map((path) => {
@@ -33,6 +33,7 @@ const App: Component<{}, {}> = function (cx) {
 
 	const routerInstance = (
 		<Router
+			initial={this.initial}
 			children={[
 				<Route path="" show={() => <Homepage />} />,
 				<Route path="projects" show={() => <ProjectList />} />,
@@ -56,16 +57,6 @@ const App: Component<{}, {}> = function (cx) {
 		/>
 	);
 
-	if (import.meta.env.SSR) {
-		router.route(page.url, "http://127.0.0.1:5173");
-	} else {
-		router.route();
-	}
-
-	cx.mount = () => {
-		// Grid effect is now handled by InteractiveGrid component
-	};
-
 	return (
 		<app id="app">
 			<InteractiveGrid />
@@ -73,9 +64,11 @@ const App: Component<{}, {}> = function (cx) {
 			<Oneko />
 		</app>
 	);
-};
+}
 
-export default (path?: string) => {
-	page.url = path;
-	return <App />;
-};
+export default function renderApp(
+	path?: string,
+	origin = "http://127.0.0.1:5173"
+) {
+	return <App initial={path ? [path, origin] : undefined} />;
+}

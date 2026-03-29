@@ -1,4 +1,4 @@
-import {Component, css} from "dreamland/core";
+import { FC, css } from "dreamland/core";
 import humanizeDuration from "humanize-duration";
 import TransitionLink from "./TransitionLink";
 
@@ -22,7 +22,13 @@ const messages: string[] = [
     "Always try to be nice, but never fail to be kind."
 ]
 
-const Footer: Component<{}, {elapsed: string, message: string, resetSplashInterval?: () => void}> = function (cx) {
+type FooterState = {
+	elapsed: string;
+	message: string;
+	resetSplashInterval?: () => void;
+};
+
+function Footer(this: FC<{}, FooterState>) {
     this.elapsed = `built on ${new Date(__BUILD_DATE__).toLocaleDateString()}`;
     this.message = "<insert funny message here>";
 
@@ -67,7 +73,7 @@ const Footer: Component<{}, {elapsed: string, message: string, resetSplashInterv
         runSplashTransition(pickNewSplashMessage);
     };
 
-    cx.mount = () => {
+    this.cx.mount = () => {
         if (import.meta.env.SSR) {
 			return;
 		}
@@ -131,6 +137,6 @@ Footer.style = css`
         overflow: hidden;
         text-overflow: ellipsis;
     }
-`
+`;
 
 export default Footer;

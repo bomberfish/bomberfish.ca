@@ -1,4 +1,4 @@
-import { Component, css } from "dreamland/core";
+import { FC, css } from "dreamland/core";
 import TransitionLink from "../components/TransitionLink";
 import { ContactLinks } from "./Homepage";
 import Sidebar from "../components/Sidebar";
@@ -53,7 +53,7 @@ const blogPosts: BlogPost[] = mdxPosts.sort((a, b) =>
 	b.date.localeCompare(a.date)
 );
 
-const BlogList: Component<{}, {}> = function () {
+function BlogList(this: FC) {
 	return (
 		<main>
 			<title>blog – bomberfish.ca</title>
@@ -127,7 +127,7 @@ const BlogList: Component<{}, {}> = function () {
 										<h3>{post.title}</h3>
 										{post.description ? (
 											<p class="post-desc">{post.description}</p>
-										) : null}
+										) : false}
 										<div class="post-footer">
 											{post.tags ? (
 												<div class="post-tags">
@@ -155,7 +155,7 @@ const BlogList: Component<{}, {}> = function () {
 			</div>
 		</main>
 	);
-};
+}
 
 BlogList.style = css`
 	p {

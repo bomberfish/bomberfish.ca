@@ -1,12 +1,10 @@
-import { Component, css } from "dreamland/core";
+import { FC, css } from "dreamland/core";
 import ProjectCardDetails from "../types/Project";
 import TransitionLink from "./TransitionLink";
 
-const ProjectCard: Component<
-	{ project: ProjectCardDetails; size: "small" | "large" },
-	{}
-> = function () {
-
+function ProjectCard(
+	this: FC<{ project: ProjectCardDetails; size: "small" | "large" }>
+) {
 	const handleCardClick = (event: MouseEvent) => {
 		if (
 			event.defaultPrevented ||
@@ -52,28 +50,27 @@ const ProjectCard: Component<
 				data-card-link
 				class:no-image={!hasImage}
 			>
-					<div class="image-wrapper">
-						<img src={this.project.img} alt="" loading="eager" />
-					</div>
-					<div class="project-info">
-						<p class="project-year">
-							<span class="material-symbols">calendar_month</span>
-							{yearDisplay}
-							{this.project.featured ? (
-								<span class="featured-indicator">
-									•
-									<span class="material-symbols">trophy</span>{" "}
-									Featured
-								</span>
-							) : null}
-						</p>
-						<h3 class="project-title">{this.project.title}</h3>
-						<p class="project-description">{this.project.blurb}</p>
-					</div>
+				<div class="image-wrapper">
+					<img src={this.project.img} alt="" loading="eager" />
+				</div>
+				<div class="project-info">
+					<p class="project-year">
+						<span class="material-symbols">calendar_month</span>
+						{yearDisplay}
+						{this.project.featured ? (
+							<span class="featured-indicator">
+								•
+								<span class="material-symbols">trophy</span> Featured
+							</span>
+						) : null}
+					</p>
+					<h3 class="project-title">{this.project.title}</h3>
+					<p class="project-description">{this.project.blurb}</p>
+				</div>
 			</TransitionLink>
 		</div>
 	);
-};
+}
 
 ProjectCard.style = css<typeof ProjectCard>`
 	:scope, :scope:visited {

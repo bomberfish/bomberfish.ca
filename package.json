@@ -40,7 +40,7 @@
 	"dependencies": {
 		"@photo-sphere-viewer/autorotate-plugin": "^5.14.1",
 		"@photo-sphere-viewer/core": "^5.14.1",
-		"dreamland": "^0.1.2",
+		"dreamland": "git+https://github.com/MercuryWorkshop/dreamlandjs.git#rewrite",
 		"humanize-duration": "^3.33.1"
 	}
 }

@@ -1,16 +1,15 @@
-import { Component, css } from "dreamland/core";
+import { FC, css } from "dreamland/core";
 
-export const WebButton: Component<
-	{
-		src: string;
-		href?: string;
-		alt?: string;
-		title?: string;
-		"on:click"?: (e: MouseEvent) => void;
-	},
-	{}
-> = function () {
-	this.href = this.href
+type WebButtonProps = {
+	src: string;
+	href?: string;
+	alt?: string;
+	title?: string;
+	"on:click"?: (e: MouseEvent) => void;
+};
+
+export function WebButton(this: FC<WebButtonProps>) {
+	this.href = this.href;
 
 	if (this.title) {
 		this.alt = this.alt || "A web button with the description: " + this.title;
@@ -22,7 +21,7 @@ export const WebButton: Component<
 			href={this.href || ""}
 			target={this.href ? "_blank" : "_self"}
 			on:click={(e: MouseEvent) => {
-				this["on:click"]!(e);
+				this["on:click"]?.(e);
 			}}
 		>
 			<img
@@ -33,7 +32,7 @@ export const WebButton: Component<
 			/>
 		</a>
 	);
-};
+}
 
 WebButton.style = css`
 	:scope {
@@ -59,7 +58,7 @@ WebButton.style = css`
 	}
 `;
 
-export const ButtonList: Component<{}, {}> = function () {
+export function ButtonList(this: FC) {
 	return (
 		<span class="webbtns">
 			<WebButton
@@ -380,7 +379,7 @@ export const ButtonList: Component<{}, {}> = function () {
 			/>
 		</span>
 	);
-};
+}
 
 ButtonList.style = css`
 	:scope {
@@ -391,10 +390,10 @@ ButtonList.style = css`
 	}
 `;
 
-export const CopiedToast: Component<{}, {}> = function (cx) {
-	cx.mount = () => {
+export function CopiedToast(this: FC) {
+	this.cx.mount = () => {
 		setTimeout(() => {
-			cx.root.remove();
+			this.root.remove();
 		}, 2000);
 	};
 
@@ -404,7 +403,7 @@ export const CopiedToast: Component<{}, {}> = function (cx) {
 			Copied to clipboard!
 		</div>
 	);
-};
+}
 
 CopiedToast.style = css`
 	:scope {

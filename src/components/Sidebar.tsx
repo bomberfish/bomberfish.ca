@@ -1,10 +1,10 @@
-import { Component } from "dreamland/core";
+import { FC } from "dreamland/core";
 import TransitionLink from "./TransitionLink";
 import Footer from "./Footer";
 
 export type PageCategory = "home" | "projects" | "blog";
 
-const Sidebar: Component<{ active?: PageCategory }, {}> = function () {
+function Sidebar(this: FC<{ active?: PageCategory }>) {
 	const active = this.active;
 	
 	return (
@@ -32,6 +32,6 @@ const Sidebar: Component<{ active?: PageCategory }, {}> = function () {
 			<Footer />
 		</aside>
 	);
-};
+}
 
 export default Sidebar;

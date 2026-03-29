@@ -1,4 +1,4 @@
-import { Component, createState, Stateful } from "dreamland/core";
+import { FC, createState, Stateful } from "dreamland/core";
 import { ViewerConfig } from "@photo-sphere-viewer/core";
 import { AutorotatePluginConfig } from "@photo-sphere-viewer/autorotate-plugin";
 import Sidebar from "../components/Sidebar";
@@ -22,7 +22,7 @@ let state: Stateful<PhotoSphereToolState> = createState({
 	},
 });
 
-export const PhotoSphereTool: Component<{}, {}> = function () {
+export function PhotoSphereTool(this: FC) {
 	const handleFileChange = (e: Event) => {
 		const input = e.target as HTMLInputElement;
 		if (input.files && input.files[0]) {
@@ -135,6 +135,6 @@ export const PhotoSphereTool: Component<{}, {}> = function () {
 			</div>
 		</main>
 	);
-};
+}
 
 export default PhotoSphereTool;

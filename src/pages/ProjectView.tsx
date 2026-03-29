@@ -1,40 +1,50 @@
-import { Component, css } from "dreamland/core";
+import { FC, css } from "dreamland/core";
 import Sidebar from "../components/Sidebar";
 import ProjectCardDetails from "../types/Project";
 
-const ProjectView: Component<{ project: ProjectCardDetails }, {}> =
-	function () {
-		return (
-			<main>
-				<title>{this.project.title} – bomberfish.ca</title>
-				<div class="layout-container">
-					<Sidebar active="projects" />
-					<div class="main-content">
-						<div class="project-view-container">
-							<section id="image">
-								<a href={this.project.img}><img title="Click to open full-size" alt={this.project.title} src={this.project.img} /><img hidden class="blur" src={this.project.img} /></a>
-								
-							</section>
-							<section id="details">
-								<h2 class="name">{this.project.title}</h2>
-								<p class="description">{this.project.largeDesc}</p>
-								<ul class="compact">
-									{this.project.links?.map((link) => (
-										<li>
-											<a href={link.url} class="link" target="_blank" rel="noopener">
-												<span class="material-symbols">{link.icon}</span>
-												{link.name}
-											</a>
-										</li>
-									))}
-								</ul>
-							</section>
-						</div>
+function ProjectView(this: FC<{ project: ProjectCardDetails }>) {
+	return (
+		<main>
+			<title>{this.project.title} – bomberfish.ca</title>
+			<div class="layout-container">
+				<Sidebar active="projects" />
+				<div class="main-content">
+					<div class="project-view-container">
+						<section id="image">
+							<a href={this.project.img}>
+								<img
+									title="Click to open full-size"
+									alt={this.project.title}
+									src={this.project.img}
+								/>
+								<img hidden class="blur" src={this.project.img} />
+							</a>
+						</section>
+						<section id="details">
+							<h2 class="name">{this.project.title}</h2>
+							<p class="description">{this.project.largeDesc}</p>
+							<ul class="compact">
+								{this.project.links?.map((link) => (
+									<li>
+										<a
+											href={link.url}
+											class="link"
+											target="_blank"
+											rel="noopener"
+										>
+											<span class="material-symbols">{link.icon}</span>
+											{link.name}
+										</a>
+									</li>
+								))}
+							</ul>
+						</section>
 					</div>
 				</div>
-			</main>
-		);
-	};
+			</div>
+		</main>
+	);
+}
 
 ProjectView.style = css`
     .main-content {

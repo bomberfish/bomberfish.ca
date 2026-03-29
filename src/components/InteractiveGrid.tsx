@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { Component, css } from "dreamland/core";
+import { FC, css } from "dreamland/core";
 
 const TARGET_BY_DIST = [0.7, 0.5, 0.35, 0.2, 0.1, 0.05];
 const MAX_DIST = TARGET_BY_DIST.length - 1;
@@ -41,7 +41,7 @@ interface WakePoint {
 	intensity: number;
 }
 
-const InteractiveGrid: Component<{}, {}> = function (cx) {
+function InteractiveGrid(this: FC) {
 	// Skip on SSR
 	if (import.meta.env.SSR) {
 		return <div class="interactive-grid"></div>;
@@ -82,7 +82,7 @@ const InteractiveGrid: Component<{}, {}> = function (cx) {
 	};
 
 	const buildGrid = () => {
-		const container = cx.root as HTMLDivElement;
+		const container = this.root as HTMLDivElement;
 		if (!container) return;
 
 		// Re-read grid size in case it changed
@@ -363,7 +363,7 @@ const InteractiveGrid: Component<{}, {}> = function (cx) {
 		return window.matchMedia("(max-width: 768px), (pointer: coarse)").matches;
 	};
 
-	cx.mount = () => {
+	this.cx.mount = () => {
 		// Skip initialization on mobile - CSS fallback grid will be used
 		if (isMobile()) return;
 
@@ -378,21 +378,8 @@ const InteractiveGrid: Component<{}, {}> = function (cx) {
 		isDarkMode.addEventListener("change", () => startTick());
 	};
 
-	cx.cleanup = () => {
-		if (isMobile()) return;
-
-		if (rafId) cancelAnimationFrame(rafId);
-		clearTimeout(resizeTimer);
-		document.removeEventListener("pointermove", onPointerMove);
-		document.removeEventListener("pointerdown", onPointerDown);
-		document.removeEventListener("pointerup", onPointerUp);
-		document.removeEventListener("pointerleave", onPointerLeave);
-		window.removeEventListener("resize", onResize);
-		document.body.classList.remove("grid-loaded");
-	};
-
 	return <div class="interactive-grid"></div>;
-};
+}
 
 InteractiveGrid.style = css`
 	:scope {

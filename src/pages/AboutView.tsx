@@ -1,4 +1,4 @@
-import { Component, createState, css, Stateful } from "dreamland/core";
+import { FC, createState, css, Stateful } from "dreamland/core";
 import Sidebar from "../components/Sidebar";
 
 const archives = [
@@ -114,16 +114,18 @@ let aboutState: Stateful<{ customHue: string }> = createState({
 	customHue: "210",
 });
 
-export const AboutView: Component<{}, {}> = function (cx) {
-	
-	cx.init = () => {
+export function AboutView(this: FC) {
+	this.cx.init = () => {
 		if (import.meta.env.SSR) return;
 
-		aboutState.customHue = getComputedStyle(document.documentElement).getPropertyValue('--main-hue') || "210";
+		aboutState.customHue =
+			getComputedStyle(document.documentElement).getPropertyValue(
+				"--main-hue"
+			) || "210";
 		use(aboutState.customHue).listen((newHue) => {
 			console.log("updating hue to", newHue);
-			document.documentElement.style.setProperty('--main-hue', newHue);
-		})
+			document.documentElement.style.setProperty("--main-hue", newHue);
+		});
 	};
 	return (
 		<main>
@@ -202,7 +204,7 @@ export const AboutView: Component<{}, {}> = function (cx) {
 			</div>
 		</main>
 	);
-};
+}
 
 AboutView.style = css`
 	.swatches {
@@ -219,22 +221,22 @@ AboutView.style = css`
 	}
 `;
 
-const ColorSwatch: Component<{ color: string }, {}> = function (cx) {
+function ColorSwatch(this: FC<{ color: string }>) {
 	let state: Stateful<{ value: string }> = createState({
 		value: "",
 	});
 
-	cx.mount = () => {
-		// updateValue();
-
+	this.cx.mount = () => {
 		use(aboutState.customHue).listen(() => {
 			updateValue();
 		});
 
-		window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
-			updateValue();
-		});
-	}
+		window
+			.matchMedia("(prefers-color-scheme: dark)")
+			.addEventListener("change", () => {
+				updateValue();
+			});
+	};
 
 	const updateValue = () => {
 		if (import.meta.env.SSR) return;
@@ -264,7 +266,7 @@ const ColorSwatch: Component<{ color: string }, {}> = function (cx) {
 			<span class="label">{this.color}</span>
 		</div>
 	);
-};
+}
 
 ColorSwatch.style = css`
 	:scope {

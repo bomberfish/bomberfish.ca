@@ -1,5 +1,5 @@
-import { Component } from "dreamland/core";
-import { router } from "../main-server";
+import { ComponentChild, FC } from "dreamland/core";
+import { router } from "dreamland/router";
 
 type ViewTransitionCallback = () => void | Promise<void>;
 type DocumentWithViewTransition = Document & {
@@ -70,11 +70,12 @@ export type TransitionLinkProps = {
 	class?: string;
 	rel?: string;
 	target?: string;
+	children?: ComponentChild;
 	"on:click"?: (event: MouseEvent) => void;
 	[key: `class:${string}`]: unknown;
 } & Record<string, unknown>;
 
-export const TransitionLink: Component<TransitionLinkProps, {}> = function (cx) {
+export function TransitionLink(this: FC<TransitionLinkProps>) {
 	const className = buildClassName(this as Record<string, unknown>);
 	const href = this.href as string;
 	const rel = this.rel as string | undefined;
@@ -170,9 +171,9 @@ export const TransitionLink: Component<TransitionLinkProps, {}> = function (cx) 
 			on:click={handleClick}
 			{...passthrough}
 		>
-			{cx.children}
+			{this.children}
 		</a>
 	);
-};
+}
 
 export default TransitionLink;

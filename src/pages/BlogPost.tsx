@@ -1,16 +1,20 @@
-import { Component, css } from "dreamland/core";
+import { FC, css } from "dreamland/core";
 import { ContactLinks } from "./Homepage";
 import Sidebar from "../components/Sidebar";
 
 interface BlogPostProps {
-slug: string;
+	slug: string;
 }
 
-const BlogPost: Component<BlogPostProps, {}> = function () {
+function BlogPost(this: FC<BlogPostProps>) {
 	const slug = this.slug;
-	const blogModules = import.meta.glob("../blog/*.mdx", { eager: true }) as Record<string, any>;
+	const blogModules = import.meta.glob("../blog/*.mdx", {
+		eager: true,
+	}) as Record<string, any>;
 
-	const matchingPath = Object.keys(blogModules).find((path) => path.includes(`-${slug}.mdx`));
+	const matchingPath = Object.keys(blogModules).find((path) =>
+		path.includes(`-${slug}.mdx`)
+	);
 
 	if (!matchingPath) {
 		return (
@@ -90,7 +94,7 @@ const BlogPost: Component<BlogPostProps, {}> = function () {
 			</div>
 		</main>
 	);
-};
+}
 
 BlogPost.style = css`
 	.main-content {
@@ -101,6 +105,6 @@ BlogPost.style = css`
 	subt.bottom {
 		display: flex; align-items: center; gap: 0.5rem; margin-block: 0.75rem;
 	}
-`
+`;
 
 export default BlogPost;
