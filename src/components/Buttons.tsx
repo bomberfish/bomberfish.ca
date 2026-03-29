@@ -62,7 +62,7 @@ export function ButtonList(this: FC) {
 	return (
 		<span class="webbtns">
 			<WebButton
-				src="/buttons/dreamland-new.gif"
+				src="https://dreamland.js.org/button.gif"
 				title="Made with dreamland.js, a small, utilitarian web framework"
 				href="https://dreamland.js.org/?uwu"
 			/>
@@ -97,7 +97,7 @@ export function ButtonList(this: FC) {
 				href="https://radiohead.com"
 			/>
 			<WebButton
-				src="/buttons/hg88x31.gif"
+				src="https://mercurywork.shop/button.gif"
 				title="Mercury Workshop"
 				href="https://mercurywork.shop"
 			/>
