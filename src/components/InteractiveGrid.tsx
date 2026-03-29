@@ -3,16 +3,16 @@ import { FC, css } from "dreamland/core";
 
 const TARGET_BY_DIST = [0.7, 0.5, 0.35, 0.2, 0.1, 0.05];
 const MAX_DIST = TARGET_BY_DIST.length - 1;
-const LERP = 0.1;
+const LERP = 6; // per second
 
 // Ripple settings (for clicks)
-const RIPPLE_SPEED = 0.125;
+const RIPPLE_SPEED = 7.5; // cells per second
 const RIPPLE_MAX_RADIUS = 36;
 const RIPPLE_WIDTH = 3;
 const RIPPLE_BRIGHTNESS = 0.5;
 
 // Wake settings (for dragging)
-const WAKE_FADE = 0.05;
+const WAKE_FADE = 3; // per second
 const WAKE_BRIGHTNESS = 0.7;
 const WAKE_LENGTH = 2; // Length along movement direction
 const WAKE_WIDTH = 4; // Width perpendicular to movement
@@ -21,7 +21,7 @@ const WAKE_WIDTH = 4; // Width perpendicular to movement
 const WAKE_RIPPLE_OFFSET = 2.5; // How far out perpendicular the side ripples spawn
 const WAKE_RIPPLE_INTERVAL = 3; // Spawn side ripples every N wake points
 const WAKE_RIPPLE_MAX_RADIUS = 8; // Smaller than click ripples
-const WAKE_RIPPLE_SPEED = 0.1; // Slower than click ripples
+const WAKE_RIPPLE_SPEED = 6; // cells per second
 const WAKE_RIPPLE_BRIGHTNESS = 0.1; // Dimmer than click ripples
 
 interface Ripple {
@@ -68,6 +68,7 @@ function InteractiveGrid(this: FC) {
 	let activeY = -1;
 	let isHovered = false;
 	let rafId: number | null = null;
+	let lastTime = 0;
 
 	const reduceMotionQuery = window.matchMedia(
 		"(prefers-reduced-motion: reduce)"
@@ -141,20 +142,24 @@ function InteractiveGrid(this: FC) {
 		}
 	};
 
-	const tick = () => {
+	const tick = (time: number) => {
 		if (reduceMotionQuery.matches) {
 			rafId = null;
 			return;
 		}
 
+		// Calculate delta time in seconds (cap at 100ms to avoid jumps)
+		const dt = Math.min((time - lastTime) / 1000, 0.1);
+		lastTime = time;
+
 		// Update ripples (each can have its own speed)
-		ripples.forEach((rip) => (rip.r += rip.speed ?? RIPPLE_SPEED));
+		ripples.forEach((rip) => (rip.r += (rip.speed ?? RIPPLE_SPEED) * dt));
 		ripples = ripples.filter(
 			(rip) => rip.r < (rip.maxRadius ?? RIPPLE_MAX_RADIUS)
 		);
 
 		// Update wake - fade out and remove dead points
-		wake.forEach((w) => (w.intensity -= WAKE_FADE));
+		wake.forEach((w) => (w.intensity -= WAKE_FADE * dt));
 		wake = wake.filter((w) => w.intensity > 0.01);
 
 		let anyMoving = ripples.length > 0 || wake.length > 0;
@@ -214,7 +219,7 @@ function InteractiveGrid(this: FC) {
 
 				const delta = t - v;
 				if (Math.abs(delta) > 0.0004) {
-					v += delta * LERP;
+					v += delta * LERP * dt;
 					cur[r][c] = v;
 					anyMoving = true;
 				} else {
@@ -248,6 +253,7 @@ function InteractiveGrid(this: FC) {
 
 	const startTick = () => {
 		if (!rafId && !reduceMotionQuery.matches) {
+			lastTime = performance.now();
 			rafId = requestAnimationFrame(tick);
 		}
 	};
