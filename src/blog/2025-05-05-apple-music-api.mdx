@@ -1,6 +1,12 @@
 export const title = "Notes on reverse-engineering the Apple Music API";
 export const tags = ["Writeup", "Webdev"];
+export const image = "/blog-images/apple-park-photo-1-building-trees.jpg"
 export const description = "Some notes on the endpoints of Apple Music’s private REST API."
+
+![Apple Park](/blog-images/apple-park-photo-1-building-trees.jpg)
+<cap>
+    <subt><span class="material-symbols">info</span>Image credit: Apple.</subt>
+</cap>
 
 I've recently been working on [Transcribe](https://bomberfish.ca/Transcribe), a tool which transfers playlists between music streaming services directly inside your browser ([Demo video](https://youtu.be/MshSHxytkdQ)). To add support for Apple Music, I had to reverse-engineer its API. Now, you may be wondering:
 ## Why not just use MusicKit?
