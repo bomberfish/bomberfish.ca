@@ -576,13 +576,9 @@ article > h1 {
 	}
 }
 
-.site-title-pfp,
-.pfp {
-	image-rendering: pixelated;
-}
-
 .site-title-pfp {
 	display: inline-block;
+	image-rendering: pixelated;
 }
 
 .pfp {

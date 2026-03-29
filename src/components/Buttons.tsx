@@ -20,6 +20,7 @@ export function WebButton(this: FC<WebButtonProps>) {
 			class="web-button"
 			href={this.href || ""}
 			target={this.href ? "_blank" : "_self"}
+			referrer-policy="unsafe-url"
 			on:click={(e: MouseEvent) => {
 				this["on:click"]?.(e);
 			}}
@@ -62,7 +63,7 @@ export function ButtonList(this: FC) {
 	return (
 		<span class="webbtns">
 			<WebButton
-				src="https://dreamland.js.org/button.gif"
+				src="/buttons/dreamland.gif"
 				title="Made with dreamland.js, a small, utilitarian web framework"
 				href="https://dreamland.js.org/?uwu"
 			/>
@@ -75,6 +76,12 @@ export function ButtonList(this: FC) {
 				src="/buttons/any-browser.gif"
 				title="View this site on *any* web browser! No, seriously!"
 				href="https://anybrowser.org/campaign/index.html"
+			/>
+			{/* TODO: update this to mozilla's latest shenanigans */}
+			<WebButton
+				src="/buttons/firefox.gif"
+				title="Firefox is EVIL!"
+				href="https://lunduke.locals.com/post/5871895/mozilla-firefox-goes-anti-privacy-pro-advertising"
 			/>
 			<WebButton
 				src="/buttons/valid-rss-rogers.gif"
@@ -92,19 +99,13 @@ export function ButtonList(this: FC) {
 				href="https://validator.w3.org/nu/?doc=http%3A%2F%2Fbomberfish.ca%2F"
 			/>
 			<WebButton
-				src="/buttons/oxo.gif"
-				title="Radiohead"
-				href="https://radiohead.com"
+				src="/buttons/cssdif.gif"
+				title="CSS overflow is my mortal enemy."
 			/>
 			<WebButton
 				src="https://mercurywork.shop/button.gif"
 				title="Mercury Workshop"
 				href="https://mercurywork.shop"
-			/>
-			<WebButton
-				src="/buttons/hackclub.gif"
-				title="Hack Club"
-				href="https://hack.club"
 			/>
 			<WebButton
 				src="/buttons/acon-gets-a-button-animated.gif"
@@ -127,24 +128,9 @@ export function ButtonList(this: FC) {
 				href="https://wearr.dev"
 			/>
 			<WebButton
-				src="https://circulars.dev/circular-88x31.gif"
-				title="circular"
-				href="https://circulars.dev"
-			/>
-			<WebButton
-				src="/buttons/kopper.png"
-				title="kopper"
-				href="https://w.on-t.work"
-			/>
-			<WebButton
-				src="https://gideon.sh/88x31.gif"
-				title="gideon.sh"
-				href="https://gideon.sh"
-			/>
-			<WebButton
-				src="https://authenyo.xyz/images/button.gif"
-				title="authenyo"
-				href="https://authenyo.xyz"
+				src="/buttons/ecz.gif"
+				title="errorcodezero"
+				href="https://www.errorcodezero.dev/"
 			/>
 			<WebButton
 				src="/buttons/k8.gif"
@@ -152,9 +138,39 @@ export function ButtonList(this: FC) {
 				href="https://thememesniper.dev"
 			/>
 			<WebButton
+				src="/buttons/dskl.gif"
+				title="doskel"
+				href="https://doskel.net/"
+			/>
+			<WebButton
+				src="https://authenyo.xyz/images/button.gif"
+				title="authenyo"
+				href="https://authenyo.xyz"
+			/>
+			<WebButton
+				src="/buttons/jack.cab.gif"
+				title="jack.cab"
+				href="https://jack.cab/?utm_content=jack-button"
+			/>
+			<WebButton
+				src="https://gideon.sh/88x31.gif"
+				title="gideon.sh"
+				href="https://gideon.sh"
+			/>
+			<WebButton
+				src="https://circulars.dev/circular-88x31.gif"
+				title="circular"
+				href="https://circulars.dev"
+			/>
+			<WebButton
 				src="/buttons/dispherical.gif"
 				title="dispherical"
 				href="https://dispherical.com"
+			/>
+			<WebButton
+				src="/buttons/kopper.gif"
+				title="kopper"
+				href="https://w.on-t.work"
 			/>
 			{/* <WebButton
 				src="https://egg.l5.ca/assets/buttons/enderman0125.gif"
@@ -172,7 +188,7 @@ export function ButtonList(this: FC) {
 				href="https://zenfyr.dev"
 			/>
 			<WebButton
-				src="/buttons/ipg.png"
+				src="/buttons/ipg.gif"
 				title="InvoxiPlayGames"
 				href="https://invoxiplaygames.uk"
 			/>
@@ -180,6 +196,11 @@ export function ButtonList(this: FC) {
 				src="https://melankorin.net/assets/img/buttons/button-1.gif?cbh=41d3f8b9b3d143bca8055b959ee0f510"
 				title="melankorin"
 				href="https://melankorin.net"
+			/>
+			<WebButton
+				src="https://omada.cafe/omada.gif"
+				title="Check out omada.cafe, an private and secure alternative provider."
+				href="https://omada.cafe"
 			/>
 			<WebButton
 				src="/buttons/wdw.gif"
@@ -192,34 +213,18 @@ export function ButtonList(this: FC) {
 				href="https://kagi.com/welcome"
 			/>
 			<WebButton
-				src="https://omada.cafe/omada.gif"
-				title="omada.cafe, an private and secure alternative provider."
-				href="https://omada.cafe"
+				src="/buttons/sun.gif"
+				title="Godspeed, Sun. You were too good for this world."
+			/>
+			<WebButton
+				src="/buttons/javanow.gif"
+				title="Java walked so JavaScript could drunkenly stumble into a gutter."
+				href="https://www.java.com/en/"
 			/>
 			<WebButton
 				src="/buttons/eightyeightthirtyone.gif"
 				title="88x31"
 				href="https://eightyeightthirty.one"
-			/>
-			<WebButton
-				src="/buttons/modarchive.gif"
-				href="https://modarchive.org"
-				title="The Mod Archive"
-			/>
-			<WebButton
-				src="/buttons/newgrounds.gif"
-				href="https://newgrounds.com"
-				title="Newgrounds!"
-			/>
-			<WebButton
-				src="/buttons/beos_now_anim.gif"
-				title="Download Haiku! (It's basically just BeOS!)"
-				href="https://haiku-os.org"
-			/>
-			<WebButton
-				src="/buttons/github.gif"
-				href="https://github.com"
-				title="Social Coding!"
 			/>
 			<WebButton
 				src="/buttons/xkcd.gif"
@@ -232,30 +237,69 @@ export function ButtonList(this: FC) {
 				href="https://lucida.to"
 			/>
 			<WebButton
-				src="/buttons/aol-sucks.gif"
-				title="Good riddance."
-				href="https://help.aol.com/articles/dial-up-internet-to-be-discontinued"
+				src="/buttons/balls.gif"
+				title="Google Single Sign On"
+				href="https://login.corp.google.com"
+			/>
+			<WebButton
+				src="/buttons/modarchive.gif"
+				href="https://modarchive.org"
+				title="The Mod Archive"
+			/>
+			<WebButton
+				src="/buttons/newgrounds.gif"
+				href="https://newgrounds.com"
+				title="Newgrounds!"
+			/>
+			<WebButton
+				src="https://smokepowered.com/smoke.gif"
+				title="Smokepowered"
+				href="https://smokepowered.com"
+			/>
+			<WebButton
+				src="/buttons/blazed.gif"
+				title="Epic MegaBlazed"
+				href="https://epicblazed.com"
+			/>
+			<WebButton
+				src="/buttons/hackclub.gif"
+				title="Hack Club"
+				href="https://hack.club"
+			/>
+			<WebButton
+				src="/buttons/beos_now_anim.gif"
+				title="Download Haiku! (It's basically just BeOS!)"
+				href="https://haiku-os.org"
+			/>
+			<WebButton
+				src="/buttons/github.gif"
+				href="https://github.com"
+				title="Social Coding!"
+			/>
+			<WebButton
+				src="/buttons/oxo.gif"
+				title="Radiohead"
+				href="https://radiohead.com"
+			/>
+			<WebButton
+				src="/buttons/paws.gif"
+				title=":3"
 			/>
 			<WebButton
 				src="/buttons/affection.gif"
 				title="<3"
 			/>
 			<WebButton
-				src="/buttons/balls.gif"
-				title="Google Single Sign On"
-				href="https://login.corp.google.com"
-			/>
-			<WebButton
-				src="/buttons/cssdif.gif"
-				title="CSS overflow is my mortal enemy."
-			/>
-			<WebButton
 				src="/buttons/macmade-wht.gif"
 				title="I <3 Macintosh"
 			/>
 			<WebButton
-				src="/buttons/paws.gif"
-				title=":3"
+				src="/buttons/imac.gif"
+				title="iMacs are dope!"
+			/>
+			<WebButton
+				src="/buttons/nodrugs.gif"
+				title="The Windows Mind Virus!"
 			/>
 			<WebButton
 				src="/buttons/besteyes2.gif"
@@ -269,36 +313,27 @@ export function ButtonList(this: FC) {
 			<WebButton
 				src="/buttons/iamv2.gif"
 				title="I am Canadian!"
+				href="https://cira.ca"
 			/>
 			<WebButton
 				src="/buttons/can.gif"
 				title="I am Canadian!"
+				href="https://cira.ca"
 			/>
 			<WebButton
 				src="/buttons/bestcanada.gif"
 				title="Canada is the GOAT"
+				href="https://cira.ca"
 			/>
 			<WebButton
 				src="/buttons/canadab.gif"
 				title="Proud to be a Canadian!"
+				href="https://cira.ca"
 			/>
 			<WebButton
 				src="/buttons/cananow.gif"
 				title="The Canadian Century starts NOW."
-			/>
-			<WebButton
-				src="/buttons/imac.gif"
-				title="iMacs are dope!"
-			/>
-			<WebButton
-				src="/buttons/sun.gif"
-				title="Godspeed, Sun."
-			/>
-			{/* TODO: update this to mozilla's latest shenanigans */}
-			<WebButton
-				src="/buttons/firefox.gif"
-				title="Firefox is EVIL!"
-				href="https://lunduke.locals.com/post/5871895/mozilla-firefox-goes-anti-privacy-pro-advertising"
+				href="https://cira.ca"
 			/>
 			<WebButton
 				src="/buttons/ieborg.gif"
@@ -321,23 +356,14 @@ export function ButtonList(this: FC) {
 				title="Bill Gates has a Micro Soft."
 			/>
 			<WebButton
-				src="/buttons/nodrugs.gif"
-				title="The Windows Mind Virus!"
-			/>
-			<WebButton
-				src="https://smokepowered.com/smoke.gif"
-				title="Smokepowered"
-				href="https://smokepowered.com"
-			/>
-			<WebButton
-				src="/buttons/blazed.png"
-				title="Epic MegaBlazed"
-				href="https://epicblazed.com"
+				src="/buttons/aol-sucks.gif"
+				title="Good riddance."
+				href="https://help.aol.com/articles/dial-up-internet-to-be-discontinued"
 			/>
 			<WebButton
 				src="/buttons/mariokart.gif"
 				title="Play some Mario Kart!"
-				href="https://bomberfish.ca/N64Wasm"
+				href="https://bomberfish.github.io/N64Wasm"
 			/>
 			<WebButton
 				src="/buttons/vocaloid.gif"
@@ -371,11 +397,6 @@ export function ButtonList(this: FC) {
 			<WebButton
 				src="/buttons/stop.gif"
 				title="STOP"
-			/>
-			<WebButton
-				src="/buttons/javanow.gif"
-				title="Java is underrated"
-				href="https://www.java.com/en/"
 			/>
 		</span>
 	);

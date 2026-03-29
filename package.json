@@ -2,7 +2,7 @@
 	"name": "website",
 	"private": true,
 	"packageManager": "pnpm@10.12.4",
-	"version": "9.5.1",
+	"version": "9.5.2",
 	"type": "module",
 	"scripts": {
 		"dev": "vite",

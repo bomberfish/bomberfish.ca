@@ -52,7 +52,7 @@ function Homepage(this: FC) {
 								on:click={(e: MouseEvent) => {
 									e.preventDefault();
 									try {
-										navigator.clipboard.writeText('<a href="https://bomberfish.ca">\n<img src="https://bomberfish.ca/button.gif" alt="BomberFish" title="BomberFish" />\n</a>');
+										navigator.clipboard.writeText('<a href="https://bomberfish.ca/?ref=button" referrerpolicy="unsafe-url" >\n<img src="https://bomberfish.ca/button.gif" alt="BomberFish" title="BomberFish" />\n</a>');
 										document.body.appendChild(<CopiedToast />);
 									} catch {
 										console.error(e);
