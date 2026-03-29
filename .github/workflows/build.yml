@@ -47,8 +47,13 @@ jobs:
           cache-dependency-path: pnpm-lock.yaml
       - name: Setup Pages
         uses: actions/configure-pages@v5
+      - name: Install tsx globally
+        run: "npm install -g tsx"
       - name: Install Dependencies
         run: "pnpm install --frozen-lockfile"
+        env:
+          # Use tsx to handle TypeScript configs when building git dependencies
+          NODE_OPTIONS: "--import tsx"
       - name: "Build"
         run: "pnpm run build"
       - name: "Fix router"
