@@ -1,6 +1,7 @@
 {
 	"name": "website",
 	"private": true,
+	"packageManager": "pnpm@10.12.4",
 	"version": "9.5.0",
 	"type": "module",
 	"scripts": {
