@@ -82,27 +82,8 @@ const Footer: Component<{}, {elapsed: string, message: string, resetSplashInterv
         updateElapsed();
         const intervalId = setInterval(updateElapsed, 1000);
 
-        // let splashIntervalId: number;
-
-        // const startSplashInterval = () => {
-        //     // @ts-ignore lgtm
-        //     splashIntervalId = setInterval(() => {
-        //         shuffleSplash();
-        //     }, 5555);
-        // };
-
-        // const resetSplashInterval = () => {
-        //     clearInterval(splashIntervalId);
-        //     startSplashInterval();
-        // };
-
-        // this.resetSplashInterval = resetSplashInterval;
-
-        // startSplashInterval();
-
         return () => {
             clearInterval(intervalId);
-            // clearInterval(splashIntervalId);
         };
     }
 

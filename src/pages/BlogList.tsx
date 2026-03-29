@@ -69,11 +69,11 @@ const BlogList: Component<{}, {}> = function () {
 						those of any employer.
 					</subt>
 					<span style="margin-bottom: 0; margin-top: 0.5rem;">
-						<subt style="display: flex; align-items: center; gap: 0.5rem; margin-top: 0.75rem; margin-bottom: 0;">
+						<subt style="display: flex; align-items: center; gap: 0.5rem; margin-top: 0.25rem; margin-bottom: 0;">
 							<span class="material-symbols">rss_feed</span> Subscribe:{" "}
 							<ul
 								class="compact"
-								style="display: inline; margin-left: 0.25rem;"
+								style="display: inline; margin-left: 0.25rem; transform: translateY(-2px);"
 							>
 								<li>
 									<a href="/feed.xml" target="_blank">

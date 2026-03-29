@@ -13,7 +13,7 @@ const Homepage: Component<{}, {}> = function () {
 						<a href="/me.png" target="_blank" rel="noopener">
 							<img src="/me.min.png" class="pfp" title="my profile picture! click to view full size." width="100" height="100" loading="lazy" alt="profile picture" />
 						</a>
-						<h3>about me!</h3>
+						<h3>👋 hiya!</h3>
 						<p>
 							i'm hariz (he/they), a 17 y/o high school student living in
 							waterloo, canada.

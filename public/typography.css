@@ -318,6 +318,18 @@
 }
 
 @font-face {
+	font-family: "NotoEmoji";
+	src: url("/fonts/emoji/NotoEmoji.eot?#iefix") format("embedded-opentype");
+	src:  local("☺"),
+			url("/fonts/emoji/Noto-COLRv1.woff2") tech(color-COLRv1) format("woff2"),
+			url("/fonts/emoji/NotoColorEmoji.woff2") format("woff2"),
+			url("/fonts/emoji/NotoColorEmoji.woff") format("woff"),
+			url("/fonts/emoji/NotoEmoji.woff") format("woff"),
+			url("/fonts/emoji/NotoEmoji.ttf") format("truetype");
+	font-display: swap;
+}
+
+@font-face {
 	font-family: "Material Symbols Sharp";
 	font-style: normal;
 	font-weight: 400;
@@ -347,17 +359,19 @@
 }
 
 :root {
+	--font-emoji: "NotoEmoji", "Noto Color Emoji", "Segoe UI Emoji", "Apple Color Emoji", "Segoe UI Symbol",
+		"Android Emoji Sans", "EmojiOne Color", "Twitter Color Emoji", "JoyPixels",
+		"OpenMoji Color", "Twemoji Mozilla", "Mozilla Noto Color Emoji";
 	--font-display:
 		"NeueHaasDisplay", "Neue Haas Grotesk Display", "Helvetica Neue", Helvetica,
-		Arial, system-ui, sans-serif;
+		Arial, system-ui, sans-serif, var(--font-emoji);
 	--font-body:
 		"HelveticaNow", "Helvetica Now Var", "Helvetica Now", "Nimbus Sans L",
 		"Nimbus Sans", Helvetica, "Helvetica Neue", "MS Sans Serif", Arial,
-		"Liberation Sans", FreeSans, system-ui, sans-serif, "Apple Color Emoji",
-		"Noto Color Emoji", "Segoe UI Emoji";
-	--font-mono: "IosevkaFishQuasi", ui-monospace, monospace;
+		"Liberation Sans", FreeSans, system-ui, sans-serif, var(--font-emoji);
+	--font-mono: "IosevkaFishQuasi", ui-monospace, monospace, var(--font-emoji);
 	--font-serif:
 		"Tiempos Text", "Times New Roman", Times, Tinos, FreeSerif,
 		"Nimbus Roman No9 L", "Nimbus Roman", "Liberation Serif", "Linux Libertine",
-		serif;
+		serif, var(--font-emoji);
 }
