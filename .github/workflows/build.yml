@@ -28,8 +28,6 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-24.04
-    env:
-      PNPM_STORE_DIR: ${{ runner.temp }}/pnpm-store
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -45,7 +43,7 @@ jobs:
       - name: Setup Pages
         uses: actions/configure-pages@v5
       - name: Configure pnpm store
-        run: "pnpm config set store-dir $PNPM_STORE_DIR"
+        run: 'pnpm config set store-dir "$RUNNER_TEMP/pnpm-store"'
       - name: Install Dependencies
         run: "pnpm install --frozen-lockfile"
       - name: "Build"
