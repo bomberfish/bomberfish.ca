@@ -49,6 +49,9 @@ jobs:
         uses: actions/configure-pages@v5
       - name: Install Dependencies
         run: "pnpm install --frozen-lockfile"
+        env:
+          # Disable Node.js native TS stripping - breaks building git deps in node_modules
+          NODE_OPTIONS: "--no-experimental-strip-types"
       - name: "Build"
         run: "pnpm run build"
       - name: "Fix router"
