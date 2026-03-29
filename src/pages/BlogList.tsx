@@ -7,7 +7,6 @@ interface BlogPost {
 	slug: string;
 	title: string;
 	date: string;
-	href?: string;
 	description?: string;
 	tags?: string[];
 	image?: string;
@@ -17,7 +16,7 @@ const blogModules = import.meta.glob("../blog/*.mdx", {
 	eager: true,
 }) as Record<string, any>;
 
-const mdxPosts = Object.entries(blogModules)
+const blogPosts = Object.entries(blogModules)
 	.map(([path, mod]): BlogPost | null => {
 		const match = path.match(/\/(\d{4}-\d{2}-\d{2})-(.+)\.mdx$/);
 		if (!match) return null;
@@ -35,23 +34,8 @@ const mdxPosts = Object.entries(blogModules)
 
 		return { slug, title, date, description, tags, image };
 	})
-	.filter((post): post is BlogPost => post !== null);
-// .filter((post) => post.slug !== "whitehouse");
-
-// const manualPosts: BlogPost[] = [
-//     {
-//         slug: "whitehouse",
-//         title: "Improving the White House Shutdown Clock",
-//         description: "Redesigning and enhancing the White House’s official government shutdown clock.",
-//         tags: ["Design", "Politics" , "Webdev"],
-//         date: "2025-10-02",
-//         href: "/blog/whitehouse.html",
-//     },
-// ];
-
-const blogPosts: BlogPost[] = mdxPosts.sort((a, b) =>
-	b.date.localeCompare(a.date)
-);
+	.filter((post): post is BlogPost => post !== null)
+	.sort((a, b) => b.date.localeCompare(a.date));
 
 function BlogList(this: FC) {
 	return (
@@ -103,46 +87,25 @@ function BlogList(this: FC) {
 										: undefined
 								}
 							>
-								{post.href ? (
-									<a href={post.href} class="blog-link">
-										<h3>{post.title}</h3>
-										{post.description ? (
-											<p class="post-desc">{post.description}</p>
-										) : null}
-										<div class="post-footer">
-											{post.tags ? (
-												<div class="post-tags">
-													{post.tags.map((t) => (
-														<span class="tag">{t}</span>
-													))}
-												</div>
-											) : (
-												<div />
-											)}
-											<time>{post.date}</time>
-										</div>
-									</a>
-								) : (
-									<TransitionLink href={`/blog/${post.slug}`} class="blog-link">
-										<h3>{post.title}</h3>
-										{post.description ? (
-											<p class="post-desc">{post.description}</p>
-										) : false}
-										<div class="post-footer">
-											{post.tags ? (
-												<div class="post-tags">
-													<span class="material-symbols">label_important</span>
-													{post.tags.map((t) => (
-														<span class="tag">{t}</span>
-													))}
-												</div>
-											) : (
-												<div />
-											)}
-											<time>{post.date}</time>
-										</div>
-									</TransitionLink>
-								)}
+								<TransitionLink href={`/blog/${post.slug}`} class="blog-link">
+									<h3>{post.title}</h3>
+									{post.description ? (
+										<p class="post-desc">{post.description}</p>
+									) : null}
+									<div class="post-footer">
+										{post.tags ? (
+											<div class="post-tags">
+												<span class="material-symbols">label_important</span>
+												{post.tags.map((t) => (
+													<span class="tag">{t}</span>
+												))}
+											</div>
+										) : (
+											<div />
+										)}
+										<time>{post.date}</time>
+									</div>
+								</TransitionLink>
 							</div>
 						))}
 					</div>

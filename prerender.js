@@ -4,10 +4,10 @@ import { fileURLToPath } from "node:url";
 import { Feed } from "feed";
 import { renderSsr } from "dreamland/vite";
 import { mkdir, readFile, rm, writeFile } from "node:fs/promises";
-import postcss from 'postcss';
-import autoprefixer from 'autoprefixer';
-import postCssPresetEnv from 'postcss-preset-env';
-import cssnano from 'cssnano';
+import postcss from "postcss";
+import autoprefixer from "autoprefixer";
+import postCssPresetEnv from "postcss-preset-env";
+import cssnano from "cssnano";
 
 import { evaluate } from "@mdx-js/mdx";
 import rehypeStarryNight from "rehype-starry-night";
@@ -23,11 +23,11 @@ const postcssProcessor = postcss([
 	postCssPresetEnv({
 		features: {},
 		browsers: [">= 0.00%"],
-		stage: 0
+		stage: 0,
 	}),
 	autoprefixer({
 		overrideBrowserslist: [">= 0.00%"],
-		grid: "autoplace"
+		grid: "autoplace",
 	}),
 	cssnano(),
 ]);
@@ -35,7 +35,8 @@ const postcssProcessor = postcss([
 function shouldProcessStyleTag(attrs = "") {
 	if (/data-no-postcss\b/i.test(attrs)) return false;
 	const typeMatch = attrs.match(/\stype\s*=\s*["']?([^"'\s>]+)["']?/i);
-	if (typeMatch && !/^(text\/css|application\/postcss)$/i.test(typeMatch[1])) return false;
+	if (typeMatch && !/^(text\/css|application\/postcss)$/i.test(typeMatch[1]))
+		return false;
 	return true;
 }
 
@@ -57,7 +58,9 @@ async function processInlineStyles(html) {
 		}
 
 		try {
-			const processed = await postcssProcessor.process(cssContent, { from: undefined });
+			const processed = await postcssProcessor.process(cssContent, {
+				from: undefined,
+			});
 			output += `<style${attrs}>${processed.css}</style>`;
 			touched = true;
 		} catch (err) {
@@ -99,11 +102,27 @@ for (const [route, path] of paths) {
 
 await rm(resolve("dist/static/.vite"), { recursive: true });
 
+// Minify typography.css
+const typographyCssPath = resolve("dist/static/typography.css");
+const typographyCss = await readFile(typographyCssPath, "utf8");
+const typographyResult = await postcssProcessor.process(typographyCss, {
+	from: typographyCssPath,
+	to: typographyCssPath,
+});
+await writeFile(typographyCssPath, typographyResult.css);
+console.log(
+	`minified: typography.css\t${(new TextEncoder().encode(typographyCss).byteLength / 1024).toFixed(2)}kb -> ${(new TextEncoder().encode(typographyResult.css).byteLength / 1024).toFixed(2)}kb`
+);
+
 const blogURL = "https://bomberfish.ca/blog/";
 
 const mdxComponents = {
 	TransitionLink: ({ href, children, className, class: classAttr, ...props }) =>
-		createElement("a", { ...props, href, className: className ?? classAttr }, children),
+		createElement(
+			"a",
+			{ ...props, href, className: className ?? classAttr },
+			children
+		),
 };
 
 function sanitizeMdxForFeed(content) {
@@ -120,7 +139,10 @@ function sanitizeMdxForFeed(content) {
 			continue;
 		}
 
-		if (!inFence && (/^import\s+/.test(trimmed) || /^export\s+const\s+\w+\s*=/.test(trimmed))) {
+		if (
+			!inFence &&
+			(/^import\s+/.test(trimmed) || /^export\s+const\s+\w+\s*=/.test(trimmed))
+		) {
 			continue;
 		}
 
@@ -140,83 +162,99 @@ async function mdxToHtml(content) {
 		useMDXComponents: () => mdxComponents,
 	});
 
-	const html = renderToStaticMarkup(createElement(Content, { components: mdxComponents }));
-	
+	const html = renderToStaticMarkup(
+		createElement(Content, { components: mdxComponents })
+	);
+
 	// Make all relative URLs absolute
 	return html
 		.replace(/src="\/(?!\/)/g, 'src="https://bomberfish.ca/')
 		.replace(/href="\/(?!\/)/g, 'href="https://bomberfish.ca/');
 }
 
-const blogModules = await import(resolve("dist/server/main-server.js")).then(async () => {
-    const { readdir } = await import("node:fs/promises");
-    const blogDir = resolve("src/blog");
-    const files = await readdir(blogDir);
-    
-    const posts = await Promise.all(
-        files
-            .filter(f => f.endsWith(".mdx"))
-            .map(async (file) => {
-                const content = await readFile(resolve(`src/blog/${file}`), "utf-8");
-                const match = file.match(/^(\d{4}-\d{2}-\d{2})-(.+)\.mdx$/);
-                if (!match) return null;
-                
-                const [, date, slug] = match;
-                
-                const titleMatch = content.match(/export\s+const\s+title\s*=\s*["'](.+?)["']/);
-                const descMatch = content.match(/export\s+const\s+description\s*=\s*["'](.+?)["']/);
-				const imageMatch = content.match(/export\s+const\s+image\s*=\s*["'](.+?)["']/);
-				
-				// Compile MDX to HTML for full content feed
-				let htmlContent = null;
-				try {
-					htmlContent = await mdxToHtml(content);
-					console.log("compiled post:", slug);
-				} catch (e) {
-					console.warn(`failed to compile ${slug} to HTML:`, e.message);
-				}
-                
-                return {
-                    slug,
-                    date: new Date(date),
-                    title: titleMatch?.[1] || slug.split("-").map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(" "),
-                    description: descMatch?.[1] || "",
-                    url: `${blogURL}${slug}`,
-					image: imageMatch?.[1] || null,
-					htmlContent,
-                };
-            })
-    );
-    
-    return posts.filter(Boolean).sort((a, b) => b.date - a.date);
-});
+const blogModules = await import(resolve("dist/server/main-server.js")).then(
+	async () => {
+		const { readdir } = await import("node:fs/promises");
+		const blogDir = resolve("src/blog");
+		const files = await readdir(blogDir);
+
+		const posts = await Promise.all(
+			files
+				.filter((f) => f.endsWith(".mdx"))
+				.map(async (file) => {
+					const content = await readFile(resolve(`src/blog/${file}`), "utf-8");
+					const match = file.match(/^(\d{4}-\d{2}-\d{2})-(.+)\.mdx$/);
+					if (!match) return null;
+
+					const [, date, slug] = match;
+
+					const titleMatch = content.match(
+						/export\s+const\s+title\s*=\s*["'](.+?)["']/
+					);
+					const descMatch = content.match(
+						/export\s+const\s+description\s*=\s*["'](.+?)["']/
+					);
+					const imageMatch = content.match(
+						/export\s+const\s+image\s*=\s*["'](.+?)["']/
+					);
+
+					// Compile MDX to HTML for full content feed
+					let htmlContent = null;
+					try {
+						htmlContent = await mdxToHtml(content);
+						console.log("compiled post:", slug);
+					} catch (e) {
+						console.warn(`failed to compile ${slug} to HTML:`, e.message);
+					}
+
+					return {
+						slug,
+						date: new Date(date),
+						title:
+							titleMatch?.[1] ||
+							slug
+								.split("-")
+								.map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+								.join(" "),
+						description: descMatch?.[1] || "",
+						url: `${blogURL}${slug}`,
+						image: imageMatch?.[1] || null,
+						htmlContent,
+					};
+				})
+		);
+
+		return posts.filter(Boolean).sort((a, b) => b.date - a.date);
+	}
+);
 
 // Create full content feed
 const feed = new Feed({
-    title: "bomberfish's blog",
+	title: "bomberfish's blog",
 	description: "various assorted thoughts and ramblings.",
 	id: blogURL,
 	link: blogURL,
-	language: 'en',
+	language: "en",
 	feedLinks: {
-		rss2: 'https://bomberfish.ca/feed.xml',
-		atom: 'https://bomberfish.ca/atom.xml',
-		json: 'https://bomberfish.ca/feed.json',
+		rss2: "https://bomberfish.ca/feed.xml",
+		atom: "https://bomberfish.ca/atom.xml",
+		json: "https://bomberfish.ca/feed.json",
 	},
 	author: { name: "bomberfish", link: "https://bomberfish.ca" },
 });
 
 // Create lite feed (no full content, for slow connections)
 const feedLite = new Feed({
-    title: "bomberfish's blog (lite)",
-	description: "various assorted thoughts and ramblings. (lite version - titles and descriptions only)",
+	title: "bomberfish's blog (lite)",
+	description:
+		"various assorted thoughts and ramblings. (lite version - titles and descriptions only)",
 	id: blogURL,
 	link: blogURL,
-	language: 'en',
+	language: "en",
 	feedLinks: {
-		rss2: 'https://bomberfish.ca/feed-lite.xml',
-		atom: 'https://bomberfish.ca/atom-lite.xml',
-		json: 'https://bomberfish.ca/feed-lite.json',
+		rss2: "https://bomberfish.ca/feed-lite.xml",
+		atom: "https://bomberfish.ca/atom-lite.xml",
+		json: "https://bomberfish.ca/feed-lite.json",
 	},
 	author: { name: "bomberfish", link: "https://bomberfish.ca" },
 });
@@ -232,7 +270,7 @@ for (const post of blogModules) {
 		date: post.date,
 		image: post.image ? `https://bomberfish.ca${post.image}` : undefined,
 	});
-	
+
 	// Lite feed item (no content)
 	feedLite.addItem({
 		title: post.title,
