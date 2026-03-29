@@ -371,7 +371,7 @@ function InteractiveGrid(this: FC) {
 
 	this.cx.mount = () => {
 		// Skip initialization on mobile - CSS fallback grid will be used
-		if (isMobile()) return;
+		if (isMobile() || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
 		buildGrid();
 		document.body.classList.add("grid-loaded");

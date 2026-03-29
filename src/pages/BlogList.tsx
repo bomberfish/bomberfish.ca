@@ -65,8 +65,8 @@ function BlogList(this: FC) {
 						various assorted thoughts and ramblings.
 					</p>
 					<subt style="font-size: 0.95rem; color: var(--text1)">
-						*obligatory disclaimer: all opinions are my own, and do not reflect
-						those of any employer.
+						*obligatory disclaimer: all opinions are my own and do not reflect
+						those of any employer, past, present, or future.
 					</subt>
 					<span style="margin-bottom: 0; margin-top: 0.5rem;">
 						<subt style="display: flex; align-items: center; gap: 0.5rem; margin-top: 0.25rem; margin-bottom: 0;">
