@@ -23,7 +23,9 @@ function ProjectCard(
 		}
 
 		const card = event.currentTarget as HTMLElement | null;
-		const link = card?.querySelector("a[data-card-link]") as HTMLAnchorElement | null;
+		const link = card?.querySelector(
+			"a[data-card-link]"
+		) as HTMLAnchorElement | null;
 		if (!link) return;
 
 		const syntheticClick = new MouseEvent("click", {
@@ -35,11 +37,12 @@ function ProjectCard(
 	};
 
 	const hasImage = Boolean(this.project.img);
-	const yearDisplay = typeof this.project.endYear === "number"
-		? this.project.endYear === this.project.startYear
-			? ` ${this.project.startYear}`
-			: ` ${this.project.startYear} — ${this.project.endYear}`
-		: ` ${this.project.startYear} — present`;
+	const yearDisplay =
+		typeof this.project.endYear === "number"
+			? this.project.endYear === this.project.startYear
+				? ` ${this.project.startYear}`
+				: ` ${this.project.startYear} — ${this.project.endYear}`
+			: ` ${this.project.startYear} — present`;
 
 	return (
 		<div class="project-card-wrapper" on:click={handleCardClick}>
@@ -59,10 +62,11 @@ function ProjectCard(
 						{yearDisplay}
 						{this.project.featured ? (
 							<span class="featured-indicator">
-								•
-								<span class="material-symbols">trophy</span> Featured
+								•<span class="material-symbols">trophy</span> Featured
 							</span>
-						) : null}
+						) : (
+							false
+						)}
 					</p>
 					<h3 class="project-title">{this.project.title}</h3>
 					<p class="project-description">{this.project.blurb}</p>
@@ -73,15 +77,18 @@ function ProjectCard(
 }
 
 ProjectCard.style = css<typeof ProjectCard>`
-	:scope, :scope:visited {
+	:scope,
+	:scope:visited {
 		width: 100%;
 		background: hsla(var(--crust-hsl), 0.5);
 		border: 1px solid var(--surface3);
 		overflow: hidden;
 		font-size: 0.9rem;
-		text-decoration: none!important;
+		text-decoration: none !important;
 		transform: scale(1) translateY(0);
-		transition: transform 0.2s, border-color 0.2s;
+		transition:
+			transform 0.2s,
+			border-color 0.2s;
 		z-index: 10;
 	}
 
@@ -91,7 +98,7 @@ ProjectCard.style = css<typeof ProjectCard>`
 	}
 
 	:scope:hover h1 {
-		text-decoration: underline!important;
+		text-decoration: underline !important;
 	}
 
 	@media (orientation: portrait) {
@@ -99,7 +106,7 @@ ProjectCard.style = css<typeof ProjectCard>`
 			width: 100%;
 		}
 	}
-	
+
 	.project-info {
 		padding: 1rem;
 		padding-top: 0.5rem;
@@ -110,7 +117,7 @@ ProjectCard.style = css<typeof ProjectCard>`
 
 	.project-description,
 	.project-year {
-		color: var(--subtext1)!important;
+		color: var(--subtext1) !important;
 	}
 
 	.featured-indicator {
@@ -125,8 +132,8 @@ ProjectCard.style = css<typeof ProjectCard>`
 	}
 
 	* {
-		margin: 0!important;
-		text-decoration: none  !important;
+		margin: 0 !important;
+		text-decoration: none !important;
 	}
 
 	.image-wrapper {
@@ -134,7 +141,8 @@ ProjectCard.style = css<typeof ProjectCard>`
 		overflow: hidden;
 	}
 
-	@supports (grid-template-rows: masonry) or (display: masonry) or (display: grid-lanes) {
+	@supports (grid-template-rows: masonry) or (display: masonry) or
+		(display: grid-lanes) {
 		.image-wrapper {
 			aspect-ratio: auto;
 			overflow: visible;

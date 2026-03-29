@@ -91,7 +91,9 @@ function BlogList(this: FC) {
 									<h3>{post.title}</h3>
 									{post.description ? (
 										<p class="post-desc">{post.description}</p>
-									) : null}
+									) : (
+										false
+									)}
 									<div class="post-footer">
 										{post.tags ? (
 											<div class="post-tags">

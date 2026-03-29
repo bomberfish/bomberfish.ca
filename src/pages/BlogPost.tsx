@@ -31,7 +31,6 @@ function BlogPost(this: FC<BlogPostProps>) {
 		);
 	}
 
-
 	const BlogContent = (blogModules[matchingPath] as any).default;
 
 	const meta = (blogModules[matchingPath] as any) || {};
@@ -51,42 +50,54 @@ function BlogPost(this: FC<BlogPostProps>) {
 				<div class="main-content">
 					<article class="blog-content">
 						<h1 class="post-title">{postTitle}</h1>
-						{postDescription ? <p class="post-desc">{postDescription}</p> : null}
+						{postDescription ? (
+							<p class="post-desc">{postDescription}</p>
+						) : (
+							false
+						)}
 						{postTags ? (
 							<div class="post-tags">
-							<span class="material-symbols">label_important</span>
-								{postTags.map((t) => <span class="tag">{t}</span>)}
+								<span class="material-symbols">label_important</span>
+								{postTags.map((t) => (
+									<span class="tag">{t}</span>
+								))}
 							</div>
-						) : null}
+						) : (
+							false
+						)}
 						<div class="post-body">
 							<BlogContent />
 						</div>
 						<p>
 							<subt class="bottom">
-							<span class="material-symbols">rss_feed</span>{" "}
-							Liked this post? Subscribe to this blog:{" "}
-							<ul class="compact" style="display: inline; margin-left: 0.25rem;">
-								<li>
-									<a href="/feed.xml" target="_blank">
-										RSS
-									</a>
-								</li>
-								<li>
-									<a href="/atom.xml" target="_blank">
-										Atom
-									</a>
-								</li>
-								<li>
-									<a href="/feed.json" target="_blank">
-										JSON Feed
-									</a>
-								</li>
-							</ul>
-							<br />
+								<span class="material-symbols">rss_feed</span> Liked this post?
+								Subscribe to this blog:{" "}
+								<ul
+									class="compact"
+									style="display: inline; margin-left: 0.25rem;"
+								>
+									<li>
+										<a href="/feed.xml" target="_blank">
+											RSS
+										</a>
+									</li>
+									<li>
+										<a href="/atom.xml" target="_blank">
+											Atom
+										</a>
+									</li>
+									<li>
+										<a href="/feed.json" target="_blank">
+											JSON Feed
+										</a>
+									</li>
+								</ul>
+								<br />
 							</subt>
 							<subt class="bottom">
-							<span class="material-symbols">email</span>{" "}
-							Or, get in touch:{"    "}<ContactLinks />
+								<span class="material-symbols">email</span> Or, get in touch:
+								{"    "}
+								<ContactLinks />
 							</subt>
 						</p>
 					</article>
@@ -99,11 +110,14 @@ function BlogPost(this: FC<BlogPostProps>) {
 BlogPost.style = css`
 	.main-content {
 		width: 1000px;
-		width: clamp(640px, 48vw - 1rem, 1000px)!important;
+		width: clamp(640px, 48vw - 1rem, 1000px) !important;
 	}
 
 	subt.bottom {
-		display: flex; align-items: center; gap: 0.5rem; margin-block: 0.75rem;
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+		margin-block: 0.75rem;
 	}
 `;
 
