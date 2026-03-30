@@ -6,10 +6,10 @@ const MAX_DIST = TARGET_BY_DIST.length - 1;
 const LERP = 6; // per second
 
 // Ripple settings (for clicks)
-const RIPPLE_SPEED = 7.5; // cells per second
-const RIPPLE_MAX_RADIUS = 36;
+const RIPPLE_SPEED = 8.5; // cells per second
+const RIPPLE_MAX_RADIUS = 32;
 const RIPPLE_WIDTH = 3;
-const RIPPLE_BRIGHTNESS = 0.5;
+const RIPPLE_BRIGHTNESS = 0.7;
 
 // Wake settings (for dragging)
 const WAKE_FADE = 3; // per second
@@ -20,7 +20,7 @@ const WAKE_WIDTH = 4; // Width perpendicular to movement
 // Side ripple settings (small waves that spawn from wake trail)
 const WAKE_RIPPLE_OFFSET = 2.5; // How far out perpendicular the side ripples spawn
 const WAKE_RIPPLE_INTERVAL = 3; // Spawn side ripples every N wake points
-const WAKE_RIPPLE_MAX_RADIUS = 8; // Smaller than click ripples
+const WAKE_RIPPLE_MAX_RADIUS = 12; // Smaller than click ripples
 const WAKE_RIPPLE_SPEED = 6; // cells per second
 const WAKE_RIPPLE_BRIGHTNESS = 0.1; // Dimmer than click ripples
 
