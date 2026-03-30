@@ -22,7 +22,7 @@ function Homepage(this: FC) {
 							i sometimes make <code>use(ful|less)</code> projects, among
 							other stuff :3
 						</p>
-						<p>i used to be involved in the ios jailbreak scene, but i've mostly moved on to other things by now. right now, i'm interested in webdev, UI/UX, embedded systems, and pcb design.</p>
+						<p>i used to be involved in the ios jailbreak scene, but i've mostly moved on to other things by now. currently, i'm interested in webdev, UI/UX, embedded systems, and pcb design.</p>
 						<p>
 							i'm fluent in swift and javascript, and i'm decent at java and most of the C dialects.
 						</p>
