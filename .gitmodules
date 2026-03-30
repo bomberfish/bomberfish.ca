@@ -1,0 +1,4 @@
+[submodule "vendor/dreamland"]
+	path = vendor/dreamland
+	url = https://github.com/MercuryWorkshop/dreamlandjs.git
+	branch = rewrite

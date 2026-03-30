@@ -5,10 +5,12 @@
 	"version": "9.5.2",
 	"type": "module",
 	"scripts": {
-		"dev": "vite",
+		"install:dreamland": "pnpm --dir vendor/dreamland install --frozen-lockfile",
+		"build:dreamland": "pnpm --dir vendor/dreamland build",
+		"dev": "pnpm run build:dreamland && vite",
 		"build:client": "tsc && vite build --ssrManifest .vite/ssr-manifest.json --outDir dist/static",
 		"build:server": "tsc && vite build --ssr src/main-server.ts --outDir dist/server",
-		"build": "pnpm run build:client && pnpm run build:server && node prerender.js",
+		"build": "pnpm run build:dreamland && pnpm run build:client && pnpm run build:server && node prerender.js",
 		"format": "prettier --write src/"
 	},
 	"devDependencies": {
@@ -53,7 +55,7 @@
 	"dependencies": {
 		"@photo-sphere-viewer/autorotate-plugin": "^5.14.1",
 		"@photo-sphere-viewer/core": "^5.14.1",
-		"dreamland": "git+https://github.com/MercuryWorkshop/dreamlandjs.git#rewrite",
+		"dreamland": "link:vendor/dreamland",
 		"humanize-duration": "^3.33.1"
 	}
 }
