@@ -128,7 +128,7 @@ export function ButtonList(this: FC) {
 				href="https://wearr.dev"
 			/>
 			<WebButton
-				src="/buttons/ecz.gif"
+				src="https://errorcodezero.dev/button.gif"
 				title="errorcodezero"
 				href="https://www.errorcodezero.dev/"
 			/>
