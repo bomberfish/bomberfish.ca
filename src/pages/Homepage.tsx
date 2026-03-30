@@ -24,7 +24,10 @@ function Homepage(this: FC) {
 						</p>
 						<p>i used to be involved in the ios jailbreak scene, but i've mostly moved on to other things by now. right now, i'm interested in webdev, UI/UX, embedded systems, and pcb design.</p>
 						<p>
-							i'm fluent in javascript, swift, and c++, and i'm also part of{" "}
+							i'm fluent in swift and javascript, and i'm decent at java and most of the C dialects.
+						</p>
+						<p> 
+							i'm also part of{" "}
 							<a href="https://mercurywork.shop" target="_blank">
 								mercury workshop
 							</a>
