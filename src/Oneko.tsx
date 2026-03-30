@@ -242,13 +242,41 @@ function Oneko(this: FC<{}, OnekoState>) {
 		this.posX -= (diffX / distance) * this.nekoSpeed;
 		this.posY -= (diffY / distance) * this.nekoSpeed;
 
-		this.posX = Math.min(Math.max(16, this.posX), document.body.clientWidth - 16);
-		this.posY = Math.min(Math.max(16, this.posY), document.body.clientHeight - 16);
+		this.posX = Math.min(
+			Math.max(16, this.posX),
+			document.body.clientWidth - 16
+		);
+		this.posY = Math.min(
+			Math.max(16, this.posY),
+			document.body.clientHeight - 16
+		);
 	};
 
 	const handleMouseMove = (event: MouseEvent) => {
 		this.mouseX = event.pageX;
 		this.mouseY = event.pageY;
+	};
+
+	// Directly update the element's style - bypasses hydration issues with reactive bindings
+	const updateStyle = () => {
+		const el = this.root as HTMLElement;
+		if (!el) return;
+
+		if (!this.enabled) {
+			el.style.display = "none";
+			el.style.opacity = "0";
+			el.style.transform = "translate3d(-16px, -16px, 0)";
+			return;
+		}
+
+		const spriteSet = SPRITE_SETS[this.spriteName];
+		const sprite = spriteSet[this.spriteFrame % spriteSet.length];
+		const [spriteX, spriteY] = sprite;
+
+		el.style.display = "";
+		el.style.transform = `translate3d(${this.posX - 16}px, ${this.posY - 16}px, 0)`;
+		el.style.opacity = String(this.opacity);
+		el.style.backgroundPosition = `${spriteX * NEKO_REM}rem ${spriteY * NEKO_REM}rem`;
 	};
 
 	const cleanup = () => {
@@ -266,7 +294,10 @@ function Oneko(this: FC<{}, OnekoState>) {
 		}
 
 		document.removeEventListener("mousemove", handleMouseMove);
-		if (this.reduceMotionQuery && (this.reduceMotionQuery as any).removeEventListener) {
+		if (
+			this.reduceMotionQuery &&
+			(this.reduceMotionQuery as any).removeEventListener
+		) {
 			(this.reduceMotionQuery as any).removeEventListener(
 				"change",
 				handleMotionPreferenceChange
@@ -275,7 +306,9 @@ function Oneko(this: FC<{}, OnekoState>) {
 			this.reduceMotionQuery &&
 			(this.reduceMotionQuery as any).removeListener
 		) {
-			(this.reduceMotionQuery as any).removeListener(handleMotionPreferenceChange);
+			(this.reduceMotionQuery as any).removeListener(
+				handleMotionPreferenceChange
+			);
 		}
 
 		this.mutationObserver?.disconnect();
@@ -299,7 +332,13 @@ function Oneko(this: FC<{}, OnekoState>) {
 			return;
 		}
 
-		if (!this.root.isConnected) {
+		// Don't cleanup if root isn't connected yet - it might still be mounting
+		// Only cleanup if it WAS connected and then became disconnected
+		if (
+			this.root &&
+			!this.root.isConnected &&
+			this.lastFrameTimestamp !== undefined
+		) {
 			cleanup();
 			return;
 		}
@@ -310,6 +349,9 @@ function Oneko(this: FC<{}, OnekoState>) {
 			this.lastFrameTimestamp = timestamp;
 			frame();
 		}
+
+		// Update DOM directly
+		updateStyle();
 
 		if (!this.cleanedUp) {
 			this.animationFrameId = window.requestAnimationFrame(onAnimationFrame);
@@ -345,7 +387,9 @@ function Oneko(this: FC<{}, OnekoState>) {
 			return;
 		}
 
-		this.reduceMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+		this.reduceMotionQuery = window.matchMedia(
+			"(prefers-reduced-motion: reduce)"
+		);
 		if (this.reduceMotionQuery && this.reduceMotionQuery.matches) {
 			disable();
 			return;
@@ -358,7 +402,13 @@ function Oneko(this: FC<{}, OnekoState>) {
 		this.opacity = 0;
 
 		this.mutationObserver = new MutationObserver(() => {
-			if (!this.root.isConnected) {
+			// Only cleanup if the element was connected and then became disconnected
+			// (lastFrameTimestamp being set indicates we've been running)
+			if (
+				this.root &&
+				!this.root.isConnected &&
+				this.lastFrameTimestamp !== undefined
+			) {
 				cleanup();
 			}
 		});
@@ -368,7 +418,10 @@ function Oneko(this: FC<{}, OnekoState>) {
 		});
 
 		document.addEventListener("mousemove", handleMouseMove, { passive: true });
-		if (this.reduceMotionQuery && (this.reduceMotionQuery as any).addEventListener) {
+		if (
+			this.reduceMotionQuery &&
+			(this.reduceMotionQuery as any).addEventListener
+		) {
 			(this.reduceMotionQuery as any).addEventListener(
 				"change",
 				handleMotionPreferenceChange
@@ -386,67 +439,34 @@ function Oneko(this: FC<{}, OnekoState>) {
 		requestAnimationFrame(() => {
 			if (!this.cleanedUp && this.enabled) {
 				this.opacity = 1;
+				updateStyle();
 			}
 		});
 	};
 
-	const styleBinding = use(
-		this.posX,
-		this.posY,
-		this.opacity,
-		this.spriteName,
-		this.spriteFrame,
-		this.enabled
-	).map(([posX, posY, opacity, spriteName, spriteFrame, enabled]) => {
-		if (!enabled) {
-			return [
-				"display: none",
-				"opacity: 0",
-				"transform: translate3d(-16px, -16px, 0)",
-			].join("; ");
-		}
-
-		const spriteSet = SPRITE_SETS[spriteName];
-		const sprite = spriteSet[spriteFrame % spriteSet.length];
-		const [spriteX, spriteY] = sprite;
-
-        return [
-            `transform: translate3d(${posX - 16}px, ${posY - 16}px, 0)`,
-            `opacity: ${opacity}`,
-            `background-position: ${spriteX * NEKO_REM}rem ${spriteY * NEKO_REM}rem`
-        ].join("; ");
-	});
-
-	return (
-		<div
-			id="oneko"
-			data-oneko
-			aria-hidden="true"
-			style={styleBinding}
-			on:click={handleWake}
-		/>
-	);
+	return <div id="oneko" data-oneko aria-hidden="true" on:click={handleWake} />;
 }
 
 Oneko.style = css`
-    :scope {
-        position: fixed;
-        left: 0;
-        top: 0;
-        width: ${NEKO_REM.toString()}rem;
-        height: ${NEKO_REM.toString()}rem;
-        pointer-events: none;
-        background-image: url(/oneko-custom.gif);
-        background-repeat: no-repeat;
-        background-size: ${(NEKO_REM * 8).toString()}rem ${(NEKO_REM * 4).toString()}rem;
-        image-rendering: pixelated;
-        transition: opacity 0.5s;
-        z-index: 2147483647;
-        display: block;
-        transform: translate3d(-16px, -16px, 0);
-        opacity: 0;
-        will-change: transform, opacity;
-    }
+	:scope {
+		position: fixed;
+		left: 0;
+		top: 0;
+		width: ${NEKO_REM.toString()}rem;
+		height: ${NEKO_REM.toString()}rem;
+		pointer-events: none;
+		background-image: url(/oneko-custom.gif);
+		background-repeat: no-repeat;
+		background-size: ${(NEKO_REM * 8).toString()}rem
+			${(NEKO_REM * 4).toString()}rem;
+		image-rendering: pixelated;
+		transition: opacity 0.5s;
+		z-index: 2147483647;
+		display: block;
+		transform: translate3d(-16px, -16px, 0);
+		opacity: 0;
+		will-change: transform, opacity;
+	}
 `;
 
 export default Oneko;
