@@ -15,23 +15,20 @@ function Homepage(this: FC) {
 						</a>
 						<h3>👋 hiya!</h3>
 						<p>
-							i'm hariz (he/they), a 17 y/o high school student living in
+							i'm hariz (he/they), a 17 y/o high school student from
 							waterloo, canada.
 						</p>
 						<p>
 							i sometimes make <code>use(ful|less)</code> projects, among
 							other stuff :3
 						</p>
-						<p>
-							i'm interested in webdev, UI design, embedded systems, and
-							hardware.
-						</p>
+						<p>i used to be involved in the ios jailbreak scene, but i've mostly moved on to other things by now. right now, i'm interested in webdev, UI/UX, embedded systems, and pcb design.</p>
 						<p>
 							i'm fluent in javascript, swift, and c++, and i'm also part of{" "}
 							<a href="https://mercurywork.shop" target="_blank">
 								mercury workshop
 							</a>
-							, a software development collective best known for the{" "}
+							, a collective of software developers best known for the{" "}
 							<a href="https://sh1mmer.me" target="_blank">
 								sh1mmer
 							</a>{" "}
@@ -40,7 +37,7 @@ function Homepage(this: FC) {
 					</section>
 
 					<section class="contact-section">
-						<h3>get in touch!</h3>
+						<h3>get in touch:</h3>
 						<ContactLinks />
 					</section>
 					<br />
@@ -165,6 +162,12 @@ export function ContactLinks(this: FC) {
 				<a href="https://bsky.app/profile/bomberfish.ca" target="_blank" rel="noopener noreferrer" class="contact-item">bluesky</a>
 				<span class="tooltip">@bomberfish.ca</span>
 			</span>
+			<span class="sep">/</span>
+			<span class="tooltip-wrapper">
+				<a href="https://signal.me/#eu/Hj17C2gxd-rMfhgGYLZADiwtnP9y1xDF9waDfQxJudgShHBOqThJXLLHV4ZPmPny" target="_blank" rel="noopener noreferrer" class="contact-item">signal</a>
+				<span class="tooltip">@one.337</span>
+			</span>
+			{/* add more links here! */}
 		</span>
 	);
 }
