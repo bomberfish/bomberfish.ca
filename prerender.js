@@ -82,8 +82,48 @@ const paths = entry.router.ssgables();
 
 let template = await readFile(resolve("dist/static/index.html"), "utf8");
 
+// Use the exported blog metadata for OG tags
+const blogMetadataMap = new Map(
+	entry.blogMetadata.map((post) => [post.slug, post])
+);
+
 for (const [route, path] of paths) {
-	const rendered = await renderSsr(template, () => entry.default(route));
+	let rendered = await renderSsr(template, () => entry.default(route));
+
+	// Inject OG meta tags for blog posts
+	const blogMatch = route.match(/^\/blog\/(.+)$/);
+	if (blogMatch) {
+		const slug = blogMatch[1];
+		const meta = blogMetadataMap.get(slug);
+		if (meta) {
+			const ogTags = [];
+			const fullTitle = `${meta.title} – bomberfish.ca`;
+			const ogImage = meta.image
+				? `https://bomberfish.ca${meta.image}`
+				: "https://bomberfish.ca/me.png";
+
+			ogTags.push(
+				`<meta property="og:title" content="${fullTitle.replace(/"/g, "&quot;")}" />`
+			);
+			ogTags.push(`<meta property="og:image" content="${ogImage}" />`);
+			if (meta.description) {
+				ogTags.push(
+					`<meta property="og:description" content="${meta.description.replace(/"/g, "&quot;")}" />`
+				);
+			}
+			ogTags.push(`<meta property="og:type" content="article" />`);
+			ogTags.push(
+				`<meta property="og:url" content="https://bomberfish.ca${route}" />`
+			);
+
+			// Replace the default og:image with the blog-specific one
+			rendered = rendered.replace(
+				/<meta name="og:image" content="https:\/\/bomberfish\.ca\/me\.png" \/>/,
+				ogTags.join("\n\t\t")
+			);
+		}
+	}
+
 	const renderedWithPostcss = await processInlineStyles(rendered);
 	console.log(
 		`prerendered: ${route}\t${(new TextEncoder().encode(renderedWithPostcss).byteLength / 1024).toFixed(2)}kb`

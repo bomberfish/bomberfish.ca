@@ -1,6 +1,7 @@
 import { FC, css } from "dreamland/core";
 import { ContactLinks } from "./Homepage";
 import Sidebar from "../components/Sidebar";
+import NotFoundView from "./NotFoundView";
 
 interface BlogPostProps {
 	slug: string;
@@ -17,18 +18,7 @@ function BlogPost(this: FC<BlogPostProps>) {
 	);
 
 	if (!matchingPath) {
-		return (
-			<main>
-				<title>404 – bomberfish.ca</title>
-				<div class="layout-container">
-					<Sidebar active="blog" />
-					<div class="main-content">
-						<h1>Blog Post Not Found</h1>
-						<p>The blog post you're looking for doesn't exist.</p>
-					</div>
-				</div>
-			</main>
-		);
+		return <NotFoundView />;
 	}
 
 	const BlogContent = (blogModules[matchingPath] as any).default;
