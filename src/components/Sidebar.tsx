@@ -11,7 +11,7 @@ function Sidebar(this: FC<{ active?: PageCategory }>) {
 		<aside class="sidebar">
 			<TransitionLink href="/" class="site-title-link">
 				<h1 class="site-title">
-                    <img src="/pfp-display-crop.gif" height="52" class="site-title-pfp" loading="lazy" alt="my profile picture" />
+                    <img src="/pfp-display-crop.gif" height="52" class="site-title-pfp" loading="eager" alt="my profile picture" />
                     <span>bomberfish.ca</span>
                 </h1>
 			</TransitionLink>
