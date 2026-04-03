@@ -1,5 +1,5 @@
 import { FC, css } from "dreamland/core";
-import ProjectCardDetails from "../types/Project";
+import { ProjectCardDetails } from "../Projects";
 import TransitionLink from "./TransitionLink";
 
 function ProjectCard(

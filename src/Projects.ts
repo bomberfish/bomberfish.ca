@@ -1,4 +1,4 @@
-class ProjectCardDetails {
+export class ProjectCardDetails {
 	img: string | undefined;
 	title: string;
 	blurb: string;

@@ -1,6 +1,6 @@
 import { FC, css } from "dreamland/core";
 import Sidebar from "../components/Sidebar";
-import ProjectCardDetails from "../types/Project";
+import { ProjectCardDetails } from "../Projects";
 
 function ProjectView(this: FC<{ project: ProjectCardDetails }>) {
 	return (
