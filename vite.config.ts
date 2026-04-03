@@ -165,10 +165,38 @@ export default defineConfig({
 		},
 		sourcemap: true,
 		rolldownOptions: {
+			checks: {
+				pluginTimings: false,
+			},
 			output: {
 				generatedCode: {
 					preset: "es2015",
-				}
+				},
+				codeSplitting: {
+					includeDependenciesRecursively: false,
+					groups: [
+						{
+							name: "core-lib",
+							test: /[\\/]vendor[\\/]dreamland[\\/]dist[\/]|[\\/]humanize-duration[\/]/,
+							priority: 120,
+						},
+						{
+							name: "app",
+							test: /[\\/]src[\/](?:App\.tsx$|main-client\.ts$|IsMobile\.ts$|components[\/](?!Buttons\.tsx$)|pages[\/](?:Homepage|NotFoundView|PhotoSphereTool|ProjectView)\.tsx$)/,
+							priority: 100,
+						},
+						{
+							name: "content",
+								test: /[\\/]src[\/](?:Projects\.ts$|pages[\/]|blog[\/]|components[\/]Buttons\.tsx$)/,
+							priority: 50,
+						},	
+						{
+							name: "photosphere-viewer",
+							test: /[\\/]node_modules[\\/]@photo-sphere-viewer[\\/]/,
+							priority: 5,
+						},
+					],
+				},
 			},
 			treeshake: true,
 		},

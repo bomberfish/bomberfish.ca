@@ -1,5 +1,5 @@
 import { FC, css } from "dreamland/core";
-import isMobile from "./IsMobile";
+import isMobile from "../IsMobile";
 
 const NEKO_REM = 2.75;
 
@@ -218,6 +218,7 @@ function Oneko(this: FC<{}, OnekoState>) {
 
 	const frame = () => {
 		this.frameCount += 1;
+
 		const diffX = this.posX - this.mouseX;
 		const diffY = this.posY - this.mouseY;
 		const distance = Math.hypot(diffX, diffY);

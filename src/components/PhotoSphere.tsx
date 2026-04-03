@@ -1,8 +1,5 @@
-import { Viewer, ViewerConfig } from "@photo-sphere-viewer/core";
-import {
-	AutorotatePlugin,
-	AutorotatePluginConfig,
-} from "@photo-sphere-viewer/autorotate-plugin";
+import type { Viewer, ViewerConfig } from "@photo-sphere-viewer/core";
+import type { AutorotatePluginConfig } from "@photo-sphere-viewer/autorotate-plugin";
 import "@photo-sphere-viewer/core/index.css";
 import { FC, css } from "dreamland/core";
 
@@ -19,45 +16,52 @@ export function PhotoSphere(this: FC<PhotoSphereProps>) {
 	let viewer: Viewer | null = null;
 
 	this.cx.mount = () => {
-		const container = this.root.querySelector(
-			".photo-sphere-viewer"
-		) as HTMLElement;
-		const fallbackEl = this.root.querySelector(
-			".photo-sphere-fallback"
-		) as HTMLElement;
-		const hintEl = this.root.querySelector(".photo-sphere-hint") as HTMLElement;
+		void (async () => {
+			const container = this.root.querySelector(
+				".photo-sphere-viewer"
+			) as HTMLElement;
+			const fallbackEl = this.root.querySelector(
+				".photo-sphere-fallback"
+			) as HTMLElement;
+			const hintEl = this.root.querySelector(".photo-sphere-hint") as HTMLElement;
 
-		if (container) {
-			viewer = new Viewer({
-				navbar: false,
-				mousewheel: false,
-				...this.viewerConfig,
-				container,
-				panorama: this.src,
-				plugins: [
-					[
-						AutorotatePlugin,
-						{
-							...this.autorotateConfig,
-						},
+			if (container) {
+				const [{ Viewer }, { AutorotatePlugin }] = await Promise.all([
+					import("@photo-sphere-viewer/core"),
+					import("@photo-sphere-viewer/autorotate-plugin"),
+				]);
+
+				viewer = new Viewer({
+					navbar: false,
+					mousewheel: false,
+					...this.viewerConfig,
+					container,
+					panorama: this.src,
+					plugins: [
+						[
+							AutorotatePlugin,
+							{
+								...this.autorotateConfig,
+							},
+						],
 					],
-				],
-			});
+				});
 
-			viewer.addEventListener("ready", () => {
-				if (fallbackEl) {
-					fallbackEl.style.display = "none";
-				}
-				container.style.opacity = "1";
+				viewer.addEventListener("ready", () => {
+					if (fallbackEl) {
+						fallbackEl.style.display = "none";
+					}
+					container.style.opacity = "1";
 
-				if (hintEl) {
-					hintEl.classList.add("visible");
-					setTimeout(() => {
-						hintEl.classList.remove("visible");
-					}, 3000);
-				}
-			});
-		}
+					if (hintEl) {
+						hintEl.classList.add("visible");
+						setTimeout(() => {
+							hintEl.classList.remove("visible");
+						}, 3000);
+					}
+				});
+			}
+		})();
 	};
 
 	const isMobile =

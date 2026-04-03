@@ -12,7 +12,7 @@ import NotFoundView from "./pages/NotFoundView";
 import BlogList from "./pages/BlogList";
 import BlogPost from "./pages/BlogPost";
 import PhotoSphereTool from "./pages/PhotoSphereTool";
-import Oneko from "./Oneko";
+import Oneko from "./components/Oneko";
 import InteractiveGrid from "./components/InteractiveGrid";
 
 type AppProps = {
