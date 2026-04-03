@@ -97,25 +97,36 @@ for (const [route, path] of paths) {
 		const meta = blogMetadataMap.get(slug);
 		if (meta) {
 			const ogTags = [];
-			const fullTitle = `${meta.title} – bomberfish.ca`;
+			const fullTitle = `${meta.title}`;
 			const ogImage = meta.image
 				? `https://bomberfish.ca${meta.image}`
 				: "https://bomberfish.ca/me.png";
 
+			ogTags.push(`<meta property="og:title" content="${fullTitle.replace(/"/g, "&quot;")}" />`);
+			ogTags.push(`<meta name="twitter:title" content="${fullTitle.replace(/"/g, "&quot;")}" />`);
+
 			ogTags.push(
-				`<meta property="og:title" content="${fullTitle.replace(/"/g, "&quot;")}" />`
+				`<meta property="og:url" content="https://bomberfish.ca${route}" />`
 			);
-			ogTags.push(`<meta property="og:image" content="${ogImage}" />`);
+			ogTags.push(`<meta name="twitter:url" content="https://bomberfish.ca${route}" />`);
+			ogTags.push(`<meta name="twitter:domain" content="bomberfish.ca" />`);
+			
+			ogTags.push(`<meta property="og:type" content="article" />`);
+
+			ogTags.push(`<meta name="twitter:site" content="@bomberfish77" />`);
+
 			if (meta.description) {
 				ogTags.push(
 					`<meta property="og:description" content="${meta.description.replace(/"/g, "&quot;")}" />`
 				);
+				ogTags.push(`<meta name="description" content="${meta.description.replace(/"/g, "&quot;")}" />`);
+				ogTags.push(`<meta name="twitter:description" content="${meta.description.replace(/"/g, "&quot;")}" />`);
 			}
-			ogTags.push(`<meta property="og:type" content="article" />`);
-			ogTags.push(
-				`<meta property="og:url" content="https://bomberfish.ca${route}" />`
-			);
 
+			ogTags.push(`<meta property="og:image" content="${ogImage}" />`);
+			ogTags.push(`<meta name="twitter:card" content="summary_large_image" />`);
+			ogTags.push(`<meta name="twitter:image" content="${ogImage}" />`);
+			
 			// Replace the default og:image with the blog-specific one
 			rendered = rendered.replace(
 				/<meta name="og:image" content="https:\/\/bomberfish\.ca\/me\.png" \/>/,
