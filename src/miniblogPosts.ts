@@ -31,7 +31,7 @@ const createPreview = (source: string) => {
 		.replace(/\s+/g, " ")
 		.trim();
 
-	return normalized.slice(0, 100);
+	return normalized.split(".")[0].slice(0, 80);
 };
 
 export const miniblogPosts = Object.entries(miniblogModules)

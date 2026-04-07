@@ -14,6 +14,7 @@ dist-ssr
 
 .fallow
 src/blog/draft-*
+src/miniblog/staging/*.mdx
 
 # Editor directories and files
 .vscode/*
