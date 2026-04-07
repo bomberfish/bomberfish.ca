@@ -35,8 +35,8 @@ function App(this: FC<AppProps>) {
 		<app id="app">
 			<Router
 				initial={this.initial}
-				children={[
-					<Route path="tools/photosphere" show={() => <PhotoSphereTool />} />,
+				>
+					<Route path="tools/photosphere" show={() => <PhotoSphereTool />} />
 					<Route
 						layout={Layout}
 						children={[
@@ -57,9 +57,8 @@ function App(this: FC<AppProps>) {
 							<Route path="siteinfo" show={() => <AboutView />} />,
 							<Route path="*" show={() => <NotFoundView />} />,
 						]}
-					/>,
-				]}
-			/>
+					/>
+				</Router>
 			<Oneko />
 		</app>
 	);

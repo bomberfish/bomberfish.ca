@@ -35,9 +35,6 @@ export function PhotoSphereTool(this: FC) {
 	return (
 		<main>
 			<title>photosphere viewer – bomberfish.ca</title>
-			<div class="layout-container">
-				<Sidebar />
-				<div class="main-content">
 					<h2>photosphere viewer</h2>
 
 					<div>
@@ -131,8 +128,6 @@ export function PhotoSphereTool(this: FC) {
 							<span>upload an image to view</span>
 						)
 					)}
-				</div>
-			</div>
 		</main>
 	);
 }
