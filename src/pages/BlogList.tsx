@@ -49,7 +49,7 @@ function BlogList(this: FC) {
 						various assorted thoughts and ramblings.
 					</p>
 					<subt style="font-size: 0.95rem; color: var(--text1)">
-						*obligatory disclaimer: all opinions are my own and do not reflect
+						<a class="to-mini" href="/mini">***</a> obligatory disclaimer: all opinions are my own and do not reflect
 						those of any employer, past, present, or future.
 					</subt>
 					<span style="margin-bottom: 0; margin-top: 0.5rem;">
@@ -126,6 +126,11 @@ BlogList.style = css`
 	p {
 		margin: 0;
 		margin-bottom: 0.5rem;
+	}
+
+	a.to-mini {
+		text-decoration: none;
+		font-size: 0.9em;
 	}
 
 	.main-content {

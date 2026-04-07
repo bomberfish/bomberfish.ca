@@ -34,6 +34,7 @@ export function PhotoSphereTool(this: FC) {
 
 	return (
 		<main>
+			<link rel="stylesheet" href="/legacy.css" />
 			<title>photosphere viewer – bomberfish.ca</title>
 					<h2>photosphere viewer</h2>
 

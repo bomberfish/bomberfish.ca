@@ -12,6 +12,15 @@ import NotFoundView from "./pages/NotFoundView";
 import BlogList from "./pages/BlogList";
 import BlogPost from "./pages/BlogPost";
 import PhotoSphereTool from "./pages/PhotoSphereTool";
+import MiniBlogLayout from "./pages/MiniBlogLayout";
+import MiniBlogList from "./pages/MiniBlogList";
+import MiniBlogPost from "./pages/MiniBlogPost";
+import {
+	miniblogMonths,
+	miniblogPosts,
+	miniblogYearMonths,
+	miniblogYears,
+} from "./miniblogPosts";
 import Oneko from "./components/Oneko";
 
 type AppProps = {
@@ -36,6 +45,41 @@ function App(this: FC<AppProps>) {
 			<Router
 				initial={this.initial}
 				>
+					<Route
+						path="mini"
+						layout={MiniBlogLayout}
+						children={[
+							<Route show={() => <MiniBlogList />} />,
+							...miniblogYears.map((year) => (
+								<Route path={year} show={() => <MiniBlogList year={year} />} />
+							)),
+							...miniblogYearMonths.map(({ year, month }) => (
+								<Route
+									path={`${year}/${month}`}
+									show={() => <MiniBlogList year={year} month={month} />}
+								/>
+							)),
+							...miniblogMonths.map((month) => (
+								<Route
+									path={`:wildcardYear/${month}`}
+									show={() => <MiniBlogList year="*" month={month} />}
+								/>
+							)),
+							...miniblogPosts.map((post) => (
+								<Route
+									path={`${post.year}/${post.month}/${post.day}/${post.number}`}
+									show={() => (
+										<MiniBlogPost
+											year={post.year}
+											month={post.month}
+											day={post.day}
+											number={post.number}
+										/>
+									)}
+								/>
+							)),
+						]}
+					/>
 					<Route path="tools/photosphere" show={() => <PhotoSphereTool />} />
 					<Route
 						layout={Layout}
@@ -59,7 +103,6 @@ function App(this: FC<AppProps>) {
 						]}
 					/>
 				</Router>
-			<Oneko />
 		</app>
 	);
 }
