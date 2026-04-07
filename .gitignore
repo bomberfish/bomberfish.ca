@@ -12,6 +12,7 @@ dist
 dist-ssr
 *.local
 
+.fallow
 src/blog/draft-*
 
 # Editor directories and files

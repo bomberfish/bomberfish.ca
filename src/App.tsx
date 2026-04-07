@@ -2,7 +2,7 @@
 import { FC } from "dreamland/core";
 import { Route, Router } from "dreamland/router";
 
-import "./style.css";
+import Layout from "./Layout";
 import Homepage from "./pages/Homepage";
 import { projects } from "./Projects";
 import ProjectView from "./pages/ProjectView";
@@ -13,7 +13,6 @@ import BlogList from "./pages/BlogList";
 import BlogPost from "./pages/BlogPost";
 import PhotoSphereTool from "./pages/PhotoSphereTool";
 import Oneko from "./components/Oneko";
-import InteractiveGrid from "./components/InteractiveGrid";
 
 type AppProps = {
 	initial?: [path: string, origin: string];
@@ -34,28 +33,31 @@ function App(this: FC<AppProps>) {
 
 	return (
 		<app id="app">
-			<InteractiveGrid />
 			<Router
 				initial={this.initial}
 				children={[
-					<Route path="" show={() => <Homepage />} />,
-					<Route path="projects" show={() => <ProjectList />} />,
-					...projects.map((project) => (
-						<Route
-							path={`projects/${project.lastPathComponent}`}
-							show={() => <ProjectView project={project} />}
-						/>
-					)),
-					<Route path="blog" show={() => <BlogList />} />,
-					...blogPosts.map((post) => (
-						<Route
-							path={`blog/${post.slug}`}
-							show={() => <BlogPost slug={post.slug} />}
-						/>
-					)),
-					<Route path="siteinfo" show={() => <AboutView />} />,
 					<Route path="tools/photosphere" show={() => <PhotoSphereTool />} />,
-					<Route path="*" show={() => <NotFoundView />} />,
+					<Route
+						layout={Layout}
+						children={[
+							<Route path="" show={() => <Homepage />} />,
+							<Route path="projects" show={() => <ProjectList />} />,
+							...projects.map((project) => (
+								<Route
+									path={`projects/${project.lastPathComponent}`}
+									show={() => <ProjectView project={project} />}
+								/>
+							)),
+							<Route path="blog" show={() => <BlogList />} />,
+							...blogPosts.map((post) => (
+								<Route
+									path={`blog/${post.slug}`}
+									show={() => <BlogPost slug={post.slug} />} />
+							)),
+							<Route path="siteinfo" show={() => <AboutView />} />,
+							<Route path="*" show={() => <NotFoundView />} />,
+						]}
+					/>,
 				]}
 			/>
 			<Oneko />
