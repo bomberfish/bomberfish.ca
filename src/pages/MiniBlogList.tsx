@@ -71,7 +71,7 @@ function MiniBlogList(this: FC<MiniBlogListProps>) {
             <p style="margin-bottom: 0;">you are here for a reason. no further clarification is required</p>
             <p style="font-size: 0.67em; margin-top: 0;">*** collections posted in bulk. last site build {__BUILD_DATE__}</p>
 
-			<ol>
+			<ol reversed>
 				{posts.map((post) => (
 					<li>
 						<a href={post.path}>{post.preview}</a>
