@@ -32,6 +32,11 @@ MiniBlogLayout.style = css`
 		min-height: 100vh;
 	}
 
+	:scope :global(::selection) {
+		background: #33909980;
+		color: #132526;	
+	}
+
 	:scope :global(section) {
 		width: min(46rem, 100%);
 		margin-inline: auto;
