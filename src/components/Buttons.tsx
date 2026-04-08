@@ -19,7 +19,7 @@ export function WebButton(this: FC<WebButtonProps>) {
 		<a
 			class="web-button"
 			href={this.href || ""}
-			target={this.href ? "_blank" : "_self"}
+			target={(this.href && this.href.includes("://")) ? "_blank" : "_self"}
 			referrer-policy="unsafe-url"
 			on:click={(e: MouseEvent) => {
 				this["on:click"]?.(e);

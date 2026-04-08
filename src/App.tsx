@@ -18,6 +18,7 @@ import MiniBlogPost from "./pages/MiniBlogPost";
 import {
 	miniblogMonths,
 	miniblogPosts,
+	miniblogYearMonthDays,
 	miniblogYearMonths,
 	miniblogYears,
 } from "./miniblogPosts";
@@ -57,6 +58,12 @@ function App(this: FC<AppProps>) {
 								<Route
 									path={`${year}/${month}`}
 									show={() => <MiniBlogList year={year} month={month} />}
+								/>
+							)),
+							...miniblogYearMonthDays.map(({ year, month, day }) => (
+								<Route
+									path={`${year}/${month}/${day}`}
+									show={() => <MiniBlogList year={year} month={month} day={day} />}
 								/>
 							)),
 							...miniblogMonths.map((month) => (

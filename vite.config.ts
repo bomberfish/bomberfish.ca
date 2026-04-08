@@ -187,7 +187,7 @@ export default defineConfig({
 						},
 						{
 							name: "content",
-								test: /[\\/]src[\/](?:Projects\.ts$|pages[\/]|blog[\/]|components[\/]Buttons\.tsx$)/,
+								test: /[\\/]src[\/](?:Projects\.ts$|pages[\/]|blog[\/]|miniblog[\/]|components[\/]Buttons\.tsx$)/,
 							priority: 50,
 						},	
 						{
