@@ -182,12 +182,12 @@ export default defineConfig({
 						},
 						{
 							name: "app",
-							test: /[\\/]src[\/](?:App\.tsx$|Layout\.tsx$|main-client\.ts$|IsMobile\.ts$|components[\/](?!Buttons\.tsx$)|pages[\/](?:Homepage|NotFoundView|PhotoSphereTool|ProjectView)\.tsx$)/,
+							test: /[\\/]src[\/](?:Layout\.tsx$|main-client\.ts$|IsMobile\.ts$|components[\/](?!Buttons\.tsx$)|pages[\/](?:Homepage|NotFoundView|PhotoSphereTool|ProjectView)\.tsx$)/,
 							priority: 100,
 						},
 						{
 							name: "content",
-								test: /[\\/]src[\/](?:Projects\.ts$|pages[\/]|blog[\/]|miniblog[\/]|components[\/]Buttons\.tsx$)/,
+								test: /[\\/]src[\/](?:pages[\/]|blog[\/]|miniblog[\/]|components[\/]Buttons\.tsx$)/,
 							priority: 50,
 						},	
 						{
