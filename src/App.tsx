@@ -39,6 +39,17 @@ function App(this: FC<AppProps>) {
 		})
 		.filter((p) => p !== null) as { slug: string }[];
 
+	const safeProjects = Array.isArray(projects) ? projects : [];
+	const safeMiniblogYears = Array.isArray(miniblogYears) ? miniblogYears : [];
+	const safeMiniblogMonths = Array.isArray(miniblogMonths) ? miniblogMonths : [];
+	const safeMiniblogYearMonths = Array.isArray(miniblogYearMonths)
+		? miniblogYearMonths
+		: [];
+	const safeMiniblogYearMonthDays = Array.isArray(miniblogYearMonthDays)
+		? miniblogYearMonthDays
+		: [];
+	const safeMiniblogPosts = Array.isArray(miniblogPosts) ? miniblogPosts : [];
+
 	blogPosts.sort((a, b) => b.slug.localeCompare(a.slug));
 
 	return (
@@ -51,28 +62,28 @@ function App(this: FC<AppProps>) {
 						layout={MiniBlogLayout}
 						children={[
 							<Route show={() => <MiniBlogList />} />,
-							...miniblogYears.map((year) => (
+							...safeMiniblogYears.map((year) => (
 								<Route path={year} show={() => <MiniBlogList year={year} />} />
 							)),
-							...miniblogYearMonths.map(({ year, month }) => (
+							...safeMiniblogYearMonths.map(({ year, month }) => (
 								<Route
 									path={`${year}/${month}`}
 									show={() => <MiniBlogList year={year} month={month} />}
 								/>
 							)),
-							...miniblogYearMonthDays.map(({ year, month, day }) => (
+							...safeMiniblogYearMonthDays.map(({ year, month, day }) => (
 								<Route
 									path={`${year}/${month}/${day}`}
 									show={() => <MiniBlogList year={year} month={month} day={day} />}
 								/>
 							)),
-							...miniblogMonths.map((month) => (
+							...safeMiniblogMonths.map((month) => (
 								<Route
 									path={`:wildcardYear/${month}`}
 									show={() => <MiniBlogList year="*" month={month} />}
 								/>
 							)),
-							...miniblogPosts.map((post) => (
+							...safeMiniblogPosts.map((post) => (
 								<Route
 									path={`${post.year}/${post.month}/${post.day}/${post.number}`}
 									show={() => (
@@ -93,7 +104,7 @@ function App(this: FC<AppProps>) {
 						children={[
 							<Route path="" show={() => <Homepage />} />,
 							<Route path="projects" show={() => <ProjectList />} />,
-							...projects.map((project) => (
+							...safeProjects.map((project) => (
 								<Route
 									path={`projects/${project.lastPathComponent}`}
 									show={() => <ProjectView project={project} />}

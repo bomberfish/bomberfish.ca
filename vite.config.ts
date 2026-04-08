@@ -173,7 +173,7 @@ export default defineConfig({
 					preset: "es2015",
 				},
 				codeSplitting: {
-					includeDependenciesRecursively: false,
+					includeDependenciesRecursively: true,
 					groups: [
 						{
 							name: "core-lib",
