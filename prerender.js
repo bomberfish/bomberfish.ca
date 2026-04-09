@@ -18,6 +18,45 @@ import { createElement } from "react";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const resolve = (p) => resolvePath(__dirname, p);
+const nodeEnv = process.env.NODE_ENV ?? import.meta?.env?.NODE_ENV;
+const lifecycleEvent = process.env.npm_lifecycle_event;
+const isProduction = nodeEnv === "production" || lifecycleEvent === "build";
+
+const easternDateFormatter = new Intl.DateTimeFormat("en-CA", {
+	timeZone: "America/New_York",
+	year: "numeric",
+	month: "2-digit",
+	day: "2-digit",
+});
+
+function getEasternDateString(date = new Date()) {
+	const parts = easternDateFormatter.formatToParts(date);
+	const year = parts.find((part) => part.type === "year")?.value;
+	const month = parts.find((part) => part.type === "month")?.value;
+	const day = parts.find((part) => part.type === "day")?.value;
+
+	if (!year || !month || !day) {
+		throw new Error("failed to compute Eastern date string");
+	}
+
+	return `${year}-${month}-${day}`;
+}
+
+function isValidDateSlug(dateString) {
+	const dateMatch = dateString.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+	if (!dateMatch) return false;
+
+	const year = Number(dateMatch[1]);
+	const month = Number(dateMatch[2]);
+	const day = Number(dateMatch[3]);
+	const utcDate = new Date(Date.UTC(year, month - 1, day));
+
+	return (
+		utcDate.getUTCFullYear() === year &&
+		utcDate.getUTCMonth() === month - 1 &&
+		utcDate.getUTCDate() === day
+	);
+}
 
 const postcssProcessor = postcss([
 	postCssPresetEnv({
@@ -231,7 +270,25 @@ const blogModules = await import(resolve("dist/server/main-server.js")).then(
 
 		const posts = await Promise.all(
 			files
-				.filter((f) => f.endsWith(".mdx"))
+				.filter((f) => {
+					const match = f.match(/^(\d{4}-\d{2}-\d{2})-(.+)\.mdx$/);
+					if (!match) {
+						console.warn(`skipping invalid blog file (does not match date-slug.mdx pattern): ${f}`);
+						return false;
+					}
+					const dateString = match[1];
+					if (!isValidDateSlug(dateString)) {
+						console.warn(`skipping invalid blog file (invalid date in filename): ${f}`);
+						return false;
+					}
+
+					const todayEastern = getEasternDateString();
+					if (isProduction && dateString > todayEastern) {
+						console.warn(`skipping blog file with future date: ${f}`);
+						return false;
+					}
+					return f.endsWith(".mdx")
+				})
 				.map(async (file) => {
 					const content = await readFile(resolve(`src/blog/${file}`), "utf-8");
 					const match = file.match(/^(\d{4}-\d{2}-\d{2})-(.+)\.mdx$/);
