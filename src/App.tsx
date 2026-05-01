@@ -41,6 +41,16 @@ function App(this: FC<AppProps>) {
 
 	blogPosts.sort((a, b) => b.slug.localeCompare(a.slug));
 
+	const miniYears = Array.isArray(miniblogYears) ? miniblogYears : [];
+	const miniYearMonths = Array.isArray(miniblogYearMonths)
+		? miniblogYearMonths
+		: [];
+	const miniYearMonthDays = Array.isArray(miniblogYearMonthDays)
+		? miniblogYearMonthDays
+		: [];
+	const miniMonths = Array.isArray(miniblogMonths) ? miniblogMonths : [];
+	const miniPosts = Array.isArray(miniblogPosts) ? miniblogPosts : [];
+
 	return (
 		<app id="app">
 			<Router
@@ -51,28 +61,28 @@ function App(this: FC<AppProps>) {
 						layout={MiniBlogLayout}
 						children={[
 							<Route show={() => <MiniBlogList />} />,
-							...miniblogYears.map((year) => (
+							...miniYears.map((year) => (
 								<Route path={year} show={() => <MiniBlogList year={year} />} />
 							)),
-							...miniblogYearMonths.map(({ year, month }) => (
+							...miniYearMonths.map(({ year, month }) => (
 								<Route
 									path={`${year}/${month}`}
 									show={() => <MiniBlogList year={year} month={month} />}
 								/>
 							)),
-							...miniblogYearMonthDays.map(({ year, month, day }) => (
+							...miniYearMonthDays.map(({ year, month, day }) => (
 								<Route
 									path={`${year}/${month}/${day}`}
 									show={() => <MiniBlogList year={year} month={month} day={day} />}
 								/>
 							)),
-							...miniblogMonths.map((month) => (
+							...miniMonths.map((month) => (
 								<Route
 									path={`:wildcardYear/${month}`}
 									show={() => <MiniBlogList year="*" month={month} />}
 								/>
 							)),
-							...miniblogPosts.map((post) => (
+							...miniPosts.map((post) => (
 								<Route
 									path={`${post.year}/${post.month}/${post.day}/${post.number}`}
 									show={() => (
