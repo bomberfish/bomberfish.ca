@@ -16,7 +16,7 @@ function MiniBlogPost(this: FC<MiniBlogPostProps>) {
 				<title>not found</title>
 				<p>post not found.</p>
 				<p>
-					<a target="_self" href="/mini">back to /mini</a>
+					<a href="/mini">back to /mini</a>
 				</p>
 			</article>
 		);
@@ -28,36 +28,14 @@ function MiniBlogPost(this: FC<MiniBlogPostProps>) {
 	return (
 		<article>
 			<title>{`${postPath} – bomberfish.ca`}</title>
-			<table class="mini-nav-table">
-				<tbody>
-					<tr class="mini-path-row">
-						<td class="mini-path-sep">/</td>
-						<td class="mini-path-part">
-							<a target="_self" href="/mini">mini</a>
-						</td>
-						<td class="mini-path-sep">/</td>
-						<td class="mini-path-part">
-							<a target="_self" href={`/mini/${post.year}`}>{post.year}</a>
-						</td>
-						<td class="mini-path-sep">/</td>
-						<td class="mini-path-part">
-							<a target="_self" href={`/mini/${post.year}/${post.month}`}>
-								{post.month}
-							</a>
-						</td>
-						<td class="mini-path-sep">/</td>
-						<td class="mini-path-part">
-							<a target="_self" href={`/mini/${post.year}/${post.month}/${post.day}`}>
-								{post.day}
-							</a>
-						</td>
-						<td class="mini-path-sep">/</td>
-						<td class="mini-path-part">
-							<span>{post.number}</span>
-						</td>
-					</tr>
-				</tbody>
-			</table>
+			<p>
+                {"/ "}
+				<a href="/mini">mini</a>
+				{" / "}
+				<a href={`/mini/${post.year}`}>{post.year}</a>
+				{" / "}
+				<a href={`/mini/${post.month}`}>{post.month}</a>
+			</p>
 			<PostContent />
 		</article>
 	);
