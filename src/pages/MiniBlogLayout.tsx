@@ -88,7 +88,6 @@ MiniBlogLayout.style = css`
 	:scope :global(.mini-filter-list) {
 		list-style: none;
 		margin: 0;
-		margin-left: 2px;
 		padding: 0;
 	}
 
