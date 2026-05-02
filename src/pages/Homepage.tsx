@@ -44,11 +44,16 @@ function Homepage(this: FC) {
 						<h3>get in touch:</h3>
 						<div class="card-section">
 							<ContactCard contact={{ platform: "email", username: "me@bomberfish.ca", url: "mailto:me@bomberfish.ca", note: "please don't send me unsolicited remote job offers. please." }} />
+							<ContactCard contact={{ platform: "discord", username: "@bomberfish", url: "https://discordapp.com/users/470637062870269952", note: "friend requests are subject to some pretty strong vibe-checking." }} />
+							<ContactCard contact={{ platform: "signal", username: "@one.337", url: "https://signal.me/#eu/Hj17C2gxd-rMfhgGYLZADiwtnP9y1xDF9waDfQxJudgShHBOqThJXLLHV4ZPmPny", note: "not unless you're absolutely unable to use other methods of communication!" }} />
+						</div>
+						<h3>socials:</h3>
+						<div class="card-section">
 							<ContactCard contact={{ platform: "github", username: "bomberfish", url: "https://github.com/bomberfish", note: "where i host most of my code." }} />
 							<ContactCard contact={{ platform: "fediverse", username: "@fish@wetdry.world", url: "https://wetdry.world/@fish", note: "follow me on the fediverse, a decentralized social network." }} />
 							<ContactCard contact={{ platform: "X", username: "@bomberfish77", url: "https://x.com/bomberfish77", note: "i'm not the most frequent poster, but i still use the platform regularly." }} />
 							<ContactCard contact={{ platform: "bluesky", username: "@bomberfish.ca", url: "https://bsky.app/profile/bomberfish.ca", note: "a bridged mirror from my fediverse account." }} />
-							<ContactCard contact={{ platform: "signal", username: "@one.337", url: "https://signal.me/#eu/Hj17C2gxd-rMfhgGYLZADiwtnP9y1xDF9waDfQxJudgShHBOqThJXLLHV4ZPmPny", note: "not unless you're absolutely unable to use other methods of communication!" }} />
+							<ContactCard contact={{platform: "last.fm", username: "bmbrfsh", url: "https://www.last.fm/user/bmbrfsh", note: "laugh at my bad taste in music if you want to."}} />
 						</div>
 					</section>
 					<br />
@@ -114,7 +119,7 @@ Homepage.style = css`
 	}
 
 	.contact-section h3 {
-		margin: 0 0 0.25rem 0;
+		margin: 0;
 		font-size: 1.2rem;
 	}
 
@@ -137,6 +142,8 @@ Homepage.style = css`
 		display: flex;
 		flex-wrap: wrap;
 		gap: 1rem;
+
+		margin-block: 1rem;
 
 		display: grid;
 		grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
