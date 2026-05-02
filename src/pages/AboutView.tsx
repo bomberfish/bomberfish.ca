@@ -136,7 +136,7 @@ export function AboutView(this: FC) {
 					<h1>about this website</h1>
 					<p>
 						i built this website using{" "}
-						<a href="https://dreamland.js.org" target="_blank" rel="noopener">
+						<a href="https://dreamland.js.org" target="_blank" referrer-policy="unsafe-url">
 							dreamland.js
 						</a>
 						, a small and utilitarian web framework with full reactivity.
@@ -147,7 +147,7 @@ export function AboutView(this: FC) {
 						<a
 							href="https://github.com/bomberfish/bomberfish.ca"
 							target="_blank"
-							rel="noopener"
+							referrer-policy="unsafe-url"
 						>
 							here
 						</a>

@@ -30,7 +30,7 @@ function ProjectView(this: FC<{ project: ProjectCardDetails }>) {
 											href={link.url}
 											class="link"
 											target="_blank"
-											rel="noopener"
+											referrer-policy="unsafe-url"
 										>
 											<span class="material-symbols">{link.icon}</span>
 											{link.name}

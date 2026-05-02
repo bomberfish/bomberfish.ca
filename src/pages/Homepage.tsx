@@ -1,6 +1,7 @@
 import { FC, css } from "dreamland/core";
 import { WebButton, ButtonList, CopiedToast } from "../components/Buttons";
 import Sidebar from "../components/Sidebar";
+import ContactCard from "../components/ContactCard";
 
 function Homepage(this: FC) {
 	return (
@@ -41,7 +42,14 @@ function Homepage(this: FC) {
 
 					<section class="contact-section">
 						<h3>get in touch:</h3>
-						<ContactLinks />
+						<div class="card-section">
+							<ContactCard contact={{ platform: "email", username: "me@bomberfish.ca", url: "mailto:me@bomberfish.ca", note: "please don't send me unsolicited remote job offers. please." }} />
+							<ContactCard contact={{ platform: "github", username: "bomberfish", url: "https://github.com/bomberfish", note: "where i host most of my code." }} />
+							<ContactCard contact={{ platform: "fediverse", username: "@fish@wetdry.world", url: "https://wetdry.world/@fish", note: "follow me on the fediverse, a decentralized social network." }} />
+							<ContactCard contact={{ platform: "X", username: "@bomberfish77", url: "https://x.com/bomberfish77", note: "i'm not the most frequent poster, but i still use the platform regularly." }} />
+							<ContactCard contact={{ platform: "bluesky", username: "@bomberfish.ca", url: "https://bsky.app/profile/bomberfish.ca", note: "a bridged mirror from my fediverse account." }} />
+							<ContactCard contact={{ platform: "signal", username: "@one.337", url: "https://signal.me/#eu/Hj17C2gxd-rMfhgGYLZADiwtnP9y1xDF9waDfQxJudgShHBOqThJXLLHV4ZPmPny", note: "not unless you're absolutely unable to use other methods of communication!" }} />
+						</div>
 					</section>
 					<br />
 					<section class="buttons-section">
@@ -125,6 +133,15 @@ Homepage.style = css`
 		margin-bottom: 0.5rem;
 	}
 
+	.card-section {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 1rem;
+
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+	}
+
 	@media (orientation: portrait) {
 		.pfp {
 			float: none;
@@ -147,27 +164,27 @@ export function ContactLinks(this: FC) {
 			</span>
 			<span class="sep">/</span>
 			<span class="tooltip-wrapper">
-				<a href="https://github.com/bomberfish" target="_blank" rel="me noopener noreferrer" class="contact-item">github</a>
+				<a href="https://github.com/bomberfish" target="_blank" rel="me" referrer-policy="unsafe-url" class="contact-item">github</a>
 				<span class="tooltip">bomberfish</span>
 			</span>
 			<span class="sep">/</span>
 			<span class="tooltip-wrapper">
-				<a href="https://wetdry.world/@fish" target="_blank" rel="me noopener noreferrer" class="contact-item">fediverse</a>
+				<a href="https://wetdry.world/@fish" target="_blank" rel="me" referrer-policy="unsafe-url" class="contact-item">fediverse</a>
 				<span class="tooltip">@fish@wetdry.world</span>
 			</span>
 			<span class="sep">/</span>
 			<span class="tooltip-wrapper">
-				<a href="https://x.com/bomberfish77" target="_blank" rel="me noopener noreferrer" class="contact-item">X</a>
+				<a href="https://x.com/bomberfish77" target="_blank" rel="me" referrer-policy="unsafe-url" class="contact-item">X</a>
 				<span class="tooltip">@bomberfish77</span>
 			</span>
 			<span class="sep">/</span>
 			<span class="tooltip-wrapper">
-				<a href="https://bsky.app/profile/bomberfish.ca" target="_blank" rel="noopener noreferrer" class="contact-item">bluesky</a>
+				<a href="https://bsky.app/profile/bomberfish.ca" target="_blank" rel="me" referrer-policy="unsafe-url" class="contact-item">bluesky</a>
 				<span class="tooltip">@bomberfish.ca</span>
 			</span>
 			<span class="sep">/</span>
 			<span class="tooltip-wrapper">
-				<a href="https://signal.me/#eu/Hj17C2gxd-rMfhgGYLZADiwtnP9y1xDF9waDfQxJudgShHBOqThJXLLHV4ZPmPny" target="_blank" rel="noopener noreferrer" class="contact-item">signal</a>
+				<a href="https://signal.me/#eu/Hj17C2gxd-rMfhgGYLZADiwtnP9y1xDF9waDfQxJudgShHBOqThJXLLHV4ZPmPny" target="_blank" rel="me" referrer-policy="unsafe-url" class="contact-item">signal</a>
 				<span class="tooltip">@one.337</span>
 			</span>
 			{/* add more links here! */}
