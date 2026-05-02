@@ -49,11 +49,11 @@ function Homepage(this: FC) {
 						</div>
 						<h3>socials:</h3>
 						<div class="card-section">
-							<ContactCard contact={{ platform: "github", username: "bomberfish", url: "https://github.com/bomberfish", note: "where i host most of my code." }} />
-							<ContactCard contact={{ platform: "fediverse", username: "@fish@wetdry.world", url: "https://wetdry.world/@fish", note: "follow me on the fediverse, a decentralized social network." }} />
+							<ContactCard contact={{ platform: "github", username: "bomberfish", url: "https://github.com/bomberfish", note: "the place where i host most of my code, and a social network. can't guarantee uptime though." }} />
 							<ContactCard contact={{ platform: "X", username: "@bomberfish77", url: "https://x.com/bomberfish77", note: "i'm not the most frequent poster, but i still use the platform regularly." }} />
+							<ContactCard contact={{ platform: "fediverse", username: "@fish@wetdry.world", url: "https://wetdry.world/@fish", note: "follow me on the fediverse, a decentralized social network." }} />
 							<ContactCard contact={{ platform: "bluesky", username: "@bomberfish.ca", url: "https://bsky.app/profile/bomberfish.ca", note: "a bridged mirror from my fediverse account." }} />
-							<ContactCard contact={{platform: "last.fm", username: "bmbrfsh", url: "https://www.last.fm/user/bmbrfsh", note: "laugh at my bad taste in music if you want to."}} />
+							<ContactCard contact={{platform: "last.fm", username: "bmbrfsh", url: "https://www.last.fm/user/bmbrfsh", note: "laugh at my bad taste in music if you really want to."}} />
 						</div>
 					</section>
 					<br />
