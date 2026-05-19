@@ -133,9 +133,9 @@ export function ButtonList(this: FC) {
 				href="https://www.errorcodezero.dev/"
 			/>
 			<WebButton
-				src="/buttons/k8.gif"
-				title="thememesniper"
-				href="https://thememesniper.dev"
+				src="https://madz.mov/assets/images/buttons/friends/madzbutton.gif"
+				title="MadzTop"
+				href="https://madz.mov"
 			/>
 			<WebButton
 				src="/buttons/dskl.gif"
@@ -147,20 +147,26 @@ export function ButtonList(this: FC) {
 				title="authenyo"
 				href="https://authenyo.xyz"
 			/>
+			
+			<WebButton
+				src="/buttons/k8.gif"
+				title="thememesniper"
+				href="https://thememesniper.dev"
+			/>
 			<WebButton
 				src="/buttons/jack.cab.gif"
 				title="jack.cab"
 				href="https://jack.cab/?utm_content=jack-button"
 			/>
 			<WebButton
-				src="https://gideon.sh/88x31.gif"
-				title="gideon.sh"
-				href="https://gideon.sh"
-			/>
-			<WebButton
 				src="https://circulars.dev/circular-88x31.gif"
 				title="circular"
 				href="https://circulars.dev"
+			/>
+			<WebButton
+				src="https://gideon.sh/88x31.gif"
+				title="gideon.sh"
+				href="https://gideon.sh"
 			/>
 			<WebButton
 				src="/buttons/dispherical.gif"
