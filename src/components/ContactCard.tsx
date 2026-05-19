@@ -43,7 +43,10 @@ ContactCard.style = css`
         padding: 1rem;
         background-color: var(--base);
         border: 1px solid var(--surface2);
-        max-width: 300px;
+        width: 100%;
+        min-width: 0;
+        min-height: 100%;
+        box-sizing: border-box;
 		transform: scale(1) translateY(0);
 		transition:
 			transform 0.2s,
@@ -82,6 +85,7 @@ ContactCard.style = css`
         color: var(--text1);
         font-weight: 400;
         font-size: 0.95rem;
+        overflow-wrap: anywhere;
     }
 
     .contact-note {
@@ -89,6 +93,9 @@ ContactCard.style = css`
         font-weight: 400;
         font-size: 0.8rem;
         color: var(--subtext2);
+        margin-top: auto !important;
+        padding-top: 0.25rem;
+        text-wrap: pretty;
     }
 
     :scope::after {
@@ -103,7 +110,9 @@ ContactCard.style = css`
         color: transparent;
         border: none;
         flex-shrink: 0;
+        margin: 0.85rem 0 0;
     }
+
 `
 
 export default ContactCard;

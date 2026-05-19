@@ -104,9 +104,8 @@ Homepage.style = css`
 	}
 
 	.main-content {
-		width: 820px;
-		width: clamp(520px, 36vw - 1rem, 820px);
-		max-height: min(60vh, 40rem);
+		width: clamp(520px, 85vw - 1rem, 90vw);
+		min-height: max(95vh, 30rem);
 	}
 
 	.pfp {
@@ -121,6 +120,10 @@ Homepage.style = css`
 	.contact-section h3 {
 		margin: 0;
 		font-size: 1.2rem;
+	}
+
+	.contact-section h3 + .card-section {
+		margin-top: 0.75rem;
 	}
 
 	.buttons-section {
@@ -139,14 +142,32 @@ Homepage.style = css`
 	}
 
 	.card-section {
-		display: flex;
-		flex-wrap: wrap;
-		gap: 1rem;
-
-		margin-block: 1rem;
-
 		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+		grid-template-columns: repeat(auto-fit, minmax(min(100%, 17rem), 1fr));
+		align-items: stretch;
+		gap: 1rem;
+		margin-block: 1rem;
+	}
+
+	@media (max-width: 70rem) {
+		.card-section {
+			grid-template-columns: repeat(auto-fit, minmax(min(100%, 15.5rem), 1fr));
+		}
+	}
+
+	@media (max-width: 40rem) {
+		.main-content {
+			width: 100%;
+		}
+
+		.card-section {
+			grid-template-columns: 1fr;
+			gap: 0.875rem;
+		}
+
+		.buttons-section {
+			padding-inline: 0.625rem;
+		}
 	}
 
 	@media (orientation: portrait) {
