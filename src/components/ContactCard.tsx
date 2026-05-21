@@ -93,8 +93,7 @@ ContactCard.style = css`
         font-weight: 400;
         font-size: 0.8rem;
         color: var(--subtext2);
-        margin-top: auto !important;
-        padding-top: 0.25rem;
+        margin-top: 0!important;
         text-wrap: pretty;
     }
 
@@ -110,7 +109,7 @@ ContactCard.style = css`
         color: transparent;
         border: none;
         flex-shrink: 0;
-        margin: 0.85rem 0 0;
+        margin: 0.5em 0;
     }
 
 `
