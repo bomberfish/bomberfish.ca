@@ -427,7 +427,7 @@ main {
 	}
 }
 
-main > * {
+main>* {
 	width: 100%;
 }
 
@@ -443,7 +443,7 @@ article {
 	flex-grow: 1;
 }
 
-article > h1 {
+article>h1 {
 	margin-block: 0.25em;
 }
 
@@ -641,6 +641,7 @@ article > h1 {
 		padding-right: 0;
 		padding-bottom: 0;
 		margin-bottom: 1rem;
+		padding-bottom: env(safe-area-inset-bottom);
 	}
 
 	@supports (display: flex) {
@@ -703,6 +704,7 @@ article > h1 {
 		height: 5rem;
 		position: absolute;
 		bottom: -10px;
+		bottom: calc(-10px + env(safe-area-inset-bottom));
 		right: -25px;
 		opacity: 0.25;
 		mask-image: linear-gradient(135deg, transparent 0%, #000 70%);
@@ -752,19 +754,19 @@ ul.compact {
 	margin: 0.25rem 0 0;
 }
 
-ul.compact > li {
+ul.compact>li {
 	display: inline;
 	margin: 0;
 	white-space: nowrap;
 }
 
-ul.compact > li::after {
+ul.compact>li::after {
 	content: "/";
 	margin: 0 0.75rem;
 	opacity: 0.6;
 }
 
-ul.compact > li:last-child::after {
+ul.compact>li:last-child::after {
 	content: "";
 	margin: 0;
 }
@@ -779,7 +781,7 @@ li:not(:has(a)) {
 }
 
 li:has(a),
-ul.compact > :is(li > span, li > a) {
+ul.compact> :is(li > span, li > a) {
 	margin-bottom: 0;
 }
 
@@ -941,17 +943,13 @@ ul.compact > :is(li > span, li > a) {
 	background-position: 90% 67%;
 	z-index: -1;
 	opacity: 1;
-	-webkit-mask-image: linear-gradient(
-		-45deg,
-		rgba(0, 0, 0, 0.35) 30%,
-		transparent 60%
-	);
-	mask-image: linear-gradient(
-		-45deg,
-		rgba(0, 0, 0, 0.35) 40%,
-		rgba(0, 0, 0, 0.25) 52.5%,
-		transparent 80%
-	);
+	-webkit-mask-image: linear-gradient(-45deg,
+			rgba(0, 0, 0, 0.35) 30%,
+			transparent 60%);
+	mask-image: linear-gradient(-45deg,
+			rgba(0, 0, 0, 0.35) 40%,
+			rgba(0, 0, 0, 0.25) 52.5%,
+			transparent 80%);
 }
 
 .blog-item.has-cover h3,
@@ -1095,9 +1093,9 @@ cap subt:not(:has(.material-symbols)) {
 		opacity: 1;
 		filter: blur(0px);
 	}
+
 	100% {
-		transform: translateX(calc(var(--vt-direction, 1) * -100%))
-			rotateY(calc(var(--vt-direction, 1) * -30deg)) translateZ(-320px);
+		transform: translateX(calc(var(--vt-direction, 1) * -100%)) rotateY(calc(var(--vt-direction, 1) * -30deg)) translateZ(-320px);
 		filter: blur(6px);
 		opacity: 0;
 	}
@@ -1105,11 +1103,11 @@ cap subt:not(:has(.material-symbols)) {
 
 @keyframes vt-slide-in {
 	0% {
-		transform: translateX(calc(var(--vt-direction, 1) * 100%))
-			rotateY(calc(var(--vt-direction, 1) * 30deg)) translateZ(-320px);
+		transform: translateX(calc(var(--vt-direction, 1) * 100%)) rotateY(calc(var(--vt-direction, 1) * 30deg)) translateZ(-320px);
 		opacity: 0;
 		filter: blur(6px);
 	}
+
 	100% {
 		transform: translateX(0) rotateY(0deg) translateZ(0);
 		opacity: 1;
@@ -1152,6 +1150,7 @@ cap subt:not(:has(.material-symbols)) {
 		transform: translateY(5px);
 		filter: blur(4px);
 	}
+
 	to {
 		opacity: 1;
 		transform: translateY(0px);
@@ -1165,6 +1164,7 @@ cap subt:not(:has(.material-symbols)) {
 		transform: translateY(0px);
 		filter: blur(0px);
 	}
+
 	to {
 		opacity: 0;
 		transform: translateY(-5px);
