@@ -61,7 +61,7 @@ function BlogPost(this: FC<BlogPostProps>) {
 						<p>
 							<subt class="bottom">
 								<span class="material-symbols">rss_feed</span> Liked this post?
-								Subscribe to this blog:{" "}
+								Subscribe to my blog:{" "}
 								<ul
 									class="compact"
 									style="display: inline; margin-left: 0.25rem;"

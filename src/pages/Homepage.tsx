@@ -27,7 +27,7 @@ function Homepage(this: FC) {
 						<p>
 							i'm fluent in swift and javascript, and i'm decent at java and most of the C dialects.
 						</p>
-						<p> 
+						<p>
 							i'm also part of{" "}
 							<a href="https://mercurywork.shop" target="_blank">
 								mercury workshop
@@ -53,7 +53,7 @@ function Homepage(this: FC) {
 							<ContactCard contact={{ platform: "X", username: "@bomberfish77", url: "https://x.com/bomberfish77", note: "i'm not the most frequent poster, but i still use the platform regularly." }} />
 							<ContactCard contact={{ platform: "fediverse", username: "@fish@wetdry.world", url: "https://wetdry.world/@fish", note: "follow me on the fediverse, a decentralized social network." }} />
 							<ContactCard contact={{ platform: "bluesky", username: "@bomberfish.ca", url: "https://bsky.app/profile/bomberfish.ca", note: "a bridged mirror from my fediverse account." }} />
-							<ContactCard contact={{platform: "last.fm", username: "bmbrfsh", url: "https://www.last.fm/user/bmbrfsh", note: "laugh at my bad taste in music if you really want to."}} />
+							<ContactCard contact={{ platform: "last.fm", username: "bmbrfsh", url: "https://www.last.fm/user/bmbrfsh", note: "laugh at my bad taste in music if you really want to." }} />
 						</div>
 					</section>
 					<br />
@@ -192,11 +192,6 @@ export function ContactLinks(this: FC) {
 			</span>
 			<span class="sep">/</span>
 			<span class="tooltip-wrapper">
-				<a href="https://github.com/bomberfish" target="_blank" rel="me" referrer-policy="unsafe-url" class="contact-item">github</a>
-				<span class="tooltip">bomberfish</span>
-			</span>
-			<span class="sep">/</span>
-			<span class="tooltip-wrapper">
 				<a href="https://wetdry.world/@fish" target="_blank" rel="me" referrer-policy="unsafe-url" class="contact-item">fediverse</a>
 				<span class="tooltip">@fish@wetdry.world</span>
 			</span>
@@ -210,12 +205,6 @@ export function ContactLinks(this: FC) {
 				<a href="https://bsky.app/profile/bomberfish.ca" target="_blank" rel="me" referrer-policy="unsafe-url" class="contact-item">bluesky</a>
 				<span class="tooltip">@bomberfish.ca</span>
 			</span>
-			<span class="sep">/</span>
-			<span class="tooltip-wrapper">
-				<a href="https://signal.me/#eu/Hj17C2gxd-rMfhgGYLZADiwtnP9y1xDF9waDfQxJudgShHBOqThJXLLHV4ZPmPny" target="_blank" rel="me" referrer-policy="unsafe-url" class="contact-item">signal</a>
-				<span class="tooltip">@one.337</span>
-			</span>
-			{/* add more links here! */}
 		</span>
 	);
 }
