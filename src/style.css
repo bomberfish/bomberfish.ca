@@ -76,7 +76,7 @@ html {
 	--font-mono: "IosevkaFishQuasi", ui-monospace, monospace;
 
 	/* Light theme (default) */
-	--main-hue: 320;
+	--main-hue: 200;
 	--grid-lines: hsla(var(--main-hue), 12%, 16%);
 
 	--core-hsl: var(--main-hue), 100%, 99%;
