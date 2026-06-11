@@ -44,7 +44,7 @@ function BlogList(this: FC) {
 			<div class="layout-container">
 				<Sidebar active="blog" />
 				<div class="main-content">
-					<div class="background-container">
+					<div class="page-header background-container">
 						<h1>blog</h1>
 						<p style="font-size: 1.05em;">
 							various assorted thoughts and ramblings.

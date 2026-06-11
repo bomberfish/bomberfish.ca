@@ -39,7 +39,7 @@ function BlogPost(this: FC<BlogPostProps>) {
 				<Sidebar active="blog" />
 				<div class="main-content">
 					<article class="blog-content">
-						<div class="post-header background-container">
+						<div class="page-header background-container">
 							<h1 class="post-title">{postTitle}</h1>
 							{postDescription ? (
 								<p class="post-desc">{postDescription}</p>
