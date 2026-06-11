@@ -20,7 +20,7 @@ function ProjectView(this: FC<{ project: ProjectCardDetails }>) {
 								<img hidden class="blur" src={this.project.img} />
 							</a>
 						</section>
-						<section id="details">
+						<section id="details" class="background-container">
 							<h2 class="name">{this.project.title}</h2>
 							<p class="description">{this.project.largeDesc}</p>
 							<ul class="compact">
@@ -48,9 +48,6 @@ function ProjectView(this: FC<{ project: ProjectCardDetails }>) {
 
 ProjectView.style = css`
     .main-content {
-		width: 884px;
-		width: clamp(584px, 40vw - 1rem, 884px);
-		min-height: min(60vh, 70rem);
 		display: flex;
 		align-content: center;
 		align-items: center;
@@ -69,7 +66,7 @@ ProjectView.style = css`
 		display: flex;
 		align-content: center;
 		align-items: center;
-		justify-content: center;
+		justify-content: left;
 		margin: 0;
 		padding: 0;
 		position: relative;

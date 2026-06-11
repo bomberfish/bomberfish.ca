@@ -23,9 +23,9 @@ const messages: string[] = [
 ]
 
 type FooterState = {
-	elapsed: string;
-	message: string;
-	resetSplashInterval?: () => void;
+    elapsed: string;
+    message: string;
+    resetSplashInterval?: () => void;
 };
 
 function Footer(this: FC<{}, FooterState>) {
@@ -75,15 +75,15 @@ function Footer(this: FC<{}, FooterState>) {
 
     this.cx.mount = () => {
         if (import.meta.env.SSR) {
-			return;
-		}
-        
+            return;
+        }
+
         this.message = messages[Math.floor(Math.random() * messages.length)];
         const buildDate = new Date(__BUILD_DATE__);
         const updateElapsed = () => {
             const now = new Date();
             const diff = now.getTime() - buildDate.getTime();
-            this.elapsed = "built " + humanizeDuration(diff , {round: true}) + " ago";
+            this.elapsed = "built " + humanizeDuration(diff, { round: true }) + " ago";
         };
         updateElapsed();
         const intervalId = setInterval(updateElapsed, 1000);
@@ -97,13 +97,13 @@ function Footer(this: FC<{}, FooterState>) {
         <footer>
             <subt>
                 <span class="tooltip-wrapper">
-                        <TransitionLink href="/siteinfo.html" class="router-link">
-                            {"bomberfish.ca v" + __APP_VERSION__ + " (" + __COMMIT_HASH__ + ")"}
-                        </TransitionLink>
+                    <TransitionLink href="/siteinfo.html" class="router-link">
+                        {"bomberfish.ca v" + __APP_VERSION__ + " (" + __COMMIT_HASH__ + ")"}
+                    </TransitionLink>
                     <span class="tooltip top">{use(this.elapsed)}</span>
                 </span>
                 <span class="divider">{" • "}</span>
-                <span on:click={()=>{
+                <span on:click={() => {
                     shuffleSplash();
                     this.resetSplashInterval?.();
                 }} class="splash">{use(this.message)}<noscript> Enable JavaScript, you damn luddite!</noscript></span>
@@ -117,7 +117,7 @@ Footer.style = css`
 		margin-top: auto;
 		font-size: 0.75rem;
         user-select: none;
-		width: 100%;
+		width: calc(100% - 1.25rem);
 	}
 
     subt {

@@ -10,7 +10,7 @@ function Homepage(this: FC) {
 			<div class="layout-container">
 				<Sidebar active="home" />
 				<div class="main-content">
-					<section class="about-section">
+					<section class="about-section background-container">
 						<a href="/me.png" target="_blank" rel="noopener">
 							<img src="/me.min.png" class="pfp" title="my profile picture! click to view full size." width="100" height="100" loading="eager" alt="profile picture" />
 						</a>
@@ -85,6 +85,9 @@ function Homepage(this: FC) {
 }
 
 Homepage.style = css`
+	.about-section {
+		margin-bottom: .75rem;
+	}
 
 	.about-section::after {
 		content: "";
@@ -104,8 +107,7 @@ Homepage.style = css`
 	}
 
 	.main-content {
-		width: clamp(520px, 85vw - 1rem, 90vw);
-		min-height: max(95vh, 30rem);
+		width: fit-content;
 	}
 
 	.pfp {

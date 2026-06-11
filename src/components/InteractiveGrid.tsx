@@ -1,15 +1,18 @@
 // @ts-nocheck
 import { FC, css } from "dreamland/core";
 
-const TARGET_BY_DIST = [0.7, 0.5, 0.35, 0.2, 0.1, 0.05];
-const MAX_DIST = TARGET_BY_DIST.length - 1;
 const LERP = 6; // per second
 
+// Hover settings
+const HOVER_BRIGHTNESS = 0.7;
+const HOVER_RADIUS = 2;
+const HOVER_FALLOFF = 1.5;
+
 // Ripple settings (for clicks)
-const RIPPLE_SPEED = 8; // cells per second
-const RIPPLE_MAX_RADIUS = 32;
+const RIPPLE_SPEED = 12; // cells per second
+const RIPPLE_MAX_RADIUS = 20;
 const RIPPLE_WIDTH = 3;
-const RIPPLE_BRIGHTNESS = 0.6;
+const RIPPLE_BRIGHTNESS = 0.2;
 
 // Wake settings (for dragging)
 const WAKE_FADE = 3; // per second
@@ -77,8 +80,8 @@ function InteractiveGrid(this: FC) {
 
 	const getGridColor = () => {
 		// Use the site's color scheme - subtle grid lines
-		const hue = isDarkMode.matches ? 192 : 185;
-		const lightness = isDarkMode.matches ? 20 : 70;
+		const hue = getComputedStyle(document.documentElement).getPropertyValue("--main-hue");
+		const lightness = isDarkMode.matches ? 20 : 80;
 		return { hue, lightness };
 	};
 
@@ -130,13 +133,17 @@ function InteractiveGrid(this: FC) {
 		for (let r = 0; r < rows; r++) tgt[r].fill(0);
 		if (!isHovered || activeX < 0) return;
 
-		for (let dr = -MAX_DIST; dr <= MAX_DIST; dr++) {
-			for (let dc = -MAX_DIST; dc <= MAX_DIST; dc++) {
+		for (let dr = -HOVER_RADIUS; dr <= HOVER_RADIUS; dr++) {
+			for (let dc = -HOVER_RADIUS; dc <= HOVER_RADIUS; dc++) {
 				const r = activeY + dr;
 				const c = activeX + dc;
 				if (r >= 0 && r < rows && c >= 0 && c < columns) {
 					const d = Math.abs(dr) + Math.abs(dc);
-					if (d <= MAX_DIST) tgt[r][c] = TARGET_BY_DIST[d];
+					if (d <= HOVER_RADIUS) {
+						const progress = d / (HOVER_RADIUS + 1);
+						const intensity = 0.7 * Math.pow(1 - progress, HOVER_FALLOFF);
+						tgt[r][c] = intensity * HOVER_BRIGHTNESS;
+					}
 				}
 			}
 		}
@@ -326,6 +333,7 @@ function InteractiveGrid(this: FC) {
 	};
 
 	const onPointerDown = (e: PointerEvent) => {
+		if (e.target.tagName.toLowerCase() === "a") return;
 		isPointerDown = true;
 		const coords = getGridCoords(e);
 		lastWakeX = coords.x;

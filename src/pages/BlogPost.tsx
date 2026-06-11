@@ -39,26 +39,28 @@ function BlogPost(this: FC<BlogPostProps>) {
 				<Sidebar active="blog" />
 				<div class="main-content">
 					<article class="blog-content">
-						<h1 class="post-title">{postTitle}</h1>
-						{postDescription ? (
-							<p class="post-desc">{postDescription}</p>
-						) : (
-							false
-						)}
-						{postTags ? (
-							<div class="post-tags">
-								<span class="material-symbols">label_important</span>
-								{postTags.map((t) => (
-									<span class="tag">{t}</span>
-								))}
-							</div>
-						) : (
-							false
-						)}
-						<div class="post-body">
+						<div class="post-header background-container">
+							<h1 class="post-title">{postTitle}</h1>
+							{postDescription ? (
+								<p class="post-desc">{postDescription}</p>
+							) : (
+								false
+							)}
+							{postTags ? (
+								<div class="post-tags">
+									<span class="material-symbols">label_important</span>
+									{postTags.map((t) => (
+										<span class="tag">{t}</span>
+									))}
+								</div>
+							) : (
+								false
+							)}
+						</div>
+						<div class="post-body background-container">
 							<BlogContent />
 						</div>
-						<p>
+						<p class="background-container" style="margin-bottom: 0!important;">
 							<subt class="bottom">
 								<span class="material-symbols">rss_feed</span> Liked this post?
 								Subscribe to my blog:{" "}
@@ -84,7 +86,7 @@ function BlogPost(this: FC<BlogPostProps>) {
 								</ul>
 								<br />
 							</subt>
-							<subt class="bottom">
+							<subt class="bottom ">
 								<span class="material-symbols">email</span> Or, get in touch:
 								{"    "}
 								<ContactLinks />
@@ -99,8 +101,7 @@ function BlogPost(this: FC<BlogPostProps>) {
 
 BlogPost.style = css`
 	.main-content {
-		width: 1000px;
-		width: clamp(640px, 48vw - 1rem, 1000px) !important;
+		width: 810pt!important;
 	}
 
 	subt.bottom {

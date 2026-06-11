@@ -76,7 +76,7 @@ html {
 	--font-mono: "IosevkaFishQuasi", ui-monospace, monospace;
 
 	/* Light theme (default) */
-	--main-hue: 200;
+	--main-hue: 320;
 	--grid-lines: hsla(var(--main-hue), 12%, 16%);
 
 	--core-hsl: var(--main-hue), 100%, 99%;
@@ -423,7 +423,8 @@ main {
 		display: flex;
 		flex-direction: column;
 		align-items: center;
-		justify-content: center;
+		justify-content: flex-start;
+		margin-top: 1rem;
 	}
 }
 
@@ -463,13 +464,10 @@ article>h1 {
 
 .layout-container {
 	display: table;
-	background: hsla(var(--crust-hsl), 0.75);
-	border: 1px solid var(--surface2);
-	padding: 1.5rem;
 	padding-right: 0;
 	width: fit-content;
 	max-width: calc(100% - 2rem);
-	max-height: calc(100vh - 4rem);
+	max-height: calc(100vh - 2rem);
 	margin: 0 auto;
 	box-sizing: border-box;
 	overflow: hidden;
@@ -481,6 +479,12 @@ article>h1 {
 	}
 }
 
+.background-container {
+	background: hsla(var(--crust-hsl), 0.75);
+	border: 1px solid var(--surface2);
+	padding: .7rem;
+}
+
 /* Sidebar */
 .sidebar {
 	display: table-cell;
@@ -488,17 +492,15 @@ article>h1 {
 	width: 140px;
 	min-width: 12rem;
 	min-height: 3.5rem;
-	border-right: 1px solid var(--surface2);
-	padding-right: 1.5rem;
+	/* padding-right: 1.5rem; */
 	box-sizing: border-box;
 	position: relative;
 }
 
 .sidebar footer {
 	position: absolute;
-	bottom: 0;
-	left: 0;
-	right: 1.5rem;
+	bottom: .75rem;
+	left: .75rem;
 }
 
 .sidebar-nav {
@@ -589,9 +591,10 @@ article>h1 {
 .main-content {
 	display: table-cell;
 	vertical-align: top;
-	padding-inline: 2rem;
+	padding-left: 1rem;
+	padding-right: 2rem;
 	box-sizing: border-box;
-	/* width: clamp(584px, 40vw - 1rem, 884px); */
+	width: max(640px, 70vw - 1rem);
 	max-width: 100%;
 	overflow-x: visible;
 	overflow-y: auto;
@@ -620,6 +623,13 @@ article>h1 {
 		top: 0;
 		left: 0;
 		box-sizing: border-box;
+		background: hsla(var(--crust-hsl), 0.75);
+		border: 1px solid var(--surface2);
+	}
+
+	.background-container {
+		background: none;
+		border: none;
 	}
 
 	@supports (display: flex) {
@@ -906,7 +916,6 @@ ul.compact> :is(li > span, li > a) {
    ========================================================================== */
 
 .blog-list {
-	width: min(68rem, 100%);
 	margin: 0.8rem auto 0;
 	display: flex;
 	flex-direction: column;
@@ -1001,11 +1010,16 @@ ul.compact> :is(li > span, li > a) {
 	color: var(--subtext0);
 }
 
+.post-header,
+.post-body {
+	padding: 1.25rem !important;
+}
+
 /* Blog article content */
 article.blog-content {
-	max-width: 1080px;
+	/* max-width: 1080px; */
 	margin: 0 auto;
-	padding: 2rem 1rem;
+	/* padding: 2rem 1rem; */
 	line-height: 1.9;
 }
 
@@ -1029,6 +1043,7 @@ article.blog-content p {
 article.blog-content .post-body {
 	margin-top: 1.5rem;
 }
+
 
 article.blog-content blockquote {
 	border-left: 4px solid var(--overlay1);

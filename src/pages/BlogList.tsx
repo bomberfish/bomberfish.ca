@@ -44,39 +44,43 @@ function BlogList(this: FC) {
 			<div class="layout-container">
 				<Sidebar active="blog" />
 				<div class="main-content">
-					<h1>blog</h1>
-					<p style="font-size: 1.05em;">
-						various assorted thoughts and ramblings.
-					</p>
-					<subt style="font-size: 0.95rem; color: var(--text1)">
-						<a class="to-mini" href="/mini">***</a> obligatory disclaimer: all opinions are my own and do not reflect
-						those of any employer, past, present, or future.
-					</subt>
-					<span style="margin-bottom: 0; margin-top: 0.5rem;">
-						<subt style="display: flex; align-items: center; gap: 0.5rem; margin-top: 0.25rem; margin-bottom: 0;">
-							<span class="material-symbols">rss_feed</span> Subscribe:{" "}
-							<ul
-								class="compact"
-								style="display: inline; margin-left: 0.25rem; transform: translateY(-2px);"
-							>
-								<li>
-									<a href="/feed.xml" target="_blank">
-										RSS
-									</a>
-								</li>
-								<li>
-									<a href="/atom.xml" target="_blank">
-										Atom
-									</a>
-								</li>
-								<li>
-									<a href="/feed.json" target="_blank">
-										JSON Feed
-									</a>
-								</li>
-							</ul>
+					<div class="background-container">
+						<h1>blog</h1>
+						<p style="font-size: 1.05em;">
+							various assorted thoughts and ramblings.
+						</p>
+					</div>
+					<div class="background-container" style="margin-top: 0.5rem;">
+						<subt style="font-size: 0.95rem; color: var(--text1)">
+							<a class="to-mini" href="/mini">***</a> obligatory disclaimer: all opinions are my own and do not reflect
+							those of any employer, past, present, or future.
 						</subt>
-					</span>
+						<span style="margin-bottom: 0; margin-top: 0.5rem;">
+							<subt style="display: flex; align-items: center; gap: 0.5rem; margin-top: 0.25rem; margin-bottom: 0;">
+								<span class="material-symbols">rss_feed</span> Subscribe:{" "}
+								<ul
+									class="compact"
+									style="display: inline; margin-left: 0.25rem; transform: translateY(-2px);"
+								>
+									<li>
+										<a href="/feed.xml" target="_blank">
+											RSS
+										</a>
+									</li>
+									<li>
+										<a href="/atom.xml" target="_blank">
+											Atom
+										</a>
+									</li>
+									<li>
+										<a href="/feed.json" target="_blank">
+											JSON Feed
+										</a>
+									</li>
+								</ul>
+							</subt>
+						</span>
+					</div>
 					<div class="blog-list">
 						{blogPosts.map((post) => (
 							<div
@@ -131,12 +135,6 @@ BlogList.style = css`
 	a.to-mini {
 		text-decoration: none;
 		font-size: 0.9em;
-	}
-
-	.main-content {
-		width: 884px;
-		width: clamp(584px, 40vw - 1rem, 884px);
-		max-height: min(80vh, 70rem);
 	}
 
 	.post-footer {

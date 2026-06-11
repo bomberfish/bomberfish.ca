@@ -10,9 +10,10 @@ function ProjectList(this: FC) {
 			<div class="layout-container">
 				<Sidebar active="projects" />
 				<div class="main-content">
-					<h1>projects</h1>
-					<p>a collection of my major projects, along with various smaller utilities, experiments, and explorations.</p>
-						{/* <h3>featured</h3> */}
+					<div class="background-container">
+						<h1>projects</h1>
+						<p>a collection of my major projects, along with various smaller utilities, experiments, and explorations.</p>
+					</div>
 					<section class="projects-group">
 						{projects
 							.filter((project) => project.featured)
@@ -20,9 +21,9 @@ function ProjectList(this: FC) {
 								(a, b) => (a.featuredPosition || 0) - (b.featuredPosition || 0)
 							)
 							.map((project) => (
-									<ProjectCard project={project} size="large" />
+								<ProjectCard project={project} size="large" />
 							))}
-					{/* </section>
+						{/* </section>
 					<h3>other projects</h3>
 					<section class="projects-group"> */}
 						{projects
@@ -86,12 +87,6 @@ ProjectList.style = css`
 			flex-direction: column;
 			gap: 1rem;
 		}
-	}
-
-	.main-content {
-		width: 884px;
-		width: clamp(640px, 60vw - 1rem, 1024px);
-		max-height: min(90vh, 50rem);
 	}
 	
 	hr {
