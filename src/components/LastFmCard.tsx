@@ -252,9 +252,9 @@ function LastFmCard(this: FC) {
 						) : null}
 						<div class="lastfm-meta">
 							<a class="lastfm-title-link" href={t.url}>
-								<h2 class="lastfm-title">
+								<h3 class="lastfm-title">
 									<span class="lastfm-title-inner">{t.name}</span>
-								</h2>
+								</h3>
 							</a>
 							<p class="lastfm-artist">
 								{t.artistUrl ? (
@@ -417,6 +417,7 @@ LastFmCard.style = css`
 		line-height: 1.1;
 		text-wrap: balance;
 		hyphens: auto;
+		font-variation-settings: "ELSH" 85;
 	}
 
 	/* When a title still doesn't fit two lines even at the floor font size,

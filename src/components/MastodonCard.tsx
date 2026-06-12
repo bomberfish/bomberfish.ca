@@ -211,14 +211,6 @@ function MastodonCard(this: FC) {
 										@{s.account.acct}@wetdry.world
 									</p>
 								</div>
-								<time
-									class="fedi-post-when"
-									datetime={s.createdAt}
-									title={longForm}
-									aria-label={longForm}
-								>
-									{compactAgo(elapsed)}
-								</time>
 							</a>
 							<div class="fedi-post-body">
 								{s.spoilerText ? (
@@ -246,6 +238,14 @@ function MastodonCard(this: FC) {
 										{s.attachments.length === 1 ? "attachment" : "attachments"}
 									</span>
 								) : null}
+								<time
+									class="fedi-post-when"
+									datetime={s.createdAt}
+									title={longForm}
+									aria-label={longForm}
+								>
+									{compactAgo(elapsed)}
+								</time>
 							</p>
 						</div>
 					</>
@@ -329,8 +329,6 @@ MastodonCard.style = css`
 	.fedi-post-when {
 		margin-left: auto;
 		flex-shrink: 0;
-		align-self: flex-start;
-		font-size: 0.78rem;
 		color: var(--subtext2);
 		letter-spacing: 0.05em;
 	}
@@ -367,7 +365,7 @@ MastodonCard.style = css`
 		color: var(--text);
 		font-size: clamp(1.15rem, 7.5cqi, 1.7rem);
 		line-height: 1.25;
-		font-variation-settings: "ELSH" 27;
+		font-variation-settings: "ELSH" 93;
 		font-synthesis: weight;
 		font-weight: 50;
 		text-rendering: geometricPrecision;

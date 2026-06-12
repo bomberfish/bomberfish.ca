@@ -158,35 +158,35 @@ html:has(body.grid-loaded) {
 
 /* @media (prefers-color-scheme: dark) { */
 html {
-	--main-hue: 304;
+	--main-hue: 305;
 	--grid-lines: hsla(var(--main-hue), 12%, 16%);
 
 	--core-hsl: var(--main-hue), 100%, 2%;
 	--mantle-hsl: var(--main-hue), 40%, 2.5%;
 	--crust-hsl: var(--main-hue), 20%, 3.5%;
-	--base-hsl: var(--main-hue), 10%, 6%;
+	--base-hsl: calc(var(--main-hue) - 30), 10%, 6%;
 	--bg-light: var(--main-hue), 5%, 6.5%;
 
-	--surface0-hsl: var(--main-hue), 8%, 7.5%;
-	--surface1-hsl: var(--main-hue), 10%, 12%;
-	--surface2-hsl: var(--main-hue), 8%, 14%;
-	--surface3-hsl: var(--main-hue), 10%, 19%;
-	--surface4-hsl: var(--main-hue), 8%, 22.5%;
-	--surface5-hsl: var(--main-hue), 6%, 27%;
-	--surface6-hsl: var(--main-hue), 7%, 34%;
+	--surface0-hsl: calc(var(--main-hue) - 30), 12%, 7.5%;
+	--surface1-hsl: calc(var(--main-hue) - 35), 17%, 12%;
+	--surface2-hsl: calc(var(--main-hue) - 30), 17%, 14%;
+	--surface3-hsl: calc(var(--main-hue) - 30), 17%, 19%;
+	--surface4-hsl: calc(var(--main-hue) - 30), 15%, 22.5%;
+	--surface5-hsl: calc(var(--main-hue) - 28), 13%, 27%;
+	--surface6-hsl: calc(var(--main-hue) - 20), 14%, 34%;
 
-	--overlay0-hsl: calc(var(--main-hue) - 5), 7%, 55%;
-	--overlay1-hsl: calc(var(--main-hue) - 5), 10%, 65%;
-	--overlay2-hsl: calc(var(--main-hue) - 5), 17%, 75%;
-	--overlay3-hsl: calc(var(--main-hue) - 5), 25%, 85%;
+	--overlay0-hsl: calc(var(--main-hue) - 30), 10%, 55%;
+	--overlay1-hsl: calc(var(--main-hue) - 25), 12.5%, 65%;
+	--overlay2-hsl: calc(var(--main-hue) - 22.5), 17.5%, 75%;
+	--overlay3-hsl: calc(var(--main-hue) - 12), 27.5%, 85%;
 
-	--supertext-hsl: calc(var(--main-hue) - 25), 100%, 98%;
-	--text-hsl: calc(var(--main-hue) - 20), 70%, 95%;
-	--text1-hsl: calc(var(--main-hue) - 22.5), 22%, 70%;
-	--subtext0-hsl: calc(var(--main-hue) - 12.5), 17%, 67%;
-	--subtext1-hsl: calc(var(--main-hue) - 12.5), 15%, 60%;
-	--subtext2-hsl: calc(var(--main-hue) - 12.5), 10%, 50%;
-	--subtext3-hsl: calc(var(--main-hue) - 12.5), 8%, 40%;
+	--supertext-hsl: calc(var(--main-hue) - 27.5), 100%, 98%;
+	--text-hsl: calc(var(--main-hue) - 22.5), 70%, 95%;
+	--text1-hsl: calc(var(--main-hue) - 25), 22%, 70%;
+	--subtext0-hsl: calc(var(--main-hue) - 27.5), 17%, 67%;
+	--subtext1-hsl: calc(var(--main-hue) - 25), 15%, 60%;
+	--subtext2-hsl: calc(var(--main-hue) - 25), 10%, 50%;
+	--subtext3-hsl: calc(var(--main-hue) - 30), 8%, 40%;
 
 	--accent-hsl: calc(var(--main-hue) - 10), 52%, 77%;
 }
@@ -215,8 +215,7 @@ body {
 	line-height: 1.6;
 	font-size: clamp(15px, 0.4vw + 14px, 17px);
 	text-rendering: optimizeLegibility;
-	font-feature-settings:
-		"kern",
+	font-feature-settings: "kern",
 		common-ligatures contextual;
 	font-kerning: normal;
 	font-variant-ligatures: common-ligatures contextual;
@@ -367,8 +366,7 @@ a,
 a:visited {
 	color: var(--supertext);
 	text-decoration-color: var(--subtext1) !important;
-	transition:
-		color 0.25s ease,
+	transition: color 0.25s ease,
 		text-decoration-color 0.25s ease;
 }
 
@@ -432,8 +430,7 @@ main {
 	transform: translateY(0);
 	filter: blur(0px);
 	opacity: 1;
-	transition:
-		0.2s transform,
+	transition: 0.2s transform,
 		0.2s opacity,
 		0.2s filter;
 	transform-origin: bottom center;
@@ -826,8 +823,7 @@ ul.compact> :is(li > span, li > a) {
 	text-align: center;
 	opacity: 0;
 	visibility: hidden;
-	transition:
-		opacity 0.15s ease-in-out,
+	transition: opacity 0.15s ease-in-out,
 		visibility 0.15s ease-in-out,
 		transform 0.15s ease-in-out;
 	user-select: text;

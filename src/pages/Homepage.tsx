@@ -51,14 +51,14 @@ function Homepage(this: FC) {
 						</a>
 					</section>
 					<section class="live-section" id="status">
-						<div class="live-grid">
-							<h3 class="live-heading">what i'm up to</h3>
-							<h3 class="more-heading" id="more-socials-heading">more socials:</h3>
-							<div class="live-stack">
-								<LastFmCard />
-								<MastodonCard />
-							</div>
-							<div class="contact-list" id="socials" aria-labelledby="more-socials-heading">
+					<div class="live-grid">
+						<h3 class="live-heading">what i'm up to</h3>
+						<div class="live-stack">
+							<LastFmCard />
+							<MastodonCard />
+						</div>
+						<h3 class="more-heading" id="more-socials-heading">more socials:</h3>
+						<div class="contact-list" id="socials" aria-labelledby="more-socials-heading">
 								<ContactCard compact contact={{ platform: "github", username: "bomberfish", url: "https://github.com/bomberfish" }}>
 									<GitHubIcon />
 								</ContactCard>
@@ -203,7 +203,7 @@ Homepage.style = css`
 	}
 
 	.buttons-section {
-		background: var(--base);
+		background: var(--mantle);
 		border: 1px solid var(--surface2);
 		padding: 0.75rem;
 		margin-top: auto;
