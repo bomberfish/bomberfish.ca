@@ -6,10 +6,10 @@ export class ProjectCardDetails {
 	endYear?: number;
 	largeDesc: string;
 	links?: { name: string; url: string; icon?: string }[];
+	hasHighRes: boolean;
 	featured?: boolean;
 	featuredPosition?: number | undefined;
 	lastPathComponent: string;
-	hasHighRes: boolean;
 
 	constructor(
 		assetName: string | undefined,
@@ -19,9 +19,9 @@ export class ProjectCardDetails {
 		startYear: number,
 		endYear?: number,
 		links?: { name: string; url: string; icon?: string }[],
+		hasHighRes: boolean = false,
 		featured?: boolean,
 		featuredPosition?: number | undefined,
-		hasHighRes: boolean = false,
 		lastPathComponent?: string
 	) {
 		this.assetName = assetName;
@@ -31,9 +31,9 @@ export class ProjectCardDetails {
 		this.endYear = endYear;
 		this.largeDesc = largeDesc || blurb;
 		this.links = links;
+		this.hasHighRes = hasHighRes;
 		this.featured = featured;
 		this.featuredPosition = featuredPosition;
-		this.hasHighRes = hasHighRes;
 		this.lastPathComponent =
 			lastPathComponent ||
 			title
@@ -76,7 +76,8 @@ export const jobs = [
 				name: "Website",
 				url: "https://puter.com/",
 			},
-		]
+		],
+		true
 	),
 ];
 
@@ -99,9 +100,7 @@ export const projects = [
 				url: "https://oneshot.r58playz.dev",
 				icon: "stadia_controller",
 			},
-		],
-		true,
-		2
+		]
 	),
 	new ProjectCardDetails(
 		"steed.jpg",
@@ -114,17 +113,17 @@ export const projects = [
 			{
 				name: "Play on itch.io",
 				url: "https://bomberfish.itch.io/steed",
-				icon: "stadia_controller"
+				icon: "stadia_controller",
 			},
 			{
 				name: "GitHub",
 				url: "https://github.com/bomberfish/steed",
-				icon: "code"
+				icon: "code",
 			},
 			{
 				name: "About Daydream",
-				url: "https://daydream.hackclub.com/"
-			}
+				url: "https://daydream.hackclub.com/",
+			},
 		]
 	),
 	new ProjectCardDetails(
@@ -182,7 +181,7 @@ export const projects = [
 		[
 			{
 				name: "Try it out",
-				url: "https://bomberfish.ca/Transcribe"
+				url: "https://bomberfish.ca/Transcribe",
 			},
 			{
 				name: "GitHub",
@@ -276,8 +275,8 @@ export const projects = [
 		[
 			{
 				name: "Try it out",
-				url: "https://mammut.bomberfish.ca"
-			}
+				url: "https://mammut.bomberfish.ca",
+			},
 		]
 	),
 	new ProjectCardDetails(
@@ -297,9 +296,7 @@ export const projects = [
 				url: "https://twitter.com/QuickSigniOS",
 				icon: "alternate_email",
 			},
-		],
-		true,
-		5
+		]
 	),
 	new ProjectCardDetails(
 		"celeste.jpg",
@@ -330,8 +327,9 @@ export const projects = [
 				icon: "code",
 			},
 		],
+		false,
 		true,
-		3
+		0
 	),
 	new ProjectCardDetails(
 		"anura.jpg",
@@ -346,8 +344,6 @@ export const projects = [
 				url: "https://anura.pro",
 			},
 		],
-		true,
-		4,
 		true
 	),
 	new ProjectCardDetails(
@@ -358,8 +354,6 @@ export const projects = [
 		2024,
 		2024,
 		[],
-		undefined,
-		undefined,
 		true
 	),
 	new ProjectCardDetails(
@@ -371,8 +365,8 @@ export const projects = [
 		2024,
 		[],
 		true,
-		1,
-		true
+		true,
+		3
 	),
 	new ProjectCardDetails(
 		"dssos.jpg",
@@ -387,8 +381,6 @@ export const projects = [
 				url: "https://bomberfish.ca/dssOS/",
 			},
 		],
-		undefined,
-		undefined,
 		true
 	),
 	new ProjectCardDetails(
@@ -411,8 +403,8 @@ export const projects = [
 			},
 		],
 		true,
-		0,
-		true
+		true,
+		1
 	),
 	new ProjectCardDetails(
 		"appcommander.jpg",
@@ -433,8 +425,6 @@ export const projects = [
 				icon: "code",
 			},
 		],
-		undefined,
-		undefined,
 		true
 	),
 	new ProjectCardDetails(
@@ -460,8 +450,8 @@ export const projects = [
 				icon: "chat",
 			},
 		],
-		undefined,
-		undefined,
-		true
+		true,
+		true,
+		5
 	),
 ];

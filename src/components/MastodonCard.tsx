@@ -406,7 +406,7 @@ MastodonCard.style = css`
 		height: 100%;
 		object-fit: cover;
 		display: block;
-		filter: brightness(0.4) saturate(1.05);
+		filter: brightness(0.45) saturate(0.9) contrast(1.15);
 	}
 
 	/* dark vignette over the image so edges fade to the card bg, helping

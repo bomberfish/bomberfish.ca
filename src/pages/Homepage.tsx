@@ -28,7 +28,7 @@ function Homepage(this: FC) {
 								i'm hariz (he/they), a 17 y/o high school student from
 								waterloo, canada, and sometimes i make <code>use(ful|less)</code> projects.
 							</p>
-							<p>i used to be reallly involved in the ios modding and jailbreak scene, but i've mostly moved on to other things by now.
+							<p>i used to be really involved in the ios modding and jailbreak scene, but i've mostly moved on to other things by now.
 							</p>
 							<p>at the moment, i'm interested in webdev, UI/UX, embedded systems, and pcb design!</p>
 							<p>
@@ -51,14 +51,14 @@ function Homepage(this: FC) {
 						</a>
 					</section>
 					<section class="live-section" id="status">
-					<div class="live-grid">
-						<h3 class="live-heading">what i'm up to</h3>
-						<div class="live-stack">
-							<LastFmCard />
-							<MastodonCard />
-						</div>
-						<h3 class="more-heading" id="more-socials-heading">more socials:</h3>
-						<div class="contact-list" id="socials" aria-labelledby="more-socials-heading">
+						<div class="live-grid">
+							<h3 class="live-heading">what i'm up to</h3>
+							<div class="live-stack">
+								<LastFmCard />
+								<MastodonCard />
+							</div>
+							<h3 class="more-heading" id="more-socials-heading">more socials:</h3>
+							<div class="contact-list" id="socials" aria-labelledby="more-socials-heading">
 								<ContactCard compact contact={{ platform: "github", username: "bomberfish", url: "https://github.com/bomberfish" }}>
 									<GitHubIcon />
 								</ContactCard>

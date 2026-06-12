@@ -344,15 +344,6 @@ LastFmCard.style = css`
 		margin-block: auto;
 	}
 
-	.lastfm-art {
-		width: 40%;
-		height: auto;
-		aspect-ratio: 1;
-		object-fit: cover;
-		flex-shrink: 0;
-		border: 1px solid var(--surface2);
-	}
-
 	.lastfm-meta {
 		min-width: 0;
 		/* must be explicit: container-type: inline-size adds size containment,
@@ -396,16 +387,26 @@ LastFmCard.style = css`
 		display: block;
 	}
 
+	.lastfm-art {
+		// visibility: hidden; /* testing */
+		width: 40%;
+		height: auto;
+		aspect-ratio: 1;
+		object-fit: cover;
+		flex-shrink: 0;
+		border: 1px solid var(--surface2);
+	}
+
 	.lastfm-art-bleed {
 		height: 100%;
 		position: absolute;
 		left: 0;
 		top: 0;
 		z-index: -1;
-		transform: translateX(-30%) scale(2);
+		transform: translateX(-28%) translateY(-2%) scale(2);
 		transform-origin: left center;
-		filter: brightness(0.8) contrast(1.2) blur(1px);
-		mask-image: linear-gradient(105deg, rgba(0,0,0,0.15) 40%, transparent 72%);
+		filter: brightness(0.75) contrast(1.1) saturate(1.3) blur(0.8px);
+		mask-image: linear-gradient(105deg, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.15) 40%, transparent 72%);
 	}
 
 	.lastfm-title {

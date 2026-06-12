@@ -6,7 +6,7 @@
 	font-variation-settings: "ELSH" 0;
 	src:
 		local("☺"),
-		url("/fonts/sans/GeistPixel.ttf") format("truetype-variations");
+		url("/fonts/sans/GeistPixel.woff2") format("woff2");
 }
 
 @font-face {
@@ -20,13 +20,30 @@
 }
 
 @font-face {
+	font-family: "Geist";
+	font-weight: 100 900;
+	font-style: normal;
+	font-display: swap;
+	src: local("☺"), url("/fonts/sans/Geist.woff2") format("woff2");
+}
+
+@font-face {
+	font-family: "Geist";
+	font-weight: 100 900;
+	font-style: italic;
+	font-display: swap;
+	src: local("☺"), url("/fonts/sans/Geist-Italic.woff2") format("woff2");
+}
+
+
+@font-face {
 	font-family: "CascadiaCode";
 	font-style: normal;
 	font-weight: normal;
 	font-display: swap;
 	src:
 		local("☺"),
-		url("/fonts/mono/CascadiaCode.ttf") format("truetype");
+		url("/fonts/mono/CascadiaCode.woff2") format("woff2");
 }
 
 @font-face {
@@ -36,7 +53,7 @@
 	font-display: swap;
 	src:
 		local("☺"),
-		url("/fonts/mono/CascadiaCodeItalic.ttf") format("truetype");
+		url("/fonts/mono/CascadiaCodeItalic.woff2") format("woff2");
 }
 
 @font-face {

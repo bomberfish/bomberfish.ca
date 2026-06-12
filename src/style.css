@@ -20,7 +20,7 @@
 }
 
 .geist-anim {
-	animation: rotate-shape 7s infinite cubic-bezier(.7, 0, .35, 1);
+	animation: rotate-shape 4s infinite cubic-bezier(.7, 0, .35, 1);
 	font-synthesis: weight !important;
 	font-weight: 50;
 }
@@ -88,9 +88,6 @@ html {
 	--card-overlay: color-mix(in srgb, var(--overlay3) 70%, var(--text) 30%);
 	--card-surface: hsla(var(--surface1-hsl), 0.9);
 	--card-surface-hover: hsla(var(--surface1-hsl), 0.96);
-
-	/* Typography */
-	--font-mono: "CascadiaCode", ui-monospace, monospace;
 
 	--main-hue: 305;
 	--grid-lines: hsla(var(--main-hue), 12%, 16%);
@@ -231,7 +228,7 @@ html:has(body.grid-loaded) {
    ========================================================================== */
 
 body {
-	font-family: var(--font-body);
+	font-family: var(--font-body), sans-serif;
 	/* No font-weight / font-stretch / wght variation: GeistPixel only ships a single
 	   "normal" face. Any non-default weight/stretch triggers browser synthesis
 	   (faux-bold), which doubles strokes and smears the ELSH axis stripes together. */
@@ -281,7 +278,7 @@ h3,
 h4,
 h5,
 h6 {
-	font-family: var(--font-display);
+	font-family: var(--font-display), sans-serif;
 	color: var(--supertext);
 	font-synthesis: weight style small-caps;
 	font-weight: 50 !important;
@@ -337,11 +334,19 @@ h6 {
 	line-height: 1.4;
 }
 
-/* Prose elements */
-p,
-subt {
-	font-family: var(--font-display), serif;
+em,
+strong {
+	font-family: "Geist", var(--font-display), sans-serif !important;
+	opacity: 0.96;
+	-webkit-font-smoothing: none;
+	font-smooth: none;
 }
+
+strong {
+	font-weight: 480;
+}
+
+/* Prose elements */
 
 p {
 	margin-block: 0.5em;
@@ -363,7 +368,7 @@ code {
 	border: 0.075rem solid var(--surface2);
 	font-variation-settings: unset;
 	font-stretch: 100%;
-	font-family: var(--font-mono);
+	font-family: var(--font-mono), monospace;
 }
 
 pre {
@@ -960,7 +965,7 @@ ul.compact> :is(li > span, li > a) {
 	inset: 0;
 	background-image: var(--cover-image);
 	background-size: cover;
-	background-position: 90% 67%;
+	background-position: 90% 45%;
 	z-index: -1;
 	opacity: 1;
 	mask-image: linear-gradient(-45deg,
@@ -1265,7 +1270,7 @@ cap subt:not(:has(.material-symbols)) {
 }
 
 .livecard-platform {
-	font-family: var(--font-display);
+	font-family: var(--font-display), sans-serif;
 	color: var(--supertext);
 	font-size: 1.05rem;
 }
