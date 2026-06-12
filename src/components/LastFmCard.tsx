@@ -85,6 +85,13 @@ function LastFmCard(this: FC) {
 		e.preventDefault();
 		e.stopPropagation();
 		if (state.refreshing) return;
+		// Restart the spin animation on every click — remove → reflow →
+		// re-add so a second click within the 0.5s window kicks fresh
+		// instead of being ignored as a no-op class toggle.
+		const btn = e.currentTarget as HTMLElement;
+		btn.classList.remove("spin");
+		void btn.offsetWidth;
+		btn.classList.add("spin");
 		load(true);
 	};
 
@@ -160,10 +167,19 @@ function LastFmCard(this: FC) {
 	};
 
 	let ro: ResizeObserver | null = null;
+	let initialTimer = 0;
 
 	this.cx.mount = () => {
 		if (import.meta.env.SSR) return;
 		cancelled = false;
+
+		// Tag the card so the fade-in rules apply. We do this imperatively
+		// instead of in the JSX because dreamland's SSR hydration strips
+		// any static or reactive class binding on this element. Removing
+		// it after the initial reveal is enough to gate refreshes — fresh
+		// DOM nodes inserted later won't match the rule.
+		this.root?.classList.add("is-initial");
+
 		load();
 		const id = setInterval(() => load(), REFRESH_MS);
 
@@ -174,8 +190,22 @@ function LastFmCard(this: FC) {
 		}
 
 		// View changes (new track, refresh, error→ok) replace the title node
-		// inside the reactive subtree, so re-run fit on the new node.
-		use(state.view).listen(() => scheduleFit());
+		// inside the reactive subtree, so re-run fit on the new node. Also
+		// arms a one-shot timer on the first transition out of "loading"
+		// that strips .is-initial — without it, every refresh would replay
+		// the fade-in (since fresh DOM nodes restart CSS animations). 1s
+		// is long enough for the slowest animation (the 0.9s bleed) to
+		// finish before the gate disappears.
+		let firstTransitionDone = false;
+		use(state.view).listen((v) => {
+			if (!firstTransitionDone && v.kind !== "loading") {
+				firstTransitionDone = true;
+				initialTimer = window.setTimeout(() => {
+					if (!cancelled) this.root?.classList.remove("is-initial");
+				}, 1000);
+			}
+			scheduleFit();
+		});
 
 		return () => {
 			cancelled = true;
@@ -183,6 +213,7 @@ function LastFmCard(this: FC) {
 			clearInterval(id);
 			ro?.disconnect();
 			cancelAnimationFrame(rafId);
+			clearTimeout(initialTimer);
 		};
 	};
 

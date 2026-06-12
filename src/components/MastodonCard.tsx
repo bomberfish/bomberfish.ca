@@ -64,18 +64,50 @@ function MastodonCard(this: FC) {
 		e.preventDefault();
 		e.stopPropagation();
 		if (state.refreshing) return;
+		// Restart the spin animation on every click — remove → reflow →
+		// re-add so a second click within the 0.5s window kicks fresh
+		// instead of being ignored as a no-op class toggle.
+		const btn = e.currentTarget as HTMLElement;
+		btn.classList.remove("spin");
+		void btn.offsetWidth;
+		btn.classList.add("spin");
 		load(true);
 	};
+
+	let initialTimer = 0;
 
 	this.cx.mount = () => {
 		if (import.meta.env.SSR) return;
 		cancelled = false;
+
+		// Tag the card so the fade-in rules apply. Set imperatively because
+		// JSX-side class binding (static or reactive) doesn't survive
+		// dreamland's SSR hydration on this element.
+		this.root?.classList.add("is-initial");
+
 		load();
 		const id = setInterval(() => load(), REFRESH_MS);
+
+		// First transition out of "loading" arms a one-shot timer that
+		// strips .is-initial — without it, every periodic or manual refresh
+		// would replay the fade-in (since fresh DOM nodes restart CSS
+		// animations). 1s is long enough for the slowest animation (the
+		// 0.9s bleed) to finish before the gate disappears.
+		let firstTransitionDone = false;
+		use(state.view).listen((v) => {
+			if (!firstTransitionDone && v.kind !== "loading") {
+				firstTransitionDone = true;
+				initialTimer = window.setTimeout(() => {
+					if (!cancelled) this.root?.classList.remove("is-initial");
+				}, 1000);
+			}
+		});
+
 		return () => {
 			cancelled = true;
 			controller?.abort();
 			clearInterval(id);
+			clearTimeout(initialTimer);
 		};
 	};
 

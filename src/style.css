@@ -26,7 +26,7 @@
 }
 
 :root {
-	--vt-duration: 700ms;
+	--vt-duration: 100ms;
 	--vt-ease: cubic-bezier(0.25, 0.8, 0.25, 1);
 	--vt-direction: 1;
 }
@@ -1335,6 +1335,104 @@ cap subt:not(:has(.material-symbols)) {
 	margin: 0;
 	color: var(--subtext2);
 	font-size: 0.85rem;
+}
+
+/* Fade-in for live card content. The .is-initial gate is added in the JSX
+   and stripped by the component ~1s after the first state.view transition
+   out of "loading" completes (long enough for the slow bleed animation to
+   finish). After it's gone, periodic auto-refreshes and manual refresh
+   clicks — both of which replace the reactive subtree's DOM nodes — no
+   longer match these rules, so the fade-in only plays on initial reveal. */
+@keyframes livecard-fade-in {
+	from {
+		opacity: 0;
+		filter: blur(8px);
+	}
+
+	to {
+		opacity: 1;
+		filter: blur(0);
+	}
+}
+
+/* Opacity-only variant for header chrome (stats) — blur on small text in a
+   tight header row reads as a glitch, not an effect. */
+@keyframes livecard-fade-in-plain {
+	from {
+		opacity: 0;
+	}
+
+	to {
+		opacity: 1;
+	}
+}
+
+/* The LastFm bleed has a baseline filter chain
+   (brightness/contrast/saturate + a small constant blur). A naïve
+   `filter: blur(8px) → blur(0)` animation would override that whole chain
+   for the duration, so these bespoke keyframes re-assert the same values
+   and only vary the blur magnitude (8px → 0.8px = bleed's natural rest). */
+@keyframes lastfm-bleed-fade-in {
+	from {
+		opacity: 0;
+		filter: brightness(0.75) contrast(1.1) saturate(1.3) blur(8px);
+	}
+
+	to {
+		opacity: 1;
+		filter: brightness(0.75) contrast(1.1) saturate(1.3) blur(0.8px);
+	}
+}
+
+/* Foreground content: Mastodon post and the LastFm art/meta. We
+   deliberately do NOT animate .lastfm-track itself — its
+   `filter: blur(...)` would propagate down through the subtree, double-
+   blurring the absolutely-positioned bleed and stomping its own animation.
+   The loading status (.livecard-status) is intentionally excluded: the
+   .is-initial gate is added imperatively in cx.mount, AFTER the SSR'd
+   loading status is already in the DOM, so animating it would flash from
+   visible → opacity 0 → fade in. The loaded content nodes are inserted
+   after mount and animate cleanly on first paint. */
+.livecard.is-initial>.post,
+.livecard.is-initial .lastfm-track>.lastfm-art,
+.livecard.is-initial .lastfm-track>.lastfm-meta {
+	animation: livecard-fade-in 0.35s ease-out;
+}
+
+/* Bleeds reveal independently and slower for an atmospheric feel — the
+   foreground snaps in, the backdrop drifts in behind it. */
+.livecard.is-initial>.fedi-post-bleed {
+	animation: livecard-fade-in 0.9s ease-out;
+}
+
+.livecard.is-initial .lastfm-art-bleed {
+	animation: lastfm-bleed-fade-in 0.9s ease-out;
+}
+
+/* Header stats (scrobble count, follower count) fade in opacity-only,
+   faster than the body so the count reads as ambient chrome rather than
+   competing with the main content's reveal. */
+.livecard.is-initial .livecard-header .livecard-stat {
+	animation: livecard-fade-in-plain 0.18s ease-out;
+}
+
+/* Refresh button: a quick 360° turn on every click. The component toggles
+   the .spin class off-and-on via reflow on each click so a second click
+   restarts the animation cleanly. Rotates the inner icon (not the button)
+   so the focus ring stays put. */
+@keyframes livecard-refresh-spin {
+	from {
+		transform: rotate(0);
+	}
+
+	to {
+		transform: rotate(720deg);
+	}
+}
+
+.livecard-refresh.spin .material-symbols {
+	animation: livecard-refresh-spin .7s cubic-bezier(.75, -0.5, .25, 1.5);
+	transform-origin: 50% 51%;
 }
 
 /* ==========================================================================
