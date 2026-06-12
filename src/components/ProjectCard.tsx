@@ -98,9 +98,16 @@ ProjectCard.style = css<typeof ProjectCard>`
 		transform: scale(1.01) translateY(-2px);
 	}
 
-	:scope:hover h1 {
+	:scope:hover h1,
+	:scope:hover .project-title {
 		text-decoration: underline !important;
 	}
+
+	/* Note: keyboard-focus styles for this card live in global style.css
+	   (search for ".project-card-wrapper"). Dreamland's CSS scoping appends
+	   :where(.dlcss-N) to every selector token, which would break selectors
+	   like :has(a:focus-visible) here because the inner <a> doesn't carry
+	   the component's scope class. */
 
 	@media (orientation: portrait) {
 		:scope {

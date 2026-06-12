@@ -127,10 +127,16 @@ export function ButtonList(this: FC) {
 				title="errorcodezero"
 				href="https://www.errorcodezero.dev/"
 			/>
+			{/* todo: annoy these two in the gc so they start serving gifs */}
 			<WebButton
 				src="https://qwq.sh/88x31/hazelcaffe.png"
 				title="Hazel's website"
 				href="https://qwq.sh"
+			/>
+			<WebButton
+				src="https://madjikware.com/img/mj.png"
+				title="mdp3"
+				href="https://madjikware.com/"
 			/>
 			<WebButton
 				src="https://madz.mov/assets/images/buttons/friends/madzbutton.gif"
@@ -147,7 +153,6 @@ export function ButtonList(this: FC) {
 				title="authenyo"
 				href="https://authenyo.xyz"
 			/>
-
 			<WebButton
 				src="/buttons/k8.gif"
 				title="thememesniper"

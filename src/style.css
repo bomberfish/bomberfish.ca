@@ -20,7 +20,7 @@
 }
 
 .geist-anim {
-	animation: rotate-shape 7s infinite linear;
+	animation: rotate-shape 7s infinite cubic-bezier(.7, 0, .35, 1);
 	font-synthesis: weight !important;
 	font-weight: 50;
 }
@@ -92,72 +92,6 @@ html {
 	/* Typography */
 	--font-mono: "CascadiaCode", ui-monospace, monospace;
 
-	/* Light theme (default) */
-	/* --main-hue: 320;
-	--grid-lines: hsla(var(--main-hue), 12%, 16%);
-
-	--core-hsl: var(--main-hue), 100%, 100%;
-	--mantle-hsl: var(--main-hue), 65%, 99%;
-	--crust-hsl: var(--main-hue), 50%, 98%;
-	--base-hsl: var(--main-hue), 35%, 97%;
-	--bg-light: var(--main-hue), 20%, 96%;
-
-	--surface0-hsl: var(--main-hue), 35%, 95%;
-	--surface1-hsl: calc(var(--main-hue) - 2.5), 40%, 93%;
-	--surface2-hsl: calc(var(--main-hue) - 2.5), 25%, 92%;
-	--surface3-hsl: calc(var(--main-hue) - 5), 25%, 90%;
-	--surface4-hsl: calc(var(--main-hue) - 5), 20%, 88%;
-	--surface5-hsl: calc(var(--main-hue) - 7.5), 25%, 86%;
-	--surface6-hsl: calc(var(--main-hue) - 7.5), 17.5%, 83%;
-
-	--overlay0-hsl: calc(var(--main-hue) - 7.5), 20%, 79%;
-	--overlay1-hsl: calc(var(--main-hue) - 7.5), 25%, 72%;
-	--overlay2-hsl: calc(var(--main-hue) - 7.5), 27.5%, 65%;
-	--overlay3-hsl: calc(var(--main-hue) - 7.5), 30%, 55%;
-
-	--supertext-hsl: calc(var(--main-hue) - 25), 100%, 3%;
-	--text-hsl: calc(var(--main-hue) - 17.5), 60%, 8%;
-	--text1-hsl: calc(var(--main-hue) - 20), 14%, 15%;
-	--subtext0-hsl: calc(var(--main-hue) - 15), 10%, 20%;
-	--subtext1-hsl: calc(var(--main-hue) - 15), 12.5%, 35%;
-	--subtext2-hsl: calc(var(--main-hue) - 15), 15%, 45%;
-	--subtext3-hsl: calc(var(--main-hue) - 15), 20%, 55%;
-
-	--accent-hsl: calc(var(--main-hue) - 15), 55%, 70%;
-
-	--shadow-soft: hsla(var(--text-hsl), 0.14);
-	--shadow-medium: hsla(var(--text-hsl), 0.24);
-	--shadow-strong: hsla(var(--text-hsl), 0.34);
-	--shadow-ultra: hsla(var(--text-hsl), 0.44);
-	--shadow-highlight: hsla(var(--surface1-hsl), 0.55); */
-
-	/* Base styles */
-	color: var(--text);
-	background: var(--crust);
-	overflow-x: hidden;
-	overflow-y: auto;
-	image-rendering: pixelated;
-	transition: background-image 0.3s ease;
-	accent-color: var(--accent);
-
-	/* CSS grid fallback for no-JS */
-	background-image:
-		linear-gradient(to right, hsl(var(--bg-light)) 1px, transparent 1px),
-		linear-gradient(to bottom, hsl(var(--bg-light)) 1px, transparent 1px);
-	background-size: var(--grid-size) var(--grid-size);
-}
-
-/* Hide CSS grid when JS grid is loaded */
-html:has(body.grid-loaded) {
-	background-image: none;
-}
-
-/* ==========================================================================
-   Dark Theme
-   ========================================================================== */
-
-/* @media (prefers-color-scheme: dark) { */
-html {
 	--main-hue: 305;
 	--grid-lines: hsla(var(--main-hue), 12%, 16%);
 
@@ -189,16 +123,107 @@ html {
 	--subtext3-hsl: calc(var(--main-hue) - 30), 8%, 40%;
 
 	--accent-hsl: calc(var(--main-hue) - 10), 52%, 77%;
+
+
+	/* Base styles */
+	color: var(--text);
+	background: var(--crust);
+	overflow-x: hidden;
+	overflow-y: auto;
+	image-rendering: pixelated;
+	transition: background-image 0.3s ease;
+	accent-color: var(--accent);
+
+	/* CSS grid fallback for no-JS */
+	background-image:
+		linear-gradient(to right, hsl(var(--bg-light)) 1px, transparent 1px),
+		linear-gradient(to bottom, hsl(var(--bg-light)) 1px, transparent 1px);
+	background-size: var(--grid-size) var(--grid-size);
 }
 
-.site-title-pfp {
-	filter: invert(1);
+/* Hide CSS grid when JS grid is loaded */
+html:has(body.grid-loaded) {
+	background-image: none;
+}
+
+
+/* @media (prefers-color-scheme: light) {
+	html {
+		--main-hue: 320;
+		--grid-lines: hsla(var(--main-hue), 12%, 16%);
+
+		--core-hsl: var(--main-hue), 100%, 100%;
+		--mantle-hsl: var(--main-hue), 65%, 99%;
+		--crust-hsl: var(--main-hue), 50%, 98%;
+		--base-hsl: var(--main-hue), 35%, 97%;
+		--bg-light: var(--main-hue), 20%, 96%;
+
+		--surface0-hsl: var(--main-hue), 35%, 95%;
+		--surface1-hsl: calc(var(--main-hue) - 2.5), 40%, 93%;
+		--surface2-hsl: calc(var(--main-hue) - 2.5), 25%, 92%;
+		--surface3-hsl: calc(var(--main-hue) - 5), 25%, 90%;
+		--surface4-hsl: calc(var(--main-hue) - 5), 20%, 88%;
+		--surface5-hsl: calc(var(--main-hue) - 7.5), 25%, 86%;
+		--surface6-hsl: calc(var(--main-hue) - 7.5), 17.5%, 83%;
+
+		--overlay0-hsl: calc(var(--main-hue) - 7.5), 20%, 79%;
+		--overlay1-hsl: calc(var(--main-hue) - 7.5), 25%, 72%;
+		--overlay2-hsl: calc(var(--main-hue) - 7.5), 27.5%, 65%;
+		--overlay3-hsl: calc(var(--main-hue) - 7.5), 30%, 55%;
+
+		--supertext-hsl: calc(var(--main-hue) - 25), 100%, 3%;
+		--text-hsl: calc(var(--main-hue) - 17.5), 60%, 8%;
+		--text1-hsl: calc(var(--main-hue) - 20), 14%, 15%;
+		--subtext0-hsl: calc(var(--main-hue) - 15), 10%, 20%;
+		--subtext1-hsl: calc(var(--main-hue) - 15), 12.5%, 35%;
+		--subtext2-hsl: calc(var(--main-hue) - 15), 15%, 45%;
+		--subtext3-hsl: calc(var(--main-hue) - 15), 20%, 55%;
+
+		--accent-hsl: calc(var(--main-hue) - 15), 55%, 70%;
+
+		--shadow-soft: hsla(var(--text-hsl), 0.14);
+		--shadow-medium: hsla(var(--text-hsl), 0.24);
+		--shadow-strong: hsla(var(--text-hsl), 0.34);
+		--shadow-ultra: hsla(var(--text-hsl), 0.44);
+		--shadow-highlight: hsla(var(--surface1-hsl), 0.55);
+	}
+
+	.site-title-pfp {
+		filter: invert(1);
+	}
 }
 
 /* } */
 
 ::selection {
 	background: hsla(var(--accent-hsl), 0.6);
+}
+
+:focus-visible {
+	outline: 1.5px dashed var(--accent);
+	outline-offset: -1px;
+}
+
+/* Project card keyboard focus.
+   The visible "card" is the wrapper <div>; the inner <a> is what actually
+   receives focus. Render the focus ring on the wrapper (so it isn't clipped
+   by the wrapper's overflow: hidden) and suppress the inner anchor's own
+   inset outline. Defined globally because Dreamland's component-scoped CSS
+   would rewrite descendant selectors in a way that breaks :has(a:...). */
+.project-card-wrapper:has(> a.project-card:focus-visible) {
+	outline: 1px dashed var(--accent);
+	outline-offset: -1px;
+	border-color: transparent;
+	transform: scale(1.01) translateY(-2px);
+}
+
+.project-card-wrapper:has(> a.project-card:focus-visible) .project-title {
+	text-decoration: underline;
+}
+
+.project-card-wrapper>a.project-card:focus,
+.project-card-wrapper>a.project-card:focus-visible {
+	outline: none;
 }
 
 /* ==========================================================================
@@ -326,12 +351,6 @@ subt {
 	font-size: 0.85em;
 	color: var(--subtext0);
 	line-height: 1.2;
-}
-
-strong,
-b {
-	/* GeistPixel has no wght axis and no bold face — drop weight to avoid faux-bold
-	   smearing the ELSH stripes. Visual emphasis comes from default rendering only. */
 }
 
 /* Code */
@@ -568,7 +587,7 @@ article>h1 {
 	position: sticky;
 	top: 0;
 	z-index: 10;
-	padding: 0.5rem 0;
+	padding: 1rem 0;
 	padding-top: max(0.5rem, env(safe-area-inset-top));
 }
 
@@ -642,6 +661,8 @@ article>h1 {
 .site-title-link {
 	text-decoration: none !important;
 	flex-shrink: 0;
+	display: inline-flex;
+	align-items: center;
 }
 
 .site-title {
@@ -652,15 +673,27 @@ article>h1 {
 	margin: 0;
 	line-height: 1.2;
 
+	overflow: hidden;
+	contain: paint layout;
+
 	-webkit-font-smoothing: none;
 	font-smooth: none;
+}
+
+.site-title span {
+	z-index: 90;
+	font-size: 1.7rem;
 }
 
 .site-title-pfp {
 	display: inline-block;
 	image-rendering: pixelated;
-	height: 1.75rem;
+	height: 3rem;
+	transform: scale(2.7) translateY(-15%) translateX(25%);
+	transform-origin: top right;
 	width: auto;
+	mask-image: linear-gradient(80deg, rgba(0, 0, 0, 0.95) 60%, transparent 90%);
+	z-index: 84;
 }
 
 /* 
@@ -960,12 +993,31 @@ ul.compact> :is(li > span, li > a) {
 /* Blog link */
 .blog-link {
 	text-decoration: none !important;
+	display: block;
 }
 
-.blog-list a.blog-link:hover h3 {
+.blog-list a.blog-link:hover h3,
+.blog-list a.blog-link:focus-visible h3 {
 	color: var(--supertext);
 	text-decoration: underline;
 	text-decoration-color: var(--subtext1) !important;
+}
+
+/* Keyboard focus indicator for blog items.
+   The global :focus-visible rule renders an inset dashed outline that's hard
+   to see (especially on cover-image variants), so we override with a solid
+   accent ring with positive offset and a subtle backdrop on the parent. */
+.blog-link:focus-visible {
+	outline: 1px dashed var(--accent);
+	outline-offset: 10px;
+}
+
+.blog-item:has(.blog-link:focus-visible) {
+	background: hsla(var(--accent-hsl), 0.08);
+}
+
+.blog-item.has-cover:has(.blog-link:focus-visible)::before {
+	opacity: 0.85;
 }
 
 /* Post metadata */

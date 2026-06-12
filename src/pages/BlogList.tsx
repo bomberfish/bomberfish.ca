@@ -53,7 +53,7 @@ function BlogList(this: FC) {
 					</div>
 					<div class="background-container" style="margin-top: 0.5rem;">
 						<subt style="font-size: 0.95rem; color: var(--text1)">
-							<a class="to-mini" href="/mini">***</a> obligatory disclaimer: all opinions are my own and do not reflect
+							** obligatory disclaimer: all opinions are my own and do not reflect
 							those of any employer, past, present, or future.
 						</subt>
 						<span style="margin-bottom: 0; margin-top: 0.5rem;">
