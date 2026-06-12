@@ -36,7 +36,8 @@ function ProjectCard(
 		link.dispatchEvent(syntheticClick);
 	};
 
-	const hasImage = Boolean(this.project.img);
+	const thumbnail = this.project.getThumbnailPath();
+	const hasImage = Boolean(thumbnail);
 	const yearDisplay =
 		typeof this.project.endYear === "number"
 			? this.project.endYear === this.project.startYear
@@ -54,7 +55,7 @@ function ProjectCard(
 				class:no-image={!hasImage}
 			>
 				<div class="image-wrapper">
-					<img src={this.project.img} alt="" loading="eager" />
+					<img src={thumbnail} alt="" loading="eager" />
 				</div>
 				<div class="project-info">
 					<p class="project-year">
@@ -80,7 +81,7 @@ ProjectCard.style = css<typeof ProjectCard>`
 	:scope,
 	:scope:visited {
 		width: 100%;
-		background: hsla(var(--crust-hsl), 0.5);
+		background: hsla(var(--crust-hsl), 0.7);
 		border: 1px solid var(--surface3);
 		overflow: hidden;
 		font-size: 0.9rem;

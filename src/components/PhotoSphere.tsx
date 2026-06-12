@@ -122,7 +122,6 @@ PhotoSphere.style = css`
 		transform: translate(-50%, -50%);
 		font-size: 1.75rem;
 		font-family: var(--font-display);
-		font-weight: 500;
 		display: flex;
 		align-items: center;
 		justify-content: center;

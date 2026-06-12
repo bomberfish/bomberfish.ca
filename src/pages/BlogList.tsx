@@ -2,6 +2,7 @@ import { FC, css } from "dreamland/core";
 import TransitionLink from "../components/TransitionLink";
 import { ContactLinks } from "./Homepage";
 import Sidebar from "../components/Sidebar";
+import Footer from "../components/Footer";
 
 interface BlogPost {
 	slug: string;
@@ -44,9 +45,9 @@ function BlogList(this: FC) {
 			<div class="layout-container">
 				<Sidebar active="blog" />
 				<div class="main-content">
-					<div class="page-header background-container">
+					<div class="page-header">
 						<h1>blog</h1>
-						<p style="font-size: 1.05em;">
+						<p>
 							various assorted thoughts and ramblings.
 						</p>
 					</div>
@@ -121,6 +122,7 @@ function BlogList(this: FC) {
 						<ContactLinks />
 					</span>
 				</div>
+				<Footer />
 			</div>
 		</main>
 	);

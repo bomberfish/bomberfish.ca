@@ -8,6 +8,23 @@
 	inherits: true;
 }
 
+
+@keyframes rotate-shape {
+	0% {
+		font-variation-settings: "ELSH" 0;
+	}
+
+	100% {
+		font-variation-settings: "ELSH" 100;
+	}
+}
+
+.geist-anim {
+	animation: rotate-shape 7s infinite linear;
+	font-synthesis: weight !important;
+	font-weight: 50;
+}
+
 :root {
 	--vt-duration: 700ms;
 	--vt-ease: cubic-bezier(0.25, 0.8, 0.25, 1);
@@ -73,30 +90,30 @@ html {
 	--card-surface-hover: hsla(var(--surface1-hsl), 0.96);
 
 	/* Typography */
-	--font-mono: "IosevkaFishQuasi", ui-monospace, monospace;
+	--font-mono: "CascadiaCode", ui-monospace, monospace;
 
 	/* Light theme (default) */
-	--main-hue: 200;
+	/* --main-hue: 320;
 	--grid-lines: hsla(var(--main-hue), 12%, 16%);
 
-	--core-hsl: var(--main-hue), 100%, 99%;
-	--mantle-hsl: var(--main-hue), 65%, 98%;
-	--crust-hsl: var(--main-hue), 50%, 95%;
-	--base-hsl: var(--main-hue), 35%, 92%;
-	--bg-light: var(--main-hue), 20%, 90%;
+	--core-hsl: var(--main-hue), 100%, 100%;
+	--mantle-hsl: var(--main-hue), 65%, 99%;
+	--crust-hsl: var(--main-hue), 50%, 98%;
+	--base-hsl: var(--main-hue), 35%, 97%;
+	--bg-light: var(--main-hue), 20%, 96%;
 
-	--surface0-hsl: var(--main-hue), 35%, 87%;
-	--surface1-hsl: calc(var(--main-hue) - 2.5), 40%, 84%;
-	--surface2-hsl: calc(var(--main-hue) - 2.5), 25%, 81%;
-	--surface3-hsl: calc(var(--main-hue) - 5), 25%, 78%;
-	--surface4-hsl: calc(var(--main-hue) - 5), 20%, 75%;
-	--surface5-hsl: calc(var(--main-hue) - 7.5), 25%, 73%;
-	--surface6-hsl: calc(var(--main-hue) - 7.5), 17.5%, 70%;
+	--surface0-hsl: var(--main-hue), 35%, 95%;
+	--surface1-hsl: calc(var(--main-hue) - 2.5), 40%, 93%;
+	--surface2-hsl: calc(var(--main-hue) - 2.5), 25%, 92%;
+	--surface3-hsl: calc(var(--main-hue) - 5), 25%, 90%;
+	--surface4-hsl: calc(var(--main-hue) - 5), 20%, 88%;
+	--surface5-hsl: calc(var(--main-hue) - 7.5), 25%, 86%;
+	--surface6-hsl: calc(var(--main-hue) - 7.5), 17.5%, 83%;
 
-	--overlay0-hsl: calc(var(--main-hue) - 7.5), 20%, 60%;
-	--overlay1-hsl: calc(var(--main-hue) - 7.5), 25%, 50%;
-	--overlay2-hsl: calc(var(--main-hue) - 7.5), 27.5%, 40%;
-	--overlay3-hsl: calc(var(--main-hue) - 7.5), 30%, 35%;
+	--overlay0-hsl: calc(var(--main-hue) - 7.5), 20%, 79%;
+	--overlay1-hsl: calc(var(--main-hue) - 7.5), 25%, 72%;
+	--overlay2-hsl: calc(var(--main-hue) - 7.5), 27.5%, 65%;
+	--overlay3-hsl: calc(var(--main-hue) - 7.5), 30%, 55%;
 
 	--supertext-hsl: calc(var(--main-hue) - 25), 100%, 3%;
 	--text-hsl: calc(var(--main-hue) - 17.5), 60%, 8%;
@@ -106,17 +123,17 @@ html {
 	--subtext2-hsl: calc(var(--main-hue) - 15), 15%, 45%;
 	--subtext3-hsl: calc(var(--main-hue) - 15), 20%, 55%;
 
-	--accent-hsl: calc(var(--main-hue) - 15), 50%, 40%;
+	--accent-hsl: calc(var(--main-hue) - 15), 55%, 70%;
 
 	--shadow-soft: hsla(var(--text-hsl), 0.14);
 	--shadow-medium: hsla(var(--text-hsl), 0.24);
 	--shadow-strong: hsla(var(--text-hsl), 0.34);
 	--shadow-ultra: hsla(var(--text-hsl), 0.44);
-	--shadow-highlight: hsla(var(--surface1-hsl), 0.55);
+	--shadow-highlight: hsla(var(--surface1-hsl), 0.55); */
 
 	/* Base styles */
 	color: var(--text);
-	background: var(--base);
+	background: var(--crust);
 	overflow-x: hidden;
 	overflow-y: auto;
 	image-rendering: pixelated;
@@ -139,45 +156,46 @@ html:has(body.grid-loaded) {
    Dark Theme
    ========================================================================== */
 
-@media (prefers-color-scheme: dark) {
-	html {
-		--main-hue: 205;
-		--grid-lines: hsla(var(--main-hue), 12%, 16%);
+/* @media (prefers-color-scheme: dark) { */
+html {
+	--main-hue: 304;
+	--grid-lines: hsla(var(--main-hue), 12%, 16%);
 
-		--core-hsl: var(--main-hue), 100%, 2%;
-		--mantle-hsl: var(--main-hue), 20%, 3%;
-		--crust-hsl: var(--main-hue), 20%, 6%;
-		--base-hsl: var(--main-hue), 20%, 8%;
-		--bg-light: var(--main-hue), 22.5%, 9.75%;
+	--core-hsl: var(--main-hue), 100%, 2%;
+	--mantle-hsl: var(--main-hue), 40%, 2.5%;
+	--crust-hsl: var(--main-hue), 20%, 3.5%;
+	--base-hsl: var(--main-hue), 10%, 6%;
+	--bg-light: var(--main-hue), 5%, 6.5%;
 
-		--surface0-hsl: var(--main-hue), 18%, 13%;
-		--surface1-hsl: var(--main-hue), 18%, 17%;
-		--surface2-hsl: var(--main-hue), 16%, 24%;
-		--surface3-hsl: var(--main-hue), 15%, 27%;
-		--surface4-hsl: var(--main-hue), 14%, 33.5%;
-		--surface5-hsl: var(--main-hue), 14%, 37.5%;
-		--surface6-hsl: var(--main-hue), 14%, 47%;
+	--surface0-hsl: var(--main-hue), 8%, 7.5%;
+	--surface1-hsl: var(--main-hue), 10%, 12%;
+	--surface2-hsl: var(--main-hue), 8%, 14%;
+	--surface3-hsl: var(--main-hue), 10%, 19%;
+	--surface4-hsl: var(--main-hue), 8%, 22.5%;
+	--surface5-hsl: var(--main-hue), 6%, 27%;
+	--surface6-hsl: var(--main-hue), 7%, 34%;
 
-		--overlay0-hsl: calc(var(--main-hue) - 10), 18%, 57.5%;
-		--overlay1-hsl: calc(var(--main-hue) - 10), 20%, 65%;
-		--overlay2-hsl: calc(var(--main-hue) - 10), 22%, 75%;
-		--overlay3-hsl: calc(var(--main-hue) - 10), 24%, 85%;
+	--overlay0-hsl: calc(var(--main-hue) - 5), 7%, 55%;
+	--overlay1-hsl: calc(var(--main-hue) - 5), 10%, 65%;
+	--overlay2-hsl: calc(var(--main-hue) - 5), 17%, 75%;
+	--overlay3-hsl: calc(var(--main-hue) - 5), 25%, 85%;
 
-		--supertext-hsl: calc(var(--main-hue) - 25), 50%, 95%;
-		--text-hsl: calc(var(--main-hue) - 20), 24%, 90%;
-		--text1-hsl: calc(var(--main-hue) - 22.5), 22%, 74%;
-		--subtext0-hsl: calc(var(--main-hue) - 17.5), 18%, 70%;
-		--subtext1-hsl: calc(var(--main-hue) - 17.5), 16%, 60%;
-		--subtext2-hsl: calc(var(--main-hue) - 17.5), 14%, 50%;
-		--subtext3-hsl: calc(var(--main-hue) - 17.5), 12%, 45%;
+	--supertext-hsl: calc(var(--main-hue) - 25), 100%, 98%;
+	--text-hsl: calc(var(--main-hue) - 20), 70%, 95%;
+	--text1-hsl: calc(var(--main-hue) - 22.5), 22%, 70%;
+	--subtext0-hsl: calc(var(--main-hue) - 12.5), 17%, 67%;
+	--subtext1-hsl: calc(var(--main-hue) - 12.5), 15%, 60%;
+	--subtext2-hsl: calc(var(--main-hue) - 12.5), 10%, 50%;
+	--subtext3-hsl: calc(var(--main-hue) - 12.5), 8%, 40%;
 
-		--accent-hsl: calc(var(--main-hue) - 20), 40%, 70%;
-	}
-
-	.site-title-pfp {
-		filter: invert(1);
-	}
+	--accent-hsl: calc(var(--main-hue) - 10), 52%, 77%;
 }
+
+.site-title-pfp {
+	filter: invert(1);
+}
+
+/* } */
 
 ::selection {
 	background: hsla(var(--accent-hsl), 0.6);
@@ -189,12 +207,10 @@ html:has(body.grid-loaded) {
 
 body {
 	font-family: var(--font-body);
-	font-weight: 330;
-	font-stretch: 96%;
-	font-variation-settings:
-		"opsz" 18,
-		"wdth" 98,
-		"wght" 330;
+	/* No font-weight / font-stretch / wght variation: GeistPixel only ships a single
+	   "normal" face. Any non-default weight/stretch triggers browser synthesis
+	   (faux-bold), which doubles strokes and smears the ELSH axis stripes together. */
+	font-synthesis: style;
 	letter-spacing: 0.01em;
 	line-height: 1.6;
 	font-size: clamp(15px, 0.4vw + 14px, 17px);
@@ -211,7 +227,6 @@ body {
 	justify-content: flex-start;
 	align-items: center;
 	min-height: 100vh;
-	overflow: hidden;
 	overscroll-behavior: none;
 	padding: 0 1.5rem;
 	margin: 0;
@@ -244,7 +259,9 @@ h5,
 h6 {
 	font-family: var(--font-display);
 	color: var(--supertext);
-	text-rendering: optimizeLegibility;
+	font-synthesis: weight style small-caps;
+	font-weight: 50 !important;
+	text-rendering: geometricPrecision;
 }
 
 h1 {
@@ -252,7 +269,10 @@ h1 {
 	margin-bottom: .75rem;
 	margin-top: 0;
 	line-height: 1.18;
-	font-weight: 900;
+	font-variation-settings: "ELSH" 35;
+
+	font-synthesis: weight !important;
+	font-weight: 50;
 }
 
 h2 {
@@ -260,7 +280,7 @@ h2 {
 	margin-block-start: 0.25em;
 	margin-block-end: 0.4em;
 	line-height: 1.24;
-	font-weight: 500;
+	font-variation-settings: "ELSH" 60;
 }
 
 h3 {
@@ -268,7 +288,7 @@ h3 {
 	margin-block-start: 0.25em;
 	margin-block-end: 0.4em;
 	line-height: 1.26;
-	font-weight: 500;
+	font-variation-settings: "ELSH" 90;
 }
 
 h4,
@@ -281,25 +301,22 @@ h6 {
 h4 {
 	font-size: clamp(1rem, 0.9vw + 0.9rem, 1.35rem);
 	line-height: 1.3;
-	font-weight: 630;
 }
 
 h5 {
 	font-size: clamp(0.95rem, 0.75vw + 0.85rem, 1.15rem);
 	line-height: 1.34;
-	font-weight: 590;
 }
 
 h6 {
 	font-size: clamp(0.9rem, 0.6vw + 0.8rem, 1.05rem);
 	line-height: 1.4;
-	font-weight: 560;
 }
 
 /* Prose elements */
 p,
 subt {
-	font-family: var(--font-serif), serif;
+	font-family: var(--font-display), serif;
 }
 
 p {
@@ -314,8 +331,8 @@ subt {
 
 strong,
 b {
-	font-weight: 650;
-	font-variation-settings: "wght" 650;
+	/* GeistPixel has no wght axis and no bold face — drop weight to avoid faux-bold
+	   smearing the ELSH stripes. Visual emphasis comes from default rendering only. */
 }
 
 /* Code */
@@ -393,6 +410,7 @@ app {
 	margin: 0;
 	width: 95%;
 	max-width: 100%;
+	margin-bottom: 1rem;
 }
 
 @media (min-width: 960px) and (orientation: landscape) {
@@ -404,7 +422,11 @@ app {
 main {
 	width: 100%;
 	min-height: 100vh;
-	display: block;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: flex-start;
+	margin-top: 1rem;
 	transform-style: preserve-3d;
 	will-change: transform, opacity, filter;
 	transform: translateY(0);
@@ -416,16 +438,6 @@ main {
 		0.2s filter;
 	transform-origin: bottom center;
 	transition-timing-function: cubic-bezier(0.2, 0.2, 0.8, 1);
-}
-
-@supports (display: flex) {
-	main {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		justify-content: flex-start;
-		margin-top: 1rem;
-	}
 }
 
 main>* {
@@ -463,91 +475,143 @@ article>h1 {
    ========================================================================== */
 
 .layout-container {
-	display: table;
-	padding-right: 0;
-	width: fit-content;
-	max-width: calc(100% - 2rem);
-	max-height: calc(100vh - 2rem);
+	display: flex;
+	flex-direction: column;
+	width: min(1440px, calc(100% - 48px));
 	margin: 0 auto;
 	box-sizing: border-box;
-	overflow: hidden;
-}
-
-@supports (display: flex) {
-	.layout-container {
-		display: flex;
-	}
 }
 
 .background-container {
-	background: hsla(var(--crust-hsl), 0.75);
+	background: hsla(var(--crust-hsl), 0.7);
 	border: 1px solid var(--surface2);
 	padding: .7rem;
 }
 
-.page-header.background-container {
-	padding: 1.25rem !important;
+/* ==========================================================================
+   Progressive blur strip behind the sticky top bar
+   --------------------------------------------------------------------------
+   Lives inside .sidebar so it sticks with the bar. Positioned absolutely
+   and extended to the full viewport width, with z-index: -1 so it sits
+   behind every pill in the bar. Stacks several layers of increasing
+   backdrop-blur, each masked so the strong end sits at the very top and
+   the blur eases out toward the page — a gradient blur instead of a hard
+   edge, so content scrolling under the sticky sidebar reads cleanly.
+   ========================================================================== */
+
+.top-blur {
+	position: absolute;
+	top: 0;
+	left: 50%;
+	transform: translateX(-50%);
+	width: 100vw;
+	height: 8rem;
+	pointer-events: none;
+	z-index: -1;
 }
 
-/* Sidebar */
-.sidebar {
-	display: table-cell;
-	vertical-align: top;
-	width: 140px;
-	min-width: 12rem;
-	min-height: 3.5rem;
-	/* padding-right: 1.5rem; */
-	box-sizing: border-box;
+.top-blur-layer {
+	position: absolute;
+	inset: 0;
+	backdrop-filter: blur(var(--blur)) brightness(1.1) saturate(.9) contrast(1.05);
+	/* A very wide ellipse anchored at the top middle. The horizontal radius
+	   is much larger than the vertical so the mask reads as a flat halo
+	   across the top edge, with each layer's --mid/--end controlling how
+	   far the blur reaches before it fades out. */
+	mask-image: radial-gradient(ellipse 75% 100% at 50% 0%,
+			#000 0%,
+			#000 var(--mid),
+			transparent var(--end));
+}
+
+.page-header {
+	padding-bottom: .8rem !important;
+}
+
+/* 
+.page-header:has(.post-title) {
+	padding-top: .8rem !important;
+} */
+
+.page-header {
 	position: relative;
 }
 
+.page-header h1 {
+	font-size: clamp(3.75rem, 14vw, 8.5rem);
+	line-height: .95;
+	mask-image: linear-gradient(to bottom, #000 60%, transparent 100%);
+	margin: 0 !important;
+}
+
+.post-title {
+	font-size: clamp(2.5rem, 9vw, 5rem) !important;
+	padding-top: 1.75rem;
+}
+
+.page-header:not(:has(.post-title)) p {
+	font-size: 1.1rem;
+	margin-top: -0.75rem;
+	margin-left: 0.6rem;
+	position: relative;
+}
+
+/* Sidebar — sticky top bar.
+   The bar itself is transparent; each element inside provides its own
+   .background-container pill, sitting in front of the .top-blur layer. */
+.sidebar {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: space-between;
+	gap: 0.5rem;
+	width: 100%;
+	min-height: 3.5rem;
+	box-sizing: border-box;
+	position: sticky;
+	top: 0;
+	z-index: 10;
+	padding: 0.5rem 0;
+	padding-top: max(0.5rem, env(safe-area-inset-top));
+}
+
+/* The Sidebar's inner <footer> is meaningless in a horizontal bar */
 .sidebar footer {
-	position: absolute;
-	bottom: .75rem;
-	left: .75rem;
+	display: none;
 }
 
 .sidebar-nav {
-	margin-top: 1rem;
+	display: flex;
+	flex-direction: row;
+	flex-wrap: nowrap;
+	align-items: center;
+	gap: 0.4rem;
+	margin: 0;
+	min-width: 0;
+	overflow-x: auto;
+	scrollbar-width: none;
 }
 
-@supports (display: flex) {
-	.sidebar-nav {
-		display: flex;
-		flex-direction: column;
-		gap: 0.5rem;
-	}
+.sidebar-nav::-webkit-scrollbar {
+	display: none;
 }
 
 /* Navigation Links */
 .nav-link {
-	display: block;
+	display: inline-flex;
+	align-items: center;
+	gap: 0.35rem;
 	color: var(--accent) !important;
 	text-decoration: none !important;
-	margin: 0.5rem 0;
 	font-size: 1rem;
-	text-align: center;
+	flex-shrink: 0;
 }
 
 .nav-link svg {
 	width: 1em;
 	height: 1em;
 	vertical-align: -0.125em;
-	margin-right: 0.35em;
 	fill: currentColor;
-}
-
-@supports (display: flex) {
-	.nav-link {
-		display: inline-flex;
-		align-items: center;
-		margin: 0;
-		gap: 0.35rem;
-	}
-
-	.nav-link svg {
-		margin-right: 0;
-	}
 }
 
 .nav-link:hover {
@@ -556,57 +620,65 @@ article>h1 {
 
 .nav-link.active {
 	color: var(--supertext) !important;
-	font-weight: 500;
-	font-variation-settings: "wght" 500;
 }
+
+/* Per-element pills inside the sidebar */
+.sidebar .background-container {
+	padding: 0.4rem 0.7rem;
+	background: hsla(var(--crust-hsl), 0.65);
+	backdrop-filter: blur(6px);
+	border-color: hsla(var(--surface4-hsl), 0.5) !important;
+	transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.sidebar .nav-link.background-container:hover {
+	background: hsla(var(--crust-hsl), 0.85);
+	border-color: transparent !important;
+}
+
+/* .sidebar .nav-link.background-container.active {
+	background: hsla(var(--crust-hsl), 0.9);
+	border-color: var(--surface3);
+} */
 
 /* Site Title */
 .site-title-link {
 	text-decoration: none !important;
+	flex-shrink: 0;
 }
 
 .site-title {
-	font-size: 1.4rem;
-	margin: 0.25rem 0 1rem 0;
-	padding: 0.5rem;
-	background: hsla(var(--crust-hsl), 0.5);
-	border: 1px solid var(--surface2);
-	text-align: center;
+	display: inline-flex;
+	align-items: center;
+	gap: 0.5rem;
+	font-size: 1.1rem;
+	margin: 0;
 	line-height: 1.2;
-	font-weight: 500;
-}
 
-@supports (display: flex) {
-	.site-title {
-		margin-bottom: 0;
-	}
+	-webkit-font-smoothing: none;
+	font-smooth: none;
 }
 
 .site-title-pfp {
 	display: inline-block;
 	image-rendering: pixelated;
+	height: 1.75rem;
+	width: auto;
 }
 
+/* 
 .pfp {
 	filter: hue-rotate(calc(calc(var(--main-hue) - 205) * 1deg));
-}
+} */
 
 /* Main Content */
 .main-content {
-	display: table-cell;
-	vertical-align: top;
-	padding-left: 1rem;
-	padding-right: 2rem;
 	box-sizing: border-box;
-	width: max(640px, 70vw - 1rem);
+	width: 100%;
 	max-width: 100%;
-	overflow-x: visible;
-	overflow-y: auto;
-	overscroll-behavior: contain;
 	min-width: 0;
+	padding-bottom: 1rem;
 	view-transition-name: page-content;
-	scrollbar-color: var(--overlay1) transparent;
-	scrollbar-width: thin;
 }
 
 /* ==========================================================================
@@ -615,133 +687,37 @@ article>h1 {
 
 @media (orientation: portrait) {
 	.layout-container {
-		display: block;
-		padding: 1rem;
-		margin: 0;
-		width: 100vw;
-		height: 100vh;
-		max-width: none;
-		max-height: none;
-		border: none;
-		position: relative;
-		top: 0;
-		left: 0;
-		box-sizing: border-box;
-		background: hsla(var(--crust-hsl), 0.75);
-		border: 1px solid var(--surface2);
-	}
-
-	.background-container {
-		background: none;
-		border: none;
-	}
-
-	@supports (display: flex) {
-		.layout-container {
-			display: flex;
-			flex-direction: column-reverse;
-			align-items: stretch;
-			max-height: 100vh;
-			padding-bottom: 0;
-		}
-	}
-
-	.sidebar {
-		display: block;
-		width: auto;
-		min-width: 0;
-		border-right: none;
-		border-bottom: 1px solid var(--surface2);
-		padding-right: 0;
-		padding-bottom: 0;
-		margin-bottom: 1rem;
+		width: 100%;
+		max-width: 100%;
+		padding: 0 1rem;
 		padding-bottom: env(safe-area-inset-bottom);
 	}
 
-	@supports (display: flex) {
-		.sidebar {
-			display: flex;
-			flex-direction: row-reverse;
-			flex-wrap: nowrap;
-			align-items: center;
-			justify-content: space-between;
-			margin-bottom: 0;
-			width: 100%;
-			border: 0;
-			border-top: 1px solid var(--surface2);
-		}
-	}
-
-	.sidebar footer {
-		display: none;
-		opacity: 0;
+	.sidebar {
+		gap: 0.75rem;
+		padding-left: 0.5rem;
+		padding-right: 0.5rem;
 	}
 
 	.sidebar-nav {
-		margin-top: 0.5rem;
+		gap: 0rem;
+		justify-content: flex-end;
 	}
 
-	.sidebar-nav .nav-link {
-		margin-right: 1rem;
-	}
-
-	@supports (display: flex) {
-		.sidebar-nav {
-			display: flex;
-			flex-direction: row;
-			justify-content: flex-start;
-			flex-wrap: nowrap;
-			flex-shrink: 1;
-			gap: 0 1.5rem;
-			padding-right: 0.5rem;
-			margin-top: 0;
-			width: calc(100vw - 2rem - 48px);
-		}
-
-		.sidebar-nav .nav-link {
-			margin-right: 0;
-			flex-shrink: 1;
-		}
+	.page-name {
+		display: none;
 	}
 
 	.site-title {
-		background: transparent;
-		border: none;
-		text-align: right;
-		font-size: 1.05rem;
-		margin: 0;
-		margin-top: 2px;
-		padding: 0;
+		font-size: 1rem;
 	}
 
 	.site-title-pfp {
-		height: 5rem;
-		position: absolute;
-		bottom: -10px;
-		bottom: calc(-10px + env(safe-area-inset-bottom));
-		right: -25px;
-		opacity: 0.25;
-		mask-image: linear-gradient(135deg, transparent 0%, #000 70%);
-		mask-repeat: no-repeat;
+		height: 1.5rem;
 	}
 
 	.main-content {
-		display: block;
-		width: auto !important;
-		padding-left: 0;
-		padding-right: 0;
-		overflow-x: hidden;
-		overflow-y: auto;
-		max-height: none !important;
-		max-width: calc(100vw - 2rem) !important;
-	}
-
-	@supports (display: flex) {
-		.main-content {
-			display: flex;
-			flex-direction: column;
-			flex: 1;
-		}
+		padding: 0.75rem 0;
 	}
 
 	.blog-list {
@@ -933,7 +909,9 @@ ul.compact> :is(li > span, li > a) {
 
 .blog-item h3 {
 	margin: 0 0 0.5rem 0;
-	font-size: clamp(1.25rem, 1.6vw + 0.5rem, 1.75rem);
+	font-size: clamp(1.25rem, 1.6vw + 0.5rem, 2rem);
+	font-variation-settings: "ELSH" 0 !important;
+	text-rendering: optimizeLegibility !important;
 }
 
 .blog-item time {
@@ -956,9 +934,6 @@ ul.compact> :is(li > span, li > a) {
 	background-position: 90% 67%;
 	z-index: -1;
 	opacity: 1;
-	-webkit-mask-image: linear-gradient(-45deg,
-			rgba(0, 0, 0, 0.35) 30%,
-			transparent 60%);
 	mask-image: linear-gradient(-45deg,
 			rgba(0, 0, 0, 0.35) 40%,
 			rgba(0, 0, 0, 0.25) 52.5%,
@@ -969,7 +944,17 @@ ul.compact> :is(li > span, li > a) {
 .blog-item.has-cover .post-desc,
 .blog-item.has-cover time,
 .blog-item.has-cover .tag {
-	text-shadow: 0 1px 8px rgba(0, 0, 0, 0.3);
+	text-shadow: none;
+}
+
+@media (prefers-color-scheme: dark) {
+
+	.blog-item.has-cover h3,
+	.blog-item.has-cover .post-desc,
+	.blog-item.has-cover time,
+	.blog-item.has-cover .tag {
+		text-shadow: 0 1px 8px rgba(0, 0, 0, 0.3);
+	}
 }
 
 .blog-item.has-cover .tag {
@@ -1201,12 +1186,110 @@ cap subt:not(:has(.material-symbols)) {
 }
 
 /* ==========================================================================
+   Live Cards (shared between MastodonCard, LastFmCard, etc.)
+   ========================================================================== */
+
+.livecard {
+	display: block;
+	text-decoration: none;
+	color: inherit;
+}
+
+.livecard::after,
+.livecard a::after {
+	display: none !important;
+}
+
+.livecard-header {
+	display: flex;
+	align-items: center;
+	gap: 0.4rem;
+	margin: 0 0 0.5rem 0;
+}
+
+.livecard-icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	color: var(--supertext);
+	font-size: 1.2rem;
+	line-height: 1;
+}
+
+.livecard-platform {
+	font-family: var(--font-display);
+	color: var(--supertext);
+	font-size: 1.05rem;
+}
+
+.livecard-topbtn {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	color: var(--subtext0) !important;
+	text-decoration: none !important;
+	font-size: 1.2rem;
+	line-height: 1;
+}
+
+.livecard-refresh {
+	margin-left: auto;
+	background: none;
+	border: none;
+	padding: 0.2rem;
+	color: var(--subtext0);
+	cursor: pointer;
+	display: inline-flex;
+	align-items: center;
+	font: inherit;
+}
+
+/* When the refresh button is preceded by another auto-pushed element (badge,
+   timestamp, etc.) it should sit next to it instead of pushing itself to the
+   far right again. */
+.livecard-header> :not(.livecard-icon, .livecard-platform, .livecard-stat)+.livecard-refresh {
+	margin-left: 0.4rem;
+}
+
+.livecard-refresh:hover {
+	color: var(--text);
+}
+
+.livecard-refresh.refreshing {
+	opacity: 0.5;
+	cursor: progress;
+}
+
+.livecard-stat,
+.livecard-when,
+.livecard-badge {
+	color: var(--subtext1);
+	font-size: 0.75rem;
+	letter-spacing: 0.05em;
+}
+
+.livecard-when {
+	margin-left: auto;
+	color: var(--subtext2);
+}
+
+.livecard-badge {
+	margin-left: auto;
+	text-transform: uppercase;
+}
+
+.livecard-status {
+	margin: 0;
+	color: var(--subtext2);
+	font-size: 0.85rem;
+}
+
+/* ==========================================================================
    Miscellaneous
    ========================================================================== */
 
 img {
 	user-select: none;
-	-webkit-user-select: none;
 }
 
 .project-card * {

@@ -1,6 +1,7 @@
 import { FC, css } from "dreamland/core";
 import { ContactLinks } from "./Homepage";
 import Sidebar from "../components/Sidebar";
+import Footer from "../components/Footer";
 import NotFoundView from "./NotFoundView";
 
 interface BlogPostProps {
@@ -39,7 +40,7 @@ function BlogPost(this: FC<BlogPostProps>) {
 				<Sidebar active="blog" />
 				<div class="main-content">
 					<article class="blog-content">
-						<div class="page-header background-container">
+						<div class="page-header">
 							<h1 class="post-title">{postTitle}</h1>
 							{postDescription ? (
 								<p class="post-desc">{postDescription}</p>
@@ -94,16 +95,13 @@ function BlogPost(this: FC<BlogPostProps>) {
 						</p>
 					</article>
 				</div>
+				<Footer />
 			</div>
 		</main>
 	);
 }
 
 BlogPost.style = css`
-	.main-content {
-		width: 810pt!important;
-	}
-
 	subt.bottom {
 		display: flex;
 		align-items: center;

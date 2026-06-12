@@ -1,11 +1,14 @@
 import { FC, css } from "dreamland/core";
 import { TransitionLink } from "../components/TransitionLink";
+import Sidebar from "../components/Sidebar";
+import Footer from "../components/Footer";
 
 function NotFoundView(this: FC) {
     return (
         <main>
             <title>404 – bomberfish.ca</title>
             <div class="layout-container">
+                <Sidebar />
                 <div class="main-content">
                     <div class="title">
                         <h1 class="material-symbols">broken_image</h1>
@@ -46,27 +49,14 @@ NotFoundView.style = css`
         text-align: center;
     }
 
-    .layout-container {
-        width: 100%;
-        max-width: none;
-        max-height: none;
-        min-height: 30rem;
-        width: 10rem;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 2rem;
-        background: transparent;
-        border: none;
-    }
-
     .main-content {
-        width: auto;
-        max-width: min(100%, 56rem);
+        flex: 1;
+        min-height: 30rem;
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
+        padding: 2rem 0;
     }
 
     .title {
@@ -102,7 +92,10 @@ NotFoundView.style = css`
         font-size: clamp(2.5rem, 7vw, 5rem);
         line-height: 0.9;
         letter-spacing: -0.04em;
-        font-weight: 800;
+    }
+
+    @media (orientation: portrait) {
+        
     }
 `
 

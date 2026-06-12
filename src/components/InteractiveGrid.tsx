@@ -4,19 +4,19 @@ import { FC, css } from "dreamland/core";
 const LERP = 6; // per second
 
 // Hover settings
-const HOVER_BRIGHTNESS = 0.7;
+const HOVER_BRIGHTNESS = 0.5;
 const HOVER_RADIUS = 2;
-const HOVER_FALLOFF = 1.5;
+const HOVER_FALLOFF = 2;
 
 // Ripple settings (for clicks)
-const RIPPLE_SPEED = 12; // cells per second
-const RIPPLE_MAX_RADIUS = 20;
+const RIPPLE_SPEED = 10; // cells per second
+const RIPPLE_MAX_RADIUS = 10;
 const RIPPLE_WIDTH = 3;
-const RIPPLE_BRIGHTNESS = 0.2;
+const RIPPLE_BRIGHTNESS = 0.25;
 
 // Wake settings (for dragging)
 const WAKE_FADE = 3; // per second
-const WAKE_BRIGHTNESS = 0.6;
+const WAKE_BRIGHTNESS = 0.3;
 const WAKE_LENGTH = 2; // Length along movement direction
 const WAKE_WIDTH = 4; // Width perpendicular to movement
 
@@ -80,8 +80,8 @@ function InteractiveGrid(this: FC) {
 
 	const getGridColor = () => {
 		// Use the site's color scheme - subtle grid lines
-		const hue = getComputedStyle(document.documentElement).getPropertyValue("--main-hue");
-		const lightness = isDarkMode.matches ? 20 : 80;
+		const hue = parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--main-hue")) - 10;
+		const lightness = isDarkMode.matches ? 10 : 90;
 		return { hue, lightness };
 	};
 
@@ -92,14 +92,10 @@ function InteractiveGrid(this: FC) {
 		// Re-read grid size in case it changed
 		squareSize = getGridSize();
 
-		// Use the larger of viewport or document dimensions to cover everything
-		const viewportWidth = window.innerWidth;
-		const viewportHeight = window.innerHeight;
-		const docWidth = document.documentElement.scrollWidth;
-		const docHeight = document.documentElement.scrollHeight;
-
-		const width = Math.max(viewportWidth, docWidth);
-		const height = Math.max(viewportHeight, docHeight);
+		// Build grid sized to the viewport only — the grid is anchored to the
+		// top of the page and only displays for the first 100vh.
+		const width = window.innerWidth;
+		const height = window.innerHeight;
 
 		columns = Math.ceil(width / squareSize) + 1;
 		rows = Math.ceil(height / squareSize) + 1;
@@ -241,7 +237,7 @@ function InteractiveGrid(this: FC) {
 						cell.style.backgroundColor = "";
 					} else {
 						// Use theme-aware colors with more prominent highlighting
-						const sat = isDarkMode.matches ? 35 : 40;
+						const sat = isDarkMode.matches ? 35 : 60;
 						const lit = isDarkMode.matches
 							? lightness + finalOpacity * 40
 							: lightness - finalOpacity * 45;
@@ -266,9 +262,26 @@ function InteractiveGrid(this: FC) {
 	};
 
 	const getGridCoords = (e: MouseEvent | PointerEvent) => {
-		const x = Math.floor(e.clientX / squareSize);
-		const y = Math.floor(e.clientY / squareSize);
-		return { x, y };
+		// Compute coordinates relative to the grid element rather than the
+		// viewport. The grid lives inside a containing block created by an
+		// ancestor (body has `perspective`, which makes any descendant
+		// containing-block for fixed/absolute positioning), so the element's
+		// own top-left is the correct origin for cell math.
+		const container = this.root as HTMLDivElement | null;
+		if (!container) return { x: -1, y: -1, inside: false };
+		const rect = container.getBoundingClientRect();
+		const localX = e.clientX - rect.left;
+		const localY = e.clientY - rect.top;
+		const inside =
+			localX >= 0 &&
+			localY >= 0 &&
+			localX <= rect.width &&
+			localY <= rect.height;
+		return {
+			x: Math.floor(localX / squareSize),
+			y: Math.floor(localY / squareSize),
+			inside,
+		};
 	};
 
 	let isPointerDown = false;
@@ -277,8 +290,14 @@ function InteractiveGrid(this: FC) {
 	let wakePointCount = 0; // Counter to spawn side ripples at intervals
 
 	const onPointerMove = (e: PointerEvent) => {
-		isHovered = true;
 		const coords = getGridCoords(e);
+		// If the pointer left the grid area (e.g., scrolled past 100vh),
+		// behave the same as a pointerleave so trailing effects don't linger.
+		if (!coords.inside) {
+			if (isHovered || isPointerDown) onPointerLeave();
+			return;
+		}
+		isHovered = true;
 		if (coords.x !== activeX || coords.y !== activeY) {
 			// Create wake trail while dragging (like a stick through water)
 			if (isPointerDown && lastWakeX >= 0 && lastWakeY >= 0) {
@@ -334,8 +353,9 @@ function InteractiveGrid(this: FC) {
 
 	const onPointerDown = (e: PointerEvent) => {
 		if (e.target.tagName.toLowerCase() === "a") return;
-		isPointerDown = true;
 		const coords = getGridCoords(e);
+		if (!coords.inside) return;
+		isPointerDown = true;
 		lastWakeX = coords.x;
 		lastWakeY = coords.y;
 		startTick();
@@ -345,8 +365,10 @@ function InteractiveGrid(this: FC) {
 		// Create a ripple on release (like lifting a stick from water)
 		if (isPointerDown) {
 			const coords = getGridCoords(e);
-			ripples.push({ x: coords.x, y: coords.y, r: 0 });
-			startTick();
+			if (coords.inside) {
+				ripples.push({ x: coords.x, y: coords.y, r: 0 });
+				startTick();
+			}
 		}
 		isPointerDown = false;
 		lastWakeX = -1;
@@ -370,6 +392,29 @@ function InteractiveGrid(this: FC) {
 	const onResize = () => {
 		clearTimeout(resizeTimer);
 		resizeTimer = setTimeout(buildGrid, 150);
+		updateScrollFade();
+	};
+
+	let scrollRafId: number | null = null;
+	const updateScrollFade = () => {
+		scrollRafId = null;
+		const container = this.root as HTMLDivElement | null;
+		if (!container) return;
+		const vh = window.innerHeight || 1;
+		// Linearly fade from 1 → 0 as scrollY goes from 0 → vh.
+		const fade = Math.max(0, 1 - window.scrollY / vh);
+		container.style.setProperty("--grid-scroll-fade", fade.toFixed(3));
+		// Stop running the animation loop entirely once invisible — saves
+		// CPU when the user has scrolled past the grid.
+		if (fade === 0 && rafId !== null) {
+			cancelAnimationFrame(rafId);
+			rafId = null;
+		}
+	};
+
+	const onScroll = () => {
+		if (scrollRafId !== null) return;
+		scrollRafId = requestAnimationFrame(updateScrollFade);
 	};
 
 	// Check if we should disable the effect (mobile/touch devices)
@@ -382,6 +427,7 @@ function InteractiveGrid(this: FC) {
 		if (isMobile() || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
 		buildGrid();
+		updateScrollFade();
 		document.body.classList.add("grid-loaded");
 
 		document.addEventListener("pointermove", onPointerMove, { passive: true });
@@ -389,6 +435,7 @@ function InteractiveGrid(this: FC) {
 		document.addEventListener("pointerup", onPointerUp);
 		document.addEventListener("pointerleave", onPointerLeave);
 		window.addEventListener("resize", onResize);
+		window.addEventListener("scroll", onScroll, { passive: true });
 		isDarkMode.addEventListener("change", () => startTick());
 	};
 
@@ -397,7 +444,7 @@ function InteractiveGrid(this: FC) {
 
 InteractiveGrid.style = css`
 	:scope {
-		position: fixed;
+		position: absolute;
 		top: 0;
 		left: 0;
 		width: 100vw;
@@ -407,6 +454,24 @@ InteractiveGrid.style = css`
 		overflow: hidden;
 		pointer-events: none;
 		z-index: 0;
+		/* Fade out the bottom ~25% so the grid doesn't end in a hard line. */
+		-webkit-mask-image: linear-gradient(
+			to bottom,
+			#000 0%,
+			#000 70%,
+			transparent 100%
+		);
+		mask-image: linear-gradient(
+			to bottom,
+			#000 0%,
+			#000 70%,
+			transparent 100%
+		);
+		/* Fade the whole element out as the user scrolls past the first
+		   viewport. --grid-scroll-fade is driven from JS on scroll/resize. */
+		opacity: var(--grid-scroll-fade, 1);
+		transition: opacity 0.15s linear;
+		will-change: opacity;
 	}
 
 	@media (prefers-reduced-motion: reduce) {

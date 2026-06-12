@@ -68,7 +68,7 @@ export function ButtonList(this: FC) {
 				href="https://dreamland.js.org/?uwu"
 			/>
 			<WebButton
-				src="https://simpleanalyticsbadges.com/bomberfish.ca?mode=dark&text=dfebec&background=333f47&logo=94ccd1"
+				src="https://simpleanalyticsbadges.com/bomberfish.ca?mode=dark&text=f7e9fb&background=221c21&logo=dca6e3"
 				title="If you don't like analytics, respectfully fuck off."
 				href="https://dashboard.simpleanalytics.com/bomberfish.ca?utm_source=bomberfish.ca&utm_content=badge"
 			/>
@@ -108,11 +108,6 @@ export function ButtonList(this: FC) {
 				href="https://mercurywork.shop"
 			/>
 			<WebButton
-				src="/buttons/acon-gets-a-button-animated.gif"
-				title="acon! (made my pfp!)"
-				href="https://aconlin.com"
-			/>
-			<WebButton
 				src="/buttons/ce88x31.gif"
 				title="velzie.d"
 				href="https://velzie.rip"
@@ -133,6 +128,11 @@ export function ButtonList(this: FC) {
 				href="https://www.errorcodezero.dev/"
 			/>
 			<WebButton
+				src="https://qwq.sh/88x31/hazelcaffe.png"
+				title="Hazel's website"
+				href="https://qwq.sh"
+			/>
+			<WebButton
 				src="https://madz.mov/assets/images/buttons/friends/madzbutton.gif"
 				title="MadzTop"
 				href="https://madz.mov"
@@ -147,7 +147,7 @@ export function ButtonList(this: FC) {
 				title="authenyo"
 				href="https://authenyo.xyz"
 			/>
-			
+
 			<WebButton
 				src="/buttons/k8.gif"
 				title="thememesniper"
@@ -387,7 +387,7 @@ export function ButtonList(this: FC) {
 			<WebButton
 				src="/buttons/talker.gif"
 				title="This website really does talk!"
-				on:click={()=>{
+				on:click={() => {
 					if ('speechSynthesis' in window) {
 						window.speechSynthesis.cancel();
 						const text = prompt("Enter text to speak:");
@@ -452,7 +452,6 @@ CopiedToast.style = css`
 			fadeout 0.35s 1.75s;
 		animation-timing-function: cubic-bezier(.2,.2,.5,1);
 
-		font-weight: 520;
 		box-shadow: 0 2px 8px var(--tooltip-shadow);
 
 		perspective: 1000px;

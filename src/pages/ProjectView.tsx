@@ -1,8 +1,15 @@
 import { FC, css } from "dreamland/core";
 import Sidebar from "../components/Sidebar";
+import Footer from "../components/Footer";
 import { ProjectCardDetails } from "../Projects";
 
 function ProjectView(this: FC<{ project: ProjectCardDetails }>) {
+	const thumbnail = this.project.getThumbnailPath();
+	const image = this.project.getImagePath();
+	const srcset = thumbnail
+		? `${thumbnail} 1x${image && image !== thumbnail ? `, ${image} 2x` : ""}`
+		: undefined;
+
 	return (
 		<main>
 			<title>{this.project.title} – bomberfish.ca</title>
@@ -10,18 +17,8 @@ function ProjectView(this: FC<{ project: ProjectCardDetails }>) {
 				<Sidebar active="projects" />
 				<div class="main-content">
 					<div class="project-view-container">
-						<section id="image">
-							<a href={this.project.img}>
-								<img
-									title="Click to open full-size"
-									alt={this.project.title}
-									src={this.project.img}
-								/>
-								<img hidden class="blur" src={this.project.img} />
-							</a>
-						</section>
-						<section id="details" class="background-container">
-							<h2 class="name">{this.project.title}</h2>
+						<section id="details" class="background-container page-header">
+							<h1 class="name">{this.project.title}</h1>
 							<p class="description">{this.project.largeDesc}</p>
 							<ul class="compact">
 								{this.project.links?.map((link) => (
@@ -39,6 +36,17 @@ function ProjectView(this: FC<{ project: ProjectCardDetails }>) {
 								))}
 							</ul>
 						</section>
+						<section id="image">
+							<a href={image}>
+								<img
+									title="Click to open full-size"
+									alt={this.project.title}
+									src={thumbnail}
+									srcset={srcset}
+								/>
+								<img hidden class="blur" src={thumbnail} srcset={srcset} />
+							</a>
+						</section>
 					</div>
 				</div>
 			</div>
@@ -54,12 +62,20 @@ ProjectView.style = css`
 		justify-content: center;
 	}
 
+	#details {
+		margin-bottom: 1rem;
+	}
+
 	/* .project-view-container {
 		max-height: 60%;
 	} */
 
 	h2 {
 		margin-bottom: 0.2em!important;
+	}
+
+	#image a {
+		width: 100%;
 	}
 
 	#image {

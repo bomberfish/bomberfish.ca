@@ -2,6 +2,7 @@ import { FC, css } from "dreamland/core";
 import ProjectCard from "../components/ProjectCard";
 import { projects } from "../Projects";
 import Sidebar from "../components/Sidebar";
+import Footer from "../components/Footer";
 
 function ProjectList(this: FC) {
 	return (
@@ -10,7 +11,7 @@ function ProjectList(this: FC) {
 			<div class="layout-container">
 				<Sidebar active="projects" />
 				<div class="main-content">
-					<div class="page-header background-container">
+					<div class="page-header">
 						<h1>projects</h1>
 						<p>a collection of my major projects, along with various smaller utilities, experiments, and explorations.</p>
 					</div>
@@ -33,6 +34,7 @@ function ProjectList(this: FC) {
 							))}
 					</section>
 				</div>
+				<Footer />
 			</div>
 		</main>
 	);

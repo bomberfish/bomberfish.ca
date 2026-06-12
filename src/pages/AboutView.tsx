@@ -1,5 +1,6 @@
 import { FC, createState, css, Stateful } from "dreamland/core";
 import Sidebar from "../components/Sidebar";
+import Footer from "../components/Footer";
 
 const archives = [
 	{
@@ -153,14 +154,9 @@ export function AboutView(this: FC) {
 						</a>
 						.
 					</p>
-					{/* <p>the body font is Helvetica Now, and the monospace font is a custom variant of <a href="https://typeof.net/Iosevka/" target="_blank" rel="noopener noreferrer">Iosevka</a> i created for my own personal use.</p> */}
-					<h3>typography</h3>
-					<ul>
-						<li>display font: <a href="https://commercialtype.com/catalog/neue_haas_grotesk" target="_blank" rel="noopener">Neue Haas Grotesk Display</a></li>
-						<li style="font-family: var(--font-body)">subheading/ui font: <a href="https://www.monotype.com/fonts/helvetica-now" target="_blank" rel="noopener">Helvetica Now</a></li>
-						<li style="font-family: var(--font-serif)">body copy font: <a href="https://klim.co.nz/fonts/tiempos-text/" target="_blank" rel="noopener">Tiempos Text</a></li>
-						<li style="font-family: var(--font-mono)">monospace font: custom variant of <a href="https://typeof.net/Iosevka/" target="_blank" rel="noopener">Iosevka</a></li>
-					</ul>
+					<p>
+						for the main font, i'm using <a href="https://vercel.com/blog/introducing-geist-pixel" target="_blank" referrer-policy="unsafe-url">geist pixel</a> by the talented folks over at vercel. the monospace font is <a href="https://github.com/microsoft/cascadia-code" target="_blank" referrer-policy="unsafe-url">cascadia code</a> by microsoft.
+					</p>
 					<h2>archive of previous versions</h2>
 					<p>
 						versioning started with v6.0.0. previous versioning applied
@@ -201,8 +197,9 @@ export function AboutView(this: FC) {
 						))}
 					</div>
 				</div>
+				<Footer />
 			</div>
-		</main>
+		</main >
 	);
 }
 

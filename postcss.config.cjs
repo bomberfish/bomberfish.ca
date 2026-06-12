@@ -1,10 +1,8 @@
 const postCssPresetEnv = require('postcss-preset-env');
 const cssnanoPlugin = require('cssnano');
-const cssnanoPlugin = require('cssnano');
 const litePreset = require('cssnano-preset-lite');
 const calc = require('postcss-calc');
 const normalizeCharset = require('postcss-normalize-charset');
-const mergeLonghand = require('postcss-merge-longhand');
 const discardComments = require('postcss-discard-comments');
 const svgo = require('postcss-svgo');
 const uniqueSelectors = require('postcss-unique-selectors');
@@ -29,16 +27,19 @@ module.exports = {
             cssnanoPlugin({
               preset: litePreset,
               plugins: [
-                calc, 
-                normalizeCharset, 
-                mergeLonghand, 
-                discardComments, 
-                svgo, 
-                uniqueSelectors, 
-                convertValues, 
-                cssDeclarationSorter, 
-                mergeRules, 
-                minifyParams, 
+                calc,
+                normalizeCharset,
+                // NOTE: postcss-merge-longhand intentionally omitted — it strips
+                // `font-variation-settings` declarations that use custom axes
+                // (e.g. "ELSH") when sibling `font-weight`/`font-stretch`/`font-style`
+                // are present, breaking variable-font styling (see h1 ELSH axis on GeistPixel).
+                discardComments,
+                svgo,
+                uniqueSelectors,
+                convertValues,
+                cssDeclarationSorter,
+                mergeRules,
+                minifyParams,
                 minifySelectors
               ],
             })
