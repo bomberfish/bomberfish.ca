@@ -1476,6 +1476,172 @@ img {
 	text-decoration: none !important;
 }
 
+:root {
+	--ctp-rosewater: #f5e0dc;
+	--ctp-flamingo: #f2cdcd;
+	--ctp-pink: #f5c2e7;
+	--ctp-mauve: #cba6f7;
+	--ctp-red: #f38ba8;
+	--ctp-maroon: #eba0ac;
+	--ctp-peach: #fab387;
+	--ctp-yellow: #f9e2af;
+	--ctp-green: #a6e3a1;
+	--ctp-teal: #94e2d5;
+	--ctp-sky: #89dceb;
+	--ctp-sapphire: #74c7ec;
+	--ctp-blue: #89b4fa;
+	--ctp-lavender: #b4befe;
+	--ctp-csubtext1: #bac2de;
+	--ctp-csubtext0: #a6adc8;
+	--ctp-coverlay2: #9399b2;
+	--ctp-coverlay1: #7f849c;
+	--ctp-coverlay0: #6c7086;
+	--ctp-csurface2: #585b70;
+	--ctp-csurface1: #45475a;
+	--ctp-csurface0: #313244;
+}
+
+/* Comments */
+.pl-c {
+	color: var(--subtext2);
+	font-style: italic;
+}
+
+/* Constants, numbers, booleans, decorators, vars inside strings */
+.pl-c1,
+.pl-s .pl-v {
+	color: var(--ctp-blue);
+}
+
+/* Entity / function names */
+.pl-e,
+.pl-en {
+	color: var(--ctp-blue);
+}
+
+/* Imports, storage modifiers, string interpolation source */
+.pl-smi,
+.pl-s .pl-s1 {
+	color: var(--ctp-peach);
+}
+
+/* HTML/XML/JSX tags */
+.pl-ent {
+	color: var(--ctp-blue);
+}
+
+/* Keywords — the Mauve accent */
+.pl-k {
+	color: var(--ctp-mauve);
+}
+
+/* Strings (and the matching regex base color) */
+.pl-s,
+.pl-pds,
+.pl-s .pl-pse .pl-s1,
+.pl-sr,
+.pl-sr .pl-cce,
+.pl-sr .pl-sre,
+.pl-sr .pl-sra {
+	color: var(--ctp-green);
+}
+
+/* Variables and semantic warnings */
+.pl-v,
+.pl-smw {
+	color: var(--ctp-peach);
+}
+
+/* Bracket-highlighter: unmatched */
+.pl-bu {
+	color: var(--ctp-red);
+}
+
+/* Invalid / illegal */
+.pl-ii {
+	color: var(--ctp-red);
+	background: rgba(243, 139, 168, 0.15);
+}
+
+/* Carriage return marker */
+.pl-c2 {
+	color: var(--text);
+	background: rgba(243, 139, 168, 0.5);
+}
+
+/* Regex character-class escape */
+.pl-sr .pl-cce {
+	font-weight: bold;
+	color: var(--ctp-teal);
+}
+
+/* Markdown list */
+.pl-ml {
+	color: var(--ctp-yellow);
+}
+
+/* Markdown headings / sections */
+.pl-mh,
+.pl-mh .pl-en,
+.pl-ms {
+	font-weight: bold;
+	color: var(--ctp-red);
+}
+
+/* Markdown italic / bold */
+.pl-mi {
+	font-style: italic;
+	color: var(--ctp-yellow);
+}
+
+.pl-mb {
+	font-weight: bold;
+	color: var(--ctp-yellow);
+}
+
+/* Diff hunks */
+.pl-md {
+	color: var(--text);
+	background: rgba(243, 139, 168, 0.25);
+}
+
+.pl-mi1 {
+	color: var(--text);
+	background: rgba(166, 227, 161, 0.25);
+}
+
+.pl-mc {
+	color: var(--text);
+	background: rgba(249, 226, 175, 0.25);
+}
+
+.pl-mi2 {
+	color: var(--text);
+	background: rgba(137, 180, 250, 0.25);
+}
+
+/* Diff range header (e.g. @@ -1,3 +1,4 @@) */
+.pl-mdr {
+	font-weight: bold;
+	color: var(--ctp-mauve);
+}
+
+/* Bracket-highlighter angle */
+.pl-ba {
+	color: var(--subtext2);
+}
+
+/* Subdued separator */
+.pl-sg {
+	color: var(--ctp-csurface2);
+}
+
+/* Reference link */
+.pl-corl {
+	text-decoration: underline;
+	color: var(--ctp-blue);
+}
+
 /* ==========================================================================
    Reduced Motion
    ========================================================================== */

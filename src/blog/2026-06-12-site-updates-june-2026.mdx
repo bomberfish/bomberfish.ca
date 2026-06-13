@@ -1,0 +1,33 @@
+import TransitionLink from "../components/TransitionLink"
+export const title = "Changelog 2: Constants are Changing"
+export const description = "It's about time I redecorated. Let's jump into 10.0.0."
+export const image = "/blog-images/site-1001.jpg"
+export const tags = ["Meta", "Changelog", "Devlog", "Update"]
+
+![A screenshot of this website](/blog-images/site-1001.jpg)
+
+This website's looked more-or-less the same since the start of 2026, but when a friend of mine offered to draw me a new profile picture, I knew I had to also give my site a facelift along with that.
+
+## What's stayed the same
+
+I've kept the same interactive grid background, project card grid (which progressively enhances to a beautiful masonry layout on browsers with the correct feature flags enabled), and the same general content.
+
+## Reworked layout
+
+While 9.x was pretty compact and space-efficient, the text-heavy nature of my site just didn't make sense for that kind of layout. That's why 10.0 takes more advantage of larger screen sizes, and places navigation in a more familiar area. The navigation bar floats over the content and is backed by a beautiful progressive blur effect for maximum legibility.
+
+## Live cards
+
+![The Mastodon and Last.fm widgets](/blog-images/site-livecards.jpg)
+
+Quite a few other people's websites have widgets displaying live info. I put off adding this for a while since this site is on a static host, but I finally got around to spinning something up on a Cloudflare Worker. For now, there's only two: my latest post on the Fediverse, and my latest scrobble on Last.fm.
+
+## New typography
+
+![An example of the 5 main shape variants of Geist Pixel](/blog-images/geist-pixel-demo.png)
+
+I swapped out the main body and header text with Geist Pixel, a frankly incredible typeface created by the talented designers over at Vercel. The headlining feature is the ability to morph the font shape using the ELSH axis. I also replaced the `monospaced` font with Cascadia Code from Microsoft.
+
+## Somewhere Right Now In The Future
+
+Sometime soon, I'd like to add a couple more live cards, and maybe even join a webring or two. Otherwise, I'm pretty happy with the current state of things.
