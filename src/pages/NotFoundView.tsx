@@ -1,6 +1,6 @@
 import { FC, css } from "dreamland/core";
 import { TransitionLink } from "../components/TransitionLink";
-import Sidebar from "../components/Sidebar";
+import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 
 function NotFoundView(this: FC) {
@@ -8,7 +8,7 @@ function NotFoundView(this: FC) {
         <main>
             <title>404 – bomberfish.ca</title>
             <div class="layout-container">
-                <Sidebar />
+                <Navbar />
                 <div class="main-content">
                     <div class="title">
                         <h1 class="material-symbols">broken_image</h1>

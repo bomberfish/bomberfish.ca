@@ -3,8 +3,34 @@ import TransitionLink from "./TransitionLink";
 
 export type PageCategory = "home" | "projects" | "blog";
 
-function Sidebar(this: FC<{ active?: PageCategory }>) {
+function Navbar(this: FC<{ active?: PageCategory }>) {
 	const active = this.active;
+
+	this.cx.mount = () => {
+		if (import.meta.env.SSR) return;
+
+		const el = this.root as HTMLElement | null;
+		if (!el) return;
+
+		let rafId: number | null = null;
+		const update = () => {
+			rafId = null;
+			el.classList.toggle("scrolled", window.scrollY > 0);
+		};
+
+		const onScroll = () => {
+			if (rafId !== null) return;
+			rafId = requestAnimationFrame(update);
+		};
+
+		update();
+		window.addEventListener("scroll", onScroll, { passive: true });
+
+		return () => {
+			window.removeEventListener("scroll", onScroll);
+			if (rafId !== null) cancelAnimationFrame(rafId);
+		};
+	};
 
 	return (
 		<aside class="sidebar">
@@ -39,4 +65,4 @@ function Sidebar(this: FC<{ active?: PageCategory }>) {
 	);
 }
 
-export default Sidebar;
+export default Navbar;

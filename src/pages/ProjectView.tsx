@@ -1,5 +1,5 @@
 import { FC, css } from "dreamland/core";
-import Sidebar from "../components/Sidebar";
+import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import { ProjectCardDetails } from "../Projects";
 
@@ -14,7 +14,7 @@ function ProjectView(this: FC<{ project: ProjectCardDetails }>) {
 		<main>
 			<title>{this.project.title} – bomberfish.ca</title>
 			<div class="layout-container">
-				<Sidebar active="projects" />
+				<Navbar active="projects" />
 				<div class="main-content">
 					<div class="project-view-container">
 						<section id="details" class="background-container page-header">

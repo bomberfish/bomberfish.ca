@@ -1,7 +1,7 @@
 import { FC, css } from "dreamland/core";
 import ProjectCard from "../components/ProjectCard";
 import { projects } from "../Projects";
-import Sidebar from "../components/Sidebar";
+import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 
 function ProjectList(this: FC) {
@@ -9,7 +9,7 @@ function ProjectList(this: FC) {
 		<main>
 			<title>projects – bomberfish.ca</title>
 			<div class="layout-container">
-				<Sidebar active="projects" />
+				<Navbar active="projects" />
 				<div class="main-content">
 					<div class="page-header">
 						<h1>projects</h1>

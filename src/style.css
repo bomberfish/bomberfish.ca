@@ -579,8 +579,14 @@ article>h1 {
 
 /* Sidebar — sticky top bar.
    The bar itself is transparent; each element inside provides its own
-   .background-container pill, sitting in front of the .top-blur layer. */
+   .background-container pill, sitting in front of the .top-blur layer.
+
+   --nav-spread controls how far the left/right groups are pushed away
+   from their natural .layout-container edges. Set to 0 at the top of
+   the page and bumped up once .scrolled is applied (toggled from JS in
+   Sidebar.tsx), so the bar visually widens as content scrolls under it. */
 .sidebar {
+	--nav-spread: 0rem;
 	display: flex;
 	flex-direction: row;
 	align-items: center;
@@ -594,6 +600,24 @@ article>h1 {
 	z-index: 10;
 	padding: 1rem 0;
 	padding-top: max(0.5rem, env(safe-area-inset-top));
+}
+
+.sidebar.scrolled {
+	--nav-spread: clamp(0.5rem, 2vw, 1.25rem);
+}
+
+.sidebar .site-title-link,
+.sidebar .sidebar-nav {
+	transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+	will-change: transform;
+}
+
+.sidebar .site-title-link {
+	transform: translateX(calc(var(--nav-spread) * -1));
+}
+
+.sidebar .sidebar-nav {
+	transform: translateX(var(--nav-spread));
 }
 
 /* The Sidebar's inner <footer> is meaningless in a horizontal bar */
@@ -1332,9 +1356,14 @@ cap subt:not(:has(.material-symbols)) {
 }
 
 .livecard-status {
-	margin: 0;
+	/* Centered in the card body. margin: auto distributes free space in
+	   both axes of the .livecard flex column (vertical via main axis,
+	   horizontal via cross axis), and text-align catches multi-line cases
+	   like the error message which can wrap. */
+	margin: auto;
 	color: var(--subtext2);
 	font-size: 0.85rem;
+	text-align: center;
 }
 
 /* Fade-in for live card content. The .is-initial gate is added in the JSX

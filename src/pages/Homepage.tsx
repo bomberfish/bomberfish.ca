@@ -1,6 +1,6 @@
 import { FC, css } from "dreamland/core";
 import { WebButton, ButtonList, CopiedToast } from "../components/Buttons";
-import Sidebar from "../components/Sidebar";
+import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import ContactCard from "../components/ContactCard";
 import LastFmCard from "../components/LastFmCard";
@@ -19,7 +19,7 @@ function Homepage(this: FC) {
 		<main>
 			<title>bomberfish.ca</title>
 			<div class="layout-container">
-				<Sidebar active="home" />
+				<Navbar active="home" />
 				<div class="main-content">
 					<section class="about-section background-container" id="about">
 						<div class="about-text">

@@ -1,6 +1,6 @@
 import { FC, css } from "dreamland/core";
 import { ContactLinks } from "./Homepage";
-import Sidebar from "../components/Sidebar";
+import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import NotFoundView from "./NotFoundView";
 
@@ -37,7 +37,7 @@ function BlogPost(this: FC<BlogPostProps>) {
 		<main>
 			<title>{postTitle} – bomberfish.ca</title>
 			<div class="layout-container">
-				<Sidebar active="blog" />
+				<Navbar active="blog" />
 				<div class="main-content">
 					<article class="blog-content">
 						<div class="page-header">
