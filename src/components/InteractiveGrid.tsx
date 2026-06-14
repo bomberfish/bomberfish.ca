@@ -10,19 +10,28 @@ const HOVER_FALLOFF = 2;
 
 // Ripple settings (for clicks)
 const RIPPLE_SPEED = 10; // cells per second
-const RIPPLE_MAX_RADIUS = 10;
+const RIPPLE_MAX_RADIUS = 16;
 const RIPPLE_WIDTH = 3;
-const RIPPLE_BRIGHTNESS = 0.25;
+const RIPPLE_BRIGHTNESS = 0.45;
 
-// Wake settings (for dragging)
-const WAKE_FADE = 3; // per second
-const WAKE_BRIGHTNESS = 0.3;
+// Wake settings (trails behind the cursor like a stick in water)
+const WAKE_FADE = 2.2; // per second — slower fade keeps the trail visible at slow speeds
+const WAKE_BRIGHTNESS = 0.4;
 const WAKE_LENGTH = 2; // Length along movement direction
 const WAKE_WIDTH = 4; // Width perpendicular to movement
 
-// Side ripple settings (small waves that spawn from wake trail)
+// Wake intensity factors based on pointer state.
+// Plain hover spawns a visible trail; holding the mouse intensifies it.
+const WAKE_HOVER_FACTOR = 0.7;
+const WAKE_PRESSED_FACTOR = 0.9;
+
+// Side ripple settings (small waves that spawn from wake trail).
+// Spawn is gated by *distance travelled since last spawn* (not a per-frame
+// counter), so wiggling the mouse in a small area can't pile up ripples
+// into a bright blob.
 const WAKE_RIPPLE_OFFSET = 2.5; // How far out perpendicular the side ripples spawn
-const WAKE_RIPPLE_INTERVAL = 3; // Spawn side ripples every N wake points
+const WAKE_RIPPLE_SPAWN_DIST = 3; // Min cells between consecutive spawns (pressed)
+const WAKE_RIPPLE_SPAWN_DIST_HOVER = 7; // Sparser when just hovering
 const WAKE_RIPPLE_MAX_RADIUS = 10; // Smaller than click ripples
 const WAKE_RIPPLE_SPEED = 6.25; // cells per second
 const WAKE_RIPPLE_BRIGHTNESS = 0.1; // Dimmer than click ripples
@@ -34,6 +43,10 @@ interface Ripple {
 	maxRadius?: number; // Defaults to RIPPLE_MAX_RADIUS
 	speed?: number; // Defaults to RIPPLE_SPEED
 	brightness?: number; // Defaults to RIPPLE_BRIGHTNESS
+	// Side-ripples spawned from the wake. Kept isolated from click ripples
+	// in the tick loop so a click ripple's brightness/interference isn't
+	// inflated by whatever wake ripples happen to be passing through.
+	isWake?: boolean;
 }
 
 interface WakePoint {
@@ -42,6 +55,7 @@ interface WakePoint {
 	dx: number; // Direction of movement
 	dy: number;
 	intensity: number;
+	brightness: number; // Multiplier baked in at spawn time (hover vs pressed)
 }
 
 function InteractiveGrid(this: FC) {
@@ -173,9 +187,15 @@ function InteractiveGrid(this: FC) {
 				let v = cur[r][c];
 				const t = tgt[r][c];
 
-				// Calculate ripple influence with smooth interference
-				let rippleIntensity = 0;
-				let waveCount = 0;
+				// Calculate ripple influence with smooth interference.
+				// Wake ripples and click ripples are accumulated separately
+				// so a passing wake ripple can't "boost" a deliberate click
+				// ripple (or vice versa). Within each group, overlapping
+				// rings still add additively and get an interference boost.
+				let wakeRippleIntensity = 0;
+				let clickRippleIntensity = 0;
+				let wakeWaveCount = 0;
+				let clickWaveCount = 0;
 
 				for (const rip of ripples) {
 					const dist = Math.sqrt((r - rip.y) ** 2 + (c - rip.x) ** 2);
@@ -188,8 +208,14 @@ function InteractiveGrid(this: FC) {
 						const fade = Math.pow(1 - rip.r / maxR, 2);
 						// Smooth bell curve falloff
 						const strength = (1 - diff / RIPPLE_WIDTH) * fade;
-						rippleIntensity += strength * brightness;
-						waveCount++;
+						const contribution = strength * brightness;
+						if (rip.isWake) {
+							wakeRippleIntensity += contribution;
+							wakeWaveCount++;
+						} else {
+							clickRippleIntensity += contribution;
+							clickWaveCount++;
+						}
 					}
 				}
 
@@ -211,14 +237,25 @@ function InteractiveGrid(this: FC) {
 
 					if (normalizedDist < 1) {
 						const strength = (1 - normalizedDist) * w.intensity;
-						wakeIntensity = Math.max(wakeIntensity, strength * WAKE_BRIGHTNESS);
+						wakeIntensity = Math.max(
+							wakeIntensity,
+							strength * WAKE_BRIGHTNESS * w.brightness
+						);
 					}
 				}
 
-				// Boost intensity where multiple ripples interact
-				if (waveCount > 1) {
-					rippleIntensity *= 1 + (waveCount - 1) * 0.5;
+				// Boost intensity where multiple ripples in the same group
+				// interact. Groups stay isolated from each other.
+				if (wakeWaveCount > 1) {
+					wakeRippleIntensity *= 1 + (wakeWaveCount - 1) * 0.5;
 				}
+				if (clickWaveCount > 1) {
+					clickRippleIntensity *= 1 + (clickWaveCount - 1) * 0.5;
+				}
+				const rippleIntensity = Math.max(
+					wakeRippleIntensity,
+					clickRippleIntensity
+				);
 
 				const delta = t - v;
 				if (Math.abs(delta) > 0.0004) {
@@ -287,7 +324,11 @@ function InteractiveGrid(this: FC) {
 	let isPointerDown = false;
 	let lastWakeX = -1;
 	let lastWakeY = -1;
-	let wakePointCount = 0; // Counter to spawn side ripples at intervals
+	// Position of the last side-ripple spawn (in cell coords). Used to
+	// gate spawning by distance travelled, so wiggling in a small area
+	// can't pile ripples on top of each other.
+	let lastRippleX = -Infinity;
+	let lastRippleY = -Infinity;
 
 	const onPointerMove = (e: PointerEvent) => {
 		const coords = getGridCoords(e);
@@ -299,8 +340,10 @@ function InteractiveGrid(this: FC) {
 		}
 		isHovered = true;
 		if (coords.x !== activeX || coords.y !== activeY) {
-			// Create wake trail while dragging (like a stick through water)
-			if (isPointerDown && lastWakeX >= 0 && lastWakeY >= 0) {
+			// Create wake trail on any movement (like a stick through water).
+			// Plain hover lays down a faint trail; holding the mouse cranks
+			// it up and also spawns side-ripples for extra splash.
+			if (lastWakeX >= 0 && lastWakeY >= 0) {
 				// Calculate movement direction
 				let dx = coords.x - lastWakeX;
 				let dy = coords.y - lastWakeY;
@@ -312,23 +355,44 @@ function InteractiveGrid(this: FC) {
 					dx = 1;
 					dy = 0;
 				}
-				wake.push({ x: coords.x, y: coords.y, dx, dy, intensity: 1 });
-				wakePointCount++;
+				const factor = isPointerDown
+					? WAKE_PRESSED_FACTOR
+					: WAKE_HOVER_FACTOR;
+				wake.push({
+					x: coords.x,
+					y: coords.y,
+					dx,
+					dy,
+					intensity: 1,
+					brightness: factor,
+				});
 
-				// Spawn side ripples perpendicular to movement at intervals
-				if (wakePointCount % WAKE_RIPPLE_INTERVAL === 0) {
+				// Spawn side ripples perpendicular to movement, but only
+				// when the cursor has actually travelled far enough from
+				// the previous spawn. Hover requires more travel than
+				// pressed mode, so plain mouse wandering stays subtle.
+				const spawnDist = isPointerDown
+					? WAKE_RIPPLE_SPAWN_DIST
+					: WAKE_RIPPLE_SPAWN_DIST_HOVER;
+				const rdx = coords.x - lastRippleX;
+				const rdy = coords.y - lastRippleY;
+				if (rdx * rdx + rdy * rdy >= spawnDist * spawnDist) {
 					// Perpendicular direction (rotate 90 degrees)
 					const perpX = -dy;
 					const perpY = dx;
+					const rippleBrightness = WAKE_RIPPLE_BRIGHTNESS * factor;
 
-					// Spawn ripple on both sides of the wake
+					// Spawn ripple on both sides of the wake. Tagged
+					// isWake so they only interfere with other wake
+					// ripples, not with click ripples.
 					ripples.push({
 						x: coords.x + perpX * WAKE_RIPPLE_OFFSET,
 						y: coords.y + perpY * WAKE_RIPPLE_OFFSET,
 						r: 0,
 						maxRadius: WAKE_RIPPLE_MAX_RADIUS,
 						speed: WAKE_RIPPLE_SPEED,
-						brightness: WAKE_RIPPLE_BRIGHTNESS,
+						brightness: rippleBrightness,
+						isWake: true,
 					});
 					ripples.push({
 						x: coords.x - perpX * WAKE_RIPPLE_OFFSET,
@@ -336,13 +400,15 @@ function InteractiveGrid(this: FC) {
 						r: 0,
 						maxRadius: WAKE_RIPPLE_MAX_RADIUS,
 						speed: WAKE_RIPPLE_SPEED,
-						brightness: WAKE_RIPPLE_BRIGHTNESS,
+						brightness: rippleBrightness,
+						isWake: true,
 					});
+					lastRippleX = coords.x;
+					lastRippleY = coords.y;
 				}
-
-				lastWakeX = coords.x;
-				lastWakeY = coords.y;
 			}
+			lastWakeX = coords.x;
+			lastWakeY = coords.y;
 
 			activeX = coords.x;
 			activeY = coords.y;
@@ -371,9 +437,8 @@ function InteractiveGrid(this: FC) {
 			}
 		}
 		isPointerDown = false;
-		lastWakeX = -1;
-		lastWakeY = -1;
-		wakePointCount = 0;
+		// Keep lastWakeX/Y and lastRippleX/Y intact so the hover-wake
+		// continues smoothly from where the press ended.
 	};
 
 	const onPointerLeave = () => {
@@ -383,7 +448,8 @@ function InteractiveGrid(this: FC) {
 		activeY = -1;
 		lastWakeX = -1;
 		lastWakeY = -1;
-		wakePointCount = 0;
+		lastRippleX = -Infinity;
+		lastRippleY = -Infinity;
 		updateTargets();
 		startTick();
 	};

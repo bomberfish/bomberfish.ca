@@ -68,6 +68,22 @@ ProjectList.style = css`
 		}
 	}
 
+	/* Firefox-specific masonry implementation.
+	 * Detected via the masonry-auto-flow property which is unique to
+	 * Firefox's experimental impl (behind layout.css.grid-template-masonry-value.enabled).
+	 * https://drafts.csswg.org/css-grid-3/#masonry-auto-flow
+	 */
+	@supports (masonry-auto-flow: pack) {
+		.projects-group {
+			display: grid;
+			grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr));
+			grid-template-rows: masonry;
+			masonry-auto-flow: pack;
+			align-tracks: start;
+			justify-tracks: start;
+		}
+	}
+
 	@supports (display: masonry) {
 		.projects-group {
 			display: masonry;
