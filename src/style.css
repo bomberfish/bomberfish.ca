@@ -136,6 +136,9 @@ html {
 		linear-gradient(to right, hsl(var(--bg-light)) 1px, transparent 1px),
 		linear-gradient(to bottom, hsl(var(--bg-light)) 1px, transparent 1px);
 	background-size: var(--grid-size) var(--grid-size);
+
+
+	word-break: auto-phrase;
 }
 
 /* Hide CSS grid when JS grid is loaded */
@@ -343,7 +346,7 @@ strong {
 }
 
 strong {
-	font-weight: 480;
+	font-weight: 670;
 }
 
 /* Prose elements */
@@ -1083,10 +1086,9 @@ ul.compact> :is(li > span, li > a) {
 
 /* Blog article content */
 article.blog-content {
-	/* max-width: 1080px; */
 	margin: 0 auto;
-	/* padding: 2rem 1rem; */
 	line-height: 1.9;
+	text-wrap: pretty;
 }
 
 article.blog-content .post-title {
@@ -1272,6 +1274,13 @@ cap subt:not(:has(.material-symbols)) {
 	color: inherit;
 }
 
+.livecard,
+.livecard * {
+	text-wrap: pretty;
+	text-wrap: balance;
+	hyphens: none;
+}
+
 .livecard::after,
 .livecard a::after {
 	display: none !important;
@@ -1396,6 +1405,20 @@ cap subt:not(:has(.material-symbols)) {
 	}
 }
 
+
+
+@keyframes masto-fade-in {
+	from {
+		opacity: 0;
+		filter: blur(8px);
+	}
+
+	to {
+		opacity: 0.67;
+		filter: blur(0);
+	}
+}
+
 /* The LastFm bleed has a baseline filter chain
    (brightness/contrast/saturate + a small constant blur). A naïve
    `filter: blur(8px) → blur(0)` animation would override that whole chain
@@ -1431,7 +1454,7 @@ cap subt:not(:has(.material-symbols)) {
 /* Bleeds reveal independently and slower for an atmospheric feel — the
    foreground snaps in, the backdrop drifts in behind it. */
 .livecard.is-initial>.fedi-post-bleed {
-	animation: livecard-fade-in 0.9s ease-out;
+	animation: masto-fade-in 0.9s ease-out;
 }
 
 .livecard.is-initial .lastfm-art-bleed {

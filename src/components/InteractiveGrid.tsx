@@ -9,10 +9,11 @@ const HOVER_RADIUS = 2;
 const HOVER_FALLOFF = 2;
 
 // Ripple settings (for clicks)
-const RIPPLE_SPEED = 10; // cells per second
-const RIPPLE_MAX_RADIUS = 16;
+const RIPPLE_SPEED = 12; // cells per second
+const RIPPLE_MAX_RADIUS = 8;
 const RIPPLE_WIDTH = 3;
-const RIPPLE_BRIGHTNESS = 0.45;
+const RIPPLE_BRIGHTNESS = 0.3;
+const RIPPLE_FALLOFF = 4; // Higher = ripples fade out faster as they propagate
 
 // Wake settings (trails behind the cursor like a stick in water)
 const WAKE_FADE = 2.2; // per second — slower fade keeps the trail visible at slow speeds
@@ -22,7 +23,7 @@ const WAKE_WIDTH = 4; // Width perpendicular to movement
 
 // Wake intensity factors based on pointer state.
 // Plain hover spawns a visible trail; holding the mouse intensifies it.
-const WAKE_HOVER_FACTOR = 0.7;
+const WAKE_HOVER_FACTOR = 0.5;
 const WAKE_PRESSED_FACTOR = 0.9;
 
 // Side ripple settings (small waves that spawn from wake trail).
@@ -33,8 +34,8 @@ const WAKE_RIPPLE_OFFSET = 2.5; // How far out perpendicular the side ripples sp
 const WAKE_RIPPLE_SPAWN_DIST = 3; // Min cells between consecutive spawns (pressed)
 const WAKE_RIPPLE_SPAWN_DIST_HOVER = 7; // Sparser when just hovering
 const WAKE_RIPPLE_MAX_RADIUS = 10; // Smaller than click ripples
-const WAKE_RIPPLE_SPEED = 6.25; // cells per second
-const WAKE_RIPPLE_BRIGHTNESS = 0.1; // Dimmer than click ripples
+const WAKE_RIPPLE_SPEED = 8; // cells per second
+const WAKE_RIPPLE_BRIGHTNESS = 0.09; // Dimmer than click ripples
 
 interface Ripple {
 	x: number;
@@ -204,8 +205,8 @@ function InteractiveGrid(this: FC) {
 					const brightness = rip.brightness ?? RIPPLE_BRIGHTNESS;
 
 					if (diff < RIPPLE_WIDTH) {
-						// Steeper falloff using quadratic decay
-						const fade = Math.pow(1 - rip.r / maxR, 2);
+						// Steep falloff as the ripple propagates outward
+						const fade = Math.pow(1 - rip.r / maxR, RIPPLE_FALLOFF);
 						// Smooth bell curve falloff
 						const strength = (1 - diff / RIPPLE_WIDTH) * fade;
 						const contribution = strength * brightness;

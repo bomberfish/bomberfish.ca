@@ -371,7 +371,7 @@ LastFmCard.style = css`
 	.lastfm-track {
 		display: flex;
 		gap: 1rem;
-		align-items: flex-start;
+		// align-items: center;
 		margin-block: auto;
 	}
 
@@ -442,13 +442,11 @@ LastFmCard.style = css`
 
 	.lastfm-title {
 		color: var(--supertext);
-		margin-bottom: 0;
+		margin-block: 0;
 		/* fluid baseline driven by the meta column width. JS may override
 		   font-size inline if the natural value wraps to >2 lines. */
 		font-size: clamp(1.25rem, 13cqi, 2.25rem);
 		line-height: 1.1;
-		text-wrap: balance;
-		hyphens: auto;
 		font-variation-settings: "ELSH" 85;
 	}
 

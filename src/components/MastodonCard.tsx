@@ -431,6 +431,7 @@ MastodonCard.style = css`
 		z-index: -1;
 		pointer-events: none;
 		background: var(--crust);
+		opacity: 0.67;
 	}
 
 	.fedi-post-bleed > :is(img, video) {
@@ -438,7 +439,8 @@ MastodonCard.style = css`
 		height: 100%;
 		object-fit: cover;
 		display: block;
-		filter: brightness(0.45) saturate(0.9) contrast(1.15);
+		filter: brightness(0.85) saturate(0.8) contrast(1.2);
+
 	}
 
 	/* dark vignette over the image so edges fade to the card bg, helping
