@@ -371,7 +371,7 @@ LastFmCard.style = css`
 	.lastfm-track {
 		display: flex;
 		gap: 1rem;
-		// align-items: center;
+		align-items: center;
 		margin-block: auto;
 	}
 
