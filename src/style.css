@@ -1001,6 +1001,15 @@ ul.compact> :is(li > span, li > a) {
 			transparent 80%);
 }
 
+/* When the browser supports image-set() with type() hints, prefer the WebP
+   cover via `--cover-image-set` (set inline by BlogList.tsx). Browsers
+   without support keep using `--cover-image` (the plain JPEG url()) above. */
+@supports (background-image: image-set(url("x.webp") type("image/webp"))) {
+	.blog-item.has-cover::before {
+		background-image: var(--cover-image-set, var(--cover-image));
+	}
+}
+
 .blog-item.has-cover h3,
 .blog-item.has-cover .post-desc,
 .blog-item.has-cover time,

@@ -47,7 +47,10 @@ function Homepage(this: FC) {
 							</p>
 						</div>
 						<a href="/me.png" target="_blank" rel="noopener" class="pfp-link">
-							<img src="/me.480px.jpg" class="pfp" title="my profile picture! click to view full size." width="220" height="220" loading="eager" alt="profile picture" />
+							<picture>
+								<source type="image/webp" srcset="/me.480px.webp" />
+								<img src="/me.480px.jpg" class="pfp" title="my profile picture! click to view full size." width="220" height="220" loading="eager" alt="profile picture" />
+							</picture>
 						</a>
 					</section>
 					<section class="live-section" id="status">
@@ -74,7 +77,7 @@ function Homepage(this: FC) {
 					<section class="contact-section" id="contact-me">
 						<h3>get in touch:</h3>
 						<div class="card-section">
-							<ContactCard contact={{ platform: "email", username: "me@bomberfish.ca", url: "mailto:me@bomberfish.ca", note: "please don't send me unsolicited remote job offers. please." }}>
+							<ContactCard contact={{ platform: "email", username: "me@bomberfish.ca (currently unavailable until further notice for technical reasons)", url: "mailto:me@bomberfish.ca", note: "please don't send me unsolicited remote job offers. please." }}>
 								<EmailIcon />
 							</ContactCard>
 							<ContactCard contact={{ platform: "discord", username: "@bomberfish", url: "https://discordapp.com/users/470637062870269952", note: "friend requests are subject to some pretty strong vibe-checking." }}>

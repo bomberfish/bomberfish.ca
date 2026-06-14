@@ -71,13 +71,25 @@ export function PhotoSphere(this: FC<PhotoSphereProps>) {
 		? "Drag to look around"
 		: "Click and drag to look around";
 
+	const fallbackSrc = this.fallback ?? this.src;
+	const fallbackWebp = /^\/[^?#]*\.jpe?g(?:[?#]|$)/i.test(fallbackSrc)
+		? fallbackSrc.replace(/\.jpe?g(?=[?#]|$)/i, ".webp")
+		: undefined;
+
 	return (
 		<div class="photo-sphere">
-			<img
-				class="photo-sphere-fallback"
-				src={this.fallback ?? this.src}
-				alt="360° panorama"
-			/>
+			<picture>
+				{fallbackWebp ? (
+					<source type="image/webp" srcset={fallbackWebp} />
+				) : (
+					false
+				)}
+				<img
+					class="photo-sphere-fallback"
+					src={fallbackSrc}
+					alt="360° panorama"
+				/>
+			</picture>
 			<div class="photo-sphere-viewer"></div>
 			<div class="photo-sphere-hint">
 				<span class="material-symbols">panorama_photosphere</span>

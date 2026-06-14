@@ -3,11 +3,25 @@ import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import { ProjectCardDetails } from "../Projects";
 
+const toWebp = (path: string | undefined) =>
+	path ? path.replace(/\.jpe?g(?=[?#]|$)/i, ".webp") : path;
+
+const isJpeg = (path: string | undefined) =>
+	!!path && /\.jpe?g(?:[?#]|$)/i.test(path);
+
 function ProjectView(this: FC<{ project: ProjectCardDetails }>) {
 	const thumbnail = this.project.getThumbnailPath();
 	const image = this.project.getImagePath();
 	const srcset = thumbnail
 		? `${thumbnail} 1x${image && image !== thumbnail ? `, ${image} 2x` : ""}`
+		: undefined;
+	// Build a parallel WebP srcset for the <source>. Only emit the
+	// <source> when the originals are JPEGs we converted.
+	const webpThumbnail = isJpeg(thumbnail) ? toWebp(thumbnail) : undefined;
+	const webpImage = isJpeg(image) ? toWebp(image) : undefined;
+	const webpSrcset = webpThumbnail
+		? `${webpThumbnail} 1x${webpImage && webpImage !== webpThumbnail ? `, ${webpImage} 2x` : ""
+		}`
 		: undefined;
 
 	return (
@@ -38,13 +52,27 @@ function ProjectView(this: FC<{ project: ProjectCardDetails }>) {
 						</section>
 						<section id="image">
 							<a href={image}>
-								<img
-									title="Click to open full-size"
-									alt={this.project.title}
-									src={thumbnail}
-									srcset={srcset}
-								/>
-								<img hidden class="blur" src={thumbnail} srcset={srcset} />
+								<picture>
+									{webpSrcset ? (
+										<source type="image/webp" srcset={webpSrcset} />
+									) : (
+										false
+									)}
+									<img
+										title="Click to open full-size"
+										alt={this.project.title}
+										src={thumbnail}
+										srcset={srcset}
+									/>
+								</picture>
+								<picture hidden>
+									{webpSrcset ? (
+										<source type="image/webp" srcset={webpSrcset} />
+									) : (
+										false
+									)}
+									<img class="blur" src={thumbnail} srcset={srcset} />
+								</picture>
 							</a>
 						</section>
 					</div>
@@ -76,6 +104,9 @@ ProjectView.style = css`
 
 	#image a {
 		width: 100%;
+		display: flex;
+		align-content: center;
+		align-items: center;
 	}
 
 	#image {
@@ -91,7 +122,8 @@ ProjectView.style = css`
 		transform: scale(1.001);
 	}
 
-	#image > a > img {
+	#image > a > picture,
+	#image > a img {
 		width: 100%;
 		height: auto;
 	}

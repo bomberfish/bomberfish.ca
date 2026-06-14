@@ -3,6 +3,12 @@ import { ContactLinks } from "./Homepage";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import NotFoundView from "./NotFoundView";
+import Pic from "../components/Pic";
+
+// MDX component overrides — `img` is intercepted so every markdown
+// `![alt](path)` and JSX `<img>` inside a blog post is rendered as a
+// `<picture>` with a WebP `<source>` and a JPEG fallback.
+const mdxComponents = { img: Pic };
 
 interface BlogPostProps {
 	slug: string;
@@ -59,7 +65,7 @@ function BlogPost(this: FC<BlogPostProps>) {
 							)}
 						</div>
 						<div class="post-body background-container">
-							<BlogContent />
+							<BlogContent components={mdxComponents} />
 						</div>
 						<p class="background-container" style="margin-bottom: 0!important;">
 							<subt class="bottom">

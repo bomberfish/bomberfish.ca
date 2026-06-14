@@ -83,38 +83,60 @@ function BlogList(this: FC) {
 						</span>
 					</div>
 					<div class="blog-list">
-						{blogPosts.map((post) => (
-							<div
-								class={`blog-item ${post.image ? "has-cover" : ""}`}
-								style={
-									post.image
-										? { "--cover-image": `url(${post.image})` }
-										: undefined
+						{blogPosts.map((post) => {
+							// Build inline CSS vars for the cover background. Pseudo-
+							// elements can't be styled inline, so the actual rule lives
+							// in style.css and reads these vars. We always set
+							// `--cover-image` as a plain url() (the JPEG fallback) and,
+							// when the cover is a JPEG, also set `--cover-image-set` to
+							// an image-set() that prefers the WebP sibling. The CSS
+							// uses the latter behind @supports so browsers without
+							// image-set() type-hint support quietly stick to the JPEG.
+							const coverStyle = (() => {
+								if (!post.image) return undefined;
+								const style: Record<string, string> = {
+									"--cover-image": `url("${post.image}")`,
+								};
+								const jpegMatch = post.image.match(/\.jpe?g(?:[?#]|$)/i);
+								if (jpegMatch) {
+									const webp = post.image.replace(
+										/\.jpe?g(?=[?#]|$)/i,
+										".webp"
+									);
+									style["--cover-image-set"] =
+										`image-set(url("${webp}") type("image/webp"), url("${post.image}") type("image/jpeg"))`;
 								}
-							>
-								<TransitionLink href={`/blog/${post.slug}`} class="blog-link">
-									<h3>{post.title}</h3>
-									{post.description ? (
-										<p class="post-desc">{post.description}</p>
-									) : (
-										false
-									)}
-									<div class="post-footer">
-										{post.tags ? (
-											<div class="post-tags">
-												<span class="material-symbols">label_important</span>
-												{post.tags.map((t) => (
-													<span class="tag">{t}</span>
-												))}
-											</div>
+								return style;
+							})();
+							return (
+								<div
+									class={`blog-item ${post.image ? "has-cover" : ""}`}
+									style={coverStyle}
+								>
+									<TransitionLink href={`/blog/${post.slug}`} class="blog-link">
+										<h3>{post.title}</h3>
+										{post.description ? (
+											<p class="post-desc">{post.description}</p>
 										) : (
-											<div />
+											false
 										)}
-										<time>{post.date}</time>
-									</div>
-								</TransitionLink>
-							</div>
-						))}
+										<div class="post-footer">
+											{post.tags ? (
+												<div class="post-tags">
+													<span class="material-symbols">label_important</span>
+													{post.tags.map((t) => (
+														<span class="tag">{t}</span>
+													))}
+												</div>
+											) : (
+												<div />
+											)}
+											<time>{post.date}</time>
+										</div>
+									</TransitionLink>
+								</div>
+							);
+						})}
 					</div>
 					<br />
 					<span style="font-size: 0.9rem; color: var(--subtext1);">
