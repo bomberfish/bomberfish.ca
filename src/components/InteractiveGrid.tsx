@@ -10,10 +10,10 @@ const HOVER_FALLOFF = 2;
 
 // Ripple settings (for clicks)
 const RIPPLE_SPEED = 12; // cells per second
-const RIPPLE_MAX_RADIUS = 8;
-const RIPPLE_WIDTH = 3;
-const RIPPLE_BRIGHTNESS = 0.3;
-const RIPPLE_FALLOFF = 4; // Higher = ripples fade out faster as they propagate
+const RIPPLE_MAX_RADIUS = 9;
+const RIPPLE_WIDTH = 2;
+const RIPPLE_BRIGHTNESS = 0.5;
+const RIPPLE_FALLOFF = 5; // Higher = click ripples fade out faster as they propagate
 
 // Wake settings (trails behind the cursor like a stick in water)
 const WAKE_FADE = 2.2; // per second — slower fade keeps the trail visible at slow speeds
@@ -32,10 +32,11 @@ const WAKE_PRESSED_FACTOR = 0.9;
 // into a bright blob.
 const WAKE_RIPPLE_OFFSET = 2.5; // How far out perpendicular the side ripples spawn
 const WAKE_RIPPLE_SPAWN_DIST = 3; // Min cells between consecutive spawns (pressed)
-const WAKE_RIPPLE_SPAWN_DIST_HOVER = 7; // Sparser when just hovering
-const WAKE_RIPPLE_MAX_RADIUS = 10; // Smaller than click ripples
+const WAKE_RIPPLE_SPAWN_DIST_HOVER = 8; // Sparser when just hovering
+const WAKE_RIPPLE_MAX_RADIUS = 11; // Smaller than click ripples
 const WAKE_RIPPLE_SPEED = 8; // cells per second
-const WAKE_RIPPLE_BRIGHTNESS = 0.09; // Dimmer than click ripples
+const WAKE_RIPPLE_BRIGHTNESS = 0.1; // Dimmer than click ripples
+const WAKE_RIPPLE_FALLOFF = 3; // Higher = wake ripples fade out faster as they propagate
 
 interface Ripple {
 	x: number;
@@ -91,8 +92,10 @@ function InteractiveGrid(this: FC) {
 	const reduceMotionQuery = window.matchMedia(
 		"(prefers-reduced-motion: reduce)"
 	);
-	const isDarkMode = window.matchMedia("(prefers-color-scheme: dark)");
-
+	// const isDarkMode = window.matchMedia("(prefers-color-scheme: dark)");
+	const isDarkMode = {
+		matches: false,
+	}
 	const getGridColor = () => {
 		// Use the site's color scheme - subtle grid lines
 		const hue = parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--main-hue")) - 10;
@@ -205,8 +208,12 @@ function InteractiveGrid(this: FC) {
 					const brightness = rip.brightness ?? RIPPLE_BRIGHTNESS;
 
 					if (diff < RIPPLE_WIDTH) {
-						// Steep falloff as the ripple propagates outward
-						const fade = Math.pow(1 - rip.r / maxR, RIPPLE_FALLOFF);
+						// Steep falloff as the ripple propagates outward.
+						// Wake and click ripples use independent exponents.
+						const falloff = rip.isWake
+							? WAKE_RIPPLE_FALLOFF
+							: RIPPLE_FALLOFF;
+						const fade = Math.pow(1 - rip.r / maxR, falloff);
 						// Smooth bell curve falloff
 						const strength = (1 - diff / RIPPLE_WIDTH) * fade;
 						const contribution = strength * brightness;
@@ -275,7 +282,7 @@ function InteractiveGrid(this: FC) {
 						cell.style.backgroundColor = "";
 					} else {
 						// Use theme-aware colors with more prominent highlighting
-						const sat = isDarkMode.matches ? 35 : 60;
+						const sat = isDarkMode.matches ? 75 : 100;
 						const lit = isDarkMode.matches
 							? lightness + finalOpacity * 40
 							: lightness - finalOpacity * 45;
