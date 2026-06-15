@@ -26,16 +26,16 @@ function Homepage(this: FC) {
 							<h1 class="home-title"><span class="emoji">👋</span>hiya!</h1>
 							<p>
 								i'm hariz (he/they), a 17 y/o high school student from
-								waterloo, canada, and sometimes i make <code>use(ful|less)</code> projects.
-							</p>
-							<p>i used to be really involved in the ios modding and jailbreak scene, but i've mostly moved on to other things by now.
-							</p>
-							<p>at the moment, i'm interested in webdev, UI/UX, embedded systems, and pcb design!</p>
-							<p>
-								i'm fluent in swift and javascript, and i'm decent at java and most of the C dialects.
+								waterloo, canada, and sometimes i make <code>use(ful|less)</code> things.
 							</p>
 							<p>
-								i'm also part of{" "}
+								at the moment, you can find me building beautiful web-adjacent stuff at <a href="https://puter.com" target="_blank">puter technologies inc,</a> where i get to work on stuff that really pushes the web platform to its limits!
+							</p>
+							<p>
+								my native languages are swift and javascript, though i'm also decent at java and most of the C dialects.
+							</p>
+							<p>
+								beyond my day-to-day, i'm part of{" "}
 								<a href="https://mercurywork.shop" target="_blank">
 									mercury workshop
 								</a>
@@ -43,8 +43,9 @@ function Homepage(this: FC) {
 								<a href="https://sh1mmer.me" target="_blank">
 									sh1mmer
 								</a>{" "}
-								chromebook exploit.
+								chromebook exploit. (fun fact: i actually made the current iteration of the group's website too!)
 							</p>
+							<p>i also used to be really involved in the ios modding and jailbreak scene, so say hi if you recognize me from those circles!</p>
 						</div>
 						<a href="/me.png" target="_blank" rel="noopener" class="pfp-link">
 							<picture>
@@ -146,6 +147,7 @@ Homepage.style = css`
 
 	h1 .emoji {
 		font-size: 0.7em;
+		padding-right: 0.15em;
 	}
 
 	h1 {
