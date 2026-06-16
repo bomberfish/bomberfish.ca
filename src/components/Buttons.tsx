@@ -1,15 +1,22 @@
 import { FC, css } from "dreamland/core";
 
-type WebButtonProps = {
+
+export function WebButton(this: FC<{
 	src: string;
 	href?: string;
 	alt?: string;
 	title?: string;
 	"on:click"?: (e: MouseEvent) => void;
-};
-
-export function WebButton(this: FC<WebButtonProps>) {
+}, { image: HTMLImageElement }>) {
 	this.href = this.href;
+
+	this.cx.mount = () => {
+		this.image.addEventListener("error", () => {
+			console.error("Oh no :(");
+			this.root.style.display = "none";
+		});
+	}
+
 
 	if (this.title) {
 		this.alt = this.alt || "A web button with the description: " + this.title;
@@ -30,6 +37,7 @@ export function WebButton(this: FC<WebButtonProps>) {
 				src={this.src}
 				alt={this.alt || "A web button."}
 				title={this.title || this.alt || ""}
+				this={use(this.image)}
 			/>
 		</a>
 	);
