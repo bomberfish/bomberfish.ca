@@ -339,6 +339,9 @@ function InteractiveGrid(this: FC) {
 	let lastRippleY = -Infinity;
 
 	const onPointerMove = (e: PointerEvent) => {
+		// Only react to mouse input (includes indirect pointers like an iPad
+		// trackpad/mouse, which report pointerType "mouse"). Ignore touch & pen.
+		if (e.pointerType !== "mouse") return;
 		const coords = getGridCoords(e);
 		// If the pointer left the grid area (e.g., scrolled past 100vh),
 		// behave the same as a pointerleave so trailing effects don't linger.
@@ -426,6 +429,7 @@ function InteractiveGrid(this: FC) {
 	};
 
 	const onPointerDown = (e: PointerEvent) => {
+		if (e.pointerType !== "mouse") return;
 		if (e.target.tagName.toLowerCase() === "a") return;
 		const coords = getGridCoords(e);
 		if (!coords.inside) return;
@@ -436,6 +440,7 @@ function InteractiveGrid(this: FC) {
 	};
 
 	const onPointerUp = (e: PointerEvent) => {
+		if (e.pointerType !== "mouse") return;
 		// Create a ripple on release (like lifting a stick from water)
 		if (isPointerDown) {
 			const coords = getGridCoords(e);
@@ -449,7 +454,10 @@ function InteractiveGrid(this: FC) {
 		// continues smoothly from where the press ended.
 	};
 
-	const onPointerLeave = () => {
+	const onPointerLeave = (e?: PointerEvent) => {
+		// Ignore touch/pen-originated leave events. Internal calls pass no
+		// event and should always run.
+		if (e && e.pointerType !== "mouse") return;
 		isHovered = false;
 		isPointerDown = false;
 		activeX = -1;
@@ -491,14 +499,12 @@ function InteractiveGrid(this: FC) {
 		scrollRafId = requestAnimationFrame(updateScrollFade);
 	};
 
-	// Check if we should disable the effect (mobile/touch devices)
-	const isMobile = () => {
-		return window.matchMedia("(max-width: 768px), (pointer: coarse)").matches;
-	};
-
 	this.cx.mount = () => {
-		// Skip initialization on mobile - CSS fallback grid will be used
-		if (isMobile() || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+		// No device/touch gating: the grid runs anywhere a mouse (or other
+		// indirect pointer that reports pointerType "mouse", such as an iPad
+		// trackpad/mouse) is used. Touch input is filtered out per-event in the
+		// pointer handlers below. Only reduced-motion still opts out.
+		if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
 		buildGrid();
 		updateScrollFade();
@@ -510,7 +516,12 @@ function InteractiveGrid(this: FC) {
 		document.addEventListener("pointerleave", onPointerLeave);
 		window.addEventListener("resize", onResize);
 		window.addEventListener("scroll", onScroll, { passive: true });
-		isDarkMode.addEventListener("change", () => startTick());
+		// isDarkMode is currently a stub object (dark mode disabled above), so
+		// guard against the missing addEventListener to avoid throwing. If the
+		// real matchMedia is restored, this keeps working.
+		if (typeof isDarkMode.addEventListener === "function") {
+			isDarkMode.addEventListener("change", () => startTick());
+		}
 	};
 
 	return <div class="interactive-grid"></div>;
@@ -549,12 +560,6 @@ InteractiveGrid.style = css`
 	}
 
 	@media (prefers-reduced-motion: reduce) {
-		:scope {
-			display: none;
-		}
-	}
-
-	@media (max-width: 768px), (pointer: coarse) {
 		:scope {
 			display: none;
 		}
