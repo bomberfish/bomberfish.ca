@@ -89,22 +89,22 @@ html {
 	--card-surface: hsla(var(--surface1-hsl), 0.9);
 	--card-surface-hover: hsla(var(--surface1-hsl), 0.96);
 
-	--main-hue: 305;
+	--main-hue: 343;
 	--grid-lines: hsla(var(--main-hue), 12%, 16%);
 
-	--core-hsl: var(--main-hue), 100%, 2%;
-	--mantle-hsl: var(--main-hue), 40%, 2.5%;
+	--core-hsl: calc(var(--main-hue) + 20), 100%, 2%;
+	--mantle-hsl: calc(var(--main-hue) - 5), 40%, 2.5%;
 	--crust-hsl: var(--main-hue), 20%, 3.5%;
 	--base-hsl: calc(var(--main-hue) - 30), 10%, 6%;
 	--bg-light: var(--main-hue), 5%, 6.5%;
 
-	--surface0-hsl: calc(var(--main-hue) - 30), 12%, 7.5%;
-	--surface1-hsl: calc(var(--main-hue) - 35), 17%, 12%;
-	--surface2-hsl: calc(var(--main-hue) - 30), 17%, 14%;
-	--surface3-hsl: calc(var(--main-hue) - 30), 17%, 19%;
-	--surface4-hsl: calc(var(--main-hue) - 30), 15%, 22.5%;
-	--surface5-hsl: calc(var(--main-hue) - 28), 13%, 27%;
-	--surface6-hsl: calc(var(--main-hue) - 20), 14%, 34%;
+	--surface0-hsl: calc(var(--main-hue) - 25), 12%, 7.5%;
+	--surface1-hsl: calc(var(--main-hue) - 30), 17%, 12%;
+	--surface2-hsl: calc(var(--main-hue) - 25), 17%, 14%;
+	--surface3-hsl: calc(var(--main-hue) - 25), 17%, 19%;
+	--surface4-hsl: calc(var(--main-hue) - 25), 15%, 22.5%;
+	--surface5-hsl: calc(var(--main-hue) - 20), 13%, 27%;
+	--surface6-hsl: calc(var(--main-hue) - 15), 14%, 34%;
 
 	--overlay0-hsl: calc(var(--main-hue) - 30), 10%, 55%;
 	--overlay1-hsl: calc(var(--main-hue) - 25), 12.5%, 65%;
@@ -113,13 +113,13 @@ html {
 
 	--supertext-hsl: calc(var(--main-hue) - 27.5), 100%, 98%;
 	--text-hsl: calc(var(--main-hue) - 22.5), 70%, 95%;
-	--text1-hsl: calc(var(--main-hue) - 25), 22%, 70%;
-	--subtext0-hsl: calc(var(--main-hue) - 27.5), 17%, 67%;
-	--subtext1-hsl: calc(var(--main-hue) - 25), 15%, 60%;
+	--text1-hsl: calc(var(--main-hue) - 10), 22%, 70%;
+	--subtext0-hsl: calc(var(--main-hue) - 22), 17%, 67%;
+	--subtext1-hsl: calc(var(--main-hue) - 15), 15%, 60%;
 	--subtext2-hsl: calc(var(--main-hue) - 25), 10%, 50%;
 	--subtext3-hsl: calc(var(--main-hue) - 30), 8%, 40%;
 
-	--accent-hsl: calc(var(--main-hue) - 10), 52%, 77%;
+	--accent-hsl: calc(var(--main-hue)), 60%, 77%;
 
 
 	/* Base styles */
