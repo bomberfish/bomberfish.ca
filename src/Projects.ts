@@ -344,7 +344,9 @@ export const projects = [
 				url: "https://anura.pro",
 			},
 		],
-		true
+		true,
+		true,
+		3
 	),
 	new ProjectCardDetails(
 		"mandelapro.jpg",
@@ -366,7 +368,7 @@ export const projects = [
 		[],
 		true,
 		true,
-		3
+		4
 	),
 	new ProjectCardDetails(
 		"dssos.jpg",
