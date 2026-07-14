@@ -1,5 +1,4 @@
 import { FC, css } from "dreamland/core";
-import isMobile from "../IsMobile";
 
 const NEKO_REM = 2.75;
 
@@ -97,7 +96,7 @@ declare global {
 	}
 }
 
-function Oneko(this: FC<{}, OnekoState>) {
+export function Oneko(this: FC<{}, OnekoState>) {
 	this.posX = 0;
 	this.posY = 0;
 	this.mouseX = 0;
@@ -383,7 +382,7 @@ function Oneko(this: FC<{}, OnekoState>) {
 			this.opacity = 0;
 		};
 
-		if (isMobile({ tablet: true })) {
+		if (!window.matchMedia('(pointer: fine)').matches) {
 			disable();
 			return;
 		}
