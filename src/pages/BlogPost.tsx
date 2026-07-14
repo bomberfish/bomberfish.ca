@@ -1,9 +1,9 @@
 import { FC, css } from "dreamland/core";
-import { ContactLinks } from "./Homepage";
+import ContactLinks from "../components/ContactLinks";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
-import NotFoundView from "./NotFoundView";
 import Pic from "../components/Pic";
+import type { BlogModule, BlogPostMetadata } from "../lib/blog";
 
 // MDX component overrides — `img` is intercepted so every markdown
 // `![alt](path)` and JSX `<img>` inside a blog post is rendered as a
@@ -11,52 +11,27 @@ import Pic from "../components/Pic";
 const mdxComponents = { img: Pic };
 
 interface BlogPostProps {
-	slug: string;
+	module: BlogModule;
+	metadata: BlogPostMetadata;
 }
 
 function BlogPost(this: FC<BlogPostProps>) {
-	const slug = this.slug;
-	const blogModules = import.meta.glob("../blog/*.mdx", {
-		eager: true,
-	}) as Record<string, any>;
-
-	const matchingPath = Object.keys(blogModules).find((path) =>
-		path.includes(`-${slug}.mdx`)
-	);
-
-	if (!matchingPath) {
-		return <NotFoundView />;
-	}
-
-	const BlogContent = (blogModules[matchingPath] as any).default;
-
-	const meta = (blogModules[matchingPath] as any) || {};
-	const postTitle: string =
-		meta.title ||
-		slug
-			.split("-")
-			.map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-			.join(" ");
-	const postTags: string[] | undefined = meta.tags;
-	const postDescription: string | undefined = meta.description;
+	const BlogContent = this.module.default;
+	const { title, tags, description } = this.metadata;
 	return (
 		<main>
-			<title>{postTitle} – bomberfish.ca</title>
+			<title>{title} – bomberfish.ca</title>
 			<div class="layout-container">
 				<Navbar active="blog" />
 				<div class="main-content">
 					<article class="blog-content">
 						<div class="page-header">
-							<h1 class="post-title">{postTitle}</h1>
-							{postDescription ? (
-								<p class="post-desc">{postDescription}</p>
-							) : (
-								false
-							)}
-							{postTags ? (
+							<h1 class="post-title">{title}</h1>
+							{description ? <p class="post-desc">{description}</p> : false}
+							{tags ? (
 								<div class="post-tags">
 									<span class="material-symbols">label_important</span>
-									{postTags.map((t) => (
+									{tags.map((t) => (
 										<span class="tag">{t}</span>
 									))}
 								</div>

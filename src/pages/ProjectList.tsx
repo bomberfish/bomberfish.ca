@@ -4,6 +4,13 @@ import { projects } from "../Projects";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 
+const orderedProjects = [
+	...projects
+		.filter((project) => project.featured)
+		.sort((a, b) => (a.featuredPosition || 0) - (b.featuredPosition || 0)),
+	...projects.filter((project) => !project.featured),
+];
+
 function ProjectList(this: FC) {
 	return (
 		<main>
@@ -13,25 +20,15 @@ function ProjectList(this: FC) {
 				<div class="main-content">
 					<div class="page-header">
 						<h1>projects</h1>
-						<p>a collection of my major projects, along with various smaller utilities, experiments, and explorations.</p>
+						<p>
+							a collection of my major projects, along with various smaller
+							utilities, experiments, and explorations.
+						</p>
 					</div>
 					<section class="projects-group">
-						{projects
-							.filter((project) => project.featured)
-							.sort(
-								(a, b) => (a.featuredPosition || 0) - (b.featuredPosition || 0)
-							)
-							.map((project) => (
-								<ProjectCard project={project} size="large" />
-							))}
-						{/* </section>
-					<h3>other projects</h3>
-					<section class="projects-group"> */}
-						{projects
-							.filter((project) => !project.featured)
-							.map((project) => (
-								<ProjectCard project={project} size="small" />
-							))}
+						{orderedProjects.map((project, index) => (
+							<ProjectCard project={project} eager={index < 2} />
+						))}
 					</section>
 				</div>
 				<Footer />
@@ -105,16 +102,6 @@ ProjectList.style = css`
 			flex-direction: column;
 			gap: 1rem;
 		}
-	}
-	
-	hr {
-		border: none;
-		border-bottom: 1px solid var(--surface3);
-		margin: 1rem 0.2rem;
-	}
-
-	h3 {
-		margin-bottom: 0;
 	}
 `;
 

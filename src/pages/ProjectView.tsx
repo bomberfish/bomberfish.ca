@@ -1,13 +1,7 @@
 import { FC, css } from "dreamland/core";
 import Navbar from "../components/Navbar";
-import Footer from "../components/Footer";
-import { ProjectCardDetails } from "../Projects";
-
-const toWebp = (path: string | undefined) =>
-	path ? path.replace(/\.jpe?g(?=[?#]|$)/i, ".webp") : path;
-
-const isJpeg = (path: string | undefined) =>
-	!!path && /\.jpe?g(?:[?#]|$)/i.test(path);
+import type { ProjectCardDetails } from "../Projects";
+import { getWebpPath } from "../lib/images";
 
 function ProjectView(this: FC<{ project: ProjectCardDetails }>) {
 	const thumbnail = this.project.getThumbnailPath();
@@ -17,11 +11,12 @@ function ProjectView(this: FC<{ project: ProjectCardDetails }>) {
 		: undefined;
 	// Build a parallel WebP srcset for the <source>. Only emit the
 	// <source> when the originals are JPEGs we converted.
-	const webpThumbnail = isJpeg(thumbnail) ? toWebp(thumbnail) : undefined;
-	const webpImage = isJpeg(image) ? toWebp(image) : undefined;
+	const webpThumbnail = getWebpPath(thumbnail);
+	const webpImage = getWebpPath(image);
 	const webpSrcset = webpThumbnail
-		? `${webpThumbnail} 1x${webpImage && webpImage !== webpThumbnail ? `, ${webpImage} 2x` : ""
-		}`
+		? `${webpThumbnail} 1x${
+				webpImage && webpImage !== webpThumbnail ? `, ${webpImage} 2x` : ""
+			}`
 		: undefined;
 
 	return (
@@ -30,16 +25,15 @@ function ProjectView(this: FC<{ project: ProjectCardDetails }>) {
 			<div class="layout-container">
 				<Navbar active="projects" />
 				<div class="main-content">
-					<div class="project-view-container">
+					<div>
 						<section id="details" class="background-container page-header">
-							<h1 class="name">{this.project.title}</h1>
-							<p class="description">{this.project.largeDesc}</p>
+							<h1>{this.project.title}</h1>
+							<p>{this.project.largeDesc}</p>
 							<ul class="compact">
 								{this.project.links?.map((link) => (
 									<li>
 										<a
 											href={link.url}
-											class="link"
 											target="_blank"
 											referrer-policy="unsafe-url"
 										>
@@ -65,14 +59,6 @@ function ProjectView(this: FC<{ project: ProjectCardDetails }>) {
 										srcset={srcset}
 									/>
 								</picture>
-								<picture hidden>
-									{webpSrcset ? (
-										<source type="image/webp" srcset={webpSrcset} />
-									) : (
-										false
-									)}
-									<img class="blur" src={thumbnail} srcset={srcset} />
-								</picture>
 							</a>
 						</section>
 					</div>
@@ -83,7 +69,7 @@ function ProjectView(this: FC<{ project: ProjectCardDetails }>) {
 }
 
 ProjectView.style = css`
-    .main-content {
+	.main-content {
 		display: flex;
 		align-content: center;
 		align-items: center;
@@ -92,14 +78,6 @@ ProjectView.style = css`
 
 	#details {
 		margin-bottom: 1rem;
-	}
-
-	/* .project-view-container {
-		max-height: 60%;
-	} */
-
-	h2 {
-		margin-bottom: 0.2em!important;
 	}
 
 	#image a {
@@ -126,19 +104,6 @@ ProjectView.style = css`
 	#image > a img {
 		width: 100%;
 		height: auto;
-	}
-
-	#image .blur {
-		display: block;
-		position: absolute;
-		top: .5%;
-		left: 50%;
-		transform: translateX(-50%);
-		width: auto;
-		height: 100%;
-		filter: blur(12px) contrast(1.5) brightness(0.8) opacity(0.225);
-		overflow: visible;
-		z-index: -1;
 	}
 
 	#details {

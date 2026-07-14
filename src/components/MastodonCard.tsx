@@ -40,23 +40,27 @@ function MastodonCard(this: FC) {
 	const load = async (cacheBust = false) => {
 		if (import.meta.env.SSR) return;
 		controller?.abort();
-		controller = new AbortController();
+		const request = new AbortController();
+		controller = request;
 		state.refreshing = true;
 		try {
-			const data = await getMastodon(controller.signal, cacheBust);
-			if (cancelled) return;
+			const data = await getMastodon(request.signal, cacheBust);
+			if (cancelled || controller !== request) return;
 			state.view = data.status
 				? { kind: "loaded", status: data.status }
 				: { kind: "empty" };
 		} catch (e: unknown) {
-			if (cancelled) return;
+			if (cancelled || controller !== request) return;
 			if (e instanceof DOMException && e.name === "AbortError") return;
 			state.view = {
 				kind: "error",
 				message: e instanceof Error ? e.message : "unknown_error",
 			};
 		} finally {
-			if (!cancelled) state.refreshing = false;
+			if (!cancelled && controller === request) {
+				controller = null;
+				state.refreshing = false;
+			}
 		}
 	};
 
@@ -75,6 +79,15 @@ function MastodonCard(this: FC) {
 	};
 
 	let initialTimer = 0;
+	const refreshWhenVisible = () => {
+		if (
+			document.visibilityState === "visible" &&
+			this.root?.isConnected &&
+			!state.refreshing
+		) {
+			load();
+		}
+	};
 
 	this.cx.mount = () => {
 		if (import.meta.env.SSR) return;
@@ -86,7 +99,10 @@ function MastodonCard(this: FC) {
 		this.root?.classList.add("is-initial");
 
 		load();
-		const id = setInterval(() => load(), REFRESH_MS);
+		const id = setInterval(() => {
+			refreshWhenVisible();
+		}, REFRESH_MS);
+		document.addEventListener("visibilitychange", refreshWhenVisible);
 
 		// First transition out of "loading" arms a one-shot timer that
 		// strips .is-initial — without it, every periodic or manual refresh
@@ -107,6 +123,7 @@ function MastodonCard(this: FC) {
 			cancelled = true;
 			controller?.abort();
 			clearInterval(id);
+			document.removeEventListener("visibilitychange", refreshWhenVisible);
 			clearTimeout(initialTimer);
 		};
 	};

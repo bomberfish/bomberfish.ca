@@ -61,23 +61,27 @@ function LastFmCard(this: FC) {
 	const load = async (cacheBust = false) => {
 		if (import.meta.env.SSR) return;
 		controller?.abort();
-		controller = new AbortController();
+		const request = new AbortController();
+		controller = request;
 		state.refreshing = true;
 		try {
-			const data = await getLastfm(controller.signal, cacheBust);
-			if (cancelled) return;
+			const data = await getLastfm(request.signal, cacheBust);
+			if (cancelled || controller !== request) return;
 			state.view = data.track
 				? { kind: "loaded", track: data.track, profile: data.profile }
 				: { kind: "empty" };
 		} catch (e: unknown) {
-			if (cancelled) return;
+			if (cancelled || controller !== request) return;
 			if (e instanceof DOMException && e.name === "AbortError") return;
 			state.view = {
 				kind: "error",
 				message: e instanceof Error ? e.message : "unknown_error",
 			};
 		} finally {
-			if (!cancelled) state.refreshing = false;
+			if (!cancelled && controller === request) {
+				controller = null;
+				state.refreshing = false;
+			}
 		}
 	};
 
@@ -168,6 +172,15 @@ function LastFmCard(this: FC) {
 
 	let ro: ResizeObserver | null = null;
 	let initialTimer = 0;
+	const refreshWhenVisible = () => {
+		if (
+			document.visibilityState === "visible" &&
+			this.root?.isConnected &&
+			!state.refreshing
+		) {
+			load();
+		}
+	};
 
 	this.cx.mount = () => {
 		if (import.meta.env.SSR) return;
@@ -181,7 +194,10 @@ function LastFmCard(this: FC) {
 		this.root?.classList.add("is-initial");
 
 		load();
-		const id = setInterval(() => load(), REFRESH_MS);
+		const id = setInterval(() => {
+			refreshWhenVisible();
+		}, REFRESH_MS);
+		document.addEventListener("visibilitychange", refreshWhenVisible);
 
 		// Re-fit when the card's column width changes (responsive resize).
 		if (typeof ResizeObserver !== "undefined") {
@@ -211,6 +227,7 @@ function LastFmCard(this: FC) {
 			cancelled = true;
 			controller?.abort();
 			clearInterval(id);
+			document.removeEventListener("visibilitychange", refreshWhenVisible);
 			ro?.disconnect();
 			cancelAnimationFrame(rafId);
 			clearTimeout(initialTimer);
@@ -412,14 +429,13 @@ LastFmCard.style = css`
 		text-decoration-thickness: 2px;
 	}
 
-	/* the title's <a> wraps an <h1> so it needs to be block to wrap properly
+	/* the title's <a> wraps a heading so it needs to be block to wrap properly
 	   and not eat extra space */
 	.lastfm-title-link {
 		display: block;
 	}
 
 	.lastfm-art {
-		// visibility: hidden; /* testing */
 		width: 40%;
 		height: auto;
 		aspect-ratio: 1;

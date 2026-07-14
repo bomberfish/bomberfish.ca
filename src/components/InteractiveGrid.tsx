@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { FC, css } from "dreamland/core";
 
 const LERP = 6; // per second
@@ -80,6 +79,7 @@ function InteractiveGrid(this: FC) {
 	let cells: HTMLDivElement[][] = [];
 	let cur: Float32Array[] = [];
 	let tgt: Float32Array[] = [];
+	let rendered: Float32Array[] = [];
 	let ripples: Ripple[] = [];
 	let wake: WakePoint[] = [];
 
@@ -92,16 +92,11 @@ function InteractiveGrid(this: FC) {
 	const reduceMotionQuery = window.matchMedia(
 		"(prefers-reduced-motion: reduce)"
 	);
-	// const isDarkMode = window.matchMedia("(prefers-color-scheme: dark)");
-	const isDarkMode = {
-		matches: false,
-	}
-	const getGridColor = () => {
-		// Use the site's color scheme - subtle grid lines
-		const hue = parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--main-hue")) - 10;
-		const lightness = isDarkMode.matches ? 10 : 90;
-		return { hue, lightness };
-	};
+	const getGridHue = () =>
+		parseFloat(
+			getComputedStyle(document.documentElement).getPropertyValue("--main-hue")
+		) - 10;
+	let lastRenderedHue = Number.NaN;
 
 	const buildGrid = () => {
 		const container = this.root as HTMLDivElement;
@@ -122,6 +117,7 @@ function InteractiveGrid(this: FC) {
 		cells = [];
 		cur = [];
 		tgt = [];
+		rendered = [];
 
 		const fragment = document.createDocumentFragment();
 
@@ -131,6 +127,7 @@ function InteractiveGrid(this: FC) {
 			cells[r] = [];
 			cur[r] = new Float32Array(columns);
 			tgt[r] = new Float32Array(columns);
+			rendered[r] = new Float32Array(columns);
 
 			for (let c = 0; c < columns; c++) {
 				const cell = document.createElement("div");
@@ -184,7 +181,9 @@ function InteractiveGrid(this: FC) {
 		wake = wake.filter((w) => w.intensity > 0.01);
 
 		let anyMoving = ripples.length > 0 || wake.length > 0;
-		const { hue, lightness } = getGridColor();
+		const hue = getGridHue();
+		const hueChanged = hue !== lastRenderedHue;
+		lastRenderedHue = hue;
 
 		for (let r = 0; r < rows; r++) {
 			for (let c = 0; c < columns; c++) {
@@ -210,9 +209,7 @@ function InteractiveGrid(this: FC) {
 					if (diff < RIPPLE_WIDTH) {
 						// Steep falloff as the ripple propagates outward.
 						// Wake and click ripples use independent exponents.
-						const falloff = rip.isWake
-							? WAKE_RIPPLE_FALLOFF
-							: RIPPLE_FALLOFF;
+						const falloff = rip.isWake ? WAKE_RIPPLE_FALLOFF : RIPPLE_FALLOFF;
 						const fade = Math.pow(1 - rip.r / maxR, falloff);
 						// Smooth bell curve falloff
 						const strength = (1 - diff / RIPPLE_WIDTH) * fade;
@@ -278,15 +275,15 @@ function InteractiveGrid(this: FC) {
 				const finalOpacity = Math.min(v + rippleIntensity + wakeIntensity, 1);
 				const cell = cells[r]?.[c];
 				if (cell) {
+					if (!hueChanged && Math.abs(rendered[r][c] - finalOpacity) < 0.0005) {
+						continue;
+					}
+					rendered[r][c] = finalOpacity;
 					if (finalOpacity < 0.001) {
 						cell.style.backgroundColor = "";
 					} else {
-						// Use theme-aware colors with more prominent highlighting
-						const sat = isDarkMode.matches ? 75 : 100;
-						const lit = isDarkMode.matches
-							? lightness + finalOpacity * 40
-							: lightness - finalOpacity * 45;
-						cell.style.backgroundColor = `hsla(${hue}, ${sat}%, ${lit}%, ${(finalOpacity * 1.2).toFixed(4)})`;
+						const lightness = 90 - finalOpacity * 45;
+						cell.style.backgroundColor = `hsla(${hue}, 100%, ${lightness}%, ${(finalOpacity * 1.2).toFixed(4)})`;
 					}
 				}
 			}
@@ -366,9 +363,7 @@ function InteractiveGrid(this: FC) {
 					dx = 1;
 					dy = 0;
 				}
-				const factor = isPointerDown
-					? WAKE_PRESSED_FACTOR
-					: WAKE_HOVER_FACTOR;
+				const factor = isPointerDown ? WAKE_PRESSED_FACTOR : WAKE_HOVER_FACTOR;
 				wake.push({
 					x: coords.x,
 					y: coords.y,
@@ -430,7 +425,7 @@ function InteractiveGrid(this: FC) {
 
 	const onPointerDown = (e: PointerEvent) => {
 		if (e.pointerType !== "mouse") return;
-		if (e.target.tagName.toLowerCase() === "a") return;
+		if ((e.target as Element | null)?.closest("a")) return;
 		const coords = getGridCoords(e);
 		if (!coords.inside) return;
 		isPointerDown = true;
@@ -500,28 +495,29 @@ function InteractiveGrid(this: FC) {
 	};
 
 	this.cx.mount = () => {
-		// No device/touch gating: the grid runs anywhere a mouse (or other
-		// indirect pointer that reports pointerType "mouse", such as an iPad
-		// trackpad/mouse) is used. Touch input is filtered out per-event in the
-		// pointer handlers below. Only reduced-motion still opts out.
-		if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+		const canHover = window.matchMedia(
+			"(any-hover: hover) and (any-pointer: fine)"
+		);
+		let initialized = false;
+		const initialize = () => {
+			if (initialized || reduceMotionQuery.matches || !canHover.matches) return;
+			initialized = true;
+			canHover.removeEventListener("change", initialize);
 
-		buildGrid();
-		updateScrollFade();
-		document.body.classList.add("grid-loaded");
+			buildGrid();
+			updateScrollFade();
+			document.body.classList.add("grid-loaded");
 
-		document.addEventListener("pointermove", onPointerMove, { passive: true });
-		document.addEventListener("pointerdown", onPointerDown, { passive: true });
-		document.addEventListener("pointerup", onPointerUp);
-		document.addEventListener("pointerleave", onPointerLeave);
-		window.addEventListener("resize", onResize);
-		window.addEventListener("scroll", onScroll, { passive: true });
-		// isDarkMode is currently a stub object (dark mode disabled above), so
-		// guard against the missing addEventListener to avoid throwing. If the
-		// real matchMedia is restored, this keeps working.
-		if (typeof isDarkMode.addEventListener === "function") {
-			isDarkMode.addEventListener("change", () => startTick());
-		}
+			document.addEventListener("pointermove", onPointerMove, { passive: true });
+			document.addEventListener("pointerdown", onPointerDown, { passive: true });
+			document.addEventListener("pointerup", onPointerUp);
+			document.addEventListener("pointerleave", onPointerLeave);
+			window.addEventListener("resize", onResize);
+			window.addEventListener("scroll", onScroll, { passive: true });
+		};
+
+		canHover.addEventListener("change", initialize);
+		initialize();
 	};
 
 	return <div class="interactive-grid"></div>;
@@ -546,12 +542,7 @@ InteractiveGrid.style = css`
 			#000 70%,
 			transparent 100%
 		);
-		mask-image: linear-gradient(
-			to bottom,
-			#000 0%,
-			#000 70%,
-			transparent 100%
-		);
+		mask-image: linear-gradient(to bottom, #000 0%, #000 70%, transparent 100%);
 		/* Fade the whole element out as the user scrolls past the first
 		   viewport. --grid-scroll-fade is driven from JS on scroll/resize. */
 		opacity: var(--grid-scroll-fade, 1);

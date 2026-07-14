@@ -23,16 +23,25 @@ function Homepage(this: FC) {
 				<div class="main-content">
 					<section class="about-section background-container" id="about">
 						<div class="about-text">
-							<h1 class="home-title"><span class="emoji">👋</span>hiya!</h1>
+							<h1>
+								<span class="emoji">👋</span>hiya!
+							</h1>
 							<p>
-								i'm hariz (he/they), a 17 y/o high school student from
-								waterloo, canada, and sometimes i make <code>use(ful|less)</code> things.
+								i'm hariz (he/they), a 17 y/o high school student from waterloo,
+								canada, and sometimes i make <code>use(ful|less)</code> things.
 							</p>
 							<p>
-								at the moment, you can find me building beautiful web-adjacent stuff at <a href="https://puter.com" target="_blank">puter technologies inc,</a> where i get to work on stuff that really pushes the web platform to its limits!
+								at the moment, you can find me building beautiful web-adjacent
+								stuff at{" "}
+								<a href="https://puter.com" target="_blank">
+									puter technologies inc,
+								</a>{" "}
+								where i get to work on stuff that really pushes the web platform
+								to its limits!
 							</p>
 							<p>
-								my native languages are swift and javascript, though i'm also decent at java and most of the C dialects.
+								my native languages are swift and javascript, though i'm also
+								decent at java and most of the C dialects.
 							</p>
 							<p>
 								beyond my day-to-day, i'm part of{" "}
@@ -43,14 +52,27 @@ function Homepage(this: FC) {
 								<a href="https://sh1mmer.me" target="_blank">
 									sh1mmer
 								</a>{" "}
-								chromebook exploit. (fun fact: i actually made the current iteration of the group's website too!)
+								chromebook exploit. (fun fact: i actually made the current
+								iteration of the group's website too!)
 							</p>
-							<p>i also used to be really involved in the ios modding and jailbreak scene, so say hi if you recognize me from those circles!</p>
+							<p>
+								i also used to be really involved in the ios modding and
+								jailbreak scene, so say hi if you recognize me from those
+								circles!
+							</p>
 						</div>
 						<a href="/me.png" target="_blank" rel="noopener" class="pfp-link">
 							<picture>
 								<source type="image/webp" srcset="/me.480px.webp" />
-								<img src="/me.480px.jpg" class="pfp" title="my profile picture! click to view full size." width="220" height="220" loading="eager" alt="profile picture" />
+								<img
+									src="/me.480px.jpg"
+									class="pfp"
+									title="my profile picture! click to view full size."
+									width="220"
+									height="220"
+									loading="eager"
+									alt="profile picture"
+								/>
 							</picture>
 						</a>
 					</section>
@@ -61,15 +83,42 @@ function Homepage(this: FC) {
 								<LastFmCard />
 								<MastodonCard />
 							</div>
-							<h3 class="more-heading" id="more-socials-heading">more socials:</h3>
-							<div class="contact-list" id="socials" aria-labelledby="more-socials-heading">
-								<ContactCard compact contact={{ platform: "github", username: "bomberfish", url: "https://github.com/bomberfish" }}>
+							<h3 class="more-heading" id="more-socials-heading">
+								more socials:
+							</h3>
+							<div
+								class="contact-list"
+								id="socials"
+								aria-labelledby="more-socials-heading"
+							>
+								<ContactCard
+									compact
+									contact={{
+										platform: "github",
+										username: "bomberfish",
+										url: "https://github.com/bomberfish",
+									}}
+								>
 									<GitHubIcon />
 								</ContactCard>
-								<ContactCard compact contact={{ platform: "X", username: "@bomberfish77", url: "https://x.com/bomberfish77" }}>
+								<ContactCard
+									compact
+									contact={{
+										platform: "X",
+										username: "@bomberfish77",
+										url: "https://x.com/bomberfish77",
+									}}
+								>
 									<XIcon />
 								</ContactCard>
-								<ContactCard compact contact={{ platform: "bluesky", username: "@bomberfish.ca", url: "https://bsky.app/profile/bomberfish.ca" }}>
+								<ContactCard
+									compact
+									contact={{
+										platform: "bluesky",
+										username: "@bomberfish.ca",
+										url: "https://bsky.app/profile/bomberfish.ca",
+									}}
+								>
 									<BlueskyIcon />
 								</ContactCard>
 							</div>
@@ -78,13 +127,31 @@ function Homepage(this: FC) {
 					<section class="contact-section" id="contact-me">
 						<h3>get in touch:</h3>
 						<div class="card-section">
-							<ContactCard contact={{ platform: "email", username: "me@bomberfish.ca", url: "mailto:me@bomberfish.ca", note: "please don't send me unsolicited remote job offers. please." }}>
+							<ContactCard
+								contact={{
+									platform: "email",
+									username: "me@bomberfish.ca",
+									url: "mailto:me@bomberfish.ca",
+								}}
+							>
 								<EmailIcon />
 							</ContactCard>
-							<ContactCard contact={{ platform: "discord", username: "@bomberfish", url: "https://discordapp.com/users/470637062870269952", note: "friend requests are subject to some pretty strong vibe-checking." }}>
+							<ContactCard
+								contact={{
+									platform: "discord",
+									username: "@bomberfish",
+									url: "https://discordapp.com/users/470637062870269952",
+								}}
+							>
 								<DiscordIcon />
 							</ContactCard>
-							<ContactCard contact={{ platform: "signal", username: "@one.337", url: "https://signal.me/#eu/Hj17C2gxd-rMfhgGYLZADiwtnP9y1xDF9waDfQxJudgShHBOqThJXLLHV4ZPmPny", note: "not unless you're absolutely unable to use other methods of communication!" }}>
+							<ContactCard
+								contact={{
+									platform: "signal",
+									username: "@one.337",
+									url: "https://signal.me/#eu/Hj17C2gxd-rMfhgGYLZADiwtnP9y1xDF9waDfQxJudgShHBOqThJXLLHV4ZPmPny",
+								}}
+							>
 								<SignalIcon />
 							</ContactCard>
 						</div>
@@ -98,7 +165,9 @@ function Homepage(this: FC) {
 								on:click={(e: MouseEvent) => {
 									e.preventDefault();
 									try {
-										navigator.clipboard.writeText('<a href="https://bomberfish.ca/?ref=button" referrerpolicy="unsafe-url" >\n<img src="https://bomberfish.ca/button.gif" alt="BomberFish" title="BomberFish" />\n</a>');
+										navigator.clipboard.writeText(
+											'<a href="https://bomberfish.ca/?ref=button" referrerpolicy="unsafe-url" >\n<img src="https://bomberfish.ca/button.gif" alt="BomberFish" title="BomberFish" />\n</a>'
+										);
 										document.body.appendChild(<CopiedToast />);
 									} catch {
 										console.error(e);
@@ -106,7 +175,8 @@ function Homepage(this: FC) {
 								}}
 							/>
 							<subt style="font-size: 0.8em; margin-left: 0.5em;">
-								(click to copy code! hotlinking is strongly encouraged, i might change it at any time!)
+								(click to copy code! hotlinking is strongly encouraged, i might
+								change it at any time!)
 							</subt>
 						</div>
 						<ButtonList />
@@ -120,7 +190,7 @@ function Homepage(this: FC) {
 
 Homepage.style = css`
 	.about-section {
-		margin-bottom: .75rem;
+		margin-bottom: 0.75rem;
 		display: flex;
 		flex-direction: row;
 		align-items: center;
@@ -153,17 +223,17 @@ Homepage.style = css`
 	h1 {
 		display: flex;
 		align-items: center;
-		font-variation-settings: "ELSH" 80!important;
+		font-variation-settings: "ELSH" 80 !important;
 		transition: font-variation-settings 0.3s ease-in-out;
 	}
 
 	h1:hover {
-		font-variation-settings: "ELSH" 35!important;
+		font-variation-settings: "ELSH" 35 !important;
 	}
 
 	h1 span.emoji {
 		display: inline-block;
-		transition: transform 0.3s cubic-bezier(.5,1.3,.86,1.09);
+		transition: transform 0.3s cubic-bezier(0.5, 1.3, 0.86, 1.09);
 	}
 
 	h1:hover span.emoji {
@@ -174,11 +244,6 @@ Homepage.style = css`
 		content: "";
 		display: table;
 		clear: both;
-	}
-
-	.about-section h3 {
-		margin: 0 0 0.5rem 0;
-		font-size: 1.4rem;
 	}
 
 	.about-section p {
@@ -369,54 +434,4 @@ Homepage.style = css`
 		}
 	}
 `;
-
-export function ContactLinks(this: FC) {
-	return (
-		<span class="contact-links">
-			<span class="tooltip-wrapper">
-				<a href="mailto:me@bomberfish.ca" class="contact-item">email</a>
-				<span class="tooltip">me@bomberfish.ca</span>
-			</span>
-			<span class="sep">/</span>
-			<span class="tooltip-wrapper">
-				<a href="https://wetdry.world/@fish" target="_blank" rel="me" referrer-policy="unsafe-url" class="contact-item">fediverse</a>
-				<span class="tooltip">@fish@wetdry.world</span>
-			</span>
-			<span class="sep">/</span>
-			<span class="tooltip-wrapper">
-				<a href="https://x.com/bomberfish77" target="_blank" rel="me" referrer-policy="unsafe-url" class="contact-item">X</a>
-				<span class="tooltip">@bomberfish77</span>
-			</span>
-			<span class="sep">/</span>
-			<span class="tooltip-wrapper">
-				<a href="https://bsky.app/profile/bomberfish.ca" target="_blank" rel="me" referrer-policy="unsafe-url" class="contact-item">bluesky</a>
-				<span class="tooltip">@bomberfish.ca</span>
-			</span>
-		</span>
-	);
-}
-
-ContactLinks.style = css`
-	:scope {
-		display: flex;
-		flex-wrap: wrap;
-		align-items: center;
-		gap: 0.25rem;
-	}
-
-	.contact-item {
-		text-decoration: underline !important;
-	}
-
-	.contact-item:after {
-		display: none !important;
-	}
-
-	.sep {
-		color: var(--subtext2);
-		margin: 0 0.25rem;
-	}
-`;
-
-
 export default Homepage;

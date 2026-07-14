@@ -1,7 +1,6 @@
-import { FC, createState, Stateful } from "dreamland/core";
-import { ViewerConfig } from "@photo-sphere-viewer/core";
-import { AutorotatePluginConfig } from "@photo-sphere-viewer/autorotate-plugin";
-import Navbar from "../components/Navbar";
+import { FC, createState } from "dreamland/core";
+import type { ViewerConfig } from "@photo-sphere-viewer/core";
+import type { AutorotatePluginConfig } from "@photo-sphere-viewer/autorotate-plugin";
 import PhotoSphere from "../components/PhotoSphere";
 
 interface PhotoSphereToolState {
@@ -10,24 +9,25 @@ interface PhotoSphereToolState {
 	autorotateConfig: Partial<AutorotatePluginConfig>;
 }
 
-let state: Stateful<PhotoSphereToolState> = createState({
-	imageSrc: null,
-	viewerConfig: {
-		defaultPitch: 0,
-		defaultYaw: 0,
-	},
-	autorotateConfig: {
-		autorotateSpeed: "0.5rpm",
-		autostartDelay: 1000,
-	},
-});
+export default function PhotoSphereTool(this: FC) {
+	const state = createState<PhotoSphereToolState>({
+		imageSrc: null,
+		viewerConfig: {
+			defaultPitch: 0,
+			defaultYaw: 0,
+		},
+		autorotateConfig: {
+			autorotateSpeed: "0.5rpm",
+			autostartDelay: 1000,
+		},
+	});
 
-export function PhotoSphereTool(this: FC) {
 	const handleFileChange = (e: Event) => {
 		const input = e.target as HTMLInputElement;
 		if (input.files && input.files[0]) {
 			const file = input.files[0];
 			const url = URL.createObjectURL(file);
+			if (state.imageSrc) URL.revokeObjectURL(state.imageSrc);
 			state.imageSrc = url;
 		}
 	};
@@ -41,11 +41,7 @@ export function PhotoSphereTool(this: FC) {
 			<div>
 				<label>
 					image
-					<input
-						type="file"
-						accept="image/*"
-						on:change={handleFileChange}
-					/>
+					<input type="file" accept="image/*" on:change={handleFileChange} />
 				</label>
 			</div>
 
@@ -132,5 +128,3 @@ export function PhotoSphereTool(this: FC) {
 		</main>
 	);
 }
-
-export default PhotoSphereTool;

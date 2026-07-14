@@ -1,7 +1,6 @@
 import { FC, css } from "dreamland/core";
 import { TransitionLink } from "../components/TransitionLink";
 import Navbar from "../components/Navbar";
-import Footer from "../components/Footer";
 
 function NotFoundView(this: FC) {
     return (
@@ -92,10 +91,6 @@ NotFoundView.style = css`
         font-size: clamp(2.5rem, 7vw, 5rem);
         line-height: 0.9;
         letter-spacing: -0.04em;
-    }
-
-    @media (orientation: portrait) {
-        
     }
 `
 

@@ -1,22 +1,23 @@
 import { FC, css } from "dreamland/core";
 
-
-export function WebButton(this: FC<{
-	src: string;
-	href?: string;
-	alt?: string;
-	title?: string;
-	"on:click"?: (e: MouseEvent) => void;
-}, { image: HTMLImageElement }>) {
-	this.href = this.href;
-
+export function WebButton(
+	this: FC<
+		{
+			src: string;
+			href?: string;
+			alt?: string;
+			title?: string;
+			"on:click"?: (e: MouseEvent) => void;
+		},
+		{ image: HTMLImageElement }
+	>
+) {
 	this.cx.mount = () => {
 		this.image.addEventListener("error", () => {
 			console.error("Oh no :(");
 			this.root.style.display = "none";
 		});
-	}
-
+	};
 
 	if (this.title) {
 		this.alt = this.alt || "A web button with the description: " + this.title;
@@ -50,17 +51,11 @@ WebButton.style = css`
 		border: none !important;
 		display: inline-block;
 		font-size: 0;
-		/* display: flex;
-		justify-content: center;
-		align-items: center; */
 	}
 	img {
 		image-rendering: pixelated;
 		width: auto;
 		height: 100%;
-		/* display: flex;
-		justify-content: center;
-		align-items: center; */
 	}
 	:scope:after {
 		display: none;
@@ -191,11 +186,6 @@ export function ButtonList(this: FC) {
 				title="kopper"
 				href="https://w.on-t.work"
 			/>
-			{/* <WebButton
-				src="https://egg.l5.ca/assets/buttons/enderman0125.gif"
-				title="enderman0125"
-				href="https://egg.l5.ca"
-			/> */}
 			<WebButton
 				src="https://notfire.cc/design/images/buttons/notfire-cc-88x31-af.gif"
 				title="notfire"
@@ -245,11 +235,7 @@ export function ButtonList(this: FC) {
 				title="88x31"
 				href="https://eightyeightthirty.one"
 			/>
-			<WebButton
-				src="/buttons/xkcd.gif"
-				title="XKCD"
-				href="https://xkcd.com"
-			/>
+			<WebButton src="/buttons/xkcd.gif" title="XKCD" href="https://xkcd.com" />
 			<WebButton
 				src="/buttons/lucida-2.gif"
 				title="Lucida: Free Music. No BS."
@@ -300,30 +286,12 @@ export function ButtonList(this: FC) {
 				title="Radiohead"
 				href="https://radiohead.com"
 			/>
-			<WebButton
-				src="/buttons/paws.gif"
-				title=":3"
-			/>
-			<WebButton
-				src="/buttons/affection.gif"
-				title="<3"
-			/>
-			<WebButton
-				src="/buttons/macmade-wht.gif"
-				title="I <3 Macintosh"
-			/>
-			<WebButton
-				src="/buttons/imac.gif"
-				title="iMacs are dope!"
-			/>
-			<WebButton
-				src="/buttons/nodrugs.gif"
-				title="The Windows Mind Virus!"
-			/>
-			<WebButton
-				src="/buttons/besteyes2.gif"
-				title="How else?"
-			/>
+			<WebButton src="/buttons/paws.gif" title=":3" />
+			<WebButton src="/buttons/affection.gif" title="<3" />
+			<WebButton src="/buttons/macmade-wht.gif" title="I <3 Macintosh" />
+			<WebButton src="/buttons/imac.gif" title="iMacs are dope!" />
+			<WebButton src="/buttons/nodrugs.gif" title="The Windows Mind Virus!" />
+			<WebButton src="/buttons/besteyes2.gif" title="How else?" />
 			<WebButton
 				src="/buttons/cdaweb.gif"
 				title="It's more likely than you think."
@@ -354,22 +322,13 @@ export function ButtonList(this: FC) {
 				title="The Canadian Century starts NOW."
 				href="https://cira.ca"
 			/>
-			<WebButton
-				src="/buttons/ieborg.gif"
-				title="Resistance is futile."
-			/>
+			<WebButton src="/buttons/ieborg.gif" title="Resistance is futile." />
 			<WebButton
 				src="/buttons/iecrash.gif"
 				title="Possibly more unstable than Xcode."
 			/>
-			<WebButton
-				src="/buttons/ieduh.gif"
-				title="Are YOU retarded?"
-			/>
-			<WebButton
-				src="/buttons/ieexplode.gif"
-				title="Kaboom!"
-			/>
+			<WebButton src="/buttons/ieduh.gif" title="Are YOU retarded?" />
+			<WebButton src="/buttons/ieexplode.gif" title="Kaboom!" />
 			<WebButton
 				src="/buttons/iexploiter.gif"
 				title="Bill Gates has a Micro Soft."
@@ -384,14 +343,8 @@ export function ButtonList(this: FC) {
 				title="Play some Mario Kart!"
 				href="https://bomberfish.github.io/N64Wasm"
 			/>
-			<WebButton
-				src="/buttons/vocaloid.gif"
-				title="Vocaloid NOW!!"
-			/>
-			<WebButton
-				src="/buttons/iframsuc.gif"
-				title="Iframes SUCK!"
-			/>
+			<WebButton src="/buttons/vocaloid.gif" title="Vocaloid NOW!!" />
+			<WebButton src="/buttons/iframsuc.gif" title="Iframes SUCK!" />
 			<WebButton
 				src="/buttons/necoarc-88x31.gif"
 				title="the profaned one"
@@ -401,7 +354,7 @@ export function ButtonList(this: FC) {
 				src="/buttons/talker.gif"
 				title="This website really does talk!"
 				on:click={() => {
-					if ('speechSynthesis' in window) {
+					if ("speechSynthesis" in window) {
 						window.speechSynthesis.cancel();
 						const text = prompt("Enter text to speak:");
 						if (text) {
@@ -409,14 +362,11 @@ export function ButtonList(this: FC) {
 							window.speechSynthesis.speak(utterance);
 						}
 					} else {
-						alert("your browser sucks!")
+						alert("your browser sucks!");
 					}
 				}}
 			/>
-			<WebButton
-				src="/buttons/stop.gif"
-				title="STOP"
-			/>
+			<WebButton src="/buttons/stop.gif" title="STOP" />
 		</span>
 	);
 }
@@ -463,7 +413,7 @@ CopiedToast.style = css`
 		animation:
 			fadein 0.35s,
 			fadeout 0.35s 1.75s;
-		animation-timing-function: cubic-bezier(.2,.2,.5,1);
+		animation-timing-function: cubic-bezier(0.2, 0.2, 0.5, 1);
 
 		box-shadow: 0 2px 8px var(--tooltip-shadow);
 

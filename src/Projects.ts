@@ -63,24 +63,6 @@ export class ProjectCardDetails {
 	}
 }
 
-export const jobs = [
-	new ProjectCardDetails(
-		"puter.jpg",
-		"Puter Technologies Inc",
-		"",
-		"",
-		2025,
-		undefined,
-		[
-			{
-				name: "Website",
-				url: "https://puter.com/",
-			},
-		],
-		true
-	),
-];
-
 export const projects = [
 	new ProjectCardDetails(
 		"webshot.jpg",

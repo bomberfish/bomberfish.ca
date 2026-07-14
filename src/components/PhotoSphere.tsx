@@ -2,6 +2,7 @@ import type { Viewer, ViewerConfig } from "@photo-sphere-viewer/core";
 import type { AutorotatePluginConfig } from "@photo-sphere-viewer/autorotate-plugin";
 import "@photo-sphere-viewer/core/index.css";
 import { FC, css } from "dreamland/core";
+import { getWebpPath } from "../lib/images";
 
 interface PhotoSphereProps {
 	src: string;
@@ -23,7 +24,9 @@ export function PhotoSphere(this: FC<PhotoSphereProps>) {
 			const fallbackEl = this.root.querySelector(
 				".photo-sphere-fallback"
 			) as HTMLElement;
-			const hintEl = this.root.querySelector(".photo-sphere-hint") as HTMLElement;
+			const hintEl = this.root.querySelector(
+				".photo-sphere-hint"
+			) as HTMLElement;
 
 			if (container) {
 				const [{ Viewer }, { AutorotatePlugin }] = await Promise.all([
@@ -72,9 +75,7 @@ export function PhotoSphere(this: FC<PhotoSphereProps>) {
 		: "Click and drag to look around";
 
 	const fallbackSrc = this.fallback ?? this.src;
-	const fallbackWebp = /^\/[^?#]*\.jpe?g(?:[?#]|$)/i.test(fallbackSrc)
-		? fallbackSrc.replace(/\.jpe?g(?=[?#]|$)/i, ".webp")
-		: undefined;
+	const fallbackWebp = getWebpPath(fallbackSrc);
 
 	return (
 		<div class="photo-sphere">

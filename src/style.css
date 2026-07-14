@@ -8,7 +8,6 @@
 	inherits: true;
 }
 
-
 @keyframes rotate-shape {
 	0% {
 		font-variation-settings: "ELSH" 0;
@@ -20,15 +19,9 @@
 }
 
 .geist-anim {
-	animation: rotate-shape 4s infinite cubic-bezier(.7, 0, .35, 1);
+	animation: rotate-shape 4s infinite cubic-bezier(0.7, 0, 0.35, 1);
 	font-synthesis: weight !important;
 	font-weight: 50;
-}
-
-:root {
-	--vt-duration: 100ms;
-	--vt-ease: cubic-bezier(0.25, 0.8, 0.25, 1);
-	--vt-direction: 1;
 }
 
 /* ==========================================================================
@@ -75,22 +68,13 @@ html {
 	--accent: hsl(var(--accent-hsl));
 
 	/* Background/grid variables */
-	--bgmoveX: 0px;
-	--bgmoveY: 0px;
 	--bg-width: 100%;
 	--bg-height: 100%;
 	--grid-size: 28px;
 
 	/* Computed color variants */
 	--tooltip-shadow: hsla(var(--overlay3-hsl), 0.35);
-	--image-ring: hsla(var(--surface1-hsl), 0.8);
-	--text-shadow-soft: hsla(var(--surface1-hsl), 0.65);
-	--card-overlay: color-mix(in srgb, var(--overlay3) 70%, var(--text) 30%);
-	--card-surface: hsla(var(--surface1-hsl), 0.9);
-	--card-surface-hover: hsla(var(--surface1-hsl), 0.96);
-
 	--main-hue: 343;
-	--grid-lines: hsla(var(--main-hue), 12%, 16%);
 
 	--core-hsl: calc(var(--main-hue) + 20), 100%, 2%;
 	--mantle-hsl: calc(var(--main-hue) - 5), 40%, 2.5%;
@@ -121,7 +105,6 @@ html {
 
 	--accent-hsl: calc(var(--main-hue)), 60%, 77%;
 
-
 	/* Base styles */
 	color: var(--text);
 	background: var(--crust);
@@ -136,7 +119,6 @@ html {
 		linear-gradient(to right, hsl(var(--bg-light)) 1px, transparent 1px),
 		linear-gradient(to bottom, hsl(var(--bg-light)) 1px, transparent 1px);
 	background-size: var(--grid-size) var(--grid-size);
-
 
 	word-break: auto-phrase;
 }
@@ -240,7 +222,8 @@ body {
 	line-height: 1.6;
 	font-size: clamp(15px, 0.4vw + 14px, 17px);
 	text-rendering: optimizeLegibility;
-	font-feature-settings: "kern",
+	font-feature-settings:
+		"kern",
 		common-ligatures contextual;
 	font-kerning: normal;
 	font-variant-ligatures: common-ligatures contextual;
@@ -290,7 +273,7 @@ h6 {
 
 h1 {
 	font-size: clamp(2.5rem, 3.5vw + 1.75rem, 4rem);
-	margin-bottom: .75rem;
+	margin-bottom: 0.75rem;
 	margin-top: 0;
 	line-height: 1.18;
 	font-variation-settings: "ELSH" 35;
@@ -393,7 +376,8 @@ a,
 a:visited {
 	color: var(--supertext);
 	text-decoration-color: var(--subtext1) !important;
-	transition: color 0.25s ease,
+	transition:
+		color 0.25s ease,
 		text-decoration-color 0.25s ease;
 }
 
@@ -457,7 +441,8 @@ main {
 	transform: translateY(0);
 	filter: blur(0px);
 	opacity: 1;
-	transition: 0.2s transform,
+	transition:
+		0.2s transform,
 		0.2s opacity,
 		0.2s filter;
 	transform-origin: bottom center;
@@ -480,20 +465,6 @@ article {
 	flex-grow: 1;
 }
 
-article>h1 {
-	margin-block: 0.25em;
-}
-
-.container {
-	width: min(68rem, 100%);
-	margin-inline: auto;
-	padding-inline: 1rem;
-}
-
-.content-with-image {
-	width: min(68rem, 100vw - 2rem);
-}
-
 /* ==========================================================================
    Layout Container (Sidebar + Main)
    ========================================================================== */
@@ -509,7 +480,7 @@ article>h1 {
 .background-container {
 	background: hsla(var(--crust-hsl), 0.7);
 	border: 1px solid var(--surface2);
-	padding: .7rem;
+	padding: 0.7rem;
 }
 
 /* ==========================================================================
@@ -537,7 +508,7 @@ article>h1 {
 .top-blur-layer {
 	position: absolute;
 	inset: 0;
-	backdrop-filter: blur(var(--blur)) brightness(1.1) saturate(.9) contrast(1.05);
+	backdrop-filter: blur(var(--blur)) brightness(1.1) saturate(0.9) contrast(1.05);
 	/* A very wide ellipse anchored at the top middle. The horizontal radius
 	   is much larger than the vertical so the mask reads as a flat halo
 	   across the top edge, with each layer's --mid/--end controlling how
@@ -549,13 +520,8 @@ article>h1 {
 }
 
 .page-header {
-	padding-bottom: .8rem !important;
+	padding-bottom: 0.8rem !important;
 }
-
-/* 
-.page-header:has(.post-title) {
-	padding-top: .8rem !important;
-} */
 
 .page-header {
 	position: relative;
@@ -563,7 +529,7 @@ article>h1 {
 
 .page-header h1 {
 	font-size: clamp(3.75rem, 14vw, 8.5rem);
-	line-height: .95;
+	line-height: 0.95;
 	mask-image: linear-gradient(to bottom, #000 60%, transparent 100%);
 	margin: 0 !important;
 }
@@ -623,11 +589,6 @@ article>h1 {
 	transform: translateX(var(--nav-spread));
 }
 
-/* The Sidebar's inner <footer> is meaningless in a horizontal bar */
-.sidebar footer {
-	display: none;
-}
-
 .sidebar-nav {
 	display: flex;
 	flex-direction: row;
@@ -676,7 +637,9 @@ article>h1 {
 	background: hsla(var(--crust-hsl), 0.65);
 	backdrop-filter: blur(6px);
 	border-color: hsla(var(--surface4-hsl), 0.5) !important;
-	transition: background 0.15s ease, border-color 0.15s ease;
+	transition:
+		background 0.15s ease,
+		border-color 0.15s ease;
 }
 
 .sidebar .nav-link.background-container:hover {
@@ -727,11 +690,6 @@ article>h1 {
 	mask-image: linear-gradient(80deg, rgba(0, 0, 0, 0.95) 60%, transparent 90%);
 	z-index: 84;
 }
-
-/* 
-.pfp {
-	filter: hue-rotate(calc(calc(var(--main-hue) - 205) * 1deg));
-} */
 
 /* Main Content */
 .main-content {
@@ -888,7 +846,8 @@ ul.compact> :is(li > span, li > a) {
 	text-align: center;
 	opacity: 0;
 	visibility: hidden;
-	transition: opacity 0.15s ease-in-out,
+	transition:
+		opacity 0.15s ease-in-out,
 		visibility 0.15s ease-in-out,
 		transform 0.15s ease-in-out;
 	user-select: text;
@@ -1088,7 +1047,6 @@ ul.compact> :is(li > span, li > a) {
 	color: var(--subtext0);
 }
 
-.post-header,
 .post-body {
 	padding: 1.25rem !important;
 }
@@ -1121,7 +1079,6 @@ article.blog-content p {
 article.blog-content .post-body {
 	margin-top: 1.5rem;
 }
-
 
 article.blog-content blockquote {
 	border-left: 4px solid var(--overlay1);
@@ -1171,56 +1128,11 @@ cap subt:not(:has(.material-symbols)) {
 	color: var(--subtext1);
 }
 
-/* ==========================================================================
-   View Transitions
-   ========================================================================== */
-
-::view-transition-old(page),
-::view-transition-new(page) {
-	mix-blend-mode: normal;
-}
-
-@keyframes vt-slide-out {
-	0% {
-		transform: translateX(0) rotateY(0deg) translateZ(0);
-		opacity: 1;
-		filter: blur(0px);
-	}
-
-	100% {
-		transform: translateX(calc(var(--vt-direction, 1) * -100%)) rotateY(calc(var(--vt-direction, 1) * -30deg)) translateZ(-320px);
-		filter: blur(6px);
-		opacity: 0;
-	}
-}
-
-@keyframes vt-slide-in {
-	0% {
-		transform: translateX(calc(var(--vt-direction, 1) * 100%)) rotateY(calc(var(--vt-direction, 1) * 30deg)) translateZ(-320px);
-		opacity: 0;
-		filter: blur(6px);
-	}
-
-	100% {
-		transform: translateX(0) rotateY(0deg) translateZ(0);
-		opacity: 1;
-		filter: blur(0px);
-	}
-}
-
-::view-transition-old(page) {
-	animation: vt-slide-out var(--vt-duration) ease forwards;
-}
-
-::view-transition-new(page) {
-	animation: vt-slide-in var(--vt-duration) ease forwards;
-}
-
 /* Splash view transition overrides */
 :root[data-vt-scope="splash"] ::view-transition-old(root),
 :root[data-vt-scope="splash"] ::view-transition-new(root),
-:root[data-vt-scope="splash"] ::view-transition-old(page),
-:root[data-vt-scope="splash"] ::view-transition-new(page) {
+:root[data-vt-scope="splash"] ::view-transition-old(page-content),
+:root[data-vt-scope="splash"] ::view-transition-new(page-content) {
 	animation: none !important;
 	animation-duration: 0ms !important;
 	opacity: 1 !important;
@@ -1356,16 +1268,10 @@ cap subt:not(:has(.material-symbols)) {
 }
 
 .livecard-stat,
-.livecard-when,
 .livecard-badge {
 	color: var(--subtext1);
 	font-size: 0.75rem;
 	letter-spacing: 0.05em;
-}
-
-.livecard-when {
-	margin-left: auto;
-	color: var(--subtext2);
 }
 
 .livecard-badge {
@@ -1413,8 +1319,6 @@ cap subt:not(:has(.material-symbols)) {
 		opacity: 1;
 	}
 }
-
-
 
 @keyframes masto-fade-in {
 	from {
@@ -1492,7 +1396,7 @@ cap subt:not(:has(.material-symbols)) {
 }
 
 .livecard-refresh.spin .material-symbols {
-	animation: livecard-refresh-spin .7s cubic-bezier(.75, -0.5, .25, 1.5);
+	animation: livecard-refresh-spin 0.7s cubic-bezier(0.75, -0.5, 0.25, 1.5);
 	transform-origin: 50% 51%;
 }
 
@@ -1509,28 +1413,14 @@ img {
 }
 
 :root {
-	--ctp-rosewater: #f5e0dc;
-	--ctp-flamingo: #f2cdcd;
-	--ctp-pink: #f5c2e7;
 	--ctp-mauve: #cba6f7;
 	--ctp-red: #f38ba8;
-	--ctp-maroon: #eba0ac;
 	--ctp-peach: #fab387;
 	--ctp-yellow: #f9e2af;
 	--ctp-green: #a6e3a1;
 	--ctp-teal: #94e2d5;
-	--ctp-sky: #89dceb;
-	--ctp-sapphire: #74c7ec;
 	--ctp-blue: #89b4fa;
-	--ctp-lavender: #b4befe;
-	--ctp-csubtext1: #bac2de;
-	--ctp-csubtext0: #a6adc8;
-	--ctp-coverlay2: #9399b2;
-	--ctp-coverlay1: #7f849c;
-	--ctp-coverlay0: #6c7086;
 	--ctp-csurface2: #585b70;
-	--ctp-csurface1: #45475a;
-	--ctp-csurface0: #313244;
 }
 
 /* Comments */

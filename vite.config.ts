@@ -29,7 +29,7 @@ import minifyParams from "postcss-minify-params";
 import minifySelectors from "postcss-minify-selectors";
 import discardDuplicates from "postcss-discard-duplicates";
 
-async function compileMdx(content: string, name?: string) {
+async function compileMdx(content: string) {
 	const compiled = await compile(content, {
 		outputFormat: "program",
 		jsxImportSource: "dreamland",
@@ -61,7 +61,7 @@ async function compileMdx(content: string, name?: string) {
 	return `
 		${compiled.toString().replace("export default", "export")}
 
-		export ${name ? `function ${name}()` : `default function Page()`} {
+		export default function Page() {
 			const {wrapper: MDXLayout} = this.components || ({});
 			return (
 				MDXLayout 
@@ -80,25 +80,6 @@ export default defineConfig({
 		devSsr({
 			entry: "/src/main-server.ts",
 		}),
-		// legacy({
-		// 	targets: ["fully supports es6"],
-		// }),
-		// htmlMinifier({
-		// 	minify: {
-		// 		collapseWhitespace: true,
-		// 		keepClosingSlash: true,
-
-		// 		removeComments: false,
-		// 		removeRedundantAttributes: false,
-		// 		removeScriptTypeAttributes: false,
-		// 		removeStyleLinkTypeAttributes: false,
-		// 		removeEmptyAttributes: false,
-		// 		useShortDoctype: false,
-		// 		minifyCSS: false,
-		// 		minifyJS: false,
-		// 		minifyURLs: false,
-		// 	},
-		// }),
 		{
 			name: "mdx-dreamland",
 			enforce: "pre",
@@ -118,9 +99,16 @@ export default defineConfig({
 			enforce: "post",
 			async generateBundle(_, bundle) {
 				for (const [fileName, chunk] of Object.entries(bundle)) {
-					if (fileName.endsWith(".css") && chunk.type === "asset" && typeof chunk.source === "string") {
+					if (
+						fileName.endsWith(".css") &&
+						chunk.type === "asset" &&
+						typeof chunk.source === "string"
+					) {
 						console.log("Processing bundled CSS for HSLA fallbacks:", fileName);
-						const result = await postcss([colorHslaFallback(),cssnanoPlugin({preset: litePreset})]).process(chunk.source, { from: fileName });
+						const result = await postcss([
+							colorHslaFallback(),
+							cssnanoPlugin({ preset: litePreset }),
+						]).process(chunk.source, { from: fileName });
 						chunk.source = result.css;
 					}
 				}
@@ -146,7 +134,6 @@ export default defineConfig({
 			compress: {
 				drop_console: true,
 				arguments: true,
-				// passes: 3,
 				unsafe: true,
 				unsafe_comps: true,
 				unsafe_Function: true,
@@ -172,35 +159,9 @@ export default defineConfig({
 				generatedCode: {
 					preset: "es2015",
 				},
-				codeSplitting: {
-					includeDependenciesRecursively: false,
-					groups: [
-						{
-							name: "core-lib",
-							test: /[\\/]vendor[\\/]dreamland[\\/]dist[\/]|[\\/]humanize-duration[\/]/,
-							priority: 120,
-						},
-						{
-							name: "app",
-							test: /[\\/]src[\/](?:App\.tsx$|Layout\.tsx$|main-client\.ts$|IsMobile\.ts$|components[\/](?!Buttons\.tsx$)|pages[\/](?:Homepage|NotFoundView|PhotoSphereTool|ProjectView)\.tsx$)/,
-							priority: 100,
-						},
-						{
-							name: "content",
-								test: /[\\/]src[\/](?:Projects\.ts$|pages[\/]|blog[\/]|components[\/]Buttons\.tsx$)/,
-							priority: 50,
-						},	
-						{
-							name: "photosphere-viewer",
-							test: /[\\/]node_modules[\\/]@photo-sphere-viewer[\\/]/,
-							priority: 5,
-						},
-					],
-				},
 			},
 			treeshake: true,
 		},
-		// cssMinify: "lightningcss"
 	},
 	css: {
 		postcss: {
@@ -218,34 +179,21 @@ export default defineConfig({
 				cssnanoPlugin({
 					preset: litePreset,
 					plugins: [
-						calc, 
-						normalizeCharset, 
-						mergeLonghand, 
-						discardComments, 
-						svgo, 
-						uniqueSelectors, 
-						convertValues, 
-						cssDeclarationSorter, 
-						mergeRules, 
-						minifyParams, 
+						calc,
+						normalizeCharset,
+						mergeLonghand,
+						discardComments,
+						svgo,
+						uniqueSelectors,
+						convertValues,
+						cssDeclarationSorter,
+						mergeRules,
+						minifyParams,
 						minifySelectors,
-						discardDuplicates
+						discardDuplicates,
 					],
 				}),
-			]
+			],
 		},
-		// lightningcss: {
-		// 	targets:  {
-		// 		chrome: 4,
-		// 		firefox: 2,
-		// 		ie: 6,
-		// 		safari: 3,
-		// 		edge: 12,
-		// 		ios_saf: 3,
-		// 		opera: 10,
-		// 		android: 2,
-		// 		samsung: 0
-		// 	}
-		// }
-	}
+	},
 });

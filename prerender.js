@@ -3,7 +3,7 @@ import { fileURLToPath } from "node:url";
 
 import { Feed } from "feed";
 import { renderSsr } from "dreamland/vite";
-import { mkdir, readFile, rm, writeFile } from "node:fs/promises";
+import { mkdir, readdir, readFile, rm, writeFile } from "node:fs/promises";
 import postcss from "postcss";
 import autoprefixer from "autoprefixer";
 import postCssPresetEnv from "postcss-preset-env";
@@ -45,7 +45,6 @@ async function processInlineStyles(html) {
 	let lastIndex = 0;
 	let match;
 	let output = "";
-	let touched = false;
 
 	while ((match = styleRegex.exec(html)) !== null) {
 		const [fullMatch, attrs = "", cssContent = ""] = match;
@@ -62,7 +61,6 @@ async function processInlineStyles(html) {
 				from: undefined,
 			});
 			output += `<style${attrs}>${processed.css}</style>`;
-			touched = true;
 		} catch (err) {
 			console.warn("failed to postcss inline <style>:", err?.message ?? err);
 			output += fullMatch;
@@ -102,15 +100,21 @@ for (const [route, path] of paths) {
 				? `https://bomberfish.ca${meta.image}`
 				: "https://bomberfish.ca/me.png";
 
-			ogTags.push(`<meta property="og:title" content="${fullTitle.replace(/"/g, "&quot;")}" />`);
-			ogTags.push(`<meta name="twitter:title" content="${fullTitle.replace(/"/g, "&quot;")}" />`);
+			ogTags.push(
+				`<meta property="og:title" content="${fullTitle.replace(/"/g, "&quot;")}" />`
+			);
+			ogTags.push(
+				`<meta name="twitter:title" content="${fullTitle.replace(/"/g, "&quot;")}" />`
+			);
 
 			ogTags.push(
 				`<meta property="og:url" content="https://bomberfish.ca${route}" />`
 			);
-			ogTags.push(`<meta name="twitter:url" content="https://bomberfish.ca${route}" />`);
+			ogTags.push(
+				`<meta name="twitter:url" content="https://bomberfish.ca${route}" />`
+			);
 			ogTags.push(`<meta name="twitter:domain" content="bomberfish.ca" />`);
-			
+
 			ogTags.push(`<meta property="og:type" content="article" />`);
 
 			ogTags.push(`<meta name="twitter:site" content="@bomberfish77" />`);
@@ -119,14 +123,18 @@ for (const [route, path] of paths) {
 				ogTags.push(
 					`<meta property="og:description" content="${meta.description.replace(/"/g, "&quot;")}" />`
 				);
-				ogTags.push(`<meta name="description" content="${meta.description.replace(/"/g, "&quot;")}" />`);
-				ogTags.push(`<meta name="twitter:description" content="${meta.description.replace(/"/g, "&quot;")}" />`);
+				ogTags.push(
+					`<meta name="description" content="${meta.description.replace(/"/g, "&quot;")}" />`
+				);
+				ogTags.push(
+					`<meta name="twitter:description" content="${meta.description.replace(/"/g, "&quot;")}" />`
+				);
 			}
 
 			ogTags.push(`<meta property="og:image" content="${ogImage}" />`);
 			ogTags.push(`<meta name="twitter:card" content="summary_large_image" />`);
 			ogTags.push(`<meta name="twitter:image" content="${ogImage}" />`);
-			
+
 			// Replace the default og:image with the blog-specific one
 			rendered = rendered.replace(
 				/<meta name="og:image" content="https:\/\/bomberfish\.ca\/me\.png" \/>/,
@@ -143,13 +151,6 @@ for (const [route, path] of paths) {
 	await mkdir(dirname(resolved), { recursive: true });
 	await writeFile(resolved, renderedWithPostcss);
 }
-
-// Process static.css with PostCSS in dist/static
-// const cssPath = resolve("dist/static/static.css");
-// const css = await readFile(cssPath, "utf8");
-// const result = await postcssProcessor.process(css, { from: cssPath, to: cssPath });
-// await writeFile(cssPath, result.css);
-// console.log(`processed: static.css\t${(new TextEncoder().encode(result.css).byteLength / 1024).toFixed(2)}kb`);
 
 await rm(resolve("dist/static/.vite"), { recursive: true });
 
@@ -174,6 +175,11 @@ const mdxComponents = {
 			{ ...props, href, className: className ?? classAttr },
 			children
 		),
+	PhotoSphere: ({ src, fallback }) =>
+		createElement("img", {
+			src: fallback ?? src,
+			alt: "360° panorama",
+		}),
 };
 
 function sanitizeMdxForFeed(content) {
@@ -197,7 +203,7 @@ function sanitizeMdxForFeed(content) {
 			continue;
 		}
 
-		kept.push(line);
+		kept.push(inFence ? line : line.replace(/\bclass=/g, "className="));
 	}
 
 	return kept.join("\n").trim();
@@ -223,61 +229,35 @@ async function mdxToHtml(content) {
 		.replace(/href="\/(?!\/)/g, 'href="https://bomberfish.ca/');
 }
 
-const blogModules = await import(resolve("dist/server/main-server.js")).then(
-	async () => {
-		const { readdir } = await import("node:fs/promises");
-		const blogDir = resolve("src/blog");
-		const files = await readdir(blogDir);
+const blogDir = resolve("src/blog");
+const files = await readdir(blogDir);
+const blogModules = (
+	await Promise.all(
+		files.map(async (file) => {
+			const match = file.match(/^(\d{4}-\d{2}-\d{2})-(.+)\.mdx$/);
+			if (!match) return null;
 
-		const posts = await Promise.all(
-			files
-				.filter((f) => f.endsWith(".mdx"))
-				.map(async (file) => {
-					const content = await readFile(resolve(`src/blog/${file}`), "utf-8");
-					const match = file.match(/^(\d{4}-\d{2}-\d{2})-(.+)\.mdx$/);
-					if (!match) return null;
+			const slug = match[2];
+			const metadata = blogMetadataMap.get(slug);
+			if (!metadata) {
+				throw new Error(`missing metadata for blog post: ${slug}`);
+			}
 
-					const [, date, slug] = match;
+			const content = await readFile(resolve(`src/blog/${file}`), "utf-8");
+			const htmlContent = await mdxToHtml(content);
+			console.log("compiled post:", slug);
 
-					const titleMatch = content.match(
-						/export\s+const\s+title\s*=\s*["'](.+?)["']/
-					);
-					const descMatch = content.match(
-						/export\s+const\s+description\s*=\s*["'](.+?)["']/
-					);
-					const imageMatch = content.match(
-						/export\s+const\s+image\s*=\s*["'](.+?)["']/
-					);
-
-					// Compile MDX to HTML for full content feed
-					let htmlContent = null;
-					try {
-						htmlContent = await mdxToHtml(content);
-						console.log("compiled post:", slug);
-					} catch (e) {
-						console.warn(`failed to compile ${slug} to HTML:`, e.message);
-					}
-
-					return {
-						slug,
-						date: new Date(date),
-						title:
-							titleMatch?.[1] ||
-							slug
-								.split("-")
-								.map((w) => w.charAt(0).toUpperCase() + w.slice(1))
-								.join(" "),
-						description: descMatch?.[1] || "",
-						url: `${blogURL}${slug}`,
-						image: imageMatch?.[1] || null,
-						htmlContent,
-					};
-				})
-		);
-
-		return posts.filter(Boolean).sort((a, b) => b.date - a.date);
-	}
-);
+			return {
+				...metadata,
+				date: new Date(metadata.date),
+				url: `${blogURL}${slug}`,
+				htmlContent,
+			};
+		})
+	)
+)
+	.filter(Boolean)
+	.sort((a, b) => b.date - a.date);
 
 // Create full content feed
 const feed = new Feed({
