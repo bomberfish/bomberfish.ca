@@ -1,19 +1,23 @@
 import { FC, createState, css, Stateful } from "dreamland/core";
 import humanizeDuration from "humanize-duration";
 import { compactAgo } from "../lib/ago";
-import { getMastodon, MastodonStatus } from "../lib/siteapi";
+import { getTwitter, Tweet } from "../lib/siteapi";
 import { displaySize, visibleLength } from "../lib/postText";
-import { MastodonIcon } from "./SocialIcons";
+import { XIcon } from "./SocialIcons";
 
 type View =
 	| { kind: "loading" }
 	| { kind: "error"; message: string }
 	| { kind: "empty" }
-	| { kind: "loaded"; status: MastodonStatus };
+	| { kind: "loaded"; tweet: Tweet };
 
 const REFRESH_MS = 5 * 60_000;
 
-function MastodonCard(this: FC) {
+function compactNum(n: number): string {
+	return n >= 1e6 ? (n / 1e6).toFixed(1) + "M" : n >= 1e3 ? (n / 1e3).toFixed(1) + "k" : String(n);
+}
+
+function TwitterCard(this: FC) {
 	const state: Stateful<{ view: View; refreshing: boolean }> = createState({
 		view: { kind: "loading" } as View,
 		refreshing: false,
@@ -29,10 +33,10 @@ function MastodonCard(this: FC) {
 		controller = request;
 		state.refreshing = true;
 		try {
-			const data = await getMastodon(request.signal, cacheBust);
+			const data = await getTwitter(request.signal, cacheBust);
 			if (cancelled || controller !== request) return;
-			state.view = data.status
-				? { kind: "loaded", status: data.status }
+			state.view = data.tweet
+				? { kind: "loaded", tweet: data.tweet }
 				: { kind: "empty" };
 		} catch (e: unknown) {
 			if (cancelled || controller !== request) return;
@@ -113,34 +117,20 @@ function MastodonCard(this: FC) {
 		};
 	};
 
-	// Build a div whose innerHTML is the upstream Mastodon status content (raw
-	// HTML). Trusted: it comes from the user's own mastodon instance, proxied
-	// through their own worker. Built imperatively per-render so the content
-	// survives state.view → state.view transitions (re-renders replace the
-	// reactive subtree, which would otherwise wipe an externally-set
-	// innerHTML).
-	const renderContent = (html: string, size: number | null) => {
-		const div = document.createElement("div");
-		div.className = "fedi-post-content" + (size ? " is-short" : "");
-		if (size) div.style.setProperty("--post-size", size + "rem");
-		div.innerHTML = html;
-		return div;
-	};
-
-	const fallbackUrl = "https://wetdry.world/@fish";
+	const fallbackUrl = "https://x.com/bomberfish77";
 
 	return (
-		<div class="livecard mastodon-card background-container">
+		<div class="livecard twitter-card background-container">
 			<p class="livecard-header">
 				<span class="livecard-icon">
-					<MastodonIcon />
+					<XIcon />
 				</span>
-				<span class="livecard-platform">fediverse</span>
+				<span class="livecard-platform">X</span>
 				{use(state.view).map((v) =>
 					v.kind === "loaded" ? (
 						<span class="livecard-stat">
 							{" "}
-							• {(v.status.account.followersCount || 0).toLocaleString()}{" "}
+							• {(v.tweet.account.followersCount || 0).toLocaleString()}{" "}
 							followers
 						</span>
 					) : null
@@ -157,7 +147,7 @@ function MastodonCard(this: FC) {
 				</button>
 				<a
 					href={use(state.view).map((v) =>
-						v.kind === "loaded" && v.status.url ? v.status.url : fallbackUrl
+						v.kind === "loaded" && v.tweet.url ? v.tweet.url : fallbackUrl
 					)}
 					target="_blank"
 					rel="me"
@@ -175,57 +165,62 @@ function MastodonCard(this: FC) {
 				if (v.kind === "empty")
 					return <p class="livecard-status">no recent posts</p>;
 
-				const s = v.status;
+				const s = v.tweet;
 				const att = s.attachments[0];
 				const elapsed = Date.now() - new Date(s.createdAt).getTime();
 				const longForm =
 					humanizeDuration(elapsed, { largest: 1, round: true }) + " ago";
-				// twitter-style: short posts get the big-font display treatment,
-				// regardless of whether they have an attachment. (with a bleed bg,
-				// the chunky text reads as a poster overlay.) strip tags to get a
-				// rough plain-length (mastodon content is just <p>/<a>/<br>, so a
-				// regex is fine here)
-				const size = displaySize(
-					visibleLength(s.content.replace(/<[^>]+>/g, ""))
-				);
+				// posts with a link card / quote are secondary content, keep text normal
+				const size =
+					s.card || s.quote ? null : displaySize(visibleLength(s.text));
+				const img = att ?? null;
+				const bleedSrc = img ? img.previewUrl || img.url : s.card?.image;
+				const renderText = (text: string) => {
+					const div = document.createElement("div");
+					div.className = "fedi-post-content" + (size ? " is-short" : "");
+					if (size) div.style.setProperty("--post-size", size + "rem");
+					const re = /(https?:\/\/[^\s]+)/g;
+					for (const p of text.split(/\n{2,}/)) {
+						const para = document.createElement("p");
+						p.split(re).forEach((part, i) => {
+							if (i % 2) {
+								const a = document.createElement("a");
+								a.href = part;
+								a.target = "_blank";
+								a.rel = "noopener";
+								a.textContent = part.replace(/^https?:\/\/(www\.)?/, "");
+								para.append(a);
+							} else {
+								const lines = part.split("\n");
+								lines.forEach((l, j) => {
+									if (j) para.append(document.createElement("br"));
+									para.append(l);
+								});
+							}
+						});
+						div.append(para);
+					}
+					return div;
+				};
 				return (
 					<>
-						{att ? (
+						{bleedSrc ? (
 							<div
-								class={"fedi-post-bleed fedi-post-bleed-" + att.type}
+								class={"fedi-post-bleed fedi-post-bleed-" + (att?.type ?? "image")}
 								aria-hidden="true"
 							>
-								{(function () {
-									switch (att.type) {
-										case "image":
-											return (
-												<img
-													src={att.url}
-													alt={att.description || ""}
-													loading="lazy"
-												/>
-											);
-										// videos render muted/looped as a moving bg; the
-										// user opens the post URL to view with audio
-										case "video":
-										case "gifv":
-											return (
-												<video src={att.url} autoplay loop muted playsinline />
-											);
-										case "audio":
-											return <audio src={att.url} controls />;
-										default:
-											return (
-												<span class="fedi-post-bleed-fallback">
-													<span class="material-symbols">attachment</span>
-													{s.attachments.length}{" "}
-													{s.attachments.length === 1
-														? "attachment"
-														: "attachments"}
-												</span>
-											);
-									}
-								})()}
+								{att && (att.type === "video" || att.type === "gifv") ? (
+									<video
+										src={att.url}
+										poster={att.previewUrl || undefined}
+										autoplay
+										loop
+										muted
+										playsinline
+									/>
+								) : (
+									<img src={bleedSrc} alt="" loading="lazy" />
+								)}
 							</div>
 						) : null}
 						<div class="post">
@@ -235,43 +230,73 @@ function MastodonCard(this: FC) {
 								target="_blank"
 								rel="me"
 							>
-								<img
-									src={s.account.avatar}
-									class="fedi-post-avatar"
-									alt={s.account.avatarDescription || ""}
-									loading="lazy"
-								/>
+								{s.account.avatar ? (
+									<img
+										src={s.account.avatar}
+										class="fedi-post-avatar"
+										alt=""
+										loading="lazy"
+									/>
+								) : null}
 								<div class="fedi-post-header-info">
 									<p class="fedi-post-header-name">{s.account.displayName}</p>
 									<p class="fedi-post-header-username">
-										@{s.account.acct}@wetdry.world
+										@{s.account.screenName}
 									</p>
 								</div>
 							</a>
 							<div class="fedi-post-body">
-								{s.spoilerText ? (
-									<p class="fedi-post-spoiler">{s.spoilerText}</p>
+								{renderText(s.text)}
+								{s.card ? (
+									<a
+										class="tweet-linkcard"
+										href={s.card.url}
+										target="_blank"
+										rel="noopener"
+									>
+										<span class="tweet-linkcard-domain">{s.card.domain}</span>
+										<span class="tweet-linkcard-title">{s.card.title}</span>
+										{s.card.description ? (
+											<span class="tweet-linkcard-desc">
+												{s.card.description}
+											</span>
+										) : null}
+									</a>
 								) : null}
-								{renderContent(s.content, size)}
+								{s.quote ? (
+									<a
+										class="tweet-quote"
+										href={s.quote.url}
+										target="_blank"
+										rel="noopener"
+									>
+										<span class="tweet-quote-author">
+											{s.quote.account.displayName}{" "}
+											<span class="tweet-quote-handle">
+												@{s.quote.account.screenName}
+											</span>
+										</span>
+										<span class="tweet-quote-text">{s.quote.text}</span>
+									</a>
+								) : null}
 							</div>
 							<p class="fedi-post-counts">
 								<span title="replies">
 									<span class="material-symbols">reply</span>
 									{s.counts.replies}
 								</span>
-								<span title="boosts">
+								<span title="reposts">
 									<span class="material-symbols">repeat</span>
-									{s.counts.reblogs}
+									{s.counts.retweets}
 								</span>
-								<span title="favourites">
-									<span class="material-symbols">star</span>
-									{s.counts.favourites}
+								<span title="likes">
+									<span class="material-symbols">favorite</span>
+									{s.counts.likes}
 								</span>
-								{s.attachments.length ? (
-									<span>
-										<span class="material-symbols">attachment</span>
-										{s.attachments.length}{" "}
-										{s.attachments.length === 1 ? "attachment" : "attachments"}
+								{s.counts.views != null ? (
+									<span title="views">
+										<span class="material-symbols">visibility</span>
+										{compactNum(s.counts.views)}
 									</span>
 								) : null}
 								<time
@@ -293,7 +318,7 @@ function MastodonCard(this: FC) {
 
 // Shared .livecard / .livecard-* styles live in src/style.css so they apply
 // here without re-declaration. Only mastodon-fedi-post-specific styles below.
-MastodonCard.style = css`
+TwitterCard.style = css`
 	:scope {
 		display: flex;
 		flex-direction: column;
@@ -498,6 +523,47 @@ MastodonCard.style = css`
 		color: var(--subtext0);
 	}
 
+	.tweet-linkcard,
+	.tweet-quote {
+		display: flex;
+		flex-direction: column;
+		gap: 0.15rem;
+		padding: 0.5rem 0.65rem;
+		border: 1px solid var(--surface2);
+		background: hsla(var(--surface0-hsl), 0.5);
+		color: inherit;
+		text-decoration: none !important;
+		font-size: 0.82rem;
+		min-width: 0;
+	}
+
+	.tweet-linkcard::after,
+	.tweet-quote::after {
+		display: none !important;
+	}
+
+	.tweet-linkcard-domain,
+	.tweet-quote-handle {
+		color: var(--subtext1);
+		font-size: 0.75rem;
+	}
+
+	.tweet-linkcard-title,
+	.tweet-quote-author {
+		font-weight: 600;
+		color: var(--text);
+	}
+
+	.tweet-linkcard-desc,
+	.tweet-quote-text {
+		color: var(--subtext0);
+		overflow-wrap: anywhere;
+		display: -webkit-box;
+		-webkit-line-clamp: 3;
+		-webkit-box-orient: vertical;
+		overflow: hidden;
+	}
+
 	.fedi-post-counts {
 		display: flex;
 		gap: 1rem;
@@ -519,4 +585,4 @@ MastodonCard.style = css`
 	}
 `;
 
-export default MastodonCard;
+export default TwitterCard;

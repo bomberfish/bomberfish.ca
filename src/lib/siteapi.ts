@@ -70,6 +70,94 @@ export interface MastodonResponse {
 	status: MastodonStatus | null;
 }
 
+export interface TweetAttachment {
+	type: "image" | "video" | "gifv";
+	url: string;
+	previewUrl: string | null;
+	description: string | null;
+	width: number | null;
+	height: number | null;
+}
+
+export interface TweetCard {
+	url: string;
+	title: string;
+	description: string | null;
+	domain: string | null;
+	image: string | null;
+	imageWidth: number | null;
+	imageHeight: number | null;
+}
+
+export interface Tweet {
+	id: string;
+	url: string;
+	createdAt: string;
+	sensitive: boolean;
+	language: string | null;
+	text: string; // plain text, t.co links already expanded
+	inReplyToId: string | null;
+	counts: {
+		replies: number;
+		retweets: number;
+		likes: number;
+		quotes: number;
+		views: number | null;
+	};
+	account: {
+		displayName: string;
+		screenName: string;
+		url: string;
+		avatar: string | null;
+		followersCount: number | null;
+	};
+	attachments: TweetAttachment[];
+	links: { url: string; displayUrl: string }[];
+	card: TweetCard | null;
+	quote: Tweet | null;
+}
+
+export interface TwitterResponse {
+	tweet: Tweet | null;
+}
+
+export interface GithubRepo {
+	name: string;
+	owner: string;
+	url: string;
+	description: string | null;
+	stars: number;
+	language: { name: string; color: string | null } | null;
+}
+
+export interface GithubResponse {
+	profile: {
+		login: string;
+		name: string | null;
+		bio: string | null;
+		pronouns: string | null;
+		avatar: string;
+		url: string;
+		company: string | null;
+		location: string | null;
+		blog: string | null;
+		status: {
+			emoji: string | null;
+			emojiHtml: string | null;
+			message: string | null;
+		} | null;
+		followers: number;
+		following: number;
+		publicRepos: number;
+	};
+	pinned: GithubRepo[];
+	contributions: {
+		total: number;
+		// weeks run Sunday → Saturday; level is 0–4
+		weeks: { date: string; count: number; level: number }[][];
+	};
+}
+
 export type SiteApiError =
 	| { error: "method_not_allowed" }
 	| { error: "missing_api_key" }
@@ -106,3 +194,9 @@ export const getLastfm = (signal?: AbortSignal, cacheBust?: boolean) =>
 
 export const getMastodon = (signal?: AbortSignal, cacheBust?: boolean) =>
 	fetchJson<MastodonResponse>("/v1/mastodon", signal, cacheBust);
+
+export const getTwitter = (signal?: AbortSignal, cacheBust?: boolean) =>
+	fetchJson<TwitterResponse>("/v1/twitter", signal, cacheBust);
+
+export const getGithub = (signal?: AbortSignal, cacheBust?: boolean) =>
+	fetchJson<GithubResponse>("/v1/github", signal, cacheBust);

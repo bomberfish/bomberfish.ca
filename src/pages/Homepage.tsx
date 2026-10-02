@@ -4,14 +4,13 @@ import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import ContactCard from "../components/ContactCard";
 import LastFmCard from "../components/LastFmCard";
+import TwitterCard from "../components/TwitterCard";
+import GithubCard from "../components/GithubCard";
 import MastodonCard from "../components/MastodonCard";
 import {
 	EmailIcon,
 	DiscordIcon,
 	SignalIcon,
-	GitHubIcon,
-	XIcon,
-	BlueskyIcon,
 } from "../components/SocialIcons";
 
 function Homepage(this: FC) {
@@ -27,7 +26,7 @@ function Homepage(this: FC) {
 								<span class="emoji">👋</span>hiya!
 							</h1>
 							<p>
-								i'm hariz (he/they), a 17 y/o high school student from waterloo,
+								i'm a 17 y/o high school student from waterloo,
 								canada, and sometimes i make <code>use(ful|less)</code> things.
 							</p>
 							<p>
@@ -81,79 +80,42 @@ function Homepage(this: FC) {
 							<h3 class="live-heading">what i'm up to</h3>
 							<div class="live-stack">
 								<LastFmCard />
+								<TwitterCard />
 								<MastodonCard />
+								<GithubCard />
 							</div>
-							<h3 class="more-heading" id="more-socials-heading">
-								more socials:
+							<h3 class="more-heading" id="contact-me">
+								get in touch:
 							</h3>
-							<div
-								class="contact-list"
-								id="socials"
-								aria-labelledby="more-socials-heading"
-							>
+							<div class="contact-list" aria-labelledby="contact-me">
 								<ContactCard
-									compact
 									contact={{
-										platform: "github",
-										username: "bomberfish",
-										url: "https://github.com/bomberfish",
+										platform: "email",
+										username: "me@bomberfish.ca",
+										url: "mailto:me@bomberfish.ca",
 									}}
 								>
-									<GitHubIcon />
+									<EmailIcon />
 								</ContactCard>
 								<ContactCard
-									compact
 									contact={{
-										platform: "X",
-										username: "@bomberfish77",
-										url: "https://x.com/bomberfish77",
+										platform: "discord",
+										username: "@bomberfish",
+										url: "https://discordapp.com/users/470637062870269952",
 									}}
 								>
-									<XIcon />
+									<DiscordIcon />
 								</ContactCard>
 								<ContactCard
-									compact
 									contact={{
-										platform: "bluesky",
-										username: "@bomberfish.ca",
-										url: "https://bsky.app/profile/bomberfish.ca",
+										platform: "signal",
+										username: "@one.337",
+										url: "https://signal.me/#eu/Hj17C2gxd-rMfhgGYLZADiwtnP9y1xDF9waDfQxJudgShHBOqThJXLLHV4ZPmPny",
 									}}
 								>
-									<BlueskyIcon />
+									<SignalIcon />
 								</ContactCard>
 							</div>
-						</div>
-					</section>
-					<section class="contact-section" id="contact-me">
-						<h3>get in touch:</h3>
-						<div class="card-section">
-							<ContactCard
-								contact={{
-									platform: "email",
-									username: "me@bomberfish.ca",
-									url: "mailto:me@bomberfish.ca",
-								}}
-							>
-								<EmailIcon />
-							</ContactCard>
-							<ContactCard
-								contact={{
-									platform: "discord",
-									username: "@bomberfish",
-									url: "https://discordapp.com/users/470637062870269952",
-								}}
-							>
-								<DiscordIcon />
-							</ContactCard>
-							<ContactCard
-								contact={{
-									platform: "signal",
-									username: "@one.337",
-									url: "https://signal.me/#eu/Hj17C2gxd-rMfhgGYLZADiwtnP9y1xDF9waDfQxJudgShHBOqThJXLLHV4ZPmPny",
-								}}
-							>
-								<SignalIcon />
-							</ContactCard>
 						</div>
 					</section>
 					<br />
@@ -259,15 +221,7 @@ Homepage.style = css`
 		border: 2px solid var(--surface3);
 	}
 
-	.contact-section h3 {
-		margin: 0;
-	}
-
-	.contact-section h3 + .card-section {
-		margin-top: 0.75rem;
-	}
-
-	#more-socials-heading {
+	#contact-me {
 		line-height: clamp(1.2rem, 1vw + 1rem, 1.75rem);
 		font-variation-settings: "ELSH" 95;
 	}
@@ -287,133 +241,104 @@ Homepage.style = css`
 		margin-bottom: 0.5rem;
 	}
 
-	.card-section {
-		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(min(100%, 17rem), 1fr));
-		align-items: stretch;
-		gap: 1rem;
-		margin-block: 1rem;
-	}
-
 	.live-section h3 {
 		margin: 0;
 	}
 
+	/* 8-col grid: row 2 = two cards (3 cols each) + contacts (2 cols),
+	   row 3 = github (5 cols) + mastodon (3 cols, same as lastfm), so nothing is left
+	   empty under the contact cards */
 	.live-grid {
 		display: grid;
-		grid-template-columns: minmax(0, 3fr) minmax(0, 1fr);
-		grid-template-rows: auto 1fr;
+		grid-template-columns: repeat(8, minmax(0, 1fr));
 		align-items: stretch;
 		gap: 1rem;
 		margin-block: 1rem;
 	}
 
 	.live-grid > .live-heading {
-		grid-column: 1;
+		grid-column: 1 / 7;
 		grid-row: 1;
 	}
 
 	.live-grid > .more-heading {
-		grid-column: 2;
+		grid-column: 7 / 9;
 		grid-row: 1;
 		font-size: 1.1rem;
 		align-self: end;
 	}
 
-	.live-grid > .live-stack {
-		grid-column: 1;
-		grid-row: 2;
-	}
-
-	.live-grid > .contact-list {
-		grid-column: 2;
-		grid-row: 2;
-	}
-
+	/* the wrapper only exists for semantics; its cards join the grid */
 	.live-stack {
-		display: flex;
-		flex-direction: row;
-		gap: 1rem;
-		min-width: 0;
-		min-height: 18rem;
+		display: contents;
 	}
 
 	.live-stack > :global(.livecard) {
-		flex: 1 1 0;
 		min-width: 0;
 		width: auto;
+		min-height: 18rem;
 	}
 
-	.contact-list {
+	.live-stack > :global(.livecard:nth-child(1)) {
+		grid-column: 1 / 4;
+		grid-row: 2;
+	}
+
+	.live-stack > :global(.livecard:nth-child(2)) {
+		grid-column: 4 / 7;
+		grid-row: 2;
+	}
+
+	.live-stack > :global(.livecard:nth-child(3)) {
+		grid-column: 6 / 9;
+		grid-row: 3;
+	}
+
+	.live-stack > :global(.livecard:nth-child(4)) {
+		grid-column: 1 / 6;
+		grid-row: 3;
+	}
+
+	.live-grid > .contact-list {
+		grid-column: 7 / 9;
+		grid-row: 2;
 		display: flex;
 		flex-direction: column;
-		gap: 0.4rem;
+		align-self: start;
+		gap: 0.75rem;
 		min-width: 0;
 	}
 
-	.contact-list > :global(.contact-card.compact) {
-		flex: 1 1 0;
+	.contact-list > :global(.contact-card) {
+		flex: 0 0 auto;
 		min-height: 0;
-	}
-
-	@media (max-width: 70rem) {
-		.card-section {
-			grid-template-columns: repeat(auto-fit, minmax(min(100%, 15.5rem), 1fr));
-		}
-
-		.live-grid {
-			grid-template-columns: minmax(0, 2.2fr) minmax(0, 1fr);
-		}
 	}
 
 	@media (max-width: 55rem) {
 		.live-grid {
 			grid-template-columns: 1fr;
-			grid-template-rows: auto;
 		}
 
 		.live-grid > .live-heading,
 		.live-grid > .more-heading,
-		.live-grid > .live-stack,
-		.live-grid > .contact-list {
-			grid-column: 1;
-			grid-row: auto;
+		.live-grid > .contact-list,
+		.live-stack > :global(.livecard) {
+			grid-column: 1 !important;
+			grid-row: auto !important;
 		}
 
 		.live-grid > .more-heading {
 			align-self: start;
 		}
 
-		/* in single-column mode .contact-list has no tall sibling forcing it
-		   to stretch, so flex:1 1 0 collapses cards to ~content height. let
-		   them size to their content instead. */
-		.contact-list > :global(.contact-card.compact) {
-			flex: 0 0 auto;
+		.live-stack > :global(.livecard) {
+			min-height: 0 !important;
 		}
 	}
 
 	@media (max-width: 40rem) {
-		.card-section {
-			grid-template-columns: 1fr;
-			gap: 0.875rem;
-		}
-
 		.live-grid {
 			gap: 0.875rem;
-		}
-
-		.live-stack {
-			flex-direction: column;
-			/* in column mode the 18rem becomes "stack of 2 must share 18rem of
-			   height", which clips card content. row-mode floor only. */
-			min-height: 0;
-		}
-
-		.live-stack > :global(.livecard) {
-			/* let each card grow to fit its content instead of fighting over
-			   the parent's height — overflow:hidden on lastfm-card otherwise
-			   lets it shrink to 0 */
-			flex: 0 0 auto;
 		}
 
 		.buttons-section {
