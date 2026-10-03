@@ -74,7 +74,7 @@ html {
 
 	/* Computed color variants */
 	--tooltip-shadow: hsla(var(--overlay3-hsl), 0.35);
-	--main-hue: 343;
+    --main-hue: 315;
 
 	--core-hsl: calc(var(--main-hue) + 20), 100%, 2%;
 	--mantle-hsl: calc(var(--main-hue) - 5), 40%, 2.5%;
@@ -96,12 +96,12 @@ html {
 	--overlay3-hsl: calc(var(--main-hue) - 12), 27.5%, 85%;
 
 	--supertext-hsl: calc(var(--main-hue) - 27.5), 100%, 98%;
-	--text-hsl: calc(var(--main-hue) - 22.5), 70%, 95%;
-	--text1-hsl: calc(var(--main-hue) - 10), 22%, 70%;
-	--subtext0-hsl: calc(var(--main-hue) - 22), 17%, 67%;
-	--subtext1-hsl: calc(var(--main-hue) - 15), 15%, 60%;
-	--subtext2-hsl: calc(var(--main-hue) - 25), 10%, 50%;
-	--subtext3-hsl: calc(var(--main-hue) - 30), 8%, 40%;
+	--text-hsl: calc(var(--main-hue) - 22.5), 67%, 95%;
+	--text1-hsl: calc(var(--main-hue) - 10), 15%, 70%;
+	--subtext0-hsl: calc(var(--main-hue) - 22), 12%, 67%;
+	--subtext1-hsl: calc(var(--main-hue) - 15), 8%, 60%;
+	--subtext2-hsl: calc(var(--main-hue) - 25), 4%, 50%;
+	--subtext3-hsl: calc(var(--main-hue) - 30), 1%, 40%;
 
 	--accent-hsl: calc(var(--main-hue)), 60%, 77%;
 
