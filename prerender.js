@@ -234,7 +234,7 @@ const files = await readdir(blogDir);
 const blogModules = (
 	await Promise.all(
 		files.map(async (file) => {
-			const match = file.match(/^(\d{4}-\d{2}-\d{2})-(.+)\.mdx$/);
+			const match = file.match(/^(?:draft-)?(\d{4}-\d{2}-\d{2})-(.+)\.mdx$/);
 			if (!match) return null;
 
 			const slug = match[2];

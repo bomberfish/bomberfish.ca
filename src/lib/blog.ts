@@ -18,7 +18,7 @@ export interface BlogPostMetadata {
 }
 
 export function getBlogPathInfo(path: string) {
-	const match = path.match(/\/(\d{4}-\d{2}-\d{2})-(.+)\.mdx$/);
+	const match = path.match(/\/(?:draft-)?(\d{4}-\d{2}-\d{2})-(.+)\.mdx$/);
 	if (!match) return null;
 
 	return { date: match[1], slug: match[2] };

@@ -19,7 +19,7 @@ type AppProps = {
 
 function App(this: FC<AppProps>) {
 	const blogModules = import.meta.glob<BlogModule>(
-		["./blog/*.mdx", "!./blog/draft-*.mdx"],
+		"./blog/*.mdx",
 		{ eager: true }
 	);
 	const blogPosts = Object.entries(blogModules)

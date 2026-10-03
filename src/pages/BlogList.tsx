@@ -7,7 +7,7 @@ import { getBlogMetadata, type BlogModule } from "../lib/blog";
 import { getWebpPath } from "../lib/images";
 
 const blogModules = import.meta.glob<BlogModule>(
-	["../blog/*.mdx", "!../blog/draft-*.mdx"],
+	"../blog/*.mdx",
 	{ eager: true }
 );
 

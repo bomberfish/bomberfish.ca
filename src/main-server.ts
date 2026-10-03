@@ -6,7 +6,7 @@ export { router } from "dreamland/router";
 export default (path: string) => render(() => renderApp(path));
 
 const blogModules = import.meta.glob<BlogModule>(
-	["./blog/*.mdx", "!./blog/draft-*.mdx"],
+	"./blog/*.mdx",
 	{ eager: true }
 );
 
