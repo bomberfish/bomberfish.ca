@@ -95,7 +95,7 @@ function InteractiveGrid(this: FC) {
 	const getGridHue = () =>
 		parseFloat(
 			getComputedStyle(document.documentElement).getPropertyValue("--main-hue")
-		) - 7.5;
+		) - 10;
 	let lastRenderedHue = Number.NaN;
 
 	const buildGrid = () => {
