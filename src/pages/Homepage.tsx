@@ -55,9 +55,10 @@ function Homepage(this: FC) {
 								iteration of the group's website too!)
 							</p>
 							<p>
-								i also used to be really involved in the ios modding and
+								{/*i also used to be really involved in the ios modding and
 								jailbreak scene, so say hi if you recognize me from those
-								circles!
+								circles!*/}
+								i'm also somewhat active in the ios modding and jailbreak scene, so say hi if you see me around!
 							</p>
 						</div>
 						<a href="/me.png" target="_blank" rel="noopener" class="pfp-link">
