@@ -26,7 +26,7 @@ function Homepage(this: FC) {
 								<span class="emoji">👋</span>hiya!
 							</h1>
 							<p>
-								i'm a 17 y/o high school student from waterloo,
+								i'm an 18 y/o high school student from waterloo,
 								canada, and sometimes i make <code>use(ful|less)</code> things.
 							</p>
 							<p>
