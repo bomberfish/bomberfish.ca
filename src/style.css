@@ -4,7 +4,7 @@
 
 @property --main-hue {
 	syntax: "<number>";
-	initial-value: 205;
+	initial-value: 227;
 	inherits: true;
 }
 
@@ -74,7 +74,7 @@ html {
 
 	/* Computed color variants */
 	--tooltip-shadow: hsla(var(--overlay3-hsl), 0.35);
-	--main-hue: 343;
+	--main-hue: 227;
 
 	--core-hsl: calc(var(--main-hue) + 20), 100%, 2%;
 	--mantle-hsl: calc(var(--main-hue) - 5), 40%, 2.5%;
@@ -127,7 +127,6 @@ html {
 html:has(body.grid-loaded) {
 	background-image: none;
 }
-
 
 /* @media (prefers-color-scheme: light) {
 	html {
@@ -203,8 +202,8 @@ html:has(body.grid-loaded) {
 	text-decoration: underline;
 }
 
-.project-card-wrapper>a.project-card:focus,
-.project-card-wrapper>a.project-card:focus-visible {
+.project-card-wrapper > a.project-card:focus,
+.project-card-wrapper > a.project-card:focus-visible {
 	outline: none;
 }
 
@@ -267,7 +266,6 @@ h6 {
 	font-family: var(--font-display), sans-serif;
 	color: var(--supertext);
 	font-synthesis: weight style small-caps;
-	font-weight: 50 !important;
 	text-rendering: geometricPrecision;
 }
 
@@ -276,10 +274,9 @@ h1 {
 	margin-bottom: 0.75rem;
 	margin-top: 0;
 	line-height: 1.18;
-	font-variation-settings: "ELSH" 35;
 
-	font-synthesis: weight !important;
-	font-weight: 50;
+	font-synthesis: style !important;
+	font-weight: 350;
 }
 
 h2 {
@@ -287,7 +284,7 @@ h2 {
 	margin-block-start: 0.25em;
 	margin-block-end: 0.4em;
 	line-height: 1.24;
-	font-variation-settings: "ELSH" 60;
+	font-weight: 300;
 }
 
 h3 {
@@ -295,7 +292,7 @@ h3 {
 	margin-block-start: 0.25em;
 	margin-block-end: 0.4em;
 	line-height: 1.26;
-	font-variation-settings: "ELSH" 90;
+	font-weight: 500;
 }
 
 h4,
@@ -449,7 +446,7 @@ main {
 	transition-timing-function: cubic-bezier(0.2, 0.2, 0.8, 1);
 }
 
-main>* {
+main > * {
 	width: 100%;
 }
 
@@ -508,15 +505,18 @@ article {
 .top-blur-layer {
 	position: absolute;
 	inset: 0;
-	backdrop-filter: blur(var(--blur)) brightness(1.1) saturate(0.9) contrast(1.05);
+	backdrop-filter: blur(var(--blur)) brightness(1.1) saturate(0.9)
+		contrast(1.05);
 	/* A very wide ellipse anchored at the top middle. The horizontal radius
 	   is much larger than the vertical so the mask reads as a flat halo
 	   across the top edge, with each layer's --mid/--end controlling how
 	   far the blur reaches before it fades out. */
-	mask-image: radial-gradient(ellipse 75% 100% at 50% 0%,
-			#000 0%,
-			#000 var(--mid),
-			transparent var(--end));
+	mask-image: radial-gradient(
+		ellipse 75% 100% at 50% 0%,
+		#000 0%,
+		#000 var(--mid),
+		transparent var(--end)
+	);
 }
 
 .page-header {
@@ -764,19 +764,19 @@ ul.compact {
 	margin: 0.25rem 0 0;
 }
 
-ul.compact>li {
+ul.compact > li {
 	display: inline;
 	margin: 0;
 	white-space: nowrap;
 }
 
-ul.compact>li::after {
+ul.compact > li::after {
 	content: "/";
 	margin: 0 0.75rem;
 	opacity: 0.6;
 }
 
-ul.compact>li:last-child::after {
+ul.compact > li:last-child::after {
 	content: "";
 	margin: 0;
 }
@@ -791,7 +791,7 @@ li:not(:has(a)) {
 }
 
 li:has(a),
-ul.compact> :is(li > span, li > a) {
+ul.compact > :is(li > span, li > a) {
 	margin-bottom: 0;
 }
 
@@ -954,10 +954,12 @@ ul.compact> :is(li > span, li > a) {
 	background-position: 90% 45%;
 	z-index: -1;
 	opacity: 1;
-	mask-image: linear-gradient(-45deg,
-			rgba(0, 0, 0, 0.35) 40%,
-			rgba(0, 0, 0, 0.25) 52.5%,
-			transparent 80%);
+	mask-image: linear-gradient(
+		-45deg,
+		rgba(0, 0, 0, 0.35) 40%,
+		rgba(0, 0, 0, 0.25) 52.5%,
+		transparent 80%
+	);
 }
 
 /* When the browser supports image-set() with type() hints, prefer the WebP
@@ -977,7 +979,6 @@ ul.compact> :is(li > span, li > a) {
 }
 
 @media (prefers-color-scheme: dark) {
-
 	.blog-item.has-cover h3,
 	.blog-item.has-cover .post-desc,
 	.blog-item.has-cover time,
@@ -1254,7 +1255,9 @@ cap subt:not(:has(.material-symbols)) {
 /* When the refresh button is preceded by another auto-pushed element (badge,
    timestamp, etc.) it should sit next to it instead of pushing itself to the
    far right again. */
-.livecard-header> :not(.livecard-icon, .livecard-platform, .livecard-stat)+.livecard-refresh {
+.livecard-header
+	> :not(.livecard-icon, .livecard-platform, .livecard-stat)
+	+ .livecard-refresh {
 	margin-left: 0.4rem;
 }
 
@@ -1358,15 +1361,15 @@ cap subt:not(:has(.material-symbols)) {
    loading status is already in the DOM, so animating it would flash from
    visible → opacity 0 → fade in. The loaded content nodes are inserted
    after mount and animate cleanly on first paint. */
-.livecard.is-initial>.post,
-.livecard.is-initial .lastfm-track>.lastfm-art,
-.livecard.is-initial .lastfm-track>.lastfm-meta {
+.livecard.is-initial > .post,
+.livecard.is-initial .lastfm-track > .lastfm-art,
+.livecard.is-initial .lastfm-track > .lastfm-meta {
 	animation: livecard-fade-in 0.35s ease-out;
 }
 
 /* Bleeds reveal independently and slower for an atmospheric feel — the
    foreground snaps in, the backdrop drifts in behind it. */
-.livecard.is-initial>.fedi-post-bleed {
+.livecard.is-initial > .fedi-post-bleed {
 	animation: masto-fade-in 0.9s ease-out;
 }
 
