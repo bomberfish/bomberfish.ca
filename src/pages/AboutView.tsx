@@ -53,9 +53,6 @@ const archives = [
 		date: "20250330171906",
 	},
 	{
-		version: "v5.4",
-	},
-	{
 		version: "v5.4.1",
 		date: "20251014143924id_",
 	},
@@ -66,13 +63,23 @@ const archives = [
 	{
 		version: "v7.0.3",
 		date: "20251122233719",
-	}, {
+	},
+	{
 		version: "v8.0.0",
-		date: "20251225232714"
-	}, {
+		date: "20251225232714",
+	},
+	{
 		version: "v9.3.2",
-		date: "20260328000543"
-	}
+		date: "20260328000543",
+	},
+	{
+		version: "v10.1.0",
+		date: "20260930175255",
+	},
+	{
+		version: "v10.3.0",
+		date: "20261101010933",
+	},
 ];
 
 const colors = [
@@ -98,7 +105,7 @@ const colors = [
 	"subtext1",
 	"subtext2",
 	"subtext3",
-	"accent"
+	"accent",
 ];
 
 const brightColors = [
@@ -108,8 +115,8 @@ const brightColors = [
 	"subtext0",
 	"subtext1",
 	"overlay3",
-	"overlay2"
-]
+	"overlay2",
+];
 
 let aboutState: Stateful<{ customHue: string }> = createState({
 	customHue: "210",
@@ -137,14 +144,18 @@ export function AboutView(this: FC) {
 					<h1>about this website</h1>
 					<p>
 						i built this website using{" "}
-						<a href="https://dreamland.js.org" target="_blank" referrer-policy="unsafe-url">
+						<a
+							href="https://dreamland.js.org"
+							target="_blank"
+							referrer-policy="unsafe-url"
+						>
 							dreamland.js
 						</a>
 						, a small and utilitarian web framework with full reactivity.
 					</p>
 					<p>
-						it's open-source under the MIT license, and
-						you can view the source code{" "}
+						it's open-source under the MIT license, and you can view the source
+						code{" "}
 						<a
 							href="https://github.com/bomberfish/bomberfish.ca"
 							target="_blank"
@@ -155,7 +166,23 @@ export function AboutView(this: FC) {
 						.
 					</p>
 					<p>
-						for the main font, i'm using <a href="https://vercel.com/blog/introducing-geist-pixel" target="_blank" referrer-policy="unsafe-url">geist pixel</a> by the talented folks over at vercel. the monospace font is <a href="https://github.com/microsoft/cascadia-code" target="_blank" referrer-policy="unsafe-url">cascadia code</a> by microsoft.
+						for the main font, i'm using{" "}
+						<a
+							href="https://vercel.com/blog/introducing-geist-pixel"
+							target="_blank"
+							referrer-policy="unsafe-url"
+						>
+							geist pixel
+						</a>{" "}
+						by the talented folks over at vercel. the monospace font is{" "}
+						<a
+							href="https://github.com/microsoft/cascadia-code"
+							target="_blank"
+							referrer-policy="unsafe-url"
+						>
+							cascadia code
+						</a>{" "}
+						by microsoft.
 					</p>
 					<h2>archive of previous versions</h2>
 					<p>
@@ -190,7 +217,12 @@ export function AboutView(this: FC) {
 							}
 						})}
 					</ul>
-					<input type="range" min="0" max="360" value={use(aboutState.customHue)} />
+					<input
+						type="range"
+						min="0"
+						max="360"
+						value={use(aboutState.customHue)}
+					/>
 					<div class="swatches">
 						{colors.map((color) => (
 							<ColorSwatch color={color} />
@@ -199,7 +231,7 @@ export function AboutView(this: FC) {
 				</div>
 				<Footer />
 			</div>
-		</main >
+		</main>
 	);
 }
 
@@ -235,7 +267,9 @@ function ColorSwatch(this: FC<{ color: string }>) {
 		const computedStyle = getComputedStyle(document.documentElement);
 		let val = computedStyle.getPropertyValue(`--${this.color}`).trim();
 		console.log(val);
-		let hsl = val.replaceAll(", ", ",").match(/hsl\(([^,]+),([^,]+)%,([^)]+)%\)/);
+		let hsl = val
+			.replaceAll(", ", ",")
+			.match(/hsl\(([^,]+),([^,]+)%,([^)]+)%\)/);
 		if (hsl) {
 			let [, hue, sat, lum] = hsl;
 			console.log(hue, sat, lum);
@@ -245,14 +279,17 @@ function ColorSwatch(this: FC<{ color: string }>) {
 			val = `hsl(${hue},${sat}%,${lum}%)`;
 		}
 		state.value = val;
-	}
+	};
 
 	return (
 		<div
 			class="swatch"
 			style={`color: ${brightColors.includes(this.color) ? "var(--mantle)" : "var(--text)"};`}
 		>
-			<div class="preview" style={`background-color: var(--${this.color});`}></div>
+			<div
+				class="preview"
+				style={`background-color: var(--${this.color});`}
+			></div>
 			<span class="value">{use(state.value)}</span>
 			<span class="label">{this.color}</span>
 		</div>
