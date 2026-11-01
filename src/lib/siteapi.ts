@@ -39,6 +39,45 @@ export interface LastfmResponse {
 	user: string;
 	profile: LastfmProfile | null;
 	track: LastfmTrack | null;
+	// cursor for the scrobbles older than `track` (pass as `before` to
+	// getLastfmRecent); null when there's nothing to anchor on, absent from
+	// older API deploys
+	historyBefore?: number | null;
+}
+
+export interface LastfmHistoryTrack {
+	name: string;
+	artist: string;
+	artistUrl: string | null;
+	album: string;
+	url: string;
+	image: string | null;
+	playedAt: string; // ISO 8601
+	loved: boolean;
+	appleMusic: AppleMusicMatch | null;
+}
+
+// the extras /v1/lastfm puts on its track, for any track (a history entry
+// shown in the card)
+export interface LastfmTrackInfo {
+	albumUrl: string | null;
+	loved: boolean;
+	duration: number | null; // milliseconds; null when unknown
+	userPlayCount: number | null;
+	globalPlayCount: number | null;
+	listeners: number | null;
+	tags: string[];
+}
+
+export interface LastfmTrackInfoResponse {
+	user: string;
+	info: LastfmTrackInfo | null; // null when Last.fm doesn't know the track
+}
+
+export interface LastfmRecentResponse {
+	user: string;
+	tracks: LastfmHistoryTrack[]; // newest first, never the now-playing track
+	next: number | null; // cursor for the page after this one
 }
 
 export interface MastodonAttachment {
@@ -200,6 +239,34 @@ async function fetchJson<T>(
 
 export const getLastfm = (signal?: AbortSignal, cacheBust?: boolean) =>
 	fetchJson<LastfmResponse>("/v1/lastfm", signal, cacheBust);
+
+// pages fetched with a cursor are cached for a long time (the cursor moves
+// on when a new scrobble lands, so they don't go stale); without one it's
+// the live head
+export const getLastfmRecent = (
+	{ before, limit }: { before?: number | null; limit?: number },
+	signal?: AbortSignal
+) => {
+	const params = new URLSearchParams();
+	if (limit != null) params.set("limit", String(limit));
+	if (before != null) params.set("before", String(before));
+	const query = params.toString();
+	return fetchJson<LastfmRecentResponse>(
+		"/v1/lastfm/recent" + (query ? "?" + query : ""),
+		signal
+	);
+};
+
+// cached for an hour by the worker and the browser
+export const getLastfmTrackInfo = (
+	artist: string,
+	track: string,
+	signal?: AbortSignal
+) =>
+	fetchJson<LastfmTrackInfoResponse>(
+		"/v1/lastfm/track?" + new URLSearchParams({ artist, track }).toString(),
+		signal
+	);
 
 export const getMastodon = (signal?: AbortSignal, cacheBust?: boolean) =>
 	fetchJson<MastodonResponse>("/v1/mastodon", signal, cacheBust);

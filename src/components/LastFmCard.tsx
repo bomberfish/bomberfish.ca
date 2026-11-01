@@ -1,6 +1,14 @@
 import { FC, createState, css, Stateful } from "dreamland/core";
 import humanizeDuration from "humanize-duration";
-import { getLastfm, LastfmProfile, LastfmTrack } from "../lib/siteapi";
+import {
+	getLastfm,
+	getLastfmRecent,
+	getLastfmTrackInfo,
+	LastfmHistoryTrack,
+	LastfmTrackInfo,
+	LastfmProfile,
+	LastfmTrack,
+} from "../lib/siteapi";
 import { AppleMusicWordmark, LastFmIcon } from "./SocialIcons";
 
 type View =
@@ -9,7 +17,54 @@ type View =
 	| { kind: "empty" }
 	| { kind: "loaded"; track: LastfmTrack; profile: LastfmProfile | null };
 
+type HistoryView =
+	| { kind: "idle" }
+	| { kind: "loading" }
+	| { kind: "error"; message: string }
+	| {
+			kind: "loaded";
+			tracks: LastfmHistoryTrack[];
+			next: number | null; // cursor for the next page; null at the end
+			more: "idle" | "loading" | "error"; // the next page
+	  };
+
 const REFRESH_MS = 60_000;
+const HISTORY_SIZE = 3; // the first page: what fits the card
+const HISTORY_PAGE = 10; // each page after that, while scrolling
+const PROFILE_URL = "https://www.last.fm/user/bmbrfsh";
+
+const ago = (iso: string) =>
+	`${humanizeDuration(Date.now() - new Date(iso).getTime(), {
+		largest: 1,
+		round: true,
+	})} ago`;
+
+// a history entry in the card's full layout, with its stats (duration,
+// play counts...) once /v1/lastfm/track has them
+const historyAsTrack = (
+	t: LastfmHistoryTrack,
+	info: LastfmTrackInfo | null | undefined
+): LastfmTrack => ({
+	nowPlaying: false,
+	name: t.name,
+	artist: t.artist,
+	artistUrl: t.artistUrl,
+	album: t.album,
+	albumUrl: info?.albumUrl ?? null,
+	url: t.url,
+	image: t.image ?? t.appleMusic?.artwork ?? null,
+	playedAt: t.playedAt,
+	loved: t.loved || !!info?.loved,
+	duration: info?.duration ?? null,
+	userPlayCount: info?.userPlayCount ?? null,
+	globalPlayCount: info?.globalPlayCount ?? null,
+	listeners: info?.listeners ?? null,
+	tags: info?.tags ?? [],
+	appleMusic: t.appleMusic,
+});
+
+const infoKey = (t: LastfmHistoryTrack) =>
+	`${t.artist}\n${t.name}`.toLowerCase();
 
 // Resolve a computed line-height value (which may be "normal", "Npx", or a
 // unitless multiplier like "1.1") to a concrete pixel height for the element.
@@ -312,14 +367,37 @@ function smallArtUrl(src: string): string {
 }
 
 function LastFmCard(this: FC) {
-	const state: Stateful<{ view: View; refreshing: boolean }> = createState({
+	const state: Stateful<{
+		view: View;
+		refreshing: boolean;
+		historyOpen: boolean;
+		history: HistoryView;
+	}> = createState({
 		view: { kind: "loading" } as View,
 		refreshing: false,
+		historyOpen: false,
+		history: { kind: "idle" } as HistoryView,
 	});
 
 	let cancelled = false;
 	let controller: AbortController | null = null;
 	let shownJson = ""; // the view currently shown, to skip no-op refreshes
+	// the latest from /v1/lastfm: what's shown, unless stepping back through
+	// the history (browsedAt)
+	let liveView: View = { kind: "loading" };
+
+	const showView = (next: View) => {
+		// the periodic refresh mostly comes back with exactly what's shown;
+		// assigning it anyway rebuilds the card body, which replays its
+		// entry transitions (waveform, colours) for nothing
+		const nextJson = JSON.stringify(next);
+		if (nextJson === shownJson) return;
+		shownJson = nextJson;
+		state.view = next;
+		// also done from the view listener in mount, but that doesn't
+		// reliably fire for the first load, and the player depends on it
+		requestAnimationFrame(afterRender);
+	};
 
 	const load = async (cacheBust = false) => {
 		if (import.meta.env.SSR) return;
@@ -330,33 +408,465 @@ function LastFmCard(this: FC) {
 		try {
 			const data = await getLastfm(request.signal, cacheBust);
 			if (cancelled || controller !== request) return;
-			const next: View = data.track
+			historyBefore = data.historyBefore ?? null;
+			shownPlayedAt = data.track?.playedAt ?? null;
+			liveView = data.track
 				? { kind: "loaded", track: data.track, profile: data.profile }
 				: { kind: "empty" };
-			// the periodic refresh mostly comes back with exactly what's shown;
-			// assigning it anyway rebuilds the card body, which replays its
-			// entry transitions (waveform, colours) for nothing
-			const nextJson = JSON.stringify(next);
-			if (nextJson === shownJson) return;
-			shownJson = nextJson;
-			state.view = next;
-			// also done from the view listener in mount, but that doesn't
-			// reliably fire for the first load, and the player depends on it
-			requestAnimationFrame(afterRender);
+			if (!browsedAt) showView(liveView);
+			// a new scrobble moves the cursor on; follow it if the history's
+			// in use
+			if (state.historyOpen || browsedAt) loadHistory();
+			syncBrowse();
 		} catch (e: unknown) {
 			if (cancelled || controller !== request) return;
 			if (e instanceof DOMException && e.name === "AbortError") return;
-			shownJson = "";
-			state.view = {
+			liveView = {
 				kind: "error",
 				message: e instanceof Error ? e.message : "unknown_error",
 			};
+			if (!browsedAt) {
+				shownJson = "";
+				state.view = liveView;
+			}
+			syncBrowse();
 		} finally {
 			if (!cancelled && controller === request) {
 				controller = null;
 				state.refreshing = false;
 			}
 		}
+	};
+
+	// Previous scrobbles, fetched the first time they're wanted (opened, or
+	// hovered/focused on the way there), then a page at a time as the list
+	// is scrolled or stepped back through. The API's cursor (historyBefore)
+	// names the page of scrobbles below the one shown, and only changes when
+	// a new scrobble lands, so a page is fetched once per cursor and the
+	// browser and the worker can both cache it for a long time; later pages
+	// are anchored on the last scrobble before them, so likewise.
+	let historyBefore: number | null = null;
+	let shownPlayedAt: string | null = null;
+	let historyKey = ""; // the cursor the list was (or is being) loaded for
+	let historyAbort: AbortController | null = null;
+	let historyPromise: Promise<void> = Promise.resolve();
+	let moreAbort: AbortController | null = null;
+	let morePromise: Promise<void> | null = null;
+	// the history entry the card is showing instead of the live track
+	let browsedAt: string | null = null;
+	// where back/forward is heading: ahead of browsedAt while a page loads,
+	// so clicks in a row keep counting
+	let browseTarget = 0;
+
+	const historyTracks = () =>
+		state.history.kind === "loaded" ? state.history.tracks : [];
+
+	const historyScroller = () =>
+		this.root?.querySelector<HTMLElement>(".lastfm-history-scroll") ?? null;
+
+	const setHistory = (next: HistoryView) => {
+		state.history = next;
+		syncBrowse();
+		requestAnimationFrame(fillHistory);
+	};
+
+	const loadHistory = (): Promise<void> => {
+		if (import.meta.env.SSR || liveView.kind !== "loaded") return historyPromise;
+		const before = historyBefore;
+		const key = before == null ? "head" : String(before);
+		if (key === historyKey) return historyPromise;
+		historyKey = key;
+		historyAbort?.abort();
+		const request = new AbortController();
+		historyAbort = request;
+		// an older list stays up until the newer one is in
+		if (state.history.kind !== "loaded") setHistory({ kind: "loading" });
+		historyPromise = (async () => {
+			try {
+				// without a cursor (older API), the live head: one spare, since
+				// it can start with the scrobble the card is showing
+				const data = await getLastfmRecent(
+					{ before, limit: before == null ? HISTORY_SIZE + 1 : HISTORY_SIZE },
+					request.signal
+				);
+				if (cancelled || historyAbort !== request) return;
+				const page = data.tracks
+					.filter((t) => before != null || t.playedAt !== shownPlayedAt)
+					.slice(0, HISTORY_SIZE);
+				let tracks = page;
+				let next = data.next;
+				const prev = state.history.kind === "loaded" ? state.history : null;
+				// a new scrobble: the new first page overlaps what's loaded, so it
+				// goes on top and the pages already scrolled through stay
+				if (
+					prev?.tracks.length &&
+					page.some((t) => t.playedAt === prev.tracks[0].playedAt)
+				) {
+					const seen = new Set(page.map((t) => t.playedAt));
+					tracks = [...page, ...prev.tracks.filter((t) => !seen.has(t.playedAt))];
+					next = prev.next;
+				}
+				// same list under a new cursor: nothing to redraw
+				if (
+					prev &&
+					next === prev.next &&
+					JSON.stringify(tracks) === JSON.stringify(prev.tracks)
+				)
+					return;
+				setHistory({
+					kind: "loaded",
+					tracks,
+					next,
+					more: prev && next === prev.next ? prev.more : "idle",
+				});
+			} catch (e: unknown) {
+				if (cancelled || historyAbort !== request) return;
+				if (e instanceof DOMException && e.name === "AbortError") return;
+				historyKey = ""; // retry on the next open
+				setHistory({
+					kind: "error",
+					message: e instanceof Error ? e.message : "unknown_error",
+				});
+			}
+		})();
+		return historyPromise;
+	};
+
+	const loadMore = (): Promise<void> => {
+		const h = state.history;
+		if (h.kind !== "loaded" || h.next == null) return Promise.resolve();
+		if (morePromise) return morePromise;
+		const cursor = h.next;
+		const request = new AbortController();
+		moreAbort = request;
+		setHistory({ ...h, more: "loading" });
+		morePromise = (async () => {
+			try {
+				const data = await getLastfmRecent(
+					{ before: cursor, limit: HISTORY_PAGE },
+					request.signal
+				);
+				const cur = state.history;
+				// (the list was replaced meanwhile: this page no longer follows it)
+				if (cancelled || cur.kind !== "loaded" || cur.next !== cursor) return;
+				const seen = new Set(cur.tracks.map((t) => t.playedAt));
+				setHistory({
+					kind: "loaded",
+					tracks: [...cur.tracks, ...data.tracks.filter((t) => !seen.has(t.playedAt))],
+					next: data.next,
+					more: "idle",
+				});
+			} catch (e: unknown) {
+				const cur = state.history;
+				if (cancelled || (e instanceof DOMException && e.name === "AbortError"))
+					return;
+				if (cur.kind === "loaded" && cur.next === cursor)
+					setHistory({ ...cur, more: "error" });
+			} finally {
+				morePromise = null;
+			}
+		})();
+		return morePromise;
+	};
+
+	// infinite scroll: the next page once the end is within half a screen,
+	// and the edge fades wherever there's more to scroll to
+	const fillHistory = () => {
+		const el = historyScroller();
+		if (!el) return;
+		const below = el.scrollHeight - el.scrollTop - el.clientHeight;
+		el.toggleAttribute("data-above", el.scrollTop > 1);
+		el.toggleAttribute("data-below", below > 1);
+		const h = state.history;
+		if (
+			state.historyOpen &&
+			h.kind === "loaded" &&
+			h.more === "idle" &&
+			below < el.clientHeight / 2
+		)
+			loadMore();
+	};
+
+	const browseOffset = () =>
+		browsedAt
+			? historyTracks().findIndex((t) => t.playedAt === browsedAt) + 1
+			: 0;
+
+	// show the nth scrobble back in the card (0: the live track), loading
+	// pages up to it as needed
+	const browseTo = async (offset: number) => {
+		browseTarget = offset = Math.max(0, offset);
+		if (offset > 0) {
+			await loadHistory();
+			while (!cancelled && browseTarget === offset && historyTracks().length < offset) {
+				const h = state.history;
+				if (h.kind !== "loaded" || h.next == null) break;
+				await loadMore();
+				const after = state.history;
+				if (after.kind === "loaded" && after.more === "error") break;
+			}
+			if (cancelled || browseTarget !== offset) return;
+			if (offset > historyTracks().length) {
+				browseTarget = browseOffset(); // ran out
+				syncBrowse();
+				return;
+			}
+		}
+		const t = offset ? historyTracks()[offset - 1] : null;
+		// give its stats a moment to arrive (usually prefetched, or a cache
+		// hit), so the card doesn't draw once without them and again with
+		if (t && !knownInfo.has(infoKey(t))) {
+			await Promise.race([
+				loadTrackInfo(t),
+				new Promise((resolve) => setTimeout(resolve, 400)),
+			]);
+			if (cancelled || browseTarget !== offset) return;
+		}
+		if ((t?.playedAt ?? null) !== browsedAt) {
+			// its player is about to go; don't leave the preview running unseen
+			if ((audio && !audio.paused) || reverse) pausePreview();
+			browsedAt = t?.playedAt ?? null;
+		}
+		showView(t ? historyView(t) : liveView);
+		syncBrowse();
+		if (t && !knownInfo.has(infoKey(t)))
+			loadTrackInfo(t).then(() => {
+				if (!cancelled && browsedAt === t.playedAt) showView(historyView(t));
+			});
+		prefetchAround(offset);
+	};
+
+	// History entries don't carry the stats the live track has; they're
+	// fetched per track as the card gets to them (and its neighbours, so the
+	// next flip has them ready)
+	const trackInfos = new Map<string, Promise<LastfmTrackInfo | null>>();
+	const knownInfo = new Map<string, LastfmTrackInfo | null>();
+	const loadTrackInfo = (t: LastfmHistoryTrack) => {
+		const key = infoKey(t);
+		let p = trackInfos.get(key);
+		if (!p) {
+			p = getLastfmTrackInfo(t.artist, t.name).then(
+				(r) => {
+					knownInfo.set(key, r.info);
+					return r.info;
+				},
+				() => {
+					trackInfos.delete(key); // try again next time
+					return null;
+				}
+			);
+			trackInfos.set(key, p);
+		}
+		return p;
+	};
+
+	const historyView = (t: LastfmHistoryTrack): View => ({
+		kind: "loaded",
+		track: historyAsTrack(t, knownInfo.get(infoKey(t))),
+		profile: liveView.kind === "loaded" ? liveView.profile : null,
+	});
+
+	const prefetchAround = (offset: number) => {
+		const tracks = historyTracks();
+		for (const i of [offset, offset - 2]) if (tracks[i]) loadTrackInfo(tracks[i]);
+	};
+
+	const onBack = () => browseTo(browseTarget + 1);
+	const onForward = () => browseTo(browseTarget - 1);
+
+	// warm up the page the next back click needs
+	const prefetchBack = () => {
+		if (liveView.kind !== "loaded") return;
+		loadHistory().then(() => {
+			const next = historyTracks()[browseTarget];
+			if (next) loadTrackInfo(next);
+			else loadMore();
+		});
+	};
+
+	// back/forward availability, and which list row is on the card
+	// (imperative for the same hydration reason as aria-expanded)
+	const syncBrowse = () => {
+		if (import.meta.env.SSR || !this.root) return;
+		const tracks = historyTracks();
+		if (
+			browsedAt &&
+			state.history.kind === "loaded" &&
+			!tracks.some((t) => t.playedAt === browsedAt)
+		) {
+			// the list was replaced under it (a page's worth of new scrobbles)
+			browsedAt = null;
+			browseTarget = 0;
+			showView(liveView);
+		}
+		const offset = browseOffset();
+		const h = state.history;
+		const atEnd = h.kind === "loaded" && h.next == null && offset >= tracks.length;
+		const back = this.root.querySelector<HTMLButtonElement>(".lastfm-back-btn");
+		const forward = this.root.querySelector<HTMLButtonElement>(".lastfm-fwd-btn");
+		// (both off while the list is up: it's covering the card they flip)
+		if (back) back.disabled = state.historyOpen || liveView.kind !== "loaded" || atEnd;
+		if (forward) forward.disabled = state.historyOpen || offset === 0;
+		for (const [playedAt, row] of historyRows)
+			row.setAttribute("aria-current", String(playedAt === browsedAt));
+	};
+
+	// Rows are kept per scrobble, so a re-render (the next page, a new
+	// scrobble on top) hands dreamland the same nodes and it only inserts
+	// the new ones: the scroll position and the rows already there stay put.
+	const historyRows = new Map<string, HTMLElement>();
+
+	const onRowClick = (e: MouseEvent, playedAt: string) => {
+		if ((e.target as Element).closest("a")) return; // the links do their thing
+		const i = historyTracks().findIndex((t) => t.playedAt === playedAt);
+		if (i < 0) return;
+		setHistoryOpen(false);
+		browseTo(i + 1);
+	};
+
+	const historyRow = (t: LastfmHistoryTrack, stagger: number) => {
+		const art = t.image ?? t.appleMusic?.artwork ?? null;
+		return (
+			<li
+				class="lastfm-history-item"
+				style={`--i: ${stagger}`}
+				on:click={(e: MouseEvent) => onRowClick(e, t.playedAt)}
+			>
+				{art ? (
+					<img
+						class="lastfm-history-art"
+						src={art}
+						alt=""
+						loading="lazy"
+						decoding="async"
+					/>
+				) : (
+					<span class="lastfm-history-art" />
+				)}
+				<span class="lastfm-history-meta">
+					<a class="lastfm-history-title" href={t.url}>
+						{t.name}
+					</a>
+					<span class="lastfm-history-artist">
+						{t.artistUrl ? <a href={t.artistUrl}>{t.artist}</a> : t.artist}
+						{t.album ? <span class="lastfm-album"> – {t.album}</span> : null}
+					</span>
+				</span>
+				<span class="lastfm-history-when">
+					{t.loved ? (
+						<span
+							class="material-symbols lastfm-history-loved"
+							title="loved"
+							aria-label="loved track"
+						>
+							favorite
+						</span>
+					) : null}
+					<time datetime={t.playedAt}>{ago(t.playedAt)}</time>
+				</span>
+			</li>
+		) as HTMLElement;
+	};
+
+	const skeletonRows = (n: number) =>
+		Array.from({ length: n }, () => (
+			<li class="lastfm-history-item skeleton" aria-hidden="true">
+				<span class="lastfm-history-art" />
+				<span class="lastfm-history-meta">
+					<span class="lastfm-history-bar" />
+					<span class="lastfm-history-bar short" />
+				</span>
+			</li>
+		));
+
+	const historyItems = (h: HistoryView) => {
+		if (h.kind === "idle") return null;
+		if (h.kind === "loading") return skeletonRows(HISTORY_SIZE);
+		if (h.kind === "error")
+			return (
+				<li class="lastfm-history-status wide">
+					couldn't load history ({h.message})
+				</li>
+			);
+		if (!h.tracks.length)
+			return <li class="lastfm-history-status wide">nothing scrobbled before this</li>;
+		let fresh = 0;
+		const rows: Node[] = h.tracks.map((t) => {
+			let row = historyRows.get(t.playedAt);
+			if (!row) {
+				row = historyRow(t, fresh++);
+				row.setAttribute("aria-current", String(t.playedAt === browsedAt));
+				historyRows.set(t.playedAt, row);
+			}
+			return row;
+		});
+		if (h.more === "loading") rows.push(...(skeletonRows(1) as Node[]));
+		if (h.more === "error")
+			rows.push(
+				(
+					<li class="lastfm-history-status">
+						<button
+							type="button"
+							class="lastfm-history-retry"
+							on:click={() => loadMore()}
+						>
+							couldn't load more · retry
+						</button>
+					</li>
+				) as HTMLElement
+			);
+		return rows;
+	};
+
+	// (aria-expanded set here: a reactive attribute binding doesn't survive
+	// hydration on this card)
+	const setHistoryOpen = (open: boolean) => {
+		const el = historyScroller();
+		if (open && el) {
+			// rows may have been sitting there a while
+			for (const time of el.querySelectorAll<HTMLTimeElement>("time[datetime]"))
+				time.textContent = ago(time.dateTime);
+			// bring the row the card is on into view
+			const current = el.querySelector<HTMLElement>('[aria-current="true"]');
+			if (current) {
+				const top =
+					current.getBoundingClientRect().top -
+					el.getBoundingClientRect().top +
+					el.scrollTop;
+				const h = current.offsetHeight;
+				if (top < el.scrollTop || top + h > el.scrollTop + el.clientHeight)
+					el.scrollTop = top - (el.clientHeight - h) / 2;
+			}
+			// the entry rise replays on every open (the rows only animate while
+			// open), staggered from the top of what's in view
+			const viewTop = el.getBoundingClientRect().top;
+			for (const row of el.querySelectorAll<HTMLElement>(".lastfm-history-item")) {
+				const r = row.getBoundingClientRect();
+				const i = r.height ? Math.round((r.top - viewTop) / r.height) : 0;
+				row.style.setProperty("--i", String(Math.min(6, Math.max(0, i))));
+			}
+		}
+		state.historyOpen = open;
+		this.root
+			?.querySelector(".lastfm-history-btn")
+			?.setAttribute("aria-expanded", String(open));
+		syncBrowse();
+		if (open) {
+			loadHistory();
+			requestAnimationFrame(fillHistory);
+		}
+	};
+
+	const onHistoryClick = (e: MouseEvent) => {
+		e.preventDefault();
+		setHistoryOpen(!state.historyOpen);
+	};
+
+	const onHistoryKey = (e: KeyboardEvent) => {
+		if (e.key !== "Escape" || !state.historyOpen) return;
+		e.stopPropagation();
+		setHistoryOpen(false);
+		this.root?.querySelector<HTMLElement>(".lastfm-history-btn")?.focus();
 	};
 
 	const onRefresh = (e: MouseEvent) => {
@@ -1804,6 +2314,8 @@ function LastFmCard(this: FC) {
 			window.removeEventListener("pointermove", onAltPointer);
 			window.removeEventListener("blur", onAltBlur);
 			controller?.abort();
+			historyAbort?.abort();
+			moreAbort?.abort();
 			fetchAbort?.abort();
 			cancelAnimationFrame(progressRaf);
 			cancelAnimationFrame(spinRaf);
@@ -1841,268 +2353,327 @@ function LastFmCard(this: FC) {
 									• {v.profile.totalScrobbles.toLocaleString()} total scrobbles
 								</span>
 							) : null}
-							{v.track.nowPlaying ? (
-								<span class="livecard-badge">now playing</span>
-							) : null}
 						</>
 					) : null
 				)}
-				<button
-					type="button"
-					class="livecard-topbtn livecard-refresh"
-					class:refreshing={use(state.refreshing)}
-					title="refresh"
-					aria-label="refresh"
-					on:click={onRefresh}
-				>
-					<span class="material-symbols">refresh</span>
-				</button>
-				<a
-					href={use(state.view).map((v) =>
-						v.kind === "loaded" && v.track.url ? v.track.url : fallbackUrl
-					)}
-					target="_blank"
-					rel="me"
-					class="livecard-topbtn"
-				>
-					<span class="material-symbols">open_in_new</span>
-				</a>
+				<span class="lastfm-topbtns">
+					<button
+						type="button"
+						class="livecard-topbtn lastfm-nav-btn lastfm-back-btn"
+						title="older scrobble"
+						aria-label="older scrobble"
+						disabled
+						on:click={onBack}
+						on:pointerenter={prefetchBack}
+						on:focus={prefetchBack}
+					>
+						<span class="material-symbols">chevron_left</span>
+					</button>
+					<button
+						type="button"
+						class="livecard-topbtn lastfm-history-btn"
+						class:open={use(state.historyOpen)}
+						title="recently played"
+						aria-label="recently played"
+						aria-controls="lastfm-history"
+						aria-expanded="false"
+						on:click={onHistoryClick}
+						on:pointerenter={() => loadHistory()}
+						on:focus={() => loadHistory()}
+					>
+						<span class="material-symbols">history</span>
+					</button>
+					<button
+						type="button"
+						class="livecard-topbtn lastfm-nav-btn lastfm-fwd-btn"
+						title="newer scrobble"
+						aria-label="newer scrobble"
+						disabled
+						on:click={onForward}
+					>
+						<span class="material-symbols">chevron_right</span>
+					</button>
+					<button
+						type="button"
+						class="livecard-topbtn livecard-refresh"
+						class:refreshing={use(state.refreshing)}
+						title="refresh"
+						aria-label="refresh"
+						on:click={onRefresh}
+					>
+						<span class="material-symbols">refresh</span>
+					</button>
+					<a
+						href={use(state.view).map((v) =>
+							v.kind === "loaded" && v.track.url ? v.track.url : fallbackUrl
+						)}
+						target="_blank"
+						rel="me"
+						class="livecard-topbtn"
+					>
+						<span class="material-symbols">open_in_new</span>
+					</a>
+				</span>
 			</p>
 
-			{use(state.view).map((v) => {
-				if (v.kind === "loading")
-					return <p class="livecard-status">loading…</p>;
-				if (v.kind === "error")
-					return <p class="livecard-status">couldn't load ({v.message})</p>;
-				if (v.kind === "empty")
-					return <p class="livecard-status">no recent scrobbles</p>;
+			<div
+				class="lastfm-body"
+				class:history-open={use(state.historyOpen)}
+				on:keydown={onHistoryKey}
+			>
+				<div class="lastfm-now">
+					{use(state.view).map((v) => {
+						if (v.kind === "loading")
+							return <p class="livecard-status">loading…</p>;
+						if (v.kind === "error")
+							return <p class="livecard-status">couldn't load ({v.message})</p>;
+						if (v.kind === "empty")
+							return <p class="livecard-status">no recent scrobbles</p>;
 
-				const t = v.track;
-				const hasStats =
-					t.duration != null ||
-					(t.userPlayCount != null && t.userPlayCount > 0) ||
-					(t.listeners != null && t.listeners > 0) ||
-					t.loved;
-				const am = t.appleMusic;
-				const previewUrl = am?.previewUrl ?? null;
-				// starts empty (or real, if already decoded); syncPlayer moves it
-				// through loading / real / placeholder from there
-				const known = previewUrl ? realPeaks.get(previewUrl) : undefined;
-				const peaks = known ?? new Array<number>(WAVE_BARS).fill(0);
-				// three identical bar rows stacked: base, hover highlight, played
-				// s2/s4 mark the bars dropped when the waveform is narrow (see
-				// fitWave); classes because dreamland's CSS scoping breaks
-				// :nth-child() arguments
-				// the palette, when it's already been worked out for this cover:
-				// a re-render (e.g. a refresh where only a count changed) then
-				// starts out coloured instead of fading in from the default
-				const art = t.image ?? am?.artwork ?? "";
-				const colors = art ? palettes.get(art) : undefined;
-				const hasColors = !!colors?.length;
-				const bars = () =>
-					peaks.map((h, i) => (
-						<i
-							class={i % 2 ? "s2" : i % 4 ? "s4" : ""}
-							style={`--h: ${h.toFixed(3)}; --d: ${sweepDelay(i)}s${hasColors ? `; --c: ${colors![i]}` : ""}`}
-						/>
-					));
-				const player = previewUrl ? (
-					<div
-						class="lastfm-player"
-						data-src={previewUrl}
-						data-state="idle"
-						data-peaks={known ? "real" : "empty"}
-						data-seed={am?.id || previewUrl}
-						// the cover the card shows, for the waveform palette
-						data-art={art}
-						// "none" until applyPalette colours it (or already, see above)
-						data-palette={hasColors ? art : "none"}
-					>
-						<button
-							type="button"
-							class="lastfm-play"
-							aria-label="play preview"
-							title="30 second preview"
-							on:click={onPlayClick}
-							on:pointerenter={onPlayHover}
-							on:focus={onPlayHover}
-						>
-							<span class="material-symbols">play_arrow</span>
-						</button>
-						<div
-							class="lastfm-wave"
-							role="slider"
-							tabindex="0"
-							aria-label="preview position"
-							aria-valuemin="0"
-							aria-valuemax="30"
-							aria-valuenow="0"
-							aria-valuetext="0:00 of 0:30"
-							on:pointerdown={onWaveDown}
-							on:pointermove={onWaveMove}
-							on:pointerup={onWaveUp}
-							on:pointercancel={onWaveUp}
-							on:lostpointercapture={onWaveLostCapture}
-							on:pointerleave={onWaveLeave}
-							on:keydown={onWaveKey}
-						>
-							<div class="lastfm-wave-bars is-base">{bars()}</div>
-							<div class="lastfm-wave-bars is-hover">{bars()}</div>
-							<div class="lastfm-wave-bars is-played">{bars()}</div>
-						</div>
-						<span class="lastfm-time">0:00 / 0:30</span>
-						<div class="lastfm-volume">
-							<button
-								type="button"
-								class="lastfm-vol-btn"
-								aria-label="mute"
-								on:click={onVolumeButtonClick}
-							>
-								<span class="material-symbols">volume_down</span>
-							</button>
-							<input
-								type="range"
-								class="lastfm-vol-range"
-								min="0"
-								max="100"
-								step="1"
-								value={String(Math.round(volume * 100))}
-								aria-label="preview volume"
-								on:input={onVolumeInput}
-							/>
-							{/* touch screens in portrait: opened by the button above */}
+						const t = v.track;
+						const hasStats =
+							t.duration != null ||
+							(t.userPlayCount != null && t.userPlayCount > 0) ||
+							(t.listeners != null && t.listeners > 0) ||
+							t.loved;
+						const am = t.appleMusic;
+						const previewUrl = am?.previewUrl ?? null;
+						// starts empty (or real, if already decoded); syncPlayer moves it
+						// through loading / real / placeholder from there
+						const known = previewUrl ? realPeaks.get(previewUrl) : undefined;
+						const peaks = known ?? new Array<number>(WAVE_BARS).fill(0);
+						// three identical bar rows stacked: base, hover highlight, played
+						// s2/s4 mark the bars dropped when the waveform is narrow (see
+						// fitWave); classes because dreamland's CSS scoping breaks
+						// :nth-child() arguments
+						// the palette, when it's already been worked out for this cover:
+						// a re-render (e.g. a refresh where only a count changed) then
+						// starts out coloured instead of fading in from the default
+						const art = t.image ?? am?.artwork ?? "";
+						const colors = art ? palettes.get(art) : undefined;
+						const hasColors = !!colors?.length;
+						const bars = () =>
+							peaks.map((h, i) => (
+								<i
+									class={i % 2 ? "s2" : i % 4 ? "s4" : ""}
+									style={`--h: ${h.toFixed(3)}; --d: ${sweepDelay(i)}s${hasColors ? `; --c: ${colors![i]}` : ""}`}
+								/>
+							));
+						const player = previewUrl ? (
 							<div
-								class="lastfm-vol-pop"
-								popover="auto"
-								on:beforetoggle={onVolumePopoverBeforeToggle}
-								on:toggle={onVolumePopoverToggle}
+								class="lastfm-player"
+								data-src={previewUrl}
+								data-state="idle"
+								data-peaks={known ? "real" : "empty"}
+								data-seed={am?.id || previewUrl}
+								// the cover the card shows, for the waveform palette
+								data-art={art}
+								// "none" until applyPalette colours it (or already, see above)
+								data-palette={hasColors ? art : "none"}
 							>
 								<button
 									type="button"
-									class="lastfm-vol-btn"
-									aria-label="mute"
-									on:click={onMuteClick}
+									class="lastfm-play"
+									aria-label="play preview"
+									title="30 second preview"
+									on:click={onPlayClick}
+									on:pointerenter={onPlayHover}
+									on:focus={onPlayHover}
 								>
-									<span class="material-symbols">volume_down</span>
+									<span class="material-symbols">play_arrow</span>
 								</button>
-								<input
-									type="range"
-									class="lastfm-vol-range"
-									min="0"
-									max="100"
-									step="1"
-									value={String(Math.round(volume * 100))}
-									aria-label="preview volume"
-									on:input={onVolumeInput}
-								/>
-							</div>
-						</div>
-						{am?.url ? (
-							<a
-								class="lastfm-am-link"
-								href={am.url}
-								target="_blank"
-								title="listen on apple music"
-								aria-label="listen on apple music"
-							>
-								<AppleMusicWordmark />
-							</a>
-						) : null}
-					</div>
-				) : null;
-				return (
-					<>
-						<div class="lastfm-track">
-							{t.image ? (
-								<>
-									<img
-										class="lastfm-art-bleed"
-										src={t.image}
-										alt=""
-										loading="lazy"
+								<div
+									class="lastfm-wave"
+									role="slider"
+									tabindex="0"
+									aria-label="preview position"
+									aria-valuemin="0"
+									aria-valuemax="30"
+									aria-valuenow="0"
+									aria-valuetext="0:00 of 0:30"
+									on:pointerdown={onWaveDown}
+									on:pointermove={onWaveMove}
+									on:pointerup={onWaveUp}
+									on:pointercancel={onWaveUp}
+									on:lostpointercapture={onWaveLostCapture}
+									on:pointerleave={onWaveLeave}
+									on:keydown={onWaveKey}
+								>
+									<div class="lastfm-wave-bars is-base">{bars()}</div>
+									<div class="lastfm-wave-bars is-hover">{bars()}</div>
+									<div class="lastfm-wave-bars is-played">{bars()}</div>
+								</div>
+								<span class="lastfm-time">0:00 / 0:30</span>
+								<div class="lastfm-volume">
+									<button
+										type="button"
+										class="lastfm-vol-btn"
+										aria-label="mute"
+										on:click={onVolumeButtonClick}
+									>
+										<span class="material-symbols">volume_down</span>
+									</button>
+									<input
+										type="range"
+										class="lastfm-vol-range"
+										min="0"
+										max="100"
+										step="1"
+										value={String(Math.round(volume * 100))}
+										aria-label="preview volume"
+										on:input={onVolumeInput}
 									/>
-									<img class="lastfm-art" src={t.image} alt="" loading="lazy" />
-								</>
-							) : null}
-							<div class="lastfm-meta">
-								<a class="lastfm-title-link" href={t.url}>
-									<h3 class="lastfm-title">
-										<span class="lastfm-title-inner">{t.name}</span>
-									</h3>
-								</a>
-								<p class="lastfm-artist">
-									{t.artistUrl ? (
-										<a href={t.artistUrl}>{t.artist}</a>
-									) : (
-										t.artist
-									)}
-									{t.album ? (
-										<span class="lastfm-album">
-											{" – "}
-											{t.albumUrl ? (
-												<a href={t.albumUrl}>{t.album}</a>
-											) : (
-												t.album
-											)}
-										</span>
+									{/* touch screens in portrait: opened by the button above */}
+									<div
+										class="lastfm-vol-pop"
+										popover="auto"
+										on:beforetoggle={onVolumePopoverBeforeToggle}
+										on:toggle={onVolumePopoverToggle}
+									>
+										<button
+											type="button"
+											class="lastfm-vol-btn"
+											aria-label="mute"
+											on:click={onMuteClick}
+										>
+											<span class="material-symbols">volume_down</span>
+										</button>
+										<input
+											type="range"
+											class="lastfm-vol-range"
+											min="0"
+											max="100"
+											step="1"
+											value={String(Math.round(volume * 100))}
+											aria-label="preview volume"
+											on:input={onVolumeInput}
+										/>
+									</div>
+								</div>
+								{am?.url ? (
+									<a
+										class="lastfm-am-link"
+										href={am.url}
+										target="_blank"
+										title="listen on apple music"
+										aria-label="listen on apple music"
+									>
+										<AppleMusicWordmark />
+									</a>
+								) : null}
+							</div>
+						) : null;
+						return (
+							<>
+								<div class="lastfm-track">
+									{t.image ? (
+										<>
+											<img
+												class="lastfm-art-bleed"
+												src={t.image}
+												alt=""
+												loading="lazy"
+											/>
+											<img class="lastfm-art" src={t.image} alt="" loading="lazy" />
+										</>
 									) : null}
-								</p>
-								{hasStats ? (
-									<p class="lastfm-stats">
-										{t.duration != null ? (
-											<span class="lastfm-stat" title="duration">
-												<span class="material-symbols">schedule</span>
-												{formatDuration(t.duration)}
-											</span>
+									<div class="lastfm-meta">
+										<a class="lastfm-title-link" href={t.url}>
+											<h3 class="lastfm-title">
+												<span class="lastfm-title-inner">{t.name}</span>
+											</h3>
+										</a>
+										<p class="lastfm-artist">
+											{t.artistUrl ? (
+												<a href={t.artistUrl}>{t.artist}</a>
+											) : (
+												t.artist
+											)}
+											{t.album ? (
+												<span class="lastfm-album">
+													{" – "}
+													{t.albumUrl ? (
+														<a href={t.albumUrl}>{t.album}</a>
+													) : (
+														t.album
+													)}
+												</span>
+											) : null}
+										</p>
+										{hasStats ? (
+											<p class="lastfm-stats">
+												{t.duration != null ? (
+													<span class="lastfm-stat" title="duration">
+														<span class="material-symbols">schedule</span>
+														{formatDuration(t.duration)}
+													</span>
+												) : null}
+												{t.userPlayCount != null && t.userPlayCount > 0 ? (
+													<span
+														class="lastfm-stat"
+														title={
+															t.userPlayCount === 1
+																? "1 play by me"
+																: `${t.userPlayCount.toLocaleString()} plays by me`
+														}
+													>
+														<span class="material-symbols">play_arrow</span>
+														{t.userPlayCount.toLocaleString()}
+													</span>
+												) : null}
+												{t.listeners != null && t.listeners > 0 ? (
+													<span
+														class="lastfm-stat"
+														title={`${t.listeners.toLocaleString()} listeners on last.fm`}
+													>
+														<span class="material-symbols">headphones</span>
+														{compactNumber(t.listeners)}
+													</span>
+												) : null}
+												{t.loved ? (
+													<span
+														class="lastfm-stat lastfm-stat-loved"
+														title="loved"
+														aria-label="loved track"
+													>
+														<span class="material-symbols">favorite</span>
+													</span>
+												) : null}
+											</p>
 										) : null}
-										{t.userPlayCount != null && t.userPlayCount > 0 ? (
-											<span
-												class="lastfm-stat"
-												title={
-													t.userPlayCount === 1
-														? "1 play by me"
-														: `${t.userPlayCount.toLocaleString()} plays by me`
+										{t.nowPlaying || t.playedAt ? (
+											<p
+												class={
+													t.nowPlaying
+														? "lastfm-when lastfm-now-playing"
+														: "lastfm-when"
 												}
 											>
-												<span class="material-symbols">play_arrow</span>
-												{t.userPlayCount.toLocaleString()}
-											</span>
+												<span class="material-symbols" aria-hidden="true">
+													acute
+												</span>
+												{t.nowPlaying ? "Now Playing" : ago(t.playedAt!)}
+											</p>
 										) : null}
-										{t.listeners != null && t.listeners > 0 ? (
-											<span
-												class="lastfm-stat"
-												title={`${t.listeners.toLocaleString()} listeners on last.fm`}
-											>
-												<span class="material-symbols">headphones</span>
-												{compactNumber(t.listeners)}
-											</span>
-										) : null}
-										{t.loved ? (
-											<span
-												class="lastfm-stat lastfm-stat-loved"
-												title="loved"
-												aria-label="loved track"
-											>
-												<span class="material-symbols">favorite</span>
-											</span>
-										) : null}
-									</p>
-								) : null}
-								{!t.nowPlaying && t.playedAt ? (
-									<p class="lastfm-when">
-										{humanizeDuration(
-											Date.now() - new Date(t.playedAt).getTime(),
-											{ largest: 1, round: true }
-										)}{" "}
-										ago
-									</p>
-								) : null}
-							</div>
-						</div>
-						{player}
-					</>
-				);
-			})}
+									</div>
+								</div>
+								{player}
+							</>
+						);
+					})}
+				</div>
+				<div class="lastfm-history" id="lastfm-history">
+					<div class="lastfm-history-scroll" on:scroll={fillHistory}>
+						<ol class="lastfm-history-list">
+							{use(state.history).map(historyItems)}
+						</ol>
+					</div>
+					<a class="lastfm-history-more" href={PROFILE_URL}>
+						view profile
+						<span class="material-symbols">north_east</span>
+					</a>
+				</div>
+			</div>
 		</div>
 	);
 }
@@ -2122,6 +2693,299 @@ LastFmCard.style = css`
 		gap: 1rem;
 		align-items: center;
 		margin-block: auto;
+	}
+
+	/* the now-playing view and the history share one grid cell, so opening
+	   the history swaps them in place without resizing the card; the
+	   history is size-contained, so only the now-playing view sizes it */
+	.lastfm-body {
+		flex: 1 1 auto;
+		min-height: 0;
+		display: grid;
+	}
+
+	.lastfm-now,
+	.lastfm-history {
+		grid-area: 1 / 1;
+		min-width: 0;
+		display: flex;
+		flex-direction: column;
+		transition:
+			opacity 0.2s ease,
+			visibility 0s linear 0.2s;
+	}
+
+	.lastfm-history {
+		contain: size;
+		opacity: 0;
+		visibility: hidden;
+	}
+
+	/* a size container, so rows can be a third of it tall; fades in at
+	   whichever edges have more to scroll to */
+	.lastfm-history-scroll {
+		--fade-top: 0px;
+		--fade-bottom: 0px;
+		flex: 1 1 0;
+		min-height: 0;
+		overflow-y: auto;
+		scrollbar-width: thin;
+		container-type: size;
+		mask-image: linear-gradient(
+			to bottom,
+			transparent,
+			#000 var(--fade-top),
+			#000 calc(100% - var(--fade-bottom)),
+			transparent
+		);
+	}
+
+	.lastfm-history-scroll[data-above] {
+		--fade-top: 1.25rem;
+	}
+
+	.lastfm-history-scroll[data-below] {
+		--fade-bottom: 1.25rem;
+	}
+
+	.lastfm-body.history-open .lastfm-now {
+		opacity: 0;
+		visibility: hidden;
+	}
+
+	.lastfm-body.history-open .lastfm-history {
+		opacity: 1;
+		visibility: visible;
+		transition: opacity 0.2s ease 0.05s;
+	}
+
+	.lastfm-history-btn,
+	.lastfm-nav-btn {
+		background: none;
+		border: none;
+		padding: 0.2rem;
+		cursor: pointer;
+		font: inherit;
+		transition:
+			color 0.2s ease,
+			opacity 0.2s ease;
+	}
+
+	/* the chevrons are narrow glyphs in a square box: tuck them in so the
+	   trio reads as one control */
+	.lastfm-nav-btn {
+		padding-inline: 0;
+		margin-inline: -0.15rem;
+	}
+
+	/* the header's buttons as one group, so on a narrow card they wrap
+	   to a line of their own together */
+	.lastfm-topbtns {
+		display: flex;
+		align-items: center;
+		gap: 0.4rem;
+		flex-shrink: 0;
+		margin-left: auto;
+	}
+
+	.lastfm-history-btn:hover,
+	.lastfm-history-btn.open,
+	.lastfm-nav-btn:not(:disabled):hover {
+		color: var(--text) !important;
+	}
+
+	.lastfm-nav-btn:disabled {
+		opacity: 0.3;
+		cursor: default;
+	}
+
+	/* on a very narrow card the buttons take a line of their own, on the
+	   right (on one line, the auto margin takes up the slack instead) */
+	.livecard-header {
+		flex-wrap: wrap;
+		justify-content: flex-end;
+		row-gap: 0.25rem;
+	}
+
+	/* five buttons don't leave room for the scrobble count on a phone */
+	@media (max-width: 30rem) {
+		.livecard-header .livecard-stat {
+			display: none;
+		}
+	}
+
+	/* three rows to the scrollport, more below */
+	.lastfm-history-list {
+		display: grid;
+		grid-auto-rows: max(2.75rem, calc((100cqh - 0.5rem) / 3));
+		gap: 0.25rem;
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	.lastfm-history-item {
+		display: flex;
+		align-items: center;
+		gap: 0.8rem;
+		min-width: 0;
+		min-height: 0;
+		cursor: pointer;
+	}
+
+	.lastfm-history-item.skeleton {
+		cursor: default;
+	}
+
+	/* only while open, so it plays again on every open */
+	.lastfm-body.history-open .lastfm-history-item:not(.skeleton) {
+		animation: lastfm-history-in 0.35s ease-out both;
+		animation-delay: calc(var(--i, 0) * 50ms);
+	}
+
+	.lastfm-history-item[aria-current="true"] .lastfm-history-title {
+		color: var(--accent);
+	}
+
+	@keyframes lastfm-history-in {
+		from {
+			opacity: 0;
+			transform: translateY(0.35rem);
+		}
+	}
+
+	.lastfm-history-art {
+		height: min(100%, 4rem);
+		aspect-ratio: 1;
+		flex-shrink: 0;
+		object-fit: cover;
+		border: 1px solid var(--surface2);
+		background: var(--surface0);
+	}
+
+	.lastfm-history-meta {
+		flex: 1 1 0;
+		min-width: 0;
+		display: flex;
+		flex-direction: column;
+		gap: 0.15rem;
+	}
+
+	/* doubled up to beat the shared .livecard * { text-wrap: balance },
+	   which would otherwise switch wrapping back on */
+	.lastfm-history .lastfm-history-title,
+	.lastfm-history .lastfm-history-artist {
+		overflow: hidden;
+		white-space: nowrap;
+		text-wrap: nowrap;
+		text-overflow: ellipsis;
+	}
+
+	.lastfm-history-title {
+		color: var(--text);
+		font-family: var(--font-display), sans-serif;
+		font-size: 1.1rem;
+		line-height: 1.2;
+		text-decoration: none;
+	}
+
+	.lastfm-history-artist {
+		color: var(--text1);
+		font-size: 0.85rem;
+		line-height: 1.25;
+	}
+
+	.lastfm-history-artist a {
+		color: inherit;
+		text-decoration: none;
+	}
+
+	.lastfm-history-artist .lastfm-album {
+		font-size: inherit;
+	}
+
+	.lastfm-history-title:hover,
+	.lastfm-history-title:focus-visible,
+	.lastfm-history-artist a:hover,
+	.lastfm-history-artist a:focus-visible {
+		color: var(--supertext);
+		text-decoration: underline;
+		text-decoration-color: var(--supertext);
+		text-decoration-thickness: 2px;
+	}
+
+	.lastfm-history-when {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.3rem;
+		flex-shrink: 0;
+		color: var(--subtext2);
+		font-size: 0.8rem;
+		white-space: nowrap;
+	}
+
+	.lastfm-history-loved {
+		color: hsl(354, 70%, 64%);
+		font-size: 1rem;
+	}
+
+	/* placeholder rows while the first page loads */
+	.lastfm-history-bar {
+		display: block;
+		width: 70%;
+		height: 0.8rem;
+		background: var(--surface0);
+	}
+
+	.lastfm-history-bar.short {
+		width: 45%;
+		height: 0.65rem;
+	}
+
+	.lastfm-history-more {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.2rem;
+		align-self: flex-end;
+		margin-top: 0.5rem;
+		color: var(--subtext1) !important;
+		font-size: 0.8rem;
+		text-decoration: none !important;
+		transition: color 0.2s ease;
+	}
+
+	.lastfm-history-more:hover {
+		color: var(--text) !important;
+	}
+
+	.lastfm-history-more .material-symbols {
+		font-size: 0.95rem;
+	}
+
+	.lastfm-history-status {
+		display: grid;
+		place-items: center;
+		color: var(--subtext2);
+		font-size: 0.85rem;
+		text-align: center;
+	}
+
+	.lastfm-history-status.wide {
+		grid-row: span 3;
+	}
+
+	.lastfm-history-retry {
+		background: none;
+		border: none;
+		padding: 0.2rem;
+		color: var(--subtext1);
+		font: inherit;
+		cursor: pointer;
+	}
+
+	.lastfm-history-retry:hover {
+		color: var(--text);
+		text-decoration: underline;
 	}
 
 	.lastfm-meta {
@@ -2273,9 +3137,21 @@ LastFmCard.style = css`
 		font-size: clamp(0.9rem, 5.2cqi, 1.15rem);
 	}
 	.lastfm-when {
+		display: flex;
+		align-items: center;
+		gap: 0.3rem;
 		color: var(--subtext2);
 		margin-top: 0.2rem !important;
 		font-size: 0.85rem;
+	}
+
+	.lastfm-when .material-symbols {
+		font-size: 1rem;
+	}
+
+	/* what used to be the header badge */
+	.lastfm-now-playing {
+		color: var(--subtext1);
 	}
 
 	/* Footer stats row — lives at the bottom of the meta column so it fills the
