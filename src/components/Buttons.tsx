@@ -16,8 +16,8 @@ export function WebButton(
 		this.image.addEventListener("error", () => {
 			console.error("Oh no :(");
 			this.root.style.visibility = "hidden";
-			this.root.style.width = 0;
-			this.root.style.minWidth = 0;
+			this.root.style.width = "0";
+			this.root.style.minWidth = "0";
 		});
 	};
 
