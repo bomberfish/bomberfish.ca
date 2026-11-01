@@ -39,7 +39,13 @@ function Navbar(this: FC<{ active?: PageCategory }>) {
 				(!!nav && nav.scrollWidth > nav.clientWidth + 1);
 			el.classList.toggle("compact", cramped);
 		};
-		const sizeObserver = new ResizeObserver(fit);
+		// next frame: toggling the class inside the observer's own callback
+		// changes layout mid-notification ("ResizeObserver loop" warning)
+		let fitRaf = 0;
+		const sizeObserver = new ResizeObserver(() => {
+			cancelAnimationFrame(fitRaf);
+			fitRaf = requestAnimationFrame(fit);
+		});
 		sizeObserver.observe(el);
 		void document.fonts?.ready.then(fit);
 
@@ -47,6 +53,7 @@ function Navbar(this: FC<{ active?: PageCategory }>) {
 			window.removeEventListener("scroll", onScroll);
 			if (rafId !== null) cancelAnimationFrame(rafId);
 			sizeObserver.disconnect();
+			cancelAnimationFrame(fitRaf);
 		};
 	};
 
