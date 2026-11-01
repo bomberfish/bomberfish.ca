@@ -691,6 +691,15 @@ article {
 	animation-delay: -2s;
 }
 
+/* not scrolled into view yet (ButtonList removes the class); without
+   scripting nothing would ever remove it, so only then */
+@media (scripting: enabled) {
+	.webbtns-wait .webbtns,
+	.webbtns-wait .webbtns > * {
+		animation-play-state: paused;
+	}
+}
+
 /* ==========================================================================
    Layout Container (Sidebar + Main)
    ========================================================================== */

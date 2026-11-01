@@ -243,8 +243,24 @@ function OtherButtons(this: FC) {
 }
 
 export function ButtonList(this: FC) {
+	// the marquees (and the buttons' bobbing) hold still until the list
+	// first scrolls into view, so they start from the beginning on screen
+	this.cx.mount = () => {
+		if (!("IntersectionObserver" in window)) {
+			this.root.classList.remove("webbtns-wait");
+			return;
+		}
+		const observer = new IntersectionObserver((entries) => {
+			if (!entries.some((e) => e.isIntersecting)) return;
+			this.root.classList.remove("webbtns-wait");
+			observer.disconnect();
+		});
+		observer.observe(this.root);
+		return () => observer.disconnect();
+	};
+
 	return (
-		<span>
+		<span class="webbtns-wait">
 			<span class="webbtns">
 				<PeopleButtons />
 				<PeopleButtons />
