@@ -3,9 +3,9 @@
 	<head>
 		<!--ssr-head-->
 		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width,initial-scale=1" />
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,viewport-fit=cover" />
 		<meta name="theme-color" content="#434d65" media="(prefers-color-scheme: light)" />
-		<meta name="theme-color" content="#181d25" media="(prefers-color-scheme: dark)" />
+		<meta name="theme-color" content="#1c2f42" media="(prefers-color-scheme: dark)" />
 		<meta name="description" content="bomberfish's personal website" />
 		<meta name="author" content="bomberfish" />
 		<meta name="og:image" content="https://bomberfish.ca/me.png" />
@@ -22,6 +22,17 @@
 	</head>
 
 	<body>
+		<!-- page background: photo, film grain, a fade at the end of the page,
+		     then the screen-fixed rain canvas (src/lib/rain.ts goes in
+		     .page-bg-fixed). Ordinary content, not
+		     position: fixed, so Safari draws it under its toolbars; see
+		     .page-bg in src/style.css -->
+		<div class="page-bg" aria-hidden="true">
+			<div class="page-bg-photo"></div>
+			<div class="page-bg-grain"></div>
+			<div class="page-bg-end"></div>
+			<div class="page-bg-fixed"></div>
+		</div>
 		<!--ssr-body-->
 		<script type="module" src="/src/main-client.ts"></script>
 		<link rel="stylesheet" href="/typography.css" />

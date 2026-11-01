@@ -115,6 +115,12 @@ export default defineConfig({
 			},
 		},
 	],
+	server: {
+		// listen on the LAN too, for testing on a phone on the same network
+		host: true,
+		// any Host header (Bonjour names, tunnels, custom hostnames); dev only
+		allowedHosts: true,
+	},
 	define: {
 		__APP_VERSION__: JSON.stringify(process.env.npm_package_version),
 		__BUILD_DATE__: JSON.stringify(new Date().toISOString()),

@@ -7,11 +7,15 @@ import LastFmCard from "../components/LastFmCard";
 import TwitterCard from "../components/TwitterCard";
 import GithubCard from "../components/GithubCard";
 import MastodonCard from "../components/MastodonCard";
-import {
-	EmailIcon,
-	DiscordIcon,
-	SignalIcon,
-} from "../components/SocialIcons";
+import { EmailIcon, DiscordIcon, SignalIcon } from "../components/SocialIcons";
+import ProjectCard from "../components/ProjectCard";
+import TransitionLink from "../components/TransitionLink";
+import { projects } from "../Projects";
+
+const featuredProjects = projects
+	.filter((project) => project.featured)
+	.sort((a, b) => (a.featuredPosition || 0) - (b.featuredPosition || 0))
+	.slice(0, 3);
 
 function Homepage(this: FC) {
 	return (
@@ -20,14 +24,30 @@ function Homepage(this: FC) {
 			<div class="layout-container">
 				<Navbar active="home" />
 				<div class="main-content">
-					<section class="about-section background-container" id="about">
+					<section class="about-section" id="about">
 						<div class="about-text">
 							<h1>
 								<span class="emoji">👋</span>hiya!
 							</h1>
+							{/* floated beside the paragraphs (before them, so it can be),
+							    or placed in the grid in narrow portrait */}
+							<a href="/me.png" target="_blank" rel="noopener" class="pfp-link">
+								<picture>
+									<source type="image/webp" srcset="/me.480px.webp" />
+									<img
+										src="/me.480px.jpg"
+										class="pfp"
+										title="my profile picture! click to view full size."
+										width="220"
+										height="220"
+										loading="eager"
+										alt="profile picture"
+									/>
+								</picture>
+							</a>
 							<p>
-								i'm an 18 y/o high school student from waterloo,
-								canada, and sometimes i make <code>use(ful|less)</code> things.
+								i'm an 18 y/o high school student from waterloo, canada, and
+								sometimes i make <code>use(ful|less)</code> things.
 							</p>
 							<p>
 								at the moment, you can find me building beautiful web-adjacent
@@ -58,23 +78,10 @@ function Homepage(this: FC) {
 								{/*i also used to be really involved in the ios modding and
 								jailbreak scene, so say hi if you recognize me from those
 								circles!*/}
-								i'm also somewhat active in the ios modding and jailbreak scene, so say hi if you see me around!
+								i'm also somewhat active in the ios modding and jailbreak scene,
+								so say hi if you see me around!
 							</p>
 						</div>
-						<a href="/me.png" target="_blank" rel="noopener" class="pfp-link">
-							<picture>
-								<source type="image/webp" srcset="/me.480px.webp" />
-								<img
-									src="/me.480px.jpg"
-									class="pfp"
-									title="my profile picture! click to view full size."
-									width="220"
-									height="220"
-									loading="eager"
-									alt="profile picture"
-								/>
-							</picture>
-						</a>
 					</section>
 					<section class="live-section" id="status">
 						<div class="live-grid">
@@ -119,6 +126,19 @@ function Homepage(this: FC) {
 							</div>
 						</div>
 					</section>
+					<section class="projects-section" id="projects">
+						<div class="projects-heading">
+							<h3>(some) things i've made</h3>
+							<TransitionLink href="/projects" class="projects-more">
+								all projects →
+							</TransitionLink>
+						</div>
+						<div class="projects-row">
+							{featuredProjects.map((project) => (
+								<ProjectCard project={project} compact />
+							))}
+						</div>
+					</section>
 					<br />
 					<section class="buttons-section">
 						<div class="mine">
@@ -152,17 +172,24 @@ function Homepage(this: FC) {
 }
 
 Homepage.style = css`
+	/* Text on the left, the picture on the right, vertically centred on
+	   the whole text block. The picture sits right after the heading in the
+	   markup (narrow portrait floats it, below), so this is a grid on the
+	   text block rather than a row of the two: everything in the first
+	   column, the picture in the second, across all the rows. */
 	.about-section {
 		margin-bottom: 0.75rem;
-		display: flex;
-		flex-direction: row;
-		align-items: center;
-		gap: 1.25rem;
+		display: flow-root;
 	}
 
 	.about-text {
-		flex: 1 1 auto;
-		min-width: 0;
+		display: grid;
+		grid-template-columns: minmax(0, 1fr) auto;
+		column-gap: 1.25rem;
+	}
+
+	.about-text > * {
+		grid-column: 1;
 	}
 
 	.about-text > *:first-child {
@@ -174,8 +201,11 @@ Homepage.style = css`
 	}
 
 	.pfp-link {
-		flex-shrink: 0;
 		display: block;
+		grid-column: 2 !important;
+		/* every row there is (the empty extra ones are 0 tall) */
+		grid-row: 1 / span 20;
+		align-self: center;
 	}
 
 	h1 .emoji {
@@ -203,11 +233,11 @@ Homepage.style = css`
 		transform: rotate(-15deg);
 	}
 
-	.about-section::after {
+	/* .about-section::after {
 		content: "";
 		display: table;
 		clear: both;
-	}
+	} */
 
 	.about-section p {
 		font-size: 0.95rem;
@@ -228,10 +258,14 @@ Homepage.style = css`
 	}
 
 	.buttons-section {
-		background: var(--mantle);
-		border: 1px solid var(--surface2);
+		background: var(--card-bg);
 		padding: 0.75rem;
 		margin-top: auto;
+		contain: paint;
+		/* the marquee, the per-button animations and the gifs stop being
+		   rendered while this is off screen; auto remembers its real height */
+		content-visibility: auto;
+		contain-intrinsic-size: auto 10rem;
 	}
 
 	.mine {
@@ -246,24 +280,24 @@ Homepage.style = css`
 		margin: 0;
 	}
 
-	/* 8-col grid: row 2 = two cards (3 cols each) + contacts (2 cols),
-	   row 3 = github (5 cols) + mastodon (3 cols, same as lastfm), so nothing is left
-	   empty under the contact cards */
+	/* 16-col grid: row 2 = last.fm (7 cols, the widest: it has the preview
+	   player) + twitter (6) + contacts (3); row 3 = github (10) + mastodon (6,
+	   same width as twitter), so nothing is left empty under the contacts */
 	.live-grid {
 		display: grid;
-		grid-template-columns: repeat(8, minmax(0, 1fr));
+		grid-template-columns: repeat(16, minmax(0, 1fr));
 		align-items: stretch;
 		gap: 1rem;
 		margin-block: 1rem;
 	}
 
 	.live-grid > .live-heading {
-		grid-column: 1 / 7;
+		grid-column: 1 / 14;
 		grid-row: 1;
 	}
 
 	.live-grid > .more-heading {
-		grid-column: 7 / 9;
+		grid-column: 14 / 17;
 		grid-row: 1;
 		font-size: 1.1rem;
 		align-self: end;
@@ -281,43 +315,123 @@ Homepage.style = css`
 	}
 
 	.live-stack > :global(.livecard:nth-child(1)) {
-		grid-column: 1 / 4;
+		grid-column: 1 / 8;
 		grid-row: 2;
 	}
 
 	.live-stack > :global(.livecard:nth-child(2)) {
-		grid-column: 4 / 7;
+		grid-column: 8 / 14;
 		grid-row: 2;
 	}
 
 	.live-stack > :global(.livecard:nth-child(3)) {
-		grid-column: 6 / 9;
+		grid-column: 11 / 17;
 		grid-row: 3;
 	}
 
 	.live-stack > :global(.livecard:nth-child(4)) {
-		grid-column: 1 / 6;
+		grid-column: 1 / 11;
 		grid-row: 3;
 	}
 
 	.live-grid > .contact-list {
-		grid-column: 7 / 9;
+		grid-column: 14 / 17;
 		grid-row: 2;
 		display: flex;
 		flex-direction: column;
-		align-self: start;
+		/* fill the row's height, cards sharing it equally */
+		align-self: stretch;
 		gap: 0.75rem;
 		min-width: 0;
 	}
 
-	.contact-list > :global(.contact-card) {
-		flex: 0 0 auto;
+	/* .live-grid prefix outranks ContactCard's own min-height: 100%
+	   (same specificity otherwise, and its stylesheet loads later), which
+	   made each card as tall as the whole column */
+	.live-grid > .contact-list > :global(.contact-card) {
+		flex: 1 1 0;
 		min-height: 0;
+	}
+
+	.projects-heading {
+		display: flex;
+		align-items: baseline;
+		justify-content: space-between;
+		gap: 1rem;
+		margin-bottom: 1rem;
+	}
+
+	.projects-heading h3 {
+		margin: 0;
+	}
+
+	.projects-row {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
+		gap: 1rem;
+	}
+
+	/* in-between widths (iPhone Duo's inner screen in landscape is 890px,
+	   small laptops, tablets): the 16-col grid gets too cramped for the
+	   player and the contacts column, so go to two columns, with the
+	   contacts as a row underneath */
+	@media (min-width: 55.0625rem) and (max-width: 70rem) {
+		.live-grid {
+			grid-template-columns: minmax(0, 7fr) minmax(0, 6fr);
+		}
+
+		.live-grid > .live-heading {
+			grid-column: 1 / -1;
+		}
+
+		.live-stack > :global(.livecard:nth-child(1)) {
+			grid-column: 1;
+			grid-row: 2;
+		}
+
+		.live-stack > :global(.livecard:nth-child(2)) {
+			grid-column: 2;
+			grid-row: 2;
+		}
+
+		.live-stack > :global(.livecard:nth-child(3)) {
+			grid-column: 2;
+			grid-row: 3;
+		}
+
+		.live-stack > :global(.livecard:nth-child(4)) {
+			grid-column: 1;
+			grid-row: 3;
+		}
+
+		.live-grid > .more-heading {
+			grid-column: 1 / -1;
+			grid-row: 4;
+			align-self: start;
+		}
+
+		.live-grid > .contact-list {
+			grid-column: 1 / -1;
+			grid-row: 5;
+			flex-direction: row;
+		}
+
+		.live-grid > .contact-list > :global(.contact-card) {
+			min-width: 0;
+			min-height: auto;
+		}
 	}
 
 	@media (max-width: 55rem) {
 		.live-grid {
 			grid-template-columns: 1fr;
+		}
+
+		/* the fill-the-column flex above needs the grid row's height; in
+		   one column there's none, and the cards collapsed to nothing */
+		.live-grid > .contact-list > :global(.contact-card) {
+			flex: none;
+			min-height: auto;
 		}
 
 		.live-grid > .live-heading,
@@ -337,6 +451,19 @@ Homepage.style = css`
 		}
 	}
 
+	/* wide enough for the three contacts side by side (iPhone Duo inner
+	   screen, tablets) but still a single column of cards */
+	@media (min-width: 36rem) and (max-width: 55rem) {
+		.live-grid > .contact-list {
+			flex-direction: row;
+		}
+
+		.live-grid > .contact-list > :global(.contact-card) {
+			flex: 1 1 0;
+			min-width: 0;
+		}
+	}
+
 	@media (max-width: 40rem) {
 		.live-grid {
 			gap: 0.875rem;
@@ -347,16 +474,45 @@ Homepage.style = css`
 		}
 	}
 
-	@media (orientation: portrait) {
+	/* portrait but roomy (iPhone Duo inner screen, tablets): keep the
+	   picture beside the text, just smaller */
+	@media (orientation: portrait) and (min-width: 36rem) {
+		.pfp {
+			width: 160px;
+			height: 160px;
+		}
+	}
+
+	/* Narrow portrait: still floated, so every paragraph is one run of
+	   lines the browser can justify and hyphenate as a whole (the text
+	   wraps round the picture and carries on full width below), but lifted
+	   up beside the heading. A float can't start above the content before
+	   it, so it's pulled up with a negative top margin: the heading's box
+	   (font-size x 1.18 line-height) plus its 0.75rem margin, less the
+	   ~0.18em above its lettering = 1 heading font-size + 0.75rem, using
+	   the heading's own size (h1 in style.css). */
+	@media (orientation: portrait) and (max-width: 35.9375rem) {
 		.about-section {
-			flex-direction: column-reverse;
-			text-align: center;
+			text-align: justify;
+		}
+
+		.about-text {
+			display: block;
+		}
+
+		.about-section p {
+			hyphens: auto;
+		}
+
+		.pfp-link {
+			float: right;
+			margin: calc(-1 * clamp(2.5rem, 1.75rem + 3.5vw, 4rem) - 0.75rem) 0
+				0.4rem 0.9rem;
 		}
 
 		.pfp {
-			width: 150px;
-			height: 150px;
-			margin: 0.5rem auto;
+			width: clamp(6.5rem, 32vw, 9rem);
+			height: clamp(6.5rem, 32vw, 9rem);
 		}
 	}
 `;

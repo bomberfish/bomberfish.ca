@@ -15,7 +15,9 @@ export function WebButton(
 	this.cx.mount = () => {
 		this.image.addEventListener("error", () => {
 			console.error("Oh no :(");
-			this.root.style.display = "none";
+			this.root.style.visibility = "hidden";
+			this.root.style.width = 0;
+			this.root.style.minWidth = 0;
 		});
 	};
 
@@ -36,7 +38,7 @@ export function WebButton(
 			<img
 				loading="lazy"
 				src={this.src}
-				alt={this.alt || "A web button."}
+				alt={this.alt || this.href}
 				title={this.title || this.alt || ""}
 				this={use(this.image)}
 			/>
@@ -62,9 +64,77 @@ WebButton.style = css`
 	}
 `;
 
-export function ButtonList(this: FC) {
+function PeopleButtons(this: FC) {
 	return (
-		<span class="webbtns">
+		<>
+			<WebButton
+				src="https://mercurywork.shop/button.gif"
+				title="Mercury Workshop"
+				href="https://mercurywork.shop"
+			/>
+			<WebButton src="https://velzie.rip/88x31.png" href="https://velzie.rip" />
+			<WebButton
+				src="https://foxmoss.com/foxmossbutton.png"
+				href="https://foxmoss.com"
+			/>
+			<WebButton src="https://wearr.dev/88x31.gif" href="https://wearr.dev" />
+			<WebButton
+				src="https://errorcodezero.dev/button.gif"
+				href="https://www.errorcodezero.dev/"
+			/>
+			<WebButton
+				src="https://qwq.sh/88x31/hazelcaffe.png"
+				href="https://qwq.sh"
+			/>
+			<WebButton
+				src="https://madz.mov/assets/images/buttons/friends/madzbutton.gif"
+				href="https://madz.mov"
+			/>
+			<WebButton
+				src="https://doskel.net/buttons/doskel.gif"
+				href="https://doskel.net/"
+			/>
+			<WebButton
+				src="https://thememesniper.dev/images/88x31.png"
+				href="https://thememesniper.dev"
+			/>
+			<WebButton
+				src="/buttons/jack.cab.gif"
+				href="https://jack.cab/?utm_content=jack-button"
+			/>
+			<WebButton
+				src="https://circulars.dev/circular-88x31.gif"
+				href="https://circulars.dev"
+			/>
+			<WebButton src="https://gideon.sh/88x31.gif" href="https://gideon.sh" />
+			<WebButton
+				src="https://cdn.dispherical.com/88x31.png"
+				href="https://dispherical.com"
+			/>
+			<WebButton
+				src="https://w.on-t.work/assets/88x31.png"
+				href="https://w.on-t.work"
+			/>
+			<WebButton
+				src="https://notfire.cc/design/images/buttons/notfire-cc-88x31-af.gif"
+				href="https://notfire.cc"
+			/>
+			<WebButton
+				src="https://zenfyr.dev/88_31/88_31.webp"
+				href="https://zenfyr.dev"
+			/>
+			<WebButton src="/buttons/ipg.gif" href="https://invoxiplaygames.uk" />
+			<WebButton
+				src="https://melankorin.net/assets/img/buttons/button-1.gif"
+				href="https://melankorin.net"
+			/>
+		</>
+	);
+}
+
+function OtherButtons(this: FC) {
+	return (
+		<>
 			<WebButton
 				src="/buttons/dreamland.gif"
 				title="Made with dreamland.js, a small, utilitarian web framework"
@@ -105,246 +175,42 @@ export function ButtonList(this: FC) {
 				src="/buttons/cssdif.gif"
 				title="CSS overflow is my mortal enemy."
 			/>
+			<WebButton src="/buttons/wdw.gif" href="https://wetdry.world" />
 			<WebButton
-				src="https://mercurywork.shop/button.gif"
-				title="Mercury Workshop"
-				href="https://mercurywork.shop"
-			/>
-			<WebButton
-				src="/buttons/ce88x31.gif"
-				title="velzie.d"
-				href="https://velzie.rip"
-			/>
-			<WebButton
-				src="/buttons/foxmossbutton.gif"
-				title="FoxMoss"
-				href="https://foxmoss.com"
-			/>
-			<WebButton
-				src="https://wearr.dev/88x31.gif"
-				title="wearr"
-				href="https://wearr.dev"
-			/>
-			<WebButton
-				src="https://errorcodezero.dev/button.gif"
-				title="errorcodezero"
-				href="https://www.errorcodezero.dev/"
-			/>
-			{/* todo: annoy these two in the gc so they start serving gifs */}
-			<WebButton
-				src="https://qwq.sh/88x31/hazelcaffe.png"
-				title="Hazel's website"
-				href="https://qwq.sh"
-			/>
-			<WebButton
-				src="https://madjikware.com/img/mj.png"
-				title="mdp3"
-				href="https://madjikware.com/"
-			/>
-			<WebButton
-				src="https://madz.mov/assets/images/buttons/friends/madzbutton.gif"
-				title="MadzTop"
-				href="https://madz.mov"
-			/>
-			<WebButton
-				src="/buttons/dskl.gif"
-				title="doskel"
-				href="https://doskel.net/"
-			/>
-			<WebButton
-				src="https://authenyo.xyz/images/button.gif"
-				title="authenyo"
-				href="https://authenyo.xyz"
-			/>
-			<WebButton
-				src="/buttons/k8.gif"
-				title="thememesniper"
-				href="https://thememesniper.dev"
-			/>
-			<WebButton
-				src="/buttons/jack.cab.gif"
-				title="jack.cab"
-				href="https://jack.cab/?utm_content=jack-button"
-			/>
-			<WebButton
-				src="https://circulars.dev/circular-88x31.gif"
-				title="circular"
-				href="https://circulars.dev"
-			/>
-			<WebButton
-				src="https://gideon.sh/88x31.gif"
-				title="gideon.sh"
-				href="https://gideon.sh"
-			/>
-			<WebButton
-				src="/buttons/dispherical.gif"
-				title="dispherical"
-				href="https://dispherical.com"
-			/>
-			<WebButton
-				src="/buttons/kopper.gif"
-				title="kopper"
-				href="https://w.on-t.work"
-			/>
-			<WebButton
-				src="https://notfire.cc/design/images/buttons/notfire-cc-88x31-af.gif"
-				title="notfire"
-				href="https://notfire.cc"
-			/>
-			<WebButton
-				src="/buttons/melon.gif"
-				title="zenfyr"
-				href="https://zenfyr.dev"
-			/>
-			<WebButton
-				src="/buttons/ipg.gif"
-				title="InvoxiPlayGames"
-				href="https://invoxiplaygames.uk"
-			/>
-			<WebButton
-				src="https://melankorin.net/assets/img/buttons/button-1.gif?cbh=41d3f8b9b3d143bca8055b959ee0f510"
-				title="melankorin"
-				href="https://melankorin.net"
-			/>
-			<WebButton
-				src="https://omada.cafe/omada.gif"
-				title="Check out omada.cafe, an private and secure alternative provider."
-				href="https://omada.cafe"
-			/>
-			<WebButton
-				src="/buttons/wdw.gif"
-				title="Wet-Dry World"
-				href="https://wetdry.world"
-			/>
-			<WebButton
-				src="https://kagi.com/smallweb/static/UseKagiV4C.gif"
-				title="Use Kagi!"
-				href="https://kagi.com/welcome"
-			/>
-			<WebButton
-				src="/buttons/sun.gif"
-				title="Godspeed, Sun. You were too good for this world."
-			/>
-			<WebButton
-				src="/buttons/javanow.gif"
-				title="Java walked so JavaScript could drunkenly stumble into a gutter."
-				href="https://www.java.com/en/"
-			/>
-			<WebButton
-				src="/buttons/eightyeightthirtyone.gif"
-				title="88x31"
+				src="https://eightyeightthirty.one/88x31.png"
 				href="https://eightyeightthirty.one"
 			/>
 			<WebButton src="/buttons/xkcd.gif" title="XKCD" href="https://xkcd.com" />
-			<WebButton
-				src="/buttons/lucida-2.gif"
-				title="Lucida: Free Music. No BS."
-				href="https://lucida.to"
-			/>
 			<WebButton
 				src="/buttons/balls.gif"
 				title="Google Single Sign On"
 				href="https://login.corp.google.com"
 			/>
-			<WebButton
-				src="/buttons/modarchive.gif"
-				href="https://modarchive.org"
-				title="The Mod Archive"
-			/>
-			<WebButton
-				src="/buttons/newgrounds.gif"
-				href="https://newgrounds.com"
-				title="Newgrounds!"
-			/>
+			<WebButton src="/buttons/modarchive.gif" href="https://modarchive.org" />
+			<WebButton src="/buttons/newgrounds.gif" href="https://newgrounds.com" />
 			<WebButton
 				src="https://smokepowered.com/smoke.gif"
-				title="Smokepowered"
 				href="https://smokepowered.com"
 			/>
-			<WebButton
-				src="/buttons/blazed.gif"
-				title="Epic MegaBlazed"
-				href="https://epicblazed.com"
-			/>
-			<WebButton
-				src="/buttons/hackclub.gif"
-				title="Hack Club"
-				href="https://hack.club"
-			/>
-			<WebButton
-				src="/buttons/beos_now_anim.gif"
-				title="Download Haiku! (It's basically just BeOS!)"
-				href="https://haiku-os.org"
-			/>
+			<WebButton src="/buttons/blazed.gif" href="https://epicblazed.com" />
 			<WebButton
 				src="/buttons/github.gif"
 				href="https://github.com"
 				title="Social Coding!"
 			/>
-			<WebButton
-				src="/buttons/oxo.gif"
-				title="Radiohead"
-				href="https://radiohead.com"
-			/>
-			<WebButton src="/buttons/paws.gif" title=":3" />
-			<WebButton src="/buttons/affection.gif" title="<3" />
 			<WebButton src="/buttons/macmade-wht.gif" title="I <3 Macintosh" />
-			<WebButton src="/buttons/imac.gif" title="iMacs are dope!" />
-			<WebButton src="/buttons/nodrugs.gif" title="The Windows Mind Virus!" />
-			<WebButton src="/buttons/besteyes2.gif" title="How else?" />
+			<WebButton src="/buttons/stop.gif" title="STOP" />
 			<WebButton
 				src="/buttons/cdaweb.gif"
 				title="It's more likely than you think."
 				href="https://cira.ca"
 			/>
-			<WebButton
-				src="/buttons/iamv2.gif"
-				title="I am Canadian!"
-				href="https://cira.ca"
-			/>
-			<WebButton
-				src="/buttons/can.gif"
-				title="I am Canadian!"
-				href="https://cira.ca"
-			/>
-			<WebButton
-				src="/buttons/bestcanada.gif"
-				title="Canada is the GOAT"
-				href="https://cira.ca"
-			/>
-			<WebButton
-				src="/buttons/canadab.gif"
-				title="Proud to be a Canadian!"
-				href="https://cira.ca"
-			/>
-			<WebButton
-				src="/buttons/cananow.gif"
-				title="The Canadian Century starts NOW."
-				href="https://cira.ca"
-			/>
 			<WebButton src="/buttons/ieborg.gif" title="Resistance is futile." />
-			<WebButton
-				src="/buttons/iecrash.gif"
-				title="Possibly more unstable than Xcode."
-			/>
-			<WebButton src="/buttons/ieduh.gif" title="Are YOU retarded?" />
-			<WebButton src="/buttons/ieexplode.gif" title="Kaboom!" />
-			<WebButton
-				src="/buttons/iexploiter.gif"
-				title="Bill Gates has a Micro Soft."
-			/>
-			<WebButton
-				src="/buttons/aol-sucks.gif"
-				title="Good riddance."
-				href="https://help.aol.com/articles/dial-up-internet-to-be-discontinued"
-			/>
 			<WebButton
 				src="/buttons/mariokart.gif"
 				title="Play some Mario Kart!"
 				href="https://bomberfish.github.io/N64Wasm"
 			/>
-			<WebButton src="/buttons/vocaloid.gif" title="Vocaloid NOW!!" />
-			<WebButton src="/buttons/iframsuc.gif" title="Iframes SUCK!" />
 			<WebButton
 				src="/buttons/necoarc-88x31.gif"
 				title="the profaned one"
@@ -366,17 +232,63 @@ export function ButtonList(this: FC) {
 					}
 				}}
 			/>
-			<WebButton src="/buttons/stop.gif" title="STOP" />
+		</>
+	);
+}
+
+export function ButtonList(this: FC) {
+	return (
+		<span>
+			<span class="webbtns">
+				<PeopleButtons />
+				<PeopleButtons />
+			</span>
+			<span class="webbtns fast">
+				<OtherButtons />
+				<OtherButtons />
+			</span>
 		</span>
 	);
 }
 
 ButtonList.style = css`
-	:scope {
-		display: flex;
-		flex-wrap: wrap;
-		gap: 0.25rem;
-		row-gap: 0.5rem;
+	.webbtns {
+		display: inline-flex;
+		flex-direction: row;
+		white-space: nowrap;
+		gap: 0.75rem;
+		padding-right: 0.75rem;
+		flex-wrap: nowrap;
+
+		margin-block: 0.5rem;
+
+		animation: move 25s linear infinite;
+		animation-fill-mode: both;
+	}
+
+	.webbtns.fast {
+		animation-duration: 16.5s;
+	}
+
+	.webbtns:hover,
+	.webbtns:hover > a {
+		animation-play-state: paused;
+	}
+
+	@keyframes move {
+		0% {
+			transform: translateX(0%);
+		}
+
+		100% {
+			transform: translateX(-50%);
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.webbtns {
+			flex-wrap: wrap;
+		}
 	}
 `;
 

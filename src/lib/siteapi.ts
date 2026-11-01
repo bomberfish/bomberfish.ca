@@ -24,6 +24,15 @@ export interface LastfmTrack {
 	globalPlayCount: number | null;
 	listeners: number | null;
 	tags: string[]; // up to 5 top-tag names
+	appleMusic?: AppleMusicMatch | null; // absent/null when no match was found
+}
+
+export interface AppleMusicMatch {
+	id: string;
+	url: string;
+	previewUrl: string | null; // ~30s AAC (.m4a), CORS-enabled
+	artwork: string | null;
+	isrc: string | null;
 }
 
 export interface LastfmResponse {

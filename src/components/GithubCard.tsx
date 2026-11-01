@@ -359,8 +359,6 @@ GithubCard.style = css`
 		container-type: size;
 		overflow: hidden;
 		pointer-events: none;
-		background: var(--crust);
-		opacity: 1;
 	}
 
 	/* 7 square rows sized to exactly fill the card height; newest weeks are

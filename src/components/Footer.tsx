@@ -76,8 +76,7 @@ function Footer(this: FC<{}, FooterState>) {
 	const buildDate = new Date(__BUILD_DATE__);
 	const updateElapsed = () => {
 		const diff = Date.now() - buildDate.getTime();
-		this.elapsed =
-			"built " + humanizeDuration(diff, { round: true }) + " ago";
+		this.elapsed = "built " + humanizeDuration(diff, { round: true }) + " ago";
 	};
 
 	this.cx.mount = () => {

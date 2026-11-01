@@ -1,22 +1,11 @@
 @font-face {
-	font-family: "GeistPixel";
-	font-weight: normal;
-	font-style: normal;
-	font-display: swap;
-	font-variation-settings: "ELSH" 0;
-	src:
-		local("☺"),
-		url("/fonts/sans/GeistPixel.woff2") format("woff2");
-}
-
-@font-face {
-	font-family: "GeistPixel Square";
-	font-weight: normal;
+	font-family: "ADT Garamond";
+	font-weight: 270 1000;
 	font-style: normal;
 	font-display: swap;
 	src:
 		local("☺"),
-		url("/fonts/sans/GeistPixel-Square.woff2") format("woff2");
+		url("/fonts/serif/ADTGaramond.woff2") format("woff2");
 }
 
 @font-face {
@@ -24,7 +13,9 @@
 	font-weight: 100 900;
 	font-style: normal;
 	font-display: swap;
-	src: local("☺"), url("/fonts/sans/Geist.woff2") format("woff2");
+	src:
+		local("☺"),
+		url("/fonts/sans/Geist.woff2") format("woff2");
 }
 
 @font-face {
@@ -32,54 +23,46 @@
 	font-weight: 100 900;
 	font-style: italic;
 	font-display: swap;
-	src: local("☺"), url("/fonts/sans/Geist-Italic.woff2") format("woff2");
+	src:
+		local("☺"),
+		url("/fonts/sans/Geist-Italic.woff2") format("woff2");
 }
 
-
 @font-face {
-	font-family: "CascadiaCode";
+	font-family: "Stalwart";
 	font-style: normal;
-	font-weight: normal;
+	font-weight: 400 700;
 	font-display: swap;
 	src:
 		local("☺"),
-		url("/fonts/mono/CascadiaCode.woff2") format("woff2");
+		url("/fonts/mono/Stalwart[wght].woff2") format("woff2");
 }
 
 @font-face {
-	font-family: "CascadiaCode";
+	font-family: "Stalwart";
 	font-style: italic;
-	font-weight: normal;
+	font-weight: 400 700;
 	font-display: swap;
 	src:
 		local("☺"),
-		url("/fonts/mono/CascadiaCodeItalic.woff2") format("woff2");
+		url("/fonts/mono/Stalwart-Italic[wght].woff2") format("woff2");
 }
 
 @font-face {
-	font-family: "Tiempos Text";
+	font-family: "Stalwart Proportional";
 	font-weight: 400 700;
 	font-style: normal;
 	font-display: swap;
-	src: url("/fonts/serif/TiemposText.eot?#iefix") format("embedded-opentype");
-	src:
-		local("☺"),
-		url("/fonts/serif/TiemposText.woff2") format("woff2"),
-		url("/fonts/serif/TiemposText.woff") format("woff"),
-		url("/fonts/serif/TiemposText.ttf") format("truetype");
+	src: url("/fonts/serif/StalwartProportional[wght].woff2") format("woff2");
 }
 
 @font-face {
-	font-family: "Tiempos Text";
+	font-family: "Stalwart Proportional";
 	font-weight: 400 700;
 	font-style: italic;
 	font-display: swap;
-	src: url("/fonts/serif/TiemposText-Italic.eot?#iefix") format("embedded-opentype");
-	src:
-		local("☺"),
-		url("/fonts/serif/TiemposText-Italic.woff2") format("woff2"),
-		url("/fonts/serif/TiemposText-Italic.woff") format("woff"),
-		url("/fonts/serif/TiemposText-Italic.ttf") format("truetype");
+	src: url("/fonts/serif/StalwartProportional-Italic[wght].woff2")
+		format("woff2");
 }
 
 @font-face {
@@ -91,20 +74,23 @@
 		url("/fonts/emoji/NotoColorEmoji.woff") format("woff");
 }
 
+/* Material Symbols Outlined, static instance: wght 300, GRAD -25, FILL 0
+   (instanced from Google's variable build with fontTools) */
 @font-face {
-	font-family: "Material Symbols Sharp";
+	font-family: "Material Symbols Outlined";
 	font-style: normal;
-	font-weight: 400;
+	font-weight: 300;
 	font-display: block;
-	src: url("https://fonts.gstatic.com/s/materialsymbolssharp/v289/gNNBW2J8Roq16WD5tFNRaeLQk6-SHQ_R00k4c2_whPnoY9ruReaU4bHmz74m0ZkGH-VBYe1x0TV6x4yFH8F-H5OdzEL3sVTgJtfbYxOLojCNJ1H7-0Hk.woff") format("woff");
+	src: url("/fonts/icons/MaterialSymbolsOutlined-300-GRADm25.woff2")
+		format("woff2");
 }
 
 .material-symbols,
 .material-symbols-sharp,
 .material-symbols-outlined,
 .material-symbols-rounded {
-	font-family: "Material Symbols Sharp";
-	font-weight: normal;
+	font-family: "Material Symbols Outlined";
+	font-weight: 300;
 	font-style: normal;
 	line-height: 1;
 	font-display: block;
@@ -119,14 +105,19 @@
 }
 
 :root {
-	--font-emoji: "NotoEmoji", "Noto Color Emoji", "Segoe UI Emoji", "Apple Color Emoji", "Segoe UI Symbol",
-		"Android Emoji Sans", "EmojiOne Color", "Twitter Color Emoji", "JoyPixels",
-		"OpenMoji Color", "Twemoji Mozilla", "Mozilla Noto Color Emoji";
-	--font-display: "GeistPixel", "GeistPixel Square", "Geist", var(--font-emoji);
-	--font-body: var(--font-display);
-	--font-mono: "CascadiaCode", Consolas, ui-monospace, "SF Mono", Menlo,
-		"Liberation Mono", monospace, var(--font-emoji);
-	--font-serif: "Tiempos Text", "Times New Roman", Times, Tinos, FreeSerif,
-		"Nimbus Roman No9 L", "Nimbus Roman", "Liberation Serif", "Linux Libertine",
-		serif, var(--font-emoji);
+	--font-emoji:
+		"NotoEmoji", "Noto Color Emoji", "Segoe UI Emoji", "Apple Color Emoji",
+		"Segoe UI Symbol", "Android Emoji Sans", "EmojiOne Color",
+		"Twitter Color Emoji", "JoyPixels", "OpenMoji Color", "Twemoji Mozilla",
+		"Mozilla Noto Color Emoji";
+	--font-serif:
+		"Stalwart Proportional", "Common Serif", "Libertinus Serif",
+		"Linux Libertine", "Times New Roman", Times, Tinos, FreeSerif,
+		"Nimbus Roman No9 L", "Nimbus Roman", "Liberation Serif", serif,
+		var(--font-emoji);
+	--font-mono:
+		"Stalwart", "Libertinus Mono", "Linux Libertine Mono", ui-monospace,
+		"SF Mono", Menlo, "Liberation Mono", monospace, var(--font-emoji);
+	--font-body: var(--font-serif);
+	--font-display: "ADT Garamond", var(--font-serif), serif, var(--font-emoji);
 }

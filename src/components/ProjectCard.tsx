@@ -4,7 +4,12 @@ import { getWebpPath } from "../lib/images";
 import TransitionLink from "./TransitionLink";
 
 function ProjectCard(
-	this: FC<{ project: ProjectCardDetails; eager?: boolean }>
+	this: FC<{
+		project: ProjectCardDetails;
+		eager?: boolean;
+		// side-by-side thumbnail + text, for the homepage
+		compact?: boolean;
+	}>
 ) {
 	const handleCardClick = (event: MouseEvent) => {
 		if (
@@ -47,7 +52,10 @@ function ProjectCard(
 			: ` ${this.project.startYear} — present`;
 
 	return (
-		<div class="project-card-wrapper" on:click={handleCardClick}>
+		<div
+			class={`project-card-wrapper${this.compact ? " compact" : ""}`}
+			on:click={handleCardClick}
+		>
 			<TransitionLink
 				href={`/projects/${this.project.lastPathComponent}`}
 				class="project-card"
@@ -91,20 +99,19 @@ function ProjectCard(
 ProjectCard.style = css<typeof ProjectCard>`
 	:scope {
 		width: 100%;
-		background: hsla(var(--crust-hsl), 0.7);
-		border: 1px solid var(--surface3);
+		background: var(--card-bg);
 		overflow: hidden;
 		font-size: 0.9rem;
 		text-decoration: none !important;
 		transform: scale(1) translateY(0);
 		transition:
 			transform 0.2s,
-			border-color 0.2s;
+			background-color 0.2s;
 		z-index: 10;
 	}
 
 	:scope:hover {
-		border-color: var(--overlay0);
+		background-color: var(--card-bg-hover);
 		transform: scale(1.01) translateY(-2px);
 	}
 
@@ -171,6 +178,37 @@ ProjectCard.style = css<typeof ProjectCard>`
 		height: 100%;
 		object-fit: cover;
 		border-bottom: 1px solid var(--surface0);
+	}
+
+	:scope.compact > :global(.project-card) {
+		display: grid;
+		grid-template-columns: minmax(6rem, 38%) 1fr;
+		align-items: stretch;
+		height: 100%;
+	}
+
+	:scope.compact .image-wrapper {
+		aspect-ratio: auto;
+		overflow: hidden;
+		min-height: 6rem;
+	}
+
+	:scope.compact img {
+		border-bottom: none;
+	}
+
+	:scope.compact .project-info {
+		padding: 0.75rem 1rem;
+		justify-content: center;
+	}
+
+	:scope.compact .project-title {
+		font-size: 1.05rem;
+	}
+
+	/* nothing to show next to the text, so let it take the full width */
+	:scope.compact > :global(.project-card:not(:has(img[src]))) {
+		grid-template-columns: 1fr;
 	}
 `;
 

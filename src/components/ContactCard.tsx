@@ -50,8 +50,7 @@ ContactCard.style = css`
 		justify-content: flex-start;
 		text-decoration: none;
 		padding: 1rem;
-		background-color: hsla(var(--crust-hsl), 0.7);
-		border: 1px solid var(--surface2);
+		background-color: var(--card-bg);
 		width: 100%;
 		min-width: 0;
 		min-height: 100%;
@@ -59,11 +58,11 @@ ContactCard.style = css`
 		transform: scale(1) translateY(0);
 		transition:
 			transform 0.2s,
-			border-color 0.2s;
+			background-color 0.2s;
 	}
 
 	:scope:is(a):hover {
-		border-color: var(--overlay0);
+		background-color: var(--card-bg-hover);
 		transform: scale(1.02) translateY(-2px);
 	}
 

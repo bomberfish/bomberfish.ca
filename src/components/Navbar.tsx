@@ -26,9 +26,27 @@ function Navbar(this: FC<{ active?: PageCategory }>) {
 		update();
 		window.addEventListener("scroll", onScroll, { passive: true });
 
+		// Too narrow for the title and all three nav buttons (the title would
+		// be cut off, or the nav clip its first button): drop the home button,
+		// since the title goes to the same place. Measured with home showing,
+		// so it comes back once there's room.
+		const title = el.querySelector<HTMLElement>(".site-title span");
+		const nav = el.querySelector<HTMLElement>(".sidebar-nav");
+		const fit = () => {
+			el.classList.remove("compact");
+			const cramped =
+				(!!title && title.scrollWidth > title.clientWidth + 1) ||
+				(!!nav && nav.scrollWidth > nav.clientWidth + 1);
+			el.classList.toggle("compact", cramped);
+		};
+		const sizeObserver = new ResizeObserver(fit);
+		sizeObserver.observe(el);
+		void document.fonts?.ready.then(fit);
+
 		return () => {
 			window.removeEventListener("scroll", onScroll);
 			if (rafId !== null) cancelAnimationFrame(rafId);
+			sizeObserver.disconnect();
 		};
 	};
 
@@ -37,23 +55,23 @@ function Navbar(this: FC<{ active?: PageCategory }>) {
 			<div class="top-blur" aria-hidden="true">
 				<div
 					class="top-blur-layer"
-					style="--blur: 1px; --mid: 50%; --end: 100%;"
+					style="--blur: 1px; --mid: 0.5; --end: 1;"
 				></div>
 				<div
 					class="top-blur-layer"
-					style="--blur: 2px; --mid: 40%; --end: 80%;"
+					style="--blur: 2px; --mid: 0.4; --end: 0.8;"
 				></div>
 				<div
 					class="top-blur-layer"
-					style="--blur: 3px; --mid: 30%; --end: 60%;"
+					style="--blur: 3px; --mid: 0.3; --end: 0.6;"
 				></div>
 				<div
 					class="top-blur-layer"
-					style="--blur: 6px; --mid: 20%; --end: 40%;"
+					style="--blur: 6px; --mid: 0.2; --end: 0.4;"
 				></div>
 				<div
 					class="top-blur-layer"
-					style="--blur: 10px; --mid: 10%; --end: 20%;"
+					style="--blur: 10px; --mid: 0.1; --end: 0.2;"
 				></div>
 			</div>
 			<TransitionLink href="/" class="site-title-link">
@@ -71,7 +89,7 @@ function Navbar(this: FC<{ active?: PageCategory }>) {
 			<nav class="sidebar-nav">
 				<TransitionLink
 					href="/"
-					class={`nav-link background-container ${active === "home" ? "active" : ""}`}
+					class={`nav-link nav-home background-container ${active === "home" ? "active" : ""}`}
 				>
 					<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
 						<path d="M240-200h120v-240h240v240h120v-360L480-740 240-560v360Zm-80 80v-480l320-240 320 240v480H520v-240h-80v240H160Zm320-350Z" />

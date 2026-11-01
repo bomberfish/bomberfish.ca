@@ -14,7 +14,11 @@ type View =
 const REFRESH_MS = 5 * 60_000;
 
 function compactNum(n: number): string {
-	return n >= 1e6 ? (n / 1e6).toFixed(1) + "M" : n >= 1e3 ? (n / 1e3).toFixed(1) + "k" : String(n);
+	return n >= 1e6
+		? (n / 1e6).toFixed(1) + "M"
+		: n >= 1e3
+			? (n / 1e3).toFixed(1) + "k"
+			: String(n);
 }
 
 function TwitterCard(this: FC) {
@@ -206,7 +210,9 @@ function TwitterCard(this: FC) {
 					<>
 						{bleedSrc ? (
 							<div
-								class={"fedi-post-bleed fedi-post-bleed-" + (att?.type ?? "image")}
+								class={
+									"fedi-post-bleed fedi-post-bleed-" + (att?.type ?? "image")
+								}
 								aria-hidden="true"
 							>
 								{att && (att.type === "video" || att.type === "gifv") ? (
@@ -427,7 +433,7 @@ TwitterCard.style = css`
 		font-size: min(var(--post-size, 1.7rem), max(1.05rem, 7.5cqi));
 		line-height: 1.25;
 		font-variation-settings: "ELSH" 93;
-		font-synthesis: weight;
+		font-synthesis: style;
 		font-weight: 50;
 		text-rendering: geometricPrecision;
 		text-wrap: balance;
@@ -468,17 +474,21 @@ TwitterCard.style = css`
 		height: 100%;
 		object-fit: cover;
 		display: block;
-		filter: brightness(0.85) saturate(0.8) contrast(1.2);
-
+		/* contrast() runs after brightness() and pushes highlights back up
+		   (0.85 -> 0.92 at 1.2), so keep it mild; brightness is what caps how
+		   light a white photo can get behind the text */
+		filter: brightness(0.45) saturate(0.8) contrast(1.05);
 	}
 
-	/* dark vignette over the image so edges fade to the card bg, helping
-	   header/footer text contrast at any image brightness */
+	/* dark vignette over the image so edges fade to the card bg, plus an even
+	   scrim under it so even the middle of a bright photo keeps the text
+	   (incl. subtext) at 4.5:1 or better */
 	.fedi-post-bleed::after {
 		content: "";
 		position: absolute;
 		inset: 0;
 		background:
+			linear-gradient(hsla(var(--crust-hsl), 0.25), hsla(var(--crust-hsl), 0.25)),
 			radial-gradient(
 				ellipse at center,
 				transparent 30%,

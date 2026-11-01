@@ -253,19 +253,35 @@ export function Oneko(this: FC<{}, OnekoState>) {
 	};
 
 	const handleMouseMove = (event: MouseEvent) => {
-		this.mouseX = event.pageX;
+		// the cat is positioned within body, which starts further in when an
+		// iPhone Duo side rail is on the left (--bg-bleed-l in style.css)
+		this.mouseX =
+			event.pageX - (document.body.getBoundingClientRect().left + window.scrollX);
 		this.mouseY = event.pageY;
 	};
 
-	// Directly update the element's style - bypasses hydration issues with reactive bindings
+	// Directly update the element's style - bypasses hydration issues with reactive bindings.
+	// Runs every animation frame but state only changes every ~100ms, so only
+	// touch a property when its value actually changed.
+	const applied: Record<string, string> = {};
+	const setStyle = (
+		el: HTMLElement,
+		prop: "display" | "opacity" | "transform" | "backgroundPosition",
+		value: string
+	) => {
+		if (applied[prop] === value) return;
+		applied[prop] = value;
+		el.style[prop] = value;
+	};
+
 	const updateStyle = () => {
 		const el = this.root as HTMLElement;
 		if (!el) return;
 
 		if (!this.enabled) {
-			el.style.display = "none";
-			el.style.opacity = "0";
-			el.style.transform = "translate3d(-16px, -16px, 0)";
+			setStyle(el, "display", "none");
+			setStyle(el, "opacity", "0");
+			setStyle(el, "transform", "translate3d(-16px, -16px, 0)");
 			return;
 		}
 
@@ -273,10 +289,18 @@ export function Oneko(this: FC<{}, OnekoState>) {
 		const sprite = spriteSet[this.spriteFrame % spriteSet.length];
 		const [spriteX, spriteY] = sprite;
 
-		el.style.display = "";
-		el.style.transform = `translate3d(${this.posX - 16}px, ${this.posY - 16}px, 0)`;
-		el.style.opacity = String(this.opacity);
-		el.style.backgroundPosition = `${spriteX * NEKO_REM}rem ${spriteY * NEKO_REM}rem`;
+		setStyle(el, "display", "");
+		setStyle(
+			el,
+			"transform",
+			`translate3d(${this.posX - 16}px, ${this.posY - 16}px, 0)`
+		);
+		setStyle(el, "opacity", String(this.opacity));
+		setStyle(
+			el,
+			"backgroundPosition",
+			`${spriteX * NEKO_REM}rem ${spriteY * NEKO_REM}rem`
+		);
 	};
 
 	const cleanup = () => {

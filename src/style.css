@@ -4,22 +4,20 @@
 
 @property --main-hue {
 	syntax: "<number>";
-	initial-value: 227;
+	initial-value: 213;
 	inherits: true;
 }
 
-@keyframes rotate-shape {
+@keyframes groove {
 	0% {
-		font-variation-settings: "ELSH" 0;
+		transform: translateY(0);
 	}
-
-	100% {
-		font-variation-settings: "ELSH" 100;
+	50% {
+		transform: translateY(max(7.75px, 0.625rem));
 	}
 }
 
 .geist-anim {
-	animation: rotate-shape 4s infinite cubic-bezier(0.7, 0, 0.35, 1);
 	font-synthesis: weight !important;
 	font-weight: 50;
 }
@@ -67,65 +65,274 @@ html {
 	--subtext3: hsl(var(--subtext3-hsl));
 	--accent: hsl(var(--accent-hsl));
 
-	/* Background/grid variables */
-	--bg-width: 100%;
-	--bg-height: 100%;
-	--grid-size: 28px;
-
 	/* Computed color variants */
 	--tooltip-shadow: hsla(var(--overlay3-hsl), 0.35);
-	--main-hue: 227;
+	--main-hue: 213;
 
-	--core-hsl: calc(var(--main-hue) + 20), 100%, 2%;
-	--mantle-hsl: calc(var(--main-hue) - 5), 40%, 2.5%;
-	--crust-hsl: var(--main-hue), 20%, 3.5%;
-	--base-hsl: calc(var(--main-hue) - 30), 10%, 6%;
-	--bg-light: var(--main-hue), 5%, 6.5%;
+	/* translucent card fill, shared by every card-like surface */
+	--card-bg: hsla(var(--crust-hsl), 0.4);
+	--card-bg-hover: hsla(var(--crust-hsl), 0.6);
 
-	--surface0-hsl: calc(var(--main-hue) - 25), 12%, 7.5%;
-	--surface1-hsl: calc(var(--main-hue) - 30), 17%, 12%;
-	--surface2-hsl: calc(var(--main-hue) - 25), 17%, 14%;
-	--surface3-hsl: calc(var(--main-hue) - 25), 17%, 19%;
-	--surface4-hsl: calc(var(--main-hue) - 25), 15%, 22.5%;
-	--surface5-hsl: calc(var(--main-hue) - 20), 13%, 27%;
-	--surface6-hsl: calc(var(--main-hue) - 15), 14%, 34%;
+	/* light-source glow for display text: three layers with growing blur
+	   approximate exponential falloff, and the wider layers get more
+	   saturated so near-white text still reads as vivid colour.
+	   --glow is for headings; --glow-soft is the same recipe, fainter and
+	   tighter, set on body so all running text inherits it. */
+	--glow:
+		0 0 0.05em hsla(calc(var(--main-hue) - 3), 60%, 90%, 0.7),
+		0 0 0.22em hsla(calc(var(--main-hue) - 4), 85%, 76%, 0.45),
+		0 0 0.75em hsla(calc(var(--main-hue) - 6), 90%, 64%, 0.32);
+	/* two layers rather than three: it's on every bit of body text, and a
+	   slightly wider middle layer stands in for the old faint 0.5em one
+	   (simulated within ~3/255 of the three-layer look) at a third less
+	   shadow drawing */
+	--glow-soft:
+		0 0 0.04em hsla(calc(var(--main-hue) - 3), 55%, 90%, 0.22),
+		0 0 0.22em hsla(calc(var(--main-hue) - 5), 85%, 72%, 0.15);
 
-	--overlay0-hsl: calc(var(--main-hue) - 30), 10%, 55%;
-	--overlay1-hsl: calc(var(--main-hue) - 25), 12.5%, 65%;
-	--overlay2-hsl: calc(var(--main-hue) - 22.5), 17.5%, 75%;
-	--overlay3-hsl: calc(var(--main-hue) - 12), 27.5%, 85%;
+	/* Palette follows the pfp's rainy-street backdrop: hue drifts with
+	   lightness, shadows leaning graphite (+) and highlights leaning
+	   streetlight blue (-), at a muted saturation that matches the bg. */
+	--core-hsl: calc(var(--main-hue) + 8), 40%, 2%;
+	--mantle-hsl: calc(var(--main-hue) + 6), 30%, 3%;
+	--crust-hsl: calc(var(--main-hue) + 5), 25%, 4.5%;
+	--base-hsl: calc(var(--main-hue) + 4), 22%, 6.5%;
+	--page-hsl: var(--main-hue), 36%, 13%;
 
-	--supertext-hsl: calc(var(--main-hue) - 27.5), 100%, 98%;
-	--text-hsl: calc(var(--main-hue) - 22.5), 70%, 95%;
-	--text1-hsl: calc(var(--main-hue) - 10), 22%, 70%;
-	--subtext0-hsl: calc(var(--main-hue) - 22), 17%, 67%;
-	--subtext1-hsl: calc(var(--main-hue) - 15), 15%, 60%;
-	--subtext2-hsl: calc(var(--main-hue) - 25), 10%, 50%;
-	--subtext3-hsl: calc(var(--main-hue) - 30), 8%, 40%;
+	--surface0-hsl: calc(var(--main-hue) + 5), 22%, 8%;
+	--surface1-hsl: calc(var(--main-hue) + 4), 22%, 12%;
+	--surface2-hsl: calc(var(--main-hue) + 4), 22%, 14.5%;
+	--surface3-hsl: calc(var(--main-hue) + 3), 20%, 19%;
+	--surface4-hsl: calc(var(--main-hue) + 2), 19%, 23%;
+	--surface5-hsl: calc(var(--main-hue) + 1), 18%, 27.5%;
+	--surface6-hsl: var(--main-hue), 18%, 34%;
 
-	--accent-hsl: calc(var(--main-hue)), 60%, 77%;
+	--overlay0-hsl: calc(var(--main-hue) - 1), 16%, 55%;
+	--overlay1-hsl: calc(var(--main-hue) - 2), 20%, 65%;
+	--overlay2-hsl: calc(var(--main-hue) - 3), 26%, 75%;
+	--overlay3-hsl: calc(var(--main-hue) - 4), 36%, 85%;
+
+	--supertext-hsl: calc(var(--main-hue) - 5), 70%, 98%;
+	--text-hsl: calc(var(--main-hue) - 4), 45%, 94%;
+	--text1-hsl: calc(var(--main-hue) - 2), 24%, 72%;
+	--subtext0-hsl: calc(var(--main-hue) - 1), 20%, 67%;
+	--subtext1-hsl: var(--main-hue), 17%, 60%;
+	--subtext2-hsl: calc(var(--main-hue) + 2), 13%, 50%;
+	--subtext3-hsl: calc(var(--main-hue) + 4), 11%, 40%;
+
+	--accent-hsl: calc(var(--main-hue) - 4), 85%, 76%;
+	--rain: hsl(calc(var(--main-hue) - 4), 55%, 86%);
 
 	/* Base styles */
 	color: var(--text);
-	background: var(--crust);
-	overflow-x: hidden;
-	overflow-y: auto;
-	image-rendering: pixelated;
-	transition: background-image 0.3s ease;
+	/* The page background is .page-bg (index.html), styled below; html's
+	   own background is just the flat colour behind it. */
+	--bg-top: calc(var(--main-hue) + 3), 32.5%, 8.5%;
+	--bg-bottom: calc(var(--main-hue) - 3), 40%, 18.5%;
+	/* How far the background layers run past the sides and the bottom of
+	   the window (the safe-area inset on that axis plus some room), to
+	   reach under Safari's side rail / toolbars */
+	/* the background's sizes (bleeds, photo height) are on body, below */
+	--parallax-speed: 0.35;
+	min-height: 100%;
+	background-color: hsl(var(--bg-bottom));
+	/* no rubber-banding (this has to be on html, the viewport scroller) */
+	overscroll-behavior: none;
 	accent-color: var(--accent);
-
-	/* CSS grid fallback for no-JS */
-	background-image:
-		linear-gradient(to right, hsl(var(--bg-light)) 1px, transparent 1px),
-		linear-gradient(to bottom, hsl(var(--bg-light)) 1px, transparent 1px);
-	background-size: var(--grid-size) var(--grid-size);
 
 	word-break: auto-phrase;
 }
 
-/* Hide CSS grid when JS grid is loaded */
-html:has(body.grid-loaded) {
-	background-image: none;
+/* Page background sizes. On body rather than html on purpose: the CSS
+   build (postcss-preset-env) bakes a static fallback for every var() it
+   can resolve from html/:root, and for these (they depend on --rail-l/r,
+   which pageBg.ts sets at runtime) that came out as e.g. "width: 100%",
+   which cssnano then merged into shared rules that landed after the real
+   ones and overrode them. Everything that uses them is inside body. */
+body {
+	/* Sideways: under the iPhone Duo's side rail. Safari only draws page
+	   there, not fixed elements or shadows/outsets, and only page that's
+	   inside the scrollable width; nor does it report the rail as a safe
+	   area. So src/lib/pageBg.ts measures the rail (screen minus page
+	   width) and makes the page that much wider on its side, sideways
+	   panning locked (html.has-rail below). 0 without a rail. */
+	--bg-bleed-l: var(--rail-l, 0px);
+	--bg-bleed-r: var(--rail-r, 0px);
+	--bg-bleed-y: calc(env(safe-area-inset-bottom, 0px) + 8rem);
+	/* the photo is 3:4 (over its full, bled width) */
+	--photo-h: max(
+		calc((100vw + var(--bg-bleed-l) + var(--bg-bleed-r)) * 4 / 3),
+		calc(100vh + var(--bg-bleed-y))
+	);
+	/* how much taller than the window (+ bleed) the photo is: how far it
+	   can parallax */
+	--bg-travel: calc(var(--photo-h) - 100vh - var(--bg-bleed-y));
+}
+
+/* No sideways scrolling, normally. */
+html:not(.has-rail) {
+	overflow-x: clip;
+}
+
+/* With the iPhone Duo's side rail (see --bg-bleed-l/r, src/lib/pageBg.ts)
+   the page is deliberately wider than the window, so the background can
+   reach under the rail. iOS doesn't honour overflow on html for touch
+   panning, so sideways swipes are switched off instead (vertical scrolling
+   and pinch-zoom stay; sideways scrollers inside, like the nav or code
+   blocks, still get their own swipes). */
+html.has-rail,
+html.has-rail body {
+	touch-action: pan-y pinch-zoom;
+}
+
+/* Page background: the photo, film grain and rain.
+
+   None of it is position: fixed. Safari 26 won't paint fixed elements
+   under its toolbars (it fills that strip with a flat colour sampled from
+   them instead), so on iOS the background stopped at the address bar and
+   the side rail. Instead .page-bg is ordinary content the size of the
+   page (body's padding box; body's perspective makes it the containing
+   block), which Safari does draw under its UI, and it clips its layers
+   vertically so they never add to the page's height.
+
+   The layers are then held in place on screen with scroll-driven
+   animations that translate them down by exactly as much as the page has
+   scrolled (--scroll-max is set by src/lib/pageBg.ts), so it looks fixed
+   but runs on the compositor in step with scrolling. The photo goes down
+   by a bit less: that's the parallax. pageBg.ts also covers browsers
+   without scroll timelines. */
+.page-bg {
+	position: absolute;
+	/* a rail on the left: reach back over the extra page body is pushed
+	   across by (see body) */
+	inset: 0 0 0 calc(-1 * var(--bg-bleed-l));
+	/* vertically, the layers mustn't add to the page's height; sideways,
+	   their bleed has to reach under Safari's side rail, past the layout
+	   viewport (html's overflow-x stops that from scrolling) */
+	overflow-x: visible;
+	overflow-y: clip;
+	z-index: -1;
+	pointer-events: none;
+}
+
+/* bg-rain.webp (the photo behind the pfp, gradient-mapped to this palette
+   and pre-blurred, so it's tiny and upscales smoothly) under a scrim that
+   dims it for legibility and fades its lower end into --bg-bottom */
+.page-bg-photo {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: calc(100% + var(--bg-bleed-r));
+	height: var(--photo-h);
+	background:
+		linear-gradient(
+			to bottom,
+			hsla(var(--bg-top), 0.62) 0%,
+			hsla(var(--bg-bottom), 0.8) 56%,
+			hsl(var(--bg-bottom)) 94%
+		),
+		url("/bg-rain.webp") center / cover no-repeat;
+	will-change: transform;
+}
+
+/* The end of the page fades into html's background colour. Once you've
+   scrolled all the way down, the strip under Safari's address bar is past
+   the end of the page, so all it can show is that colour (like a side
+   rail on the left); this makes the page run into it instead of stopping
+   at a hard edge. Under the rain and grain, so the rain still falls (and
+   splashes) right down to the bar; over the grain, whose lift would
+   otherwise leave the page a shade lighter than the bar. */
+.page-bg-end {
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	width: calc(100% + var(--bg-bleed-r));
+	height: min(45vh, 22rem);
+	background: linear-gradient(
+		to bottom,
+		hsla(var(--bg-bottom), 0) 0%,
+		hsla(var(--bg-bottom), 0.3) 40%,
+		hsla(var(--bg-bottom), 0.75) 75%,
+		hsl(var(--bg-bottom)) 100%
+	);
+}
+
+/* a window-sized layer that stays put on screen, for the rain */
+.page-bg-fixed {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100vh;
+	will-change: transform;
+}
+
+/* Film grain, like a texture on the glass: also held in place on screen,
+   but its own layer so the end fade can go over it and under the rain */
+.page-bg-grain {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: calc(100% + var(--bg-bleed-r));
+	height: calc(100vh + var(--bg-bleed-y));
+	will-change: transform;
+	background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 .09 0 0 0 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")
+		0 0 / 180px 180px;
+}
+
+/* Rain canvas (src/lib/rain.ts), inside .page-bg-fixed. rain.ts draws in
+   window coordinates, offset by where the canvas actually starts.
+   (a canvas is a replaced element: insets alone don't stretch it) */
+.rain-canvas {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: calc(100% + var(--bg-bleed-r));
+	height: calc(100% + var(--bg-bleed-y));
+	/* read back by rain.ts as a resolved rgb() for the canvas */
+	color: var(--rain);
+}
+
+/* Held in place: down by exactly the scroll, over the whole scroll. */
+@keyframes page-bg-hold {
+	to {
+		transform: translateY(var(--scroll-max, 0px));
+	}
+}
+
+/* Parallax: on screen, the photo slides up by its --bg-travel, at
+   --parallax-speed times the page's speed, or slower if the page is long
+   enough that it'd otherwise run out before the end (then it reaches its
+   bottom right at the end of the page). Its on-screen offset is linear in
+   the scroll either way, so as a translation in the page it's one linear
+   animation over the whole scroll, ending at
+   scroll-max - min(travel, speed * scroll-max). */
+@keyframes page-bg-parallax {
+	to {
+		transform: translateY(
+			calc(
+				var(--scroll-max, 0px) -
+					min(
+						var(--bg-travel),
+						var(--parallax-speed) * var(--scroll-max, 0px)
+					)
+			)
+		);
+	}
+}
+
+@supports (animation-timeline: scroll()) {
+	.page-bg-fixed,
+	.page-bg-grain {
+		animation: page-bg-hold linear both;
+		/* after the shorthand, which resets the timeline */
+		animation-timeline: scroll(root block);
+	}
+
+	.page-bg-photo {
+		animation: page-bg-parallax linear both;
+		animation-timeline: scroll(root block);
+	}
 }
 
 /* @media (prefers-color-scheme: light) {
@@ -137,7 +344,7 @@ html:has(body.grid-loaded) {
 		--mantle-hsl: var(--main-hue), 65%, 99%;
 		--crust-hsl: var(--main-hue), 50%, 98%;
 		--base-hsl: var(--main-hue), 35%, 97%;
-		--bg-light: var(--main-hue), 20%, 96%;
+		--page-hsl: var(--main-hue), 20%, 96%;
 
 		--surface0-hsl: var(--main-hue), 35%, 95%;
 		--surface1-hsl: calc(var(--main-hue) - 2.5), 40%, 93%;
@@ -194,7 +401,6 @@ html:has(body.grid-loaded) {
 .project-card-wrapper:has(> a.project-card:focus-visible) {
 	outline: 1px dashed var(--accent);
 	outline-offset: -1px;
-	border-color: transparent;
 	transform: scale(1.01) translateY(-2px);
 }
 
@@ -212,7 +418,11 @@ html:has(body.grid-loaded) {
    ========================================================================== */
 
 body {
+	/* lives here rather than on html so html's background photo upscales
+	   smoothly; everything on the page still inherits pixelated */
+	image-rendering: pixelated;
 	font-family: var(--font-body), sans-serif;
+	text-shadow: var(--glow-soft);
 	/* No font-weight / font-stretch / wght variation: GeistPixel only ships a single
 	   "normal" face. Any non-default weight/stretch triggers browser synthesis
 	   (faux-bold), which doubles strokes and smears the ELSH axis stripes together. */
@@ -233,18 +443,30 @@ body {
 	justify-content: flex-start;
 	align-items: center;
 	min-height: 100vh;
-	overscroll-behavior: none;
+	/* viewport-fit=cover (index.html) lets the background run under the
+	   rounded corners / Dynamic Island; keep the content inside the safe
+	   area. Left and right separately: they aren't always equal (iPhone Duo
+	   in landscape, for one) */
 	padding: 0 1.5rem;
+	padding-left: max(1.5rem, env(safe-area-inset-left));
+	padding-right: max(1.5rem, env(safe-area-inset-right));
+	padding-bottom: env(safe-area-inset-bottom);
 	margin: 0;
+	/* a rail on the left (--bg-bleed-l): push the page across by its width,
+	   keeping it window-wide (the negative right margin), so there's page
+	   under the rail for the background; pageBg.ts then scrolls that extra
+	   strip out of view behind the rail */
+	margin-left: var(--bg-bleed-l);
+	margin-right: calc(-1 * var(--bg-bleed-l));
 
-	background-repeat: no-repeat;
-	background-position: top left;
-	background-attachment: fixed;
-	background-size: var(--bg-width) var(--bg-height);
-	background-blend-mode: normal;
+	text-rendering: geometricPrecision;
+	-webkit-font-smoothing: none;
+	font-smooth: none;
 
 	scrollbar-color: var(--overlay1) var(--base);
 	scrollbar-width: thin;
+	/* also makes body the containing block for position: fixed, which
+	   Oneko relies on (it positions itself with pageX/pageY) */
 	perspective: 1400px;
 	perspective-origin: center 30vh;
 }
@@ -266,17 +488,18 @@ h6 {
 	font-family: var(--font-display), sans-serif;
 	color: var(--supertext);
 	font-synthesis: weight style small-caps;
-	text-rendering: geometricPrecision;
+	font-weight: 270;
 }
 
 h1 {
+	text-shadow: var(--glow);
 	font-size: clamp(2.5rem, 3.5vw + 1.75rem, 4rem);
 	margin-bottom: 0.75rem;
 	margin-top: 0;
 	line-height: 1.18;
 
 	font-synthesis: style !important;
-	font-weight: 350;
+	/* font-weight: 350; */
 }
 
 h2 {
@@ -284,7 +507,7 @@ h2 {
 	margin-block-start: 0.25em;
 	margin-block-end: 0.4em;
 	line-height: 1.24;
-	font-weight: 300;
+	/* font-weight: 300; */
 }
 
 h3 {
@@ -292,7 +515,7 @@ h3 {
 	margin-block-start: 0.25em;
 	margin-block-end: 0.4em;
 	line-height: 1.26;
-	font-weight: 500;
+	/* font-weight: 500; */
 }
 
 h4,
@@ -321,8 +544,6 @@ em,
 strong {
 	font-family: "Geist", var(--font-display), sans-serif !important;
 	opacity: 0.96;
-	-webkit-font-smoothing: none;
-	font-smooth: none;
 }
 
 strong {
@@ -433,17 +654,9 @@ main {
 	align-items: center;
 	justify-content: flex-start;
 	margin-top: 1rem;
-	transform-style: preserve-3d;
-	will-change: transform, opacity, filter;
-	transform: translateY(0);
-	filter: blur(0px);
-	opacity: 1;
-	transition:
-		0.2s transform,
-		0.2s opacity,
-		0.2s filter;
-	transform-origin: bottom center;
-	transition-timing-function: cubic-bezier(0.2, 0.2, 0.8, 1);
+	/* no filter/opacity/will-change here: filter or opacity makes main a
+	   backdrop root, and the cards' backdrop-filter would stop at main's edge
+	   instead of seeing the page background and rain behind it */
 }
 
 main > * {
@@ -462,6 +675,22 @@ article {
 	flex-grow: 1;
 }
 
+.webbtns > * {
+	animation: groove 2s cubic-bezier(0.3, 0, 0.7, 0.9) infinite;
+}
+
+.webbtns :nth-child(2n) {
+	animation-delay: -1s;
+}
+
+.webbtns.fast > * {
+	animation-delay: -1s;
+}
+
+.webbtns.fast :nth-child(2n) {
+	animation-delay: -2s;
+}
+
 /* ==========================================================================
    Layout Container (Sidebar + Main)
    ========================================================================== */
@@ -475,9 +704,18 @@ article {
 }
 
 .background-container {
-	background: hsla(var(--crust-hsl), 0.7);
-	border: 1px solid var(--surface2);
+	background: var(--card-bg);
+	/* colour-only, so it's a single cheap pass, but it's redone every rain
+	   frame. No contrast: on this dark backdrop it crushed nearly
+	   everything behind the card to black. */
+	backdrop-filter: saturate(160%) brightness(105%);
 	padding: 0.7rem;
+}
+
+/* a blog post body covers most of the screen; not worth a near full-screen
+   filter pass 60 times a second while reading */
+.post-body.background-container {
+	backdrop-filter: none;
 }
 
 /* ==========================================================================
@@ -492,19 +730,44 @@ article {
    ========================================================================== */
 
 .top-blur {
+	--strip-w: 100vw;
+	--strip-h: 8rem;
+	/* the mask ellipse's horizontal radius, as a fraction of the strip:
+	   0.5 = an oval exactly as wide as the window, fading out to nothing by
+	   the time it reaches the side edges (portrait widens it, below) */
+	--strip-rx: 0.5;
+	/* main's margin-top. Before the bar sticks it sits this far down the
+	   page, and the strip's top edge would show as a hard line there. So
+	   the strip starts this much higher, with the mask's centre pushed down
+	   to match: once stuck, the extra bit is above the viewport and the
+	   effect is unchanged. */
+	--strip-lift: 1rem;
 	position: absolute;
-	top: 0;
+	top: calc(-1 * var(--strip-lift));
 	left: 50%;
 	transform: translateX(-50%);
-	width: 100vw;
-	height: 8rem;
+	width: var(--strip-w);
+	height: calc(var(--strip-h) + var(--strip-lift));
 	pointer-events: none;
 	z-index: -1;
 }
 
 .top-blur-layer {
+	/* --mid/--end are fractions (0-1) of the mask ellipse's radius */
 	position: absolute;
-	inset: 0;
+	top: 0;
+	left: 0;
+	right: 0;
+	margin-inline: auto;
+	/* Cropped to the part of the strip the mask leaves visible: the
+	   ellipse's radii are --strip-rx x 100% of the strip, so at --end it
+	   spans 2 * --strip-rx * --end of the width and --end of the height.
+	   Backdrop blur
+	   costs scale with area and this is recomputed every time the rain
+	   behind it changes, so the strong-but-small layers get much cheaper;
+	   the mask is pinned to the full strip so the result looks the same. */
+	width: min(100%, calc(var(--end) * var(--strip-rx) * 200%));
+	height: calc(var(--end) * var(--strip-h) + var(--strip-lift));
 	backdrop-filter: blur(var(--blur)) brightness(1.1) saturate(0.9)
 		contrast(1.05);
 	/* A very wide ellipse anchored at the top middle. The horizontal radius
@@ -512,11 +775,33 @@ article {
 	   across the top edge, with each layer's --mid/--end controlling how
 	   far the blur reaches before it fades out. */
 	mask-image: radial-gradient(
-		ellipse 75% 100% at 50% 0%,
+		calc(var(--strip-w) * var(--strip-rx)) var(--strip-h) at 50%
+			var(--strip-lift),
 		#000 0%,
-		#000 var(--mid),
-		transparent var(--end)
+		#000 calc(var(--mid) * 100%),
+		transparent calc(var(--end) * 100%)
 	);
+	mask-size: var(--strip-w) calc(var(--strip-h) + var(--strip-lift));
+	mask-position: center top;
+	mask-repeat: no-repeat;
+}
+
+/* portrait: a band right across the screen instead (a very wide ellipse,
+   so its bottom edge is all but flat), reaching under the iPhone Duo's
+   side rail too, like the page background (--bg-bleed-r) */
+@media (orientation: portrait) {
+	.top-blur {
+		--strip-w: calc(100vw + var(--bg-bleed-l) + var(--bg-bleed-r));
+		--strip-rx: 4;
+		/* shallower: a full-width band reaches everything below the bar, and
+		   at the top of the page the old 8rem still blurred the start of the
+		   content (the pfp); this fades out just as the content begins */
+		--strip-h: 5.5rem;
+		/* centred on the page, then shifted to cover both bleeds */
+		transform: translateX(
+			calc(-50% + (var(--bg-bleed-r) - var(--bg-bleed-l)) / 2)
+		);
+	}
 }
 
 .page-header {
@@ -528,15 +813,30 @@ article {
 }
 
 .page-header h1 {
+	/* A mask clips everything outside the box, glow included, and this box
+	   is tight (line-height 0.95). So pad the top and sides to give the
+	   glow room (about its outer blur radius), cancel that with negative
+	   margins so nothing moves, and put the fade back exactly where it
+	   was: 60% down the original box, which is now 100% minus the top pad. */
+	--glow-room: 0.8em;
 	font-size: clamp(3.75rem, 14vw, 8.5rem);
 	line-height: 0.95;
-	mask-image: linear-gradient(to bottom, #000 60%, transparent 100%);
-	margin: 0 !important;
+	padding: var(--glow-room) var(--glow-room) 0;
+	mask-image: linear-gradient(
+		to bottom,
+		#000 calc(var(--glow-room) + (100% - var(--glow-room)) * 0.6),
+		transparent 100%
+	);
+	margin: calc(-1 * var(--glow-room)) calc(-1 * var(--glow-room)) 0 !important;
 }
 
 .post-title {
 	font-size: clamp(2.5rem, 9vw, 5rem) !important;
 	padding-top: 1.75rem;
+}
+
+.page-header .post-title {
+	padding-top: calc(1.75rem + var(--glow-room));
 }
 
 .page-header:not(:has(.post-title)) p {
@@ -631,20 +931,66 @@ article {
 	color: var(--supertext) !important;
 }
 
+/* not enough room for the title and all three nav buttons (Navbar.tsx
+   measures it): home goes first, the title links home anyway */
+.sidebar.compact .nav-home {
+	display: none;
+}
+
+/* Touch: bigger tap targets for the top bar than the pills look (they're
+   ~32x29px; ~44px is comfortable for a finger), via invisible ::after
+   boxes. Sideways they only reach into the gaps between pills (4px), more
+   at the outer ends. The nav is a sideways scroller, which clips what
+   sticks out of it, so it gets matching padding with negative margins:
+   room for them without moving anything. */
+@media (pointer: coarse) {
+	.sidebar .site-title-link,
+	.sidebar .sidebar-nav .nav-link {
+		position: relative;
+	}
+
+	/* (undoing the external-link icon every a::after otherwise is, which
+	   internal links like these hide with display: none) */
+	.sidebar .site-title-link::after,
+	.sidebar .sidebar-nav .nav-link::after {
+		content: "";
+		display: block;
+		position: absolute;
+		inset: -10px -2px;
+		width: auto;
+		height: auto;
+		margin: 0;
+		background: none;
+		-webkit-mask-image: none;
+		mask-image: none;
+	}
+
+	.sidebar .site-title-link::after {
+		inset: -10px -8px -10px -16px;
+	}
+
+	.sidebar .sidebar-nav .nav-link:last-child::after {
+		right: -16px;
+	}
+
+	.sidebar .sidebar-nav {
+		padding-block: 10px;
+		margin-block: -10px;
+		padding-right: 16px;
+		margin-right: -16px;
+	}
+}
+
 /* Per-element pills inside the sidebar */
 .sidebar .background-container {
 	padding: 0.4rem 0.7rem;
 	background: hsla(var(--crust-hsl), 0.65);
 	backdrop-filter: blur(6px);
-	border-color: hsla(var(--surface4-hsl), 0.5) !important;
-	transition:
-		background 0.15s ease,
-		border-color 0.15s ease;
+	transition: background 0.15s ease;
 }
 
 .sidebar .nav-link.background-container:hover {
 	background: hsla(var(--crust-hsl), 0.85);
-	border-color: transparent !important;
 }
 
 /* .sidebar .nav-link.background-container.active {
@@ -661,6 +1007,8 @@ article {
 }
 
 .site-title {
+	/* the pill clips overflow, so the glow would get cut off at its edges */
+	text-shadow: none;
 	display: inline-flex;
 	align-items: center;
 	gap: 0.5rem;
@@ -710,11 +1058,22 @@ article {
 		width: 100%;
 		max-width: 100%;
 		padding: 0 1rem;
-		padding-bottom: env(safe-area-inset-bottom);
+		/* the safe-area bottom inset is on body now, for every orientation */
 	}
 
+	/* always the wide (scrolled) layout in portrait. The spread pushes the
+	   title and nav apart visually, so the layout gap can be small: on the
+	   iPhone Duo's outer screen (382px) the old 0.75rem left the nav ~6px
+	   short, and it clipped its own first link (home) out of view */
 	.sidebar {
-		gap: 0.75rem;
+		--nav-spread: clamp(0.5rem, 2vw, 1.25rem);
+		/* and stuck at the same height it has at the top of the page (below
+		   main's 1rem top margin), not 1rem higher: right at the top edge,
+		   iOS takes taps for its scroll-to-top gesture, and mid-page the nav
+		   links were swallowed (top-blur's --strip-lift still reaches the
+		   very top of the screen) */
+		top: 1rem;
+		gap: 0.25rem;
 		padding-left: 0.5rem;
 		padding-right: 0.5rem;
 	}
@@ -722,6 +1081,32 @@ article {
 	.sidebar-nav {
 		gap: 0rem;
 		justify-content: flex-end;
+		/* never squeeze the nav (it'd clip its links); the title gives way */
+		flex-shrink: 0;
+	}
+
+	.sidebar .site-title-link {
+		flex-shrink: 1;
+		min-width: 0;
+	}
+
+	.site-title span {
+		min-width: 0;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+		font-size: 1.6rem;
+	}
+
+	/* tighter pills so title + three nav buttons fit a narrow phone */
+	.sidebar .site-title {
+		gap: 0.3rem;
+		padding-inline: 0.55rem;
+	}
+
+	.sidebar .sidebar-nav .nav-link {
+		margin-left: 0.25rem;
+		padding-inline: 0.5rem;
 	}
 
 	.page-name {
@@ -745,8 +1130,7 @@ article {
 	}
 
 	.blog-item {
-		border: 1px solid var(--surface3);
-		background: hsla(var(--crust-hsl), 0.75);
+		background: var(--card-bg);
 	}
 }
 
@@ -1578,7 +1962,19 @@ img {
 		scroll-behavior: auto !important;
 	}
 
-	body {
-		background-position: 0 0;
+	/* the background still has to stay put on screen (that's not motion),
+	   just without the parallax: hold the photo like the rest */
+	@supports (animation-timeline: scroll()) {
+		.page-bg-fixed,
+		.page-bg-grain,
+		.page-bg-photo {
+			animation: page-bg-hold linear both !important;
+			animation-timeline: scroll(root block) !important;
+		}
+	}
+
+	.webbtns,
+	.webbtns * {
+		animation: none;
 	}
 }
