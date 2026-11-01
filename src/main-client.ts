@@ -3,18 +3,10 @@ import renderApp from "./App";
 import { startRain } from "./lib/rain";
 import { startPageBg } from "./lib/pageBg";
 
-hydrate(
-	renderApp,
-	document.querySelector("#app")!,
-	document.head,
-	document.querySelector("[dlssr-d]")!
-);
-
-startPageBg();
-startRain();
-
-// TEMP (debugging taps on the iPhone Duo): with ?tapdebug, report pointer,
-// touch and click events to the scratch server on :8765. Remove after.
+// TEMP (debugging taps and prod-only failures on the iPhone Duo): with
+// ?tapdebug, report startup steps, script errors and pointer/touch/click
+// events to the scratch server on :8765. Remove after.
+let debugStep = (_step: string) => {};
 if (location.search.includes("tapdebug")) {
 	const desc = (el: Element | null) =>
 		el
@@ -64,5 +56,26 @@ if (location.search.includes("tapdebug")) {
 			{ capture: true, passive: true }
 		);
 	}
-	send({ t: "loaded", w: innerWidth, h: innerHeight, cls: document.documentElement.className });
+	debugStep = (step) =>
+		send({ t: step, w: innerWidth, h: innerHeight, cls: document.documentElement.className });
+	addEventListener("error", (e) =>
+		send({ t: "error", msg: e.message, src: e.filename, line: e.lineno, col: e.colno })
+	);
+	addEventListener("unhandledrejection", (e) =>
+		send({ t: "rejection", msg: String((e as PromiseRejectionEvent).reason) })
+	);
+	debugStep("start");
 }
+
+hydrate(
+	renderApp,
+	document.querySelector("#app")!,
+	document.head,
+	document.querySelector("[dlssr-d]")!
+);
+debugStep("hydrated");
+
+startPageBg();
+debugStep("pagebg");
+startRain();
+debugStep("rain");

@@ -506,7 +506,10 @@ function LastFmCard(this: FC) {
 	let gain: GainNode | null = null;
 	try {
 		const saved = parseFloat(localStorage.getItem(VOLUME_KEY) ?? "");
-		if (saved >= 0 && saved <= 1) volume = saved;
+		// isFinite first: nothing saved yet is NaN, and the production
+		// minifier (terser unsafe_comps) turns `saved >= 0 && saved <= 1`
+		// into `!(0 > saved || saved > 1)`, which lets NaN through
+		if (Number.isFinite(saved) && saved >= 0 && saved <= 1) volume = saved;
 	} catch {
 		// storage blocked / SSR: keep the default
 	}
@@ -583,7 +586,8 @@ function LastFmCard(this: FC) {
 			// short ramp instead of a jump, so dragging the slider doesn't crackle
 			gain.gain.setTargetAtTime(target, audioCtx.currentTime, 0.015);
 		} else {
-			audio.volume = Math.min(1, target);
+			// unlike a gain node, the element throws outside 0..1 (or on NaN)
+			audio.volume = Number.isFinite(target) ? Math.min(1, Math.max(0, target)) : 0;
 			audio.muted = muted;
 		}
 	};
@@ -616,7 +620,9 @@ function LastFmCard(this: FC) {
 		const total = ms * Math.abs(to - from);
 		const start = performance.now();
 		const step = (now: number) => {
-			const t = total > 0 ? Math.min(1, (now - start) / total) : 1;
+			// a frame's timestamp can be slightly before `start`; below 0 the
+			// ease goes negative, and so would the volume
+			const t = total > 0 ? Math.min(1, Math.max(0, (now - start) / total)) : 1;
 			setSpin(from + (to - from) * ease(t), withRate);
 			if (t < 1) spinRaf = requestAnimationFrame(step);
 			else done?.();

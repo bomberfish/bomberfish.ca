@@ -141,7 +141,9 @@ export default defineConfig({
 				drop_console: true,
 				arguments: true,
 				unsafe: true,
-				unsafe_comps: true,
+				// no unsafe_comps: it rewrites comparisons assuming no NaN
+				// (`x >= 0 && x <= 1` -> `!(0 > x || x > 1)`, which NaN passes),
+				// and that let a NaN preview volume through in production only
 				unsafe_Function: true,
 				unsafe_math: true,
 				unsafe_proto: true,
