@@ -73,6 +73,7 @@ function PeopleButtons(this: FC) {
 				href="https://mercurywork.shop"
 			/>
 			<WebButton src="https://velzie.rip/88x31.png" href="https://velzie.rip" />
+			<WebButton src="https://percs.dev/button.gif" href="https://percs.dev" />
 			<WebButton
 				src="https://foxmoss.com/foxmossbutton.png"
 				href="https://foxmoss.com"
@@ -99,9 +100,14 @@ function PeopleButtons(this: FC) {
 				href="https://thememesniper.dev"
 			/>
 			<WebButton
+				src="https://www.hrtowii.dev/88x31-madoka.png"
+				href="https://www.hrtowii.dev/"
+			/>
+			<WebButton
 				src="/buttons/jack.cab.gif"
 				href="https://jack.cab/?utm_content=jack-button"
 			/>
+			<WebButton src="https://3kh0.net/button.png" href="https://3kh0.net" />
 			<WebButton
 				src="https://circulars.dev/circular-88x31.gif"
 				href="https://circulars.dev"

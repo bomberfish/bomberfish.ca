@@ -319,6 +319,7 @@ function LastFmCard(this: FC) {
 
 	let cancelled = false;
 	let controller: AbortController | null = null;
+	let shownJson = ""; // the view currently shown, to skip no-op refreshes
 
 	const load = async (cacheBust = false) => {
 		if (import.meta.env.SSR) return;
@@ -329,15 +330,23 @@ function LastFmCard(this: FC) {
 		try {
 			const data = await getLastfm(request.signal, cacheBust);
 			if (cancelled || controller !== request) return;
-			state.view = data.track
+			const next: View = data.track
 				? { kind: "loaded", track: data.track, profile: data.profile }
 				: { kind: "empty" };
+			// the periodic refresh mostly comes back with exactly what's shown;
+			// assigning it anyway rebuilds the card body, which replays its
+			// entry transitions (waveform, colours) for nothing
+			const nextJson = JSON.stringify(next);
+			if (nextJson === shownJson) return;
+			shownJson = nextJson;
+			state.view = next;
 			// also done from the view listener in mount, but that doesn't
 			// reliably fire for the first load, and the player depends on it
 			requestAnimationFrame(afterRender);
 		} catch (e: unknown) {
 			if (cancelled || controller !== request) return;
 			if (e instanceof DOMException && e.name === "AbortError") return;
+			shownJson = "";
 			state.view = {
 				kind: "error",
 				message: e instanceof Error ? e.message : "unknown_error",
@@ -487,9 +496,25 @@ function LastFmCard(this: FC) {
 		lastFrame: number; // performance.now(), ms
 		lastSync: number;
 		resume: boolean; // play on release
+		resumeReverse: boolean; // ...backwards (it was reversing)
 		raf: number;
 	};
 	let scrub: Scrub | null = null;
+	// alt-click play: the clip played backwards (see Reverse playback below)
+	type Reverse = {
+		url: string;
+		buf: AudioBuffer; // the forward buffer (for its duration)
+		src: AudioBufferSourceNode; // playing the reversed copy
+		fade: GainNode; // this run's fade in/out
+		t0: number; // audioCtx time it started
+		from: number; // clip position it started at, s
+		rate0: number; // playback rate it started at (spin-up from here to 1)
+		rampS: number; // length of the spin-up, s (0 = none)
+		// spinning down to a pause: when it began, from where, how long
+		stop: { t: number; pos: number; rampS: number } | null;
+		raf: number;
+	};
+	let reverse: Reverse | null = null;
 	let progressRaf = 0;
 	let previewObserver: IntersectionObserver | null = null;
 
@@ -562,13 +587,15 @@ function LastFmCard(this: FC) {
 	const CLIP_FADE_IN_S = 0.8;
 	const CLIP_FADE_OUT_S = 2;
 	const clipEnvelope = () => {
-		if (!audio || !Number.isFinite(audio.duration) || audio.duration <= 0)
-			return 1;
-		const t = audio.currentTime;
+		// reversing: the decoded clip's own duration (the paused element may
+		// not have loaded its metadata yet)
+		const dur = reverse ? reverse.buf.duration : audio?.duration;
+		if (!audio || !dur || !Number.isFinite(dur) || dur <= 0) return 1;
+		const t = reverse ? reversePos() : audio.currentTime;
 		const x = Math.min(
 			1,
 			t / CLIP_FADE_IN_S,
-			Math.max(0, (audio.duration - t) / CLIP_FADE_OUT_S)
+			Math.max(0, (dur - t) / CLIP_FADE_OUT_S)
 		);
 		return x * x * (3 - 2 * x);
 	};
@@ -579,7 +606,7 @@ function LastFmCard(this: FC) {
 			? muted
 				? 0
 				: volume
-			: (muted ? 0 : volume) * spinLevel * clipEnvelope();
+			: (muted ? 0 : volume) * (reverse ? 1 : spinLevel) * clipEnvelope();
 		if (gain && audioCtx) {
 			audio.volume = 1;
 			audio.muted = false;
@@ -640,6 +667,10 @@ function LastFmCard(this: FC) {
 	};
 
 	const pausePreview = () => {
+		if (reverse) {
+			pauseReverse();
+			return;
+		}
 		if (!audio || audio.paused || stopping) return;
 		stopping = true;
 		syncPlayer();
@@ -746,8 +777,21 @@ function LastFmCard(this: FC) {
 		if (!el) return;
 		const mine = isCurrent(el.dataset.src);
 		const scrubbing = !!scrub && scrub.url === el.dataset.src;
-		const dur = scrubbing ? scrub!.buf.duration : mine ? currentDuration() : 30;
-		const t = scrubbing ? scrub!.frac * dur : mine ? audio!.currentTime : 0;
+		const reversing = !!reverse && reverse.url === el.dataset.src;
+		const dur = scrubbing
+			? scrub!.buf.duration
+			: reversing
+				? reverse!.buf.duration
+				: mine
+					? currentDuration()
+					: 30;
+		const t = scrubbing
+			? scrub!.frac * dur
+			: reversing
+				? reversePos()
+				: mine
+					? audio!.currentTime
+					: 0;
 		el.style.setProperty("--progress", String(Math.min(1, t / dur)));
 		setText(
 			el.querySelector(".lastfm-time"),
@@ -789,28 +833,47 @@ function LastFmCard(this: FC) {
 		if (!el) return;
 		const url = el.dataset.src;
 		const mine = isCurrent(url);
-		const playing = mine && !audio!.paused && !stopping;
+		const reversing = !!reverse && reverse.url === url && !reverse.stop;
+		const playing = reversing || (mine && !audio!.paused && !stopping);
 		const st =
-			playing && audio!.readyState < HTMLMediaElement.HAVE_FUTURE_DATA
+			!reversing && playing && audio!.readyState < HTMLMediaElement.HAVE_FUTURE_DATA
 				? "loading" // asked to play, still buffering
 				: playing
 					? "playing"
-					: mine && audio!.currentTime > 0
+					: (mine && audio!.currentTime > 0) ||
+						  (reverse && reverse.url === url) // spinning down
 						? "paused"
 						: "idle";
 		el.dataset.state = st;
+		// The button shows what pressing it does. Reversing: the play arrow,
+		// mirrored (CSS), which says which way it's going and is what a click
+		// does (play forwards). Holding alt: what an alt-click does instead,
+		// i.e. play backwards (mirrored arrow), or pause if it already is.
+		const altAction =
+			altHeld && st !== "loading" ? (reversing ? "pause" : "reverse") : null;
+		const action =
+			altAction ??
+			(reversing ? "forwards" : st === "playing" ? "pause" : st === "loading" ? "loading" : "play");
+		el.dataset.dir =
+			action === "reverse" || (reversing && action === "forwards") ? "reverse" : "";
 		const btn = el.querySelector(".lastfm-play");
 		setText(
 			btn?.querySelector(".material-symbols"),
-			st === "playing"
+			action === "pause"
 				? "pause"
-				: st === "loading"
+				: action === "loading"
 					? "progress_activity"
 					: "play_arrow"
 		);
 		btn?.setAttribute(
 			"aria-label",
-			st === "playing" ? "pause preview" : "play preview"
+			action === "pause"
+				? "pause preview"
+				: action === "reverse"
+					? "play preview backwards"
+					: action === "forwards"
+						? "play forwards"
+						: "play preview"
 		);
 
 		const silent = muted || volume === 0;
@@ -1093,10 +1156,24 @@ function LastFmCard(this: FC) {
 		syncPlayer();
 	};
 
+	// alt-click: play backwards (from here, or from the end at 0:00). While
+	// it's going backwards, a click flips it back to forwards and an
+	// alt-click pauses it.
 	const onPlayClick = (e: MouseEvent) => {
 		e.preventDefault();
 		const url = playerEl()?.dataset.src;
 		if (!url) return;
+		if (reverse && reverse.url === url && !reverse.stop) {
+			if (e.altKey) pauseReverse();
+			else reverseToForward(url);
+			return;
+		}
+		if (e.altKey) {
+			playReverse(url);
+			return;
+		}
+		// caught a reverse run spinning down: carry on forwards from there
+		if (reverse) stopReverse(true);
 		if (isCurrent(url) && !audio!.paused && !stopping) pausePreview();
 		else playPreview(url);
 	};
@@ -1253,6 +1330,183 @@ function LastFmCard(this: FC) {
 		s.lastSync = performance.now();
 	};
 
+	// ---- Reverse playback (alt-click play) ---------------------------------
+	// The reversed copy of the decoded clip (the same one scrubbing uses)
+	// played through Web Audio, into the same volume gain as the element. It
+	// gets the same turntable treatment as forwards: spin-up from
+	// SPIN_MIN_RATE (rate ramp + fade in), or just a quick fade when starting
+	// from the very end; pausing spins down and fades out, then stops. The
+	// position isn't readable off a buffer source, so it's worked out from
+	// the clock and those (linear) rate ramps; the <audio> element is paused
+	// throughout and takes over the position whenever the run stops, so a
+	// normal click carries on forwards from there.
+
+	// how far it's got (in clip seconds) e seconds into a run that ramps
+	// linearly from rate r0 to 1 over rampS, then holds 1
+	const rampDistance = (e: number, r0: number, rampS: number) =>
+		rampS <= 0
+			? e
+			: e < rampS
+				? r0 * e + ((1 - r0) * e * e) / (2 * rampS)
+				: ((1 + r0) / 2) * rampS + (e - rampS);
+
+	const reversePos = () => {
+		const r = reverse;
+		if (!r || !audioCtx) return 0;
+		const now = audioCtx.currentTime;
+		if (r.stop) {
+			// spinning down: rate 1 -> SPIN_MIN_RATE over r.stop.rampS
+			const e = Math.min(now - r.stop.t, r.stop.rampS);
+			const k = r.stop.rampS > 0 ? (1 - SPIN_MIN_RATE) / (2 * r.stop.rampS) : 0;
+			return Math.max(0, r.stop.pos - (e - k * e * e));
+		}
+		return Math.max(0, r.from - rampDistance(now - r.t0, r.rate0, r.rampS));
+	};
+
+	// hand the position to the <audio> element (paused), for whatever's next
+	const commitPosition = (pos: number) => {
+		if (!audio) return;
+		if (audio.readyState < HTMLMediaElement.HAVE_METADATA)
+			pendingSeek = pos / currentDuration();
+		else audio.currentTime = Math.min(currentDuration(), Math.max(0, pos));
+	};
+
+	const reverseLoop = () => {
+		syncProgress();
+		applyVolume(); // the clip fades follow the playhead backwards too
+		if (reverse) reverse.raf = requestAnimationFrame(reverseLoop);
+	};
+
+	// stop dead (a short fade), optionally leaving the element at its position
+	const stopReverse = (commit: boolean) => {
+		const r = reverse;
+		if (!r || !audioCtx) return;
+		const pos = reversePos();
+		reverse = null;
+		cancelAnimationFrame(r.raf);
+		const now = audioCtx.currentTime;
+		r.src.onended = null;
+		r.fade.gain.cancelScheduledValues(now);
+		r.fade.gain.setValueAtTime(r.fade.gain.value, now);
+		r.fade.gain.linearRampToValueAtTime(0, now + SCRUB_XFADE_S);
+		r.src.stop(now + SCRUB_XFADE_S + 0.005);
+		if (commit) commitPosition(pos);
+		syncPlayer();
+	};
+
+	const startReverse = (url: string, buf: AudioBuffer, from: number, spin: boolean) => {
+		if (!audioCtx || !gain) return;
+		const rbuf = reversedBuffer(url, buf);
+		if (!rbuf) return;
+		stopReverse(false);
+		// the element hands over: no forward spin-down, it just stops here
+		cancelAnimationFrame(spinRaf);
+		stopping = false;
+		audio?.pause();
+		const now = audioCtx.currentTime;
+		const rampS = spin ? SPIN_UP_MS / 1000 : 0;
+		const rate0 = spin ? SPIN_MIN_RATE : 1;
+		const src = audioCtx.createBufferSource();
+		src.buffer = rbuf;
+		src.playbackRate.setValueAtTime(rate0, now);
+		if (rampS) src.playbackRate.linearRampToValueAtTime(1, now + rampS);
+		const fade = audioCtx.createGain();
+		fade.gain.setValueAtTime(0, now);
+		fade.gain.linearRampToValueAtTime(1, now + (spin ? SPIN_UP_MS : FADE_IN_MS) / 1000);
+		src.connect(fade).connect(gain);
+		// the reversed copy's offset for clip position `from`
+		src.start(now, Math.min(buf.duration - 0.001, Math.max(0, buf.duration - from)));
+		const r: Reverse = { url, buf, src, fade, t0: now, from, rate0, rampS, stop: null, raf: 0 };
+		reverse = r;
+		// back at 0:00 (the clip's own fade-in, backwards, softens the end)
+		src.onended = () => {
+			if (reverse !== r) return;
+			reverse = null;
+			cancelAnimationFrame(r.raf);
+			commitPosition(0);
+			syncPlayer();
+		};
+		applyVolume();
+		syncPlayer();
+		r.raf = requestAnimationFrame(reverseLoop);
+	};
+
+	// spin down and fade out, then stop where it got to
+	const pauseReverse = () => {
+		const r = reverse;
+		if (!r || r.stop || !audioCtx) return;
+		const now = audioCtx.currentTime;
+		const rampS = SPIN_DOWN_MS / 1000;
+		r.stop = { t: now, pos: reversePos(), rampS };
+		r.src.playbackRate.cancelScheduledValues(now);
+		r.src.playbackRate.setValueAtTime(r.src.playbackRate.value, now);
+		r.src.playbackRate.linearRampToValueAtTime(SPIN_MIN_RATE, now + rampS);
+		r.fade.gain.cancelScheduledValues(now);
+		r.fade.gain.setValueAtTime(r.fade.gain.value, now);
+		r.fade.gain.linearRampToValueAtTime(0, now + rampS);
+		syncPlayer();
+		setTimeout(() => {
+			if (reverse === r) stopReverse(true);
+		}, SPIN_DOWN_MS);
+	};
+
+	// Holding alt (option) previews what an alt-click would do on the play
+	// button: play backwards, or pause if it already is (see syncPlayer).
+	// Tracked from keys and pointer moves (which carry altKey, in case a
+	// keyup went elsewhere); losing focus lets go of it.
+	let altHeld = false;
+	const setAltHeld = (held: boolean) => {
+		if (held === altHeld) return;
+		altHeld = held;
+		syncPlayer();
+	};
+	const onAltKey = (e: KeyboardEvent) => {
+		if (e.key === "Alt" || e.altKey !== altHeld) setAltHeld(e.altKey);
+	};
+	const onAltPointer = (e: PointerEvent) => setAltHeld(e.altKey);
+	const onAltBlur = () => setAltHeld(false);
+
+	// back to forwards from wherever it's got to, with the forwards spin-up
+	// (like flipping a turntable's direction)
+	const reverseToForward = (url: string) => {
+		stopReverse(true);
+		playPreview(url);
+	};
+
+	// Must stay synchronous up to the graph unlock, like playPreview (Safari
+	// only lets audio start inside the click).
+	const playReverse = (url: string) => {
+		// a run spinning down (or already going): pick up from where it is
+		const from0 = reverse && reverse.url === url ? reversePos() : null;
+		if (!isCurrent(url)) {
+			audio?.pause();
+			const a = ensureAudio();
+			a.src = ready.get(url)?.src ?? url;
+			audioFor = url;
+			const v = state.view;
+			if (v.kind === "loaded") setMediaSession(v.track);
+		}
+		ensureGraph();
+		void audioCtx?.resume();
+		const begin = (buf: AudioBuffer) => {
+			const at = from0 ?? (audio && audio.currentTime > 0.05 ? audio.currentTime : buf.duration);
+			// from the very end: just fade in, like forwards from 0:00
+			startReverse(url, buf, at, at < buf.duration - 0.05);
+		};
+		const buf = buffers.get(url);
+		if (buf) begin(buf);
+		else {
+			// not downloaded/decoded yet: go once it is (the context's already
+			// unlocked by this click)
+			loadPreview(url)
+				.then(() => {
+					const b = buffers.get(url);
+					if (b) begin(b);
+				})
+				.catch(() => {});
+		}
+	};
+
 	const scrubLoop = (now: number) => {
 		const s = scrub;
 		if (!s || !audioCtx) return;
@@ -1316,7 +1570,9 @@ function LastFmCard(this: FC) {
 		const a = audio;
 		if (a.readyState < HTMLMediaElement.HAVE_METADATA) pendingSeek = s.frac;
 		else a.currentTime = s.frac * currentDuration();
-		if (s.resume) {
+		if (s.resume && s.resumeReverse) {
+			startReverse(s.url, s.buf, s.frac * s.buf.duration, false);
+		} else if (s.resume) {
 			// carry on with a quick fade-in rather than the vinyl spin-up
 			setSpin(0, false);
 			a.play().catch(() => syncPlayer());
@@ -1359,10 +1615,13 @@ function LastFmCard(this: FC) {
 			void audioCtx?.resume();
 		}
 		if (!buf || !audioCtx || !gain) {
+			stopReverse(true);
 			seekTo(frac);
 			return;
 		}
-		const wasPlaying = !audio!.paused && !stopping;
+		const wasReversing = !!reverse && !reverse.stop;
+		stopReverse(true);
+		const wasPlaying = (!audio!.paused && !stopping) || wasReversing;
 		cancelAnimationFrame(spinRaf);
 		stopping = false;
 		audio!.pause();
@@ -1383,6 +1642,7 @@ function LastFmCard(this: FC) {
 			lastFrame: performance.now(),
 			lastSync: 0,
 			resume: wasPlaying || fresh, // a click on an idle player plays from there
+			resumeReverse: wasReversing,
 			raf: 0,
 		};
 		reversedBuffer(url, buf); // now, rather than mid-drag
@@ -1431,14 +1691,19 @@ function LastFmCard(this: FC) {
 		if (!url) return;
 		if (e.key === " " || e.key === "Enter") {
 			e.preventDefault();
-			if (isCurrent(url) && !audio!.paused && !stopping) pausePreview();
+			if (reverse && !reverse.stop) {
+				if (e.altKey) pauseReverse();
+				else reverseToForward(url);
+			} else if (e.altKey) playReverse(url);
+			else if (isCurrent(url) && !audio!.paused && !stopping) pausePreview();
 			else playPreview(url);
 			return;
 		}
 		if (!isCurrent(url)) return;
-		const dur = currentDuration();
+		const r = reverse && !reverse.stop ? reverse : null;
+		const dur = r ? r.buf.duration : currentDuration();
 		const step = e.shiftKey ? 5 : 2;
-		const t = audio!.currentTime;
+		const t = r ? reversePos() : audio!.currentTime;
 		const next =
 			e.key === "ArrowRight" || e.key === "ArrowUp"
 				? t + step
@@ -1451,7 +1716,9 @@ function LastFmCard(this: FC) {
 							: null;
 		if (next == null) return;
 		e.preventDefault();
-		audio!.currentTime = Math.min(dur, Math.max(0, next));
+		const to = Math.min(dur, Math.max(0, next));
+		if (r) startReverse(r.url, r.buf, to, false);
+		else audio!.currentTime = to;
 		syncProgress();
 	};
 
@@ -1463,7 +1730,8 @@ function LastFmCard(this: FC) {
 			this.root?.isConnected &&
 			!state.refreshing &&
 			// don't swap the card's DOM out from under a playing preview
-			!(audio && !audio.paused)
+			!(audio && !audio.paused) &&
+			!reverse
 		) {
 			load();
 		}
@@ -1498,6 +1766,10 @@ function LastFmCard(this: FC) {
 			refreshWhenVisible();
 		}, REFRESH_MS);
 		document.addEventListener("visibilitychange", refreshWhenVisible);
+		window.addEventListener("keydown", onAltKey);
+		window.addEventListener("keyup", onAltKey);
+		window.addEventListener("pointermove", onAltPointer, { passive: true });
+		window.addEventListener("blur", onAltBlur);
 
 		// Re-fit when the card's column width changes (responsive resize).
 		if (typeof ResizeObserver !== "undefined") {
@@ -1527,6 +1799,10 @@ function LastFmCard(this: FC) {
 
 		return () => {
 			cancelled = true;
+			window.removeEventListener("keydown", onAltKey);
+			window.removeEventListener("keyup", onAltKey);
+			window.removeEventListener("pointermove", onAltPointer);
+			window.removeEventListener("blur", onAltBlur);
 			controller?.abort();
 			fetchAbort?.abort();
 			cancelAnimationFrame(progressRaf);
@@ -1617,11 +1893,17 @@ function LastFmCard(this: FC) {
 				// s2/s4 mark the bars dropped when the waveform is narrow (see
 				// fitWave); classes because dreamland's CSS scoping breaks
 				// :nth-child() arguments
+				// the palette, when it's already been worked out for this cover:
+				// a re-render (e.g. a refresh where only a count changed) then
+				// starts out coloured instead of fading in from the default
+				const art = t.image ?? am?.artwork ?? "";
+				const colors = art ? palettes.get(art) : undefined;
+				const hasColors = !!colors?.length;
 				const bars = () =>
 					peaks.map((h, i) => (
 						<i
 							class={i % 2 ? "s2" : i % 4 ? "s4" : ""}
-							style={`--h: ${h.toFixed(3)}; --d: ${sweepDelay(i)}s`}
+							style={`--h: ${h.toFixed(3)}; --d: ${sweepDelay(i)}s${hasColors ? `; --c: ${colors![i]}` : ""}`}
 						/>
 					));
 				const player = previewUrl ? (
@@ -1632,7 +1914,9 @@ function LastFmCard(this: FC) {
 						data-peaks={known ? "real" : "empty"}
 						data-seed={am?.id || previewUrl}
 						// the cover the card shows, for the waveform palette
-						data-art={t.image ?? am?.artwork ?? ""}
+						data-art={art}
+						// "none" until applyPalette colours it (or already, see above)
+						data-palette={hasColors ? art : "none"}
 					>
 						<button
 							type="button"
@@ -2079,6 +2363,11 @@ LastFmCard.style = css`
 		font-size: 1.4rem;
 	}
 
+	/* playing backwards (alt-click): the play arrow points the other way */
+	.lastfm-player[data-dir="reverse"] .lastfm-play .material-symbols {
+		transform: scaleX(-1);
+	}
+
 	.lastfm-player[data-state="loading"] .lastfm-play .material-symbols {
 		animation: lastfm-spin 0.9s linear infinite;
 	}
@@ -2206,19 +2495,19 @@ LastFmCard.style = css`
 	   the cover's gradient. Played is the full colour; the rest of the track
 	   is a faint version of the same gradient, so the colours are there
 	   before you press play, like the Dynamic Island's idle tint. */
-	.lastfm-player[data-palette] .lastfm-wave-bars.is-played i {
+	.lastfm-player[data-palette]:not([data-palette="none"]) .lastfm-wave-bars.is-played i {
 		color: var(--c);
 	}
 
-	.lastfm-player[data-palette] .lastfm-wave-bars.is-hover i {
+	.lastfm-player[data-palette]:not([data-palette="none"]) .lastfm-wave-bars.is-hover i {
 		color: color-mix(in oklab, var(--c) 55%, transparent);
 	}
 
-	.lastfm-player[data-palette] .lastfm-wave-bars.is-base i {
+	.lastfm-player[data-palette]:not([data-palette="none"]) .lastfm-wave-bars.is-base i {
 		color: color-mix(in oklab, var(--c) 30%, transparent);
 	}
 
-	.lastfm-player[data-palette][data-peaks="placeholder"]
+	.lastfm-player[data-palette]:not([data-palette="none"])[data-peaks="placeholder"]
 		.lastfm-wave-bars.is-base
 		i {
 		color: color-mix(in oklab, var(--c) 20%, transparent);
