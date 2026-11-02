@@ -1,7 +1,8 @@
 // client for siteapi (https://github.com/.../siteapi)
 // proxies last.fm + mastodon. CORS is wildcard so calling from the browser is fine.
 
-export const SITE_API_BASE = "https://siteapi.bomberfish-industries.workers.dev";
+export const SITE_API_BASE =
+	"https://siteapi.bomberfish-industries.workers.dev";
 
 export interface LastfmProfile {
 	totalScrobbles: number | null;
@@ -219,26 +220,50 @@ export type SiteApiError =
 async function fetchJson<T>(
 	path: string,
 	signal?: AbortSignal,
-	cacheBust?: boolean,
+	cacheBust?: boolean
 ): Promise<T> {
 	// when the user explicitly hits refresh, tack on a unique query param so any
 	// intermediate caches (browser, CDN, the worker itself) are bypassed.
 	const url = cacheBust
-		? SITE_API_BASE + path + (path.includes("?") ? "&" : "?") + "_=" + Date.now()
+		? SITE_API_BASE +
+			path +
+			(path.includes("?") ? "&" : "?") +
+			"_=" +
+			Date.now()
 		: SITE_API_BASE + path;
 	const init: RequestInit = { signal };
 	if (cacheBust) init.cache = "no-store";
 	const res = await fetch(url, init);
-	const body = await res.json().catch(() => null) as T | SiteApiError | null;
+	const body = (await res.json().catch(() => null)) as T | SiteApiError | null;
 	if (!res.ok || body === null) {
-		const code = body && typeof body === "object" && "error" in body ? body.error : `http_${res.status}`;
+		const code =
+			body && typeof body === "object" && "error" in body
+				? body.error
+				: `http_${res.status}`;
 		throw new Error(String(code));
 	}
 	return body as T;
 }
 
+// How siteapi should proxy each endpoint's images through wsrv: no output
+// format (WsrvPicture picks one per browser), and a quality (1-100). Album
+// art and post images are what the cards are about, avatars are small, and
+// the social ones are tiny (40px).
+const IMAGE_OPTIONS = {
+	lastfm: { format: "none", quality: "90" },
+	github: { format: "none", quality: "70" },
+	social: { format: "none", quality: "80", avatarQuality: "67" },
+};
+
+const withImageOptions = (path: string, options: Record<string, string>) =>
+	path + "?" + new URLSearchParams(options).toString();
+
 export const getLastfm = (signal?: AbortSignal, cacheBust?: boolean) =>
-	fetchJson<LastfmResponse>("/v1/lastfm", signal, cacheBust);
+	fetchJson<LastfmResponse>(
+		withImageOptions("/v1/lastfm", IMAGE_OPTIONS.lastfm),
+		signal,
+		cacheBust
+	);
 
 // pages fetched with a cursor are cached for a long time (the cursor moves
 // on when a new scrobble lands, so they don't go stale); without one it's
@@ -247,12 +272,11 @@ export const getLastfmRecent = (
 	{ before, limit }: { before?: number | null; limit?: number },
 	signal?: AbortSignal
 ) => {
-	const params = new URLSearchParams();
+	const params = new URLSearchParams(IMAGE_OPTIONS.lastfm);
 	if (limit != null) params.set("limit", String(limit));
 	if (before != null) params.set("before", String(before));
-	const query = params.toString();
 	return fetchJson<LastfmRecentResponse>(
-		"/v1/lastfm/recent" + (query ? "?" + query : ""),
+		"/v1/lastfm/recent?" + params.toString(),
 		signal
 	);
 };
@@ -269,10 +293,22 @@ export const getLastfmTrackInfo = (
 	);
 
 export const getMastodon = (signal?: AbortSignal, cacheBust?: boolean) =>
-	fetchJson<MastodonResponse>("/v1/mastodon", signal, cacheBust);
+	fetchJson<MastodonResponse>(
+		withImageOptions("/v1/mastodon", IMAGE_OPTIONS.social),
+		signal,
+		cacheBust
+	);
 
 export const getTwitter = (signal?: AbortSignal, cacheBust?: boolean) =>
-	fetchJson<TwitterResponse>("/v1/twitter", signal, cacheBust);
+	fetchJson<TwitterResponse>(
+		withImageOptions("/v1/twitter", IMAGE_OPTIONS.social),
+		signal,
+		cacheBust
+	);
 
 export const getGithub = (signal?: AbortSignal, cacheBust?: boolean) =>
-	fetchJson<GithubResponse>("/v1/github", signal, cacheBust);
+	fetchJson<GithubResponse>(
+		withImageOptions("/v1/github", IMAGE_OPTIONS.github),
+		signal,
+		cacheBust
+	);

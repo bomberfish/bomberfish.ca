@@ -1,6 +1,7 @@
 import { FC, createState, css, Stateful } from "dreamland/core";
 import { getGithub, GithubResponse } from "../lib/siteapi";
 import { GitHubIcon } from "./SocialIcons";
+import { wsrvPicture } from "./WsrvPicture";
 
 type View =
 	| { kind: "loading" }
@@ -172,12 +173,11 @@ function GithubCard(this: FC) {
 						<div class="gh-top">
 						<div class="gh-about">
 						<a class="gh-profile" href={p.url} target="_blank" rel="me">
-							<img
-								src={p.avatar}
-								class="gh-avatar"
-								alt=""
-								loading="lazy"
-							/>
+							{wsrvPicture(p.avatar, {
+								class: "gh-avatar",
+								alt: "",
+								loading: "lazy",
+							})}
 							<div class="gh-profile-info">
 								<p class="gh-name">{p.name || p.login}</p>
 								<p class="gh-login">
@@ -248,7 +248,7 @@ function GithubCard(this: FC) {
 }
 
 // Shared .livecard / .livecard-* styles live in src/style.css so they apply
-// here without re-declaration. Only mastodon-fedi-post-specific styles below.
+// here without re-declaration. Only github-card-specific styles below.
 GithubCard.style = css`
 	:scope {
 		display: flex;
@@ -263,91 +263,9 @@ GithubCard.style = css`
 		gap: 0.6rem;
 		flex: 1;
 		min-width: 0;
-		/* container for cqi-based fluid type sizing in .is-short.
-		   position: relative so the post sits above the .fedi-post-bleed
-		   (which is at z-index: -1 in the card's stacking context). */
 		container-type: inline-size;
+		/* above the .gh-bleed (z-index: -1 in the card's stacking context) */
 		position: relative;
-	}
-
-	.fedi-post-header {
-		display: flex;
-		align-items: center;
-		gap: 0.6rem;
-		min-width: 0;
-		text-decoration: none !important;
-		color: inherit;
-	}
-
-	.fedi-post-header::after {
-		display: none !important;
-	}
-
-	.fedi-post-avatar {
-		width: 2.5rem;
-		height: 2.5rem;
-		flex-shrink: 0;
-		object-fit: cover;
-		border: 1px solid var(--surface2);
-		background: var(--surface2);
-	}
-
-	.fedi-post-header-info {
-		display: flex;
-		flex-direction: column;
-		min-width: 0;
-		line-height: 1.2;
-	}
-
-	.fedi-post-header-name {
-		margin: 0;
-		font-size: 0.95rem;
-		font-weight: 600;
-		color: var(--text);
-		overflow: hidden;
-		text-overflow: ellipsis;
-		white-space: nowrap;
-	}
-
-	.fedi-post-header-username {
-		margin: 0;
-		font-size: 0.78rem;
-		color: var(--subtext1);
-		overflow: hidden;
-		text-overflow: ellipsis;
-		white-space: nowrap;
-	}
-
-	.fedi-post-when {
-		margin-left: auto;
-		flex-shrink: 0;
-		color: var(--subtext2);
-		letter-spacing: 0.05em;
-	}
-
-	.fedi-post-body {
-		display: flex;
-		flex-direction: column;
-		gap: 0.5rem;
-		flex: 1;
-		min-width: 0;
-	}
-
-	.fedi-post-spoiler {
-		margin: 0;
-		font-style: italic;
-		color: var(--subtext0);
-		font-size: 0.85rem;
-		padding: 0.35rem 0.5rem;
-		border-left: 2px solid var(--surface2);
-		background: hsla(var(--surface0-hsl), 0.4);
-	}
-
-	.fedi-post-content {
-		color: var(--text1);
-		font-size: 0.9rem;
-		line-height: 1.45;
-		overflow-wrap: anywhere;
 	}
 
 	/* contribution graph as a full-bleed translucent backdrop (inset reaches the

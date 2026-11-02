@@ -1686,6 +1686,241 @@ cap subt:not(:has(.material-symbols)) {
 	text-align: center;
 }
 
+/* Social post cards (MastodonCard, TwitterCard; markup in
+   src/components/SocialPost.tsx) */
+
+.social-card {
+	display: flex;
+	flex-direction: column;
+	position: relative;
+	overflow: hidden;
+}
+
+.social-post {
+	display: flex;
+	flex-direction: column;
+	gap: 0.6rem;
+	flex: 1;
+	min-width: 0;
+	/* container for cqi-based fluid type sizing in .is-short.
+	   position: relative so the post sits above the .social-post-bleed
+	   (which is at z-index: -1 in the card's stacking context). */
+	container-type: inline-size;
+	position: relative;
+}
+
+.social-post-header {
+	display: flex;
+	align-items: center;
+	gap: 0.6rem;
+	min-width: 0;
+	text-decoration: none !important;
+	color: inherit;
+}
+
+.social-post-header::after {
+	display: none !important;
+}
+
+.social-post-avatar {
+	width: 2.5rem;
+	height: 2.5rem;
+	flex-shrink: 0;
+	object-fit: cover;
+	border: 1px solid var(--surface2);
+	background: var(--surface2);
+}
+
+.social-post-header-info {
+	display: flex;
+	flex-direction: column;
+	min-width: 0;
+	line-height: 1.2;
+}
+
+.social-post-header-name {
+	margin: 0;
+	font-size: 0.95rem;
+	font-weight: 600;
+	color: var(--text);
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.social-post-header-username {
+	margin: 0;
+	font-size: 0.78rem;
+	color: var(--subtext1);
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.social-post-when {
+	margin-left: auto;
+	flex-shrink: 0;
+	color: var(--subtext2);
+	letter-spacing: 0.05em;
+}
+
+.social-post-body {
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+	flex: 1;
+	min-width: 0;
+}
+
+.social-post-spoiler {
+	margin: 0;
+	font-style: italic;
+	color: var(--subtext0);
+	font-size: 0.85rem;
+	padding: 0.35rem 0.5rem;
+	border-left: 2px solid var(--surface2);
+	background: hsla(var(--surface0-hsl), 0.4);
+}
+
+.social-post-content {
+	color: var(--text1);
+	font-size: 0.9rem;
+	line-height: 1.45;
+	overflow-wrap: anywhere;
+}
+
+/* twitter-style: short, text-only posts get the big-font display
+   treatment. fluid clamp scales with the card column, ELSH adds the
+   chunky stripe weight that h2 uses. */
+.social-post-content.is-short {
+	color: var(--text);
+	font-size: min(var(--post-size, 1.7rem), max(1.05rem, 7.5cqi));
+	line-height: 1.25;
+	font-variation-settings: "ELSH" 93;
+	font-synthesis: style;
+	font-weight: 50;
+	text-rendering: geometricPrecision;
+	text-wrap: balance;
+	hyphens: auto;
+}
+
+.social-post-content p {
+	margin: 0 0 0.4rem 0;
+}
+
+.social-post-content.is-short p {
+	margin: 0 0 0.5rem 0;
+}
+
+.social-post-content p:last-child {
+	margin-bottom: 0;
+}
+
+.social-post-content a {
+	color: var(--accent);
+}
+
+/* Bleed: visual attachments (image/video/gifv) fill the card behind the
+   post, heavily darkened so the foreground text stays readable. inset is
+   negative so the bleed extends past .background-container's padding all
+   the way to the inside of the card border. */
+.social-post-bleed {
+	position: absolute;
+	inset: -0.7rem;
+	z-index: -1;
+	pointer-events: none;
+	background: var(--crust);
+	opacity: 0.67;
+}
+
+.social-post-bleed :is(img, video) {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	display: block;
+	/* contrast() runs after brightness() and pushes highlights back up
+	   (0.85 -> 0.92 at 1.2), so keep it mild; brightness is what caps how
+	   light a white photo can get behind the text */
+	filter: brightness(0.45) saturate(0.8) contrast(1.05);
+	image-rendering: auto;
+}
+
+/* dark vignette over the image so edges fade to the card bg, plus an even
+   scrim under it so even the middle of a bright photo keeps the text
+   (incl. subtext) at 4.5:1 or better */
+.social-post-bleed::after {
+	content: "";
+	position: absolute;
+	inset: 0;
+	background:
+		linear-gradient(
+			hsla(var(--crust-hsl), 0.25),
+			hsla(var(--crust-hsl), 0.25)
+		),
+		radial-gradient(
+			ellipse at center,
+			transparent 30%,
+			hsla(var(--crust-hsl), 0.55) 100%
+		),
+		linear-gradient(
+			to bottom,
+			hsla(var(--crust-hsl), 0.5) 0%,
+			transparent 25%,
+			transparent 75%,
+			hsla(var(--crust-hsl), 0.5) 100%
+		);
+	pointer-events: none;
+}
+
+/* audio + unknown have no good "bleed" representation. Render them inline
+   at the bottom of the card instead. */
+.social-post-bleed-audio,
+.social-post-bleed-unknown {
+	position: static;
+	inset: auto;
+	z-index: auto;
+	pointer-events: auto;
+	background: none;
+	margin-top: 0.5rem;
+}
+
+.social-post-bleed-audio::after,
+.social-post-bleed-unknown::after {
+	display: none;
+}
+
+.social-post-bleed-audio audio {
+	width: 100%;
+}
+
+.social-post-bleed-fallback {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.3rem;
+	font-size: 0.8rem;
+	color: var(--subtext0);
+}
+
+.social-post-counts {
+	display: flex;
+	gap: 1rem;
+	margin: 0;
+	padding-top: 0.5rem;
+	border-top: 1px solid var(--surface2);
+	font-size: 0.8rem;
+	color: var(--subtext2);
+}
+
+.social-post-counts span {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.25rem;
+}
+
+.social-post-counts .material-symbols {
+	font-size: 1rem;
+}
+
 /* Fade-in for live card content. The .is-initial gate is added in the JSX
    and stripped by the component ~1s after the first state.view transition
    out of "loading" completes (long enough for the slow bleed animation to
@@ -1755,14 +1990,14 @@ cap subt:not(:has(.material-symbols)) {
    visible → opacity 0 → fade in. The loaded content nodes are inserted
    after mount and animate cleanly on first paint. */
 .livecard.is-initial > .post,
-.livecard.is-initial .lastfm-track > .lastfm-art,
+.livecard.is-initial .lastfm-track .lastfm-art,
 .livecard.is-initial .lastfm-track > .lastfm-meta {
 	animation: livecard-fade-in 0.35s ease-out;
 }
 
 /* Bleeds reveal independently and slower for an atmospheric feel — the
    foreground snaps in, the backdrop drifts in behind it. */
-.livecard.is-initial > .fedi-post-bleed {
+.livecard.is-initial > .social-post-bleed {
 	animation: masto-fade-in 0.9s ease-out;
 }
 
@@ -1802,6 +2037,18 @@ cap subt:not(:has(.material-symbols)) {
 
 img {
 	user-select: none;
+}
+
+/* wsrv images' format picker (src/components/WsrvPicture.tsx): no box of its
+   own, so the <img> inside lays out as if it were in its place */
+.wsrv-picture {
+	display: contents;
+}
+
+/* or the (empty) <source>s become flex/grid items of their own, each with
+   a gap. Choosing between them doesn't depend on their rendering. */
+.wsrv-picture > source {
+	display: none;
 }
 
 .project-card * {

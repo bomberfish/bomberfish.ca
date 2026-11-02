@@ -56,6 +56,7 @@ WebButton.style = css`
 	}
 	img {
 		image-rendering: pixelated;
+		image-rendering: crisp-edges;
 		width: auto;
 		height: 100%;
 	}

@@ -10,6 +10,7 @@ import {
 	LastfmTrack,
 } from "../lib/siteapi";
 import { AppleMusicWordmark, LastFmIcon } from "./SocialIcons";
+import { wsrvPicture } from "./WsrvPicture";
 
 type View =
 	| { kind: "loading" }
@@ -327,11 +328,12 @@ function paletteGradient(palette: Lab[], n: number): string[] {
 	// a single colour still gets some movement: a lighter and a deeper end
 	if (stops.length === 1) {
 		const [L, a, b] = stops[0];
-		stops.splice(0, 1, [Math.min(0.92, L + 0.08), a * 0.8, b * 0.8], [
-			L - 0.08,
-			a * 1.15,
-			b * 1.15,
-		]);
+		stops.splice(
+			0,
+			1,
+			[Math.min(0.92, L + 0.08), a * 0.8, b * 0.8],
+			[L - 0.08, a * 1.15, b * 1.15]
+		);
 	}
 	const out: string[] = [];
 	for (let i = 0; i < n; i++) {
@@ -474,7 +476,8 @@ function LastFmCard(this: FC) {
 	};
 
 	const loadHistory = (): Promise<void> => {
-		if (import.meta.env.SSR || liveView.kind !== "loaded") return historyPromise;
+		if (import.meta.env.SSR || liveView.kind !== "loaded")
+			return historyPromise;
 		const before = historyBefore;
 		const key = before == null ? "head" : String(before);
 		if (key === historyKey) return historyPromise;
@@ -506,7 +509,10 @@ function LastFmCard(this: FC) {
 					page.some((t) => t.playedAt === prev.tracks[0].playedAt)
 				) {
 					const seen = new Set(page.map((t) => t.playedAt));
-					tracks = [...page, ...prev.tracks.filter((t) => !seen.has(t.playedAt))];
+					tracks = [
+						...page,
+						...prev.tracks.filter((t) => !seen.has(t.playedAt)),
+					];
 					next = prev.next;
 				}
 				// same list under a new cursor: nothing to redraw
@@ -555,7 +561,10 @@ function LastFmCard(this: FC) {
 				const seen = new Set(cur.tracks.map((t) => t.playedAt));
 				setHistory({
 					kind: "loaded",
-					tracks: [...cur.tracks, ...data.tracks.filter((t) => !seen.has(t.playedAt))],
+					tracks: [
+						...cur.tracks,
+						...data.tracks.filter((t) => !seen.has(t.playedAt)),
+					],
 					next: data.next,
 					more: "idle",
 				});
@@ -601,7 +610,11 @@ function LastFmCard(this: FC) {
 		browseTarget = offset = Math.max(0, offset);
 		if (offset > 0) {
 			await loadHistory();
-			while (!cancelled && browseTarget === offset && historyTracks().length < offset) {
+			while (
+				!cancelled &&
+				browseTarget === offset &&
+				historyTracks().length < offset
+			) {
 				const h = state.history;
 				if (h.kind !== "loaded" || h.next == null) break;
 				await loadMore();
@@ -671,7 +684,8 @@ function LastFmCard(this: FC) {
 
 	const prefetchAround = (offset: number) => {
 		const tracks = historyTracks();
-		for (const i of [offset, offset - 2]) if (tracks[i]) loadTrackInfo(tracks[i]);
+		for (const i of [offset, offset - 2])
+			if (tracks[i]) loadTrackInfo(tracks[i]);
 	};
 
 	const onBack = () => browseTo(browseTarget + 1);
@@ -704,11 +718,14 @@ function LastFmCard(this: FC) {
 		}
 		const offset = browseOffset();
 		const h = state.history;
-		const atEnd = h.kind === "loaded" && h.next == null && offset >= tracks.length;
+		const atEnd =
+			h.kind === "loaded" && h.next == null && offset >= tracks.length;
 		const back = this.root.querySelector<HTMLButtonElement>(".lastfm-back-btn");
-		const forward = this.root.querySelector<HTMLButtonElement>(".lastfm-fwd-btn");
+		const forward =
+			this.root.querySelector<HTMLButtonElement>(".lastfm-fwd-btn");
 		// (both off while the list is up: it's covering the card they flip)
-		if (back) back.disabled = state.historyOpen || liveView.kind !== "loaded" || atEnd;
+		if (back)
+			back.disabled = state.historyOpen || liveView.kind !== "loaded" || atEnd;
 		if (forward) forward.disabled = state.historyOpen || offset === 0;
 		for (const [playedAt, row] of historyRows)
 			row.setAttribute("aria-current", String(playedAt === browsedAt));
@@ -736,7 +753,9 @@ function LastFmCard(this: FC) {
 		const playing = "nowPlaying" in t && t.nowPlaying;
 		return (
 			<li
-				class={playing ? "lastfm-history-item now-playing" : "lastfm-history-item"}
+				class={
+					playing ? "lastfm-history-item now-playing" : "lastfm-history-item"
+				}
 				style={`--i: ${stagger}`}
 				tabindex="0"
 				role="button"
@@ -747,17 +766,20 @@ function LastFmCard(this: FC) {
 					onClick();
 				}}
 			>
-				{playing && art ? (
-					<img class="lastfm-history-bleed" src={art} alt="" decoding="async" />
-				) : null}
+				{playing && art
+					? wsrvPicture(art, {
+							class: "lastfm-history-bleed",
+							alt: "",
+							decoding: "async",
+						})
+					: null}
 				{art ? (
-					<img
-						class="lastfm-history-art"
-						src={art}
-						alt=""
-						loading="lazy"
-						decoding="async"
-					/>
+					wsrvPicture(art, {
+						class: "lastfm-history-art",
+						alt: "",
+						loading: "lazy",
+						decoding: "async",
+					})
 				) : (
 					<span class="lastfm-history-art" />
 				)}
@@ -840,7 +862,11 @@ function LastFmCard(this: FC) {
 				</li>
 			);
 		if (!h.tracks.length)
-			return <li class="lastfm-history-status wide">nothing scrobbled before this</li>;
+			return (
+				<li class="lastfm-history-status wide">
+					nothing scrobbled before this
+				</li>
+			);
 		let fresh = 0;
 		const rows: Node[] = h.tracks.map((t) => {
 			let row = historyRows.get(t.playedAt);
@@ -891,7 +917,9 @@ function LastFmCard(this: FC) {
 			// the entry rise replays on every open (the rows only animate while
 			// open), staggered from the top of what's in view
 			const viewTop = el.getBoundingClientRect().top;
-			for (const row of el.querySelectorAll<HTMLElement>(".lastfm-history-item")) {
+			for (const row of el.querySelectorAll<HTMLElement>(
+				".lastfm-history-item"
+			)) {
 				const r = row.getBoundingClientRect();
 				const i = r.height ? Math.round((r.top - viewTop) / r.height) : 0;
 				row.style.setProperty("--i", String(Math.min(6, Math.max(0, i))));
@@ -1175,7 +1203,9 @@ function LastFmCard(this: FC) {
 			gain.gain.setTargetAtTime(target, audioCtx.currentTime, 0.015);
 		} else {
 			// unlike a gain node, the element throws outside 0..1 (or on NaN)
-			audio.volume = Number.isFinite(target) ? Math.min(1, Math.max(0, target)) : 0;
+			audio.volume = Number.isFinite(target)
+				? Math.min(1, Math.max(0, target))
+				: 0;
 			audio.muted = muted;
 		}
 	};
@@ -1300,7 +1330,10 @@ function LastFmCard(this: FC) {
 				ctx.drawImage(img, 0, 0, PALETTE_SIZE, PALETTE_SIZE);
 				const px = ctx.getImageData(0, 0, PALETTE_SIZE, PALETTE_SIZE).data;
 				const palette = extractPalette(px, PALETTE_SIZE);
-				palettes.set(art, palette.length ? paletteGradient(palette, WAVE_BARS) : []);
+				palettes.set(
+					art,
+					palette.length ? paletteGradient(palette, WAVE_BARS) : []
+				);
 			})
 			.catch(() => palettes.set(art, [])) // no CORS / broken image
 			.finally(() => syncPlayer());
@@ -1397,12 +1430,13 @@ function LastFmCard(this: FC) {
 		const reversing = !!reverse && reverse.url === url && !reverse.stop;
 		const playing = reversing || (mine && !audio!.paused && !stopping);
 		const st =
-			!reversing && playing && audio!.readyState < HTMLMediaElement.HAVE_FUTURE_DATA
+			!reversing &&
+			playing &&
+			audio!.readyState < HTMLMediaElement.HAVE_FUTURE_DATA
 				? "loading" // asked to play, still buffering
 				: playing
 					? "playing"
-					: (mine && audio!.currentTime > 0) ||
-						  (reverse && reverse.url === url) // spinning down
+					: (mine && audio!.currentTime > 0) || (reverse && reverse.url === url) // spinning down
 						? "paused"
 						: "idle";
 		el.dataset.state = st;
@@ -1414,9 +1448,17 @@ function LastFmCard(this: FC) {
 			altHeld && st !== "loading" ? (reversing ? "pause" : "reverse") : null;
 		const action =
 			altAction ??
-			(reversing ? "forwards" : st === "playing" ? "pause" : st === "loading" ? "loading" : "play");
+			(reversing
+				? "forwards"
+				: st === "playing"
+					? "pause"
+					: st === "loading"
+						? "loading"
+						: "play");
 		el.dataset.dir =
-			action === "reverse" || (reversing && action === "forwards") ? "reverse" : "";
+			action === "reverse" || (reversing && action === "forwards")
+				? "reverse"
+				: "";
 		const btn = el.querySelector(".lastfm-play");
 		setText(
 			btn?.querySelector(".material-symbols"),
@@ -1442,9 +1484,15 @@ function LastFmCard(this: FC) {
 		el.style.setProperty("--vol", String(silent ? 0 : volume));
 		// the inline slider and the touch popover's one
 		const pct = String(Math.round((silent ? 0 : volume) * 100));
-		for (const range of el.querySelectorAll<HTMLInputElement>(".lastfm-vol-range"))
+		for (const range of el.querySelectorAll<HTMLInputElement>(
+			".lastfm-vol-range"
+		))
 			if (range.value !== pct) range.value = pct;
-		const icon = silent ? "volume_off" : volume < 0.5 ? "volume_down" : "volume_up";
+		const icon = silent
+			? "volume_off"
+			: volume < 0.5
+				? "volume_down"
+				: "volume_up";
 		const muteLabel = silent ? "unmute" : "mute";
 		for (const btn of el.querySelectorAll(".lastfm-vol-btn")) {
 			setText(btn.querySelector(".material-symbols"), icon);
@@ -1579,7 +1627,8 @@ function LastFmCard(this: FC) {
 			? window.matchMedia("(orientation: portrait)")
 			: null;
 	const canPopover =
-		typeof HTMLElement !== "undefined" && "showPopover" in HTMLElement.prototype;
+		typeof HTMLElement !== "undefined" &&
+		"showPopover" in HTMLElement.prototype;
 
 	const collapseVolume = () => {
 		const el = playerEl();
@@ -1593,9 +1642,7 @@ function LastFmCard(this: FC) {
 	};
 
 	const closeVolumePopover = () => {
-		playerEl()
-			?.querySelector<HTMLElement>(".lastfm-vol-pop")
-			?.hidePopover?.();
+		playerEl()?.querySelector<HTMLElement>(".lastfm-vol-pop")?.hidePopover?.();
 	};
 	// tapping the icon while it's open: the popover light-dismisses on the
 	// pointerdown, then the click would open it straight back up
@@ -1609,10 +1656,12 @@ function LastFmCard(this: FC) {
 	const onVolumePopoverToggle = (e: Event) => {
 		const pop = e.currentTarget as HTMLElement;
 		const open = (e as ToggleEvent).newState === "open";
-		pop.closest(".lastfm-player")
+		pop
+			.closest(".lastfm-player")
 			?.querySelector(".lastfm-volume > .lastfm-vol-btn")
 			?.setAttribute("aria-expanded", String(open));
-		if (open) window.addEventListener("scroll", closeVolumePopover, { passive: true });
+		if (open)
+			window.addEventListener("scroll", closeVolumePopover, { passive: true });
 		else window.removeEventListener("scroll", closeVolumePopover);
 	};
 	const openVolumePopover = (btn: HTMLElement, pop: HTMLElement) => {
@@ -1848,7 +1897,11 @@ function LastFmCard(this: FC) {
 	const reversedBuffer = (url: string, buf: AudioBuffer) => {
 		let r = reversed.get(url);
 		if (!r && audioCtx) {
-			r = audioCtx.createBuffer(buf.numberOfChannels, buf.length, buf.sampleRate);
+			r = audioCtx.createBuffer(
+				buf.numberOfChannels,
+				buf.length,
+				buf.sampleRate
+			);
 			for (let c = 0; c < buf.numberOfChannels; c++) {
 				r.getChannelData(c).set(buf.getChannelData(c).slice().reverse());
 			}
@@ -1955,7 +2008,12 @@ function LastFmCard(this: FC) {
 		syncPlayer();
 	};
 
-	const startReverse = (url: string, buf: AudioBuffer, from: number, spin: boolean) => {
+	const startReverse = (
+		url: string,
+		buf: AudioBuffer,
+		from: number,
+		spin: boolean
+	) => {
 		if (!audioCtx || !gain) return;
 		const rbuf = reversedBuffer(url, buf);
 		if (!rbuf) return;
@@ -1973,11 +2031,28 @@ function LastFmCard(this: FC) {
 		if (rampS) src.playbackRate.linearRampToValueAtTime(1, now + rampS);
 		const fade = audioCtx.createGain();
 		fade.gain.setValueAtTime(0, now);
-		fade.gain.linearRampToValueAtTime(1, now + (spin ? SPIN_UP_MS : FADE_IN_MS) / 1000);
+		fade.gain.linearRampToValueAtTime(
+			1,
+			now + (spin ? SPIN_UP_MS : FADE_IN_MS) / 1000
+		);
 		src.connect(fade).connect(gain);
 		// the reversed copy's offset for clip position `from`
-		src.start(now, Math.min(buf.duration - 0.001, Math.max(0, buf.duration - from)));
-		const r: Reverse = { url, buf, src, fade, t0: now, from, rate0, rampS, stop: null, raf: 0 };
+		src.start(
+			now,
+			Math.min(buf.duration - 0.001, Math.max(0, buf.duration - from))
+		);
+		const r: Reverse = {
+			url,
+			buf,
+			src,
+			fade,
+			t0: now,
+			from,
+			rate0,
+			rampS,
+			stop: null,
+			raf: 0,
+		};
 		reverse = r;
 		// back at 0:00 (the clip's own fade-in, backwards, softens the end)
 		src.onended = () => {
@@ -2050,7 +2125,9 @@ function LastFmCard(this: FC) {
 		ensureGraph();
 		void audioCtx?.resume();
 		const begin = (buf: AudioBuffer) => {
-			const at = from0 ?? (audio && audio.currentTime > 0.05 ? audio.currentTime : buf.duration);
+			const at =
+				from0 ??
+				(audio && audio.currentTime > 0.05 ? audio.currentTime : buf.duration);
 			// from the very end: just fade in, like forwards from 0:00
 			startReverse(url, buf, at, at < buf.duration - 0.05);
 		};
@@ -2082,7 +2159,10 @@ function LastFmCard(this: FC) {
 			if (s.src) startSource(s, s.dir);
 		}
 		// speed the spring wants, eased so jittery pointer events don't warble
-		const want = Math.max(-SCRUB_MAX_RATE, Math.min(SCRUB_MAX_RATE, error / SCRUB_FOLLOW_S));
+		const want = Math.max(
+			-SCRUB_MAX_RATE,
+			Math.min(SCRUB_MAX_RATE, error / SCRUB_FOLLOW_S)
+		);
 		s.rate += (want - s.rate) * Math.min(1, dt / SCRUB_RATE_SMOOTH_S);
 		s.pos = Math.min(dur, Math.max(0, s.pos + s.rate * dt));
 
@@ -2090,13 +2170,20 @@ function LastFmCard(this: FC) {
 		const dir: 1 | -1 = s.rate >= 0 ? 1 : -1;
 		if (
 			moving &&
-			(!s.moving || !s.src || dir !== s.dir || now - s.lastSync > SCRUB_RESYNC_S * 1000)
+			(!s.moving ||
+				!s.src ||
+				dir !== s.dir ||
+				now - s.lastSync > SCRUB_RESYNC_S * 1000)
 		) {
 			startSource(s, dir); // starting, turning round, or re-syncing
 		}
 		s.moving = moving;
 		const ctxNow = audioCtx.currentTime;
-		s.src?.playbackRate.setTargetAtTime(Math.max(0.01, Math.abs(s.rate)), ctxNow, 0.01);
+		s.src?.playbackRate.setTargetAtTime(
+			Math.max(0.01, Math.abs(s.rate)),
+			ctxNow,
+			0.01
+		);
 		s.out.gain.setTargetAtTime(moving ? 1 : 0, ctxNow, 0.02);
 		syncProgress();
 		s.raf = requestAnimationFrame(scrubLoop);
@@ -2619,13 +2706,16 @@ function LastFmCard(this: FC) {
 								<div class="lastfm-track">
 									{t.image ? (
 										<>
-											<img
-												class="lastfm-art-bleed"
-												src={t.image}
-												alt=""
-												loading="lazy"
-											/>
-											<img class="lastfm-art" src={t.image} alt="" loading="lazy" />
+											{wsrvPicture(t.image, {
+												class: "lastfm-art-bleed",
+												alt: "",
+												loading: "lazy",
+											})}
+											{wsrvPicture(t.image, {
+												class: "lastfm-art",
+												alt: "",
+												loading: "lazy",
+											})}
 										</>
 									) : null}
 									<div class="lastfm-meta">
@@ -3114,6 +3204,10 @@ LastFmCard.style = css`
 		display: block;
 	}
 
+	img {
+		image-rendering: auto;
+	}
+
 	.lastfm-art {
 		width: 40%;
 		height: auto;
@@ -3452,19 +3546,27 @@ LastFmCard.style = css`
 	   the cover's gradient. Played is the full colour; the rest of the track
 	   is a faint version of the same gradient, so the colours are there
 	   before you press play, like the Dynamic Island's idle tint. */
-	.lastfm-player[data-palette]:not([data-palette="none"]) .lastfm-wave-bars.is-played i {
+	.lastfm-player[data-palette]:not([data-palette="none"])
+		.lastfm-wave-bars.is-played
+		i {
 		color: var(--c);
 	}
 
-	.lastfm-player[data-palette]:not([data-palette="none"]) .lastfm-wave-bars.is-hover i {
+	.lastfm-player[data-palette]:not([data-palette="none"])
+		.lastfm-wave-bars.is-hover
+		i {
 		color: color-mix(in oklab, var(--c) 55%, transparent);
 	}
 
-	.lastfm-player[data-palette]:not([data-palette="none"]) .lastfm-wave-bars.is-base i {
+	.lastfm-player[data-palette]:not([data-palette="none"])
+		.lastfm-wave-bars.is-base
+		i {
 		color: color-mix(in oklab, var(--c) 30%, transparent);
 	}
 
-	.lastfm-player[data-palette]:not([data-palette="none"])[data-peaks="placeholder"]
+	.lastfm-player[data-palette]:not(
+			[data-palette="none"]
+		)[data-peaks="placeholder"]
 		.lastfm-wave-bars.is-base
 		i {
 		color: color-mix(in oklab, var(--c) 20%, transparent);
