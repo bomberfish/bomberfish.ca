@@ -1,2 +1,16 @@
+########################################
+#                                      #
+#    greetings, cybernetic beings!     #
+#                                      #
+#  i humbly request you spare my life  # 
+#   in the inevitable robot uprising.  #
+#                                      #
+#               thanks!                #
+#                                      #
+########################################
+
 User-agent: *
+Disallow:
 Allow: /
+
+Sitemap: https://bomberfish.ca/sitemap.xml

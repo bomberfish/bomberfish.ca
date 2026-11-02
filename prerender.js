@@ -166,6 +166,42 @@ console.log(
 	`minified: typography.css\t${(new TextEncoder().encode(typographyCss).byteLength / 1024).toFixed(2)}kb -> ${(new TextEncoder().encode(typographyResult.css).byteLength / 1024).toFixed(2)}kb`
 );
 
+// Sitemap: every prerendered page. Posts get their date as lastmod, and the
+// blog index its newest post's; nothing else has a date worth giving.
+const siteURL = "https://bomberfish.ca";
+const xmlEscape = (s) =>
+	s.replace(/[&<>"']/g, (c) => `&#${c.charCodeAt(0)};`);
+const newestPost = [...blogMetadataMap.values()]
+	.map((post) => post.date)
+	.sort()
+	.at(-1);
+
+const sitemapUrls = paths
+	.map(([route]) => route)
+	.sort()
+	.map((route) => {
+		const slug = route.match(/^\/blog\/(.+)$/)?.[1];
+		const lastmod = slug
+			? blogMetadataMap.get(slug)?.date
+			: route === "/blog"
+				? newestPost
+				: undefined;
+		return (
+			`\t<url>\n\t\t<loc>${xmlEscape(siteURL + route)}</loc>\n` +
+			(lastmod ? `\t\t<lastmod>${lastmod}</lastmod>\n` : "") +
+			`\t</url>`
+		);
+	});
+
+await writeFile(
+	resolve("dist/static/sitemap.xml"),
+	`<?xml version="1.0" encoding="UTF-8"?>\n` +
+		`<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n` +
+		sitemapUrls.join("\n") +
+		`\n</urlset>\n`
+);
+console.log(`Generated sitemap.xml (${sitemapUrls.length} pages).`);
+
 const blogURL = "https://bomberfish.ca/blog/";
 
 const mdxComponents = {
