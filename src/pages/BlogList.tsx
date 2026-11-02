@@ -6,10 +6,9 @@ import Footer from "../components/Footer";
 import { getBlogMetadata, type BlogModule } from "../lib/blog";
 import { getWebpPath } from "../lib/images";
 
-const blogModules = import.meta.glob<BlogModule>(
-	"../blog/*.mdx",
-	{ eager: true }
-);
+const blogModules = import.meta.glob<BlogModule>("../blog/*.mdx", {
+	eager: true,
+});
 
 const blogPosts = Object.entries(blogModules)
 	.map(([path, module]) => getBlogMetadata(path, module))
@@ -39,7 +38,9 @@ function BlogList(this: FC) {
 				<div class="main-content">
 					<div class="page-header">
 						<h1>blog</h1>
-						<p>various assorted thoughts and ramblings.</p>
+						<p>
+							various assorted thoughts and ramblings. very infrequently updated
+						</p>
 					</div>
 					<div class="background-container" style="margin-top: 0.5rem;">
 						<subt style="font-size: 0.95rem; color: var(--text1)">

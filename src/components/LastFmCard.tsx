@@ -372,11 +372,13 @@ function LastFmCard(this: FC) {
 		refreshing: boolean;
 		historyOpen: boolean;
 		history: HistoryView;
+		live: LastfmTrack | null; // the latest track, atop the history
 	}> = createState({
 		view: { kind: "loading" } as View,
 		refreshing: false,
 		historyOpen: false,
 		history: { kind: "idle" } as HistoryView,
+		live: null as LastfmTrack | null,
 	});
 
 	let cancelled = false;
@@ -413,6 +415,7 @@ function LastFmCard(this: FC) {
 			liveView = data.track
 				? { kind: "loaded", track: data.track, profile: data.profile }
 				: { kind: "empty" };
+			state.live = data.track;
 			if (!browsedAt) showView(liveView);
 			// a new scrobble moves the cursor on; follow it if the history's
 			// in use
@@ -709,6 +712,7 @@ function LastFmCard(this: FC) {
 		if (forward) forward.disabled = state.historyOpen || offset === 0;
 		for (const [playedAt, row] of historyRows)
 			row.setAttribute("aria-current", String(playedAt === browsedAt));
+		liveRow?.setAttribute("aria-current", String(!browsedAt));
 	};
 
 	// Rows are kept per scrobble, so a re-render (the next page, a new
@@ -716,22 +720,36 @@ function LastFmCard(this: FC) {
 	// the new ones: the scroll position and the rows already there stay put.
 	const historyRows = new Map<string, HTMLElement>();
 
-	const onRowClick = (e: MouseEvent, playedAt: string) => {
-		if ((e.target as Element).closest("a")) return; // the links do their thing
+	const onRowClick = (playedAt: string) => {
 		const i = historyTracks().findIndex((t) => t.playedAt === playedAt);
 		if (i < 0) return;
 		setHistoryOpen(false);
 		browseTo(i + 1);
 	};
 
-	const historyRow = (t: LastfmHistoryTrack, stagger: number) => {
+	const historyRow = (
+		t: LastfmHistoryTrack | LastfmTrack,
+		stagger: number,
+		onClick: () => void
+	) => {
 		const art = t.image ?? t.appleMusic?.artwork ?? null;
+		const playing = "nowPlaying" in t && t.nowPlaying;
 		return (
 			<li
-				class="lastfm-history-item"
+				class={playing ? "lastfm-history-item now-playing" : "lastfm-history-item"}
 				style={`--i: ${stagger}`}
-				on:click={(e: MouseEvent) => onRowClick(e, t.playedAt)}
+				tabindex="0"
+				role="button"
+				on:click={onClick}
+				on:keydown={(e: KeyboardEvent) => {
+					if (e.key !== "Enter" && e.key !== " ") return;
+					e.preventDefault();
+					onClick();
+				}}
 			>
+				{playing && art ? (
+					<img class="lastfm-history-bleed" src={art} alt="" decoding="async" />
+				) : null}
 				{art ? (
 					<img
 						class="lastfm-history-art"
@@ -744,11 +762,9 @@ function LastFmCard(this: FC) {
 					<span class="lastfm-history-art" />
 				)}
 				<span class="lastfm-history-meta">
-					<a class="lastfm-history-title" href={t.url}>
-						{t.name}
-					</a>
+					<span class="lastfm-history-title">{t.name}</span>
 					<span class="lastfm-history-artist">
-						{t.artistUrl ? <a href={t.artistUrl}>{t.artist}</a> : t.artist}
+						{t.artist}
 						{t.album ? <span class="lastfm-album"> – {t.album}</span> : null}
 					</span>
 				</span>
@@ -762,10 +778,45 @@ function LastFmCard(this: FC) {
 							favorite
 						</span>
 					) : null}
-					<time datetime={t.playedAt}>{ago(t.playedAt)}</time>
+					{playing || !t.playedAt ? (
+						"now playing"
+					) : (
+						<time datetime={t.playedAt}>{ago(t.playedAt)}</time>
+					)}
 				</span>
 			</li>
 		) as HTMLElement;
+	};
+
+	// the live track (now playing, or else the latest scrobble, which the
+	// history starts below); kept while it's the same, like the rows
+	let liveRow: HTMLElement | null = null;
+	let liveRowKey = "";
+
+	const onLiveRowClick = () => {
+		setHistoryOpen(false);
+		browseTo(0);
+	};
+
+	const liveItem = (t: LastfmTrack | null) => {
+		if (!t) return (liveRow = null);
+		const key = JSON.stringify([
+			t.name,
+			t.artist,
+			t.album,
+			t.url,
+			t.image,
+			t.playedAt,
+			t.nowPlaying,
+			t.loved,
+		]);
+		if (!liveRow || key !== liveRowKey) {
+			liveRowKey = key;
+			liveRow = historyRow(t, 0, onLiveRowClick);
+			liveRow.classList.add("live");
+			liveRow.setAttribute("aria-current", String(!browsedAt));
+		}
+		return liveRow;
 	};
 
 	const skeletonRows = (n: number) =>
@@ -794,7 +845,7 @@ function LastFmCard(this: FC) {
 		const rows: Node[] = h.tracks.map((t) => {
 			let row = historyRows.get(t.playedAt);
 			if (!row) {
-				row = historyRow(t, fresh++);
+				row = historyRow(t, ++fresh, () => onRowClick(t.playedAt));
 				row.setAttribute("aria-current", String(t.playedAt === browsedAt));
 				historyRows.set(t.playedAt, row);
 			}
@@ -2652,7 +2703,7 @@ function LastFmCard(this: FC) {
 												<span class="material-symbols" aria-hidden="true">
 													acute
 												</span>
-												{t.nowPlaying ? "Now Playing" : ago(t.playedAt!)}
+												{t.nowPlaying ? "now playing" : ago(t.playedAt!)}
 											</p>
 										) : null}
 									</div>
@@ -2665,6 +2716,7 @@ function LastFmCard(this: FC) {
 				<div class="lastfm-history" id="lastfm-history">
 					<div class="lastfm-history-scroll" on:scroll={fillHistory}>
 						<ol class="lastfm-history-list">
+							{use(state.live).map(liveItem)}
 							{use(state.history).map(historyItems)}
 						</ol>
 					</div>
@@ -2830,6 +2882,7 @@ LastFmCard.style = css`
 		gap: 0.8rem;
 		min-width: 0;
 		min-height: 0;
+		padding-inline: 0.6rem;
 		cursor: pointer;
 	}
 
@@ -2845,6 +2898,33 @@ LastFmCard.style = css`
 
 	.lastfm-history-item[aria-current="true"] .lastfm-history-title {
 		color: var(--accent);
+	}
+
+	/* the card's art bleed, stretched across the row */
+	.lastfm-history-item.now-playing {
+		position: relative;
+		isolation: isolate;
+		overflow: hidden;
+	}
+
+	.lastfm-history-bleed {
+		position: absolute;
+		inset: 0;
+		width: 100%;
+		height: 100%;
+		z-index: -1;
+		object-fit: cover;
+		filter: brightness(0.75) contrast(1.1) saturate(1.3) blur(0.8px);
+		mask-image: linear-gradient(
+			105deg,
+			rgba(0, 0, 0, 0.2) 0%,
+			rgba(0, 0, 0, 0.15) 40%,
+			transparent 72%
+		);
+	}
+
+	.lastfm-history-item.now-playing .lastfm-history-when {
+		color: var(--subtext1);
 	}
 
 	@keyframes lastfm-history-in {
@@ -2886,7 +2966,7 @@ LastFmCard.style = css`
 		font-family: var(--font-display), sans-serif;
 		font-size: 1.1rem;
 		line-height: 1.2;
-		text-decoration: none;
+		transition: color 0.15s ease;
 	}
 
 	.lastfm-history-artist {
@@ -2895,23 +2975,20 @@ LastFmCard.style = css`
 		line-height: 1.25;
 	}
 
-	.lastfm-history-artist a {
-		color: inherit;
-		text-decoration: none;
-	}
-
 	.lastfm-history-artist .lastfm-album {
 		font-size: inherit;
 	}
 
-	.lastfm-history-title:hover,
-	.lastfm-history-title:focus-visible,
-	.lastfm-history-artist a:hover,
-	.lastfm-history-artist a:focus-visible {
+	.lastfm-history-item:hover:not([aria-current="true"]) .lastfm-history-title,
+	.lastfm-history-item:focus-visible:not([aria-current="true"])
+		.lastfm-history-title {
 		color: var(--supertext);
-		text-decoration: underline;
-		text-decoration-color: var(--supertext);
-		text-decoration-thickness: 2px;
+	}
+
+	/* inset, or the scroller would clip it at the sides */
+	.lastfm-history-item:focus-visible {
+		outline: 2px solid var(--accent);
+		outline-offset: -2px;
 	}
 
 	.lastfm-history-when {
@@ -2972,6 +3049,10 @@ LastFmCard.style = css`
 
 	.lastfm-history-status.wide {
 		grid-row: span 3;
+	}
+
+	.lastfm-history-item.live ~ .lastfm-history-status.wide {
+		grid-row: span 2;
 	}
 
 	.lastfm-history-retry {

@@ -40,6 +40,7 @@ const SPLASH_CHANCE = 0.15;
 const SPLASH_SPEED = 0.09; // launch, viewport heights/s (+ up to 0.01)
 const SPLASH_SPREAD = 0.9; // radians either side of straight up
 const GRAVITY = 0.5; // viewport heights/s²
+const SPLASH_ORPHAN_LIFE = 0.15; // s; what's left of one whose card went
 
 // Rain doesn't need more than 60fps, and every rain frame also makes the
 // browser recompute any backdrop-filter sitting over it (the top blur
@@ -78,6 +79,8 @@ interface Splash {
 	life: number;
 	maxLife: number;
 	alpha: number;
+	// the card it landed on, which it moves with; null for the ground
+	surface: Surface | null;
 }
 
 interface Surface {
@@ -87,6 +90,7 @@ interface Surface {
 	top: number;
 	bottom: number;
 	prevTop: number;
+	gone: boolean; // dropped from the page (a route change, mostly)
 }
 
 declare global {
@@ -202,17 +206,20 @@ export function startRain() {
 		if (surfacesDirty) {
 			surfacesDirty = false;
 			const prev = new Map(surfaces.map((s) => [s.el, s]));
-			surfaces = Array.from(document.querySelectorAll(SURFACES)).map(
-				(el) =>
-					prev.get(el) ?? {
-						el,
-						left: 0,
-						right: 0,
-						top: 0,
-						bottom: 0,
-						prevTop: NaN,
-					}
-			);
+			for (const s of surfaces) s.gone = true;
+			surfaces = Array.from(document.querySelectorAll(SURFACES)).map((el) => {
+				const s = prev.get(el) ?? {
+					el,
+					left: 0,
+					right: 0,
+					top: 0,
+					bottom: 0,
+					prevTop: NaN,
+					gone: false,
+				};
+				s.gone = false;
+				return s;
+			});
 		}
 		for (const s of surfaces) {
 			const r = s.el.getBoundingClientRect();
@@ -226,7 +233,13 @@ export function startRain() {
 
 	// `amount` is the strength the card just took from the drop (0..ABSORB)
 	// `far` is the back layer: smaller, lower droplets to match its drops
-	const splash = (x: number, y: number, amount: number, far = false) => {
+	const splash = (
+		x: number,
+		y: number,
+		amount: number,
+		far = false,
+		surface: Surface | null = null
+	) => {
 		const scale = far ? 0.6 : 1;
 		const n = Math.max(1, Math.round((2 + Math.random() * 2) * amount * 2));
 		for (let i = 0; i < n && splashes.length < MAX_PARTICLES; i++) {
@@ -241,6 +254,7 @@ export function startRain() {
 			// far droplets are far more numerous, so they go sooner
 			p.life = p.maxLife = (1 + Math.random() * 0.8) * (far ? 0.5 : 1);
 			p.alpha = 0.9 * amount;
+			p.surface = surface;
 			splashes.push(p);
 		}
 	};
@@ -256,7 +270,7 @@ export function startRain() {
 		const dt = Math.min((now - lastDraw) / 1000, 0.05);
 		lastDraw = now;
 
-		// splashes sit on cards, so they ride along with the page when it scrolls
+		// splashes on the ground ride along with the page when it scrolls
 		const scrollDelta = window.scrollY - lastScrollY;
 		lastScrollY = window.scrollY;
 
@@ -294,7 +308,7 @@ export function startRain() {
 				d.strength -= lost;
 				if (splashBudget > 0 && Math.random() < SPLASH_CHANCE) {
 					splashBudget--;
-					splash(d.x, s.top, lost);
+					splash(d.x, s.top, lost, false, s);
 				}
 			}
 
@@ -333,8 +347,22 @@ export function startRain() {
 		let alive = 0;
 		for (const p of splashes) {
 			p.life -= dt;
-			p.floor -= scrollDelta;
-			p.y -= scrollDelta;
+			const s = p.surface;
+			if (s && (s.gone || s.right <= s.left)) {
+				// its card's gone (or hidden): don't leave droplets hanging
+				// where it was, over whatever's there now (a new page's title)
+				p.surface = null;
+				if (p.life > SPLASH_ORPHAN_LIFE) {
+					// fade out from where it is now
+					p.alpha *= p.life / p.maxLife;
+					p.life = p.maxLife = SPLASH_ORPHAN_LIFE;
+				}
+			}
+			// the rest stick to their card, scrolling or not (sticky nav pills,
+			// layout shifts)
+			const shift = p.surface ? p.surface.top - p.surface.prevTop : -scrollDelta;
+			p.floor += shift;
+			p.y += shift;
 			if (p.vx !== 0 || p.vy !== 0) {
 				p.vy += gravity * dt;
 				p.x += p.vx * dt;
