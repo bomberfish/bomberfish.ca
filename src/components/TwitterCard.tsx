@@ -1,5 +1,6 @@
 import { FC, css } from "dreamland/core";
 import { getTwitter, Tweet } from "../lib/siteapi";
+import { compactNumber } from "../lib/format";
 import { displaySize, visibleLength } from "../lib/postText";
 import { XIcon } from "./SocialIcons";
 import {
@@ -14,14 +15,6 @@ import {
 import { wsrvFormat, wsrvPicture } from "./WsrvPicture";
 
 const REFRESH_MS = 5 * 60_000;
-
-function compactNum(n: number): string {
-	return n >= 1e6
-		? (n / 1e6).toFixed(1) + "M"
-		: n >= 1e3
-			? (n / 1e3).toFixed(1) + "k"
-			: String(n);
-}
 
 // plain tweet text into paragraphs, with its (already expanded) links
 // clickable
@@ -152,7 +145,7 @@ function TwitterCard(this: FC) {
 								postCount("reposts", "repeat", s.counts.retweets),
 								postCount("likes", "favorite", s.counts.likes),
 								s.counts.views != null
-									? postCount("views", "visibility", compactNum(s.counts.views))
+									? postCount("views", "visibility", compactNumber(s.counts.views))
 									: null,
 							])}
 						</div>

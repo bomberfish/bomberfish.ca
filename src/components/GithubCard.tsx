@@ -308,7 +308,7 @@ GithubCard.style = css`
 
 	.gh-day {
 		display: block;
-		background: hsla(var(--surface1-hsl, var(--surface0-hsl)), 0.45);
+		background: hsla(var(--surface1-hsl), 0.45);
 	}
 
 	.gh-l1 { background: hsla(var(--accent-hsl), 0.22); }

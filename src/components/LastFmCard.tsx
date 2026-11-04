@@ -1,5 +1,4 @@
 import { FC, createState, css, Stateful } from "dreamland/core";
-import humanizeDuration from "humanize-duration";
 import {
 	getLastfm,
 	getLastfmRecent,
@@ -9,6 +8,7 @@ import {
 	LastfmProfile,
 	LastfmTrack,
 } from "../lib/siteapi";
+import { ago, compactNumber } from "../lib/format";
 import { AppleMusicWordmark, LastFmIcon } from "./SocialIcons";
 import { wsrvPicture } from "./WsrvPicture";
 
@@ -33,12 +33,6 @@ const REFRESH_MS = 60_000;
 const HISTORY_SIZE = 3; // the first page: what fits the card
 const HISTORY_PAGE = 10; // each page after that, while scrolling
 const PROFILE_URL = "https://www.last.fm/user/bmbrfsh";
-
-const ago = (iso: string) =>
-	`${humanizeDuration(Date.now() - new Date(iso).getTime(), {
-		largest: 1,
-		round: true,
-	})} ago`;
 
 // a history entry in the card's full layout, with its stats (duration,
 // play counts...) once /v1/lastfm/track has them
@@ -91,18 +85,6 @@ function formatDuration(ms: number): string {
 	const ss = String(s).padStart(2, "0");
 	if (h > 0) return `${h}:${String(m).padStart(2, "0")}:${ss}`;
 	return `${m}:${ss}`;
-}
-
-// Compact "K/M/B" formatter for big counts (listeners, plays). Drops the
-// decimal once the rounded value reaches 100 (e.g. "174K" not "174.5K") and
-// strips trailing ".0" so we never render "1.0K".
-function compactNumber(n: number): string {
-	if (n < 1000) return n.toLocaleString();
-	const fmt = (v: number, suffix: string) =>
-		(v >= 100 ? `${Math.round(v)}` : v.toFixed(1).replace(/\.0$/, "")) + suffix;
-	if (n < 1_000_000) return fmt(n / 1000, "K");
-	if (n < 1_000_000_000) return fmt(n / 1_000_000, "M");
-	return fmt(n / 1_000_000_000, "B");
 }
 
 // Number of bars in the preview waveform. On narrow waveforms only every
@@ -3324,7 +3306,6 @@ LastFmCard.style = css`
 		font-size: 1rem;
 	}
 
-	/* what used to be the header badge */
 	.lastfm-now-playing {
 		color: var(--subtext1);
 	}

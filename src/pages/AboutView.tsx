@@ -131,7 +131,6 @@ export function AboutView(this: FC) {
 				"--main-hue"
 			) || "210";
 		use(aboutState.customHue).listen((newHue) => {
-			console.log("updating hue to", newHue);
 			document.documentElement.style.setProperty("--main-hue", newHue);
 		});
 	};
@@ -263,16 +262,13 @@ function ColorSwatch(this: FC<{ color: string }>) {
 
 	const updateValue = () => {
 		if (import.meta.env.SSR) return;
-		console.log("updating color swatch for", this.color);
 		const computedStyle = getComputedStyle(document.documentElement);
 		let val = computedStyle.getPropertyValue(`--${this.color}`).trim();
-		console.log(val);
 		let hsl = val
 			.replaceAll(", ", ",")
 			.match(/hsl\(([^,]+),([^,]+)%,([^)]+)%\)/);
 		if (hsl) {
 			let [, hue, sat, lum] = hsl;
-			console.log(hue, sat, lum);
 			if (hue.includes("calc")) {
 				hue = (0, eval)(hue.replace("calc", ""));
 			}

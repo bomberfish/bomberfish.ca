@@ -50,20 +50,11 @@ function Homepage(this: FC) {
 								sometimes i make <code>use(ful|less)</code> things.
 							</p>
 							<p>
-								at the moment, you can find me building beautiful web-adjacent
-								stuff at{" "}
-								<a href="https://puter.com" target="_blank">
-									puter technologies inc,
-								</a>{" "}
-								where i get to work on stuff that really pushes the web platform
-								to its limits!
-							</p>
-							<p>
 								my native languages are swift and javascript, though i'm also
-								decent at java and most of the C dialects.
+								decent at java and all the usual C-family languages.
 							</p>
 							<p>
-								beyond my day-to-day, i'm part of{" "}
+								i'm also a part of{" "}
 								<a href="https://mercurywork.shop" target="_blank">
 									mercury workshop
 								</a>
@@ -75,9 +66,6 @@ function Homepage(this: FC) {
 								iteration of the group's website too!)
 							</p>
 							<p>
-								{/*i also used to be really involved in the ios modding and
-								jailbreak scene, so say hi if you recognize me from those
-								circles!*/}
 								i'm also somewhat active in the ios modding and jailbreak scene,
 								so say hi if you see me around!
 							</p>
@@ -506,8 +494,8 @@ Homepage.style = css`
 
 		.pfp-link {
 			float: right;
-			margin: calc(-1 * clamp(2.5rem, 1.75rem + 3.5vw, 4rem) - 0.75rem) 0
-				0.4rem 0.9rem;
+			margin: calc(-1 * clamp(2.5rem, 1.75rem + 3.5vw, 4rem) - 0.75rem) 0 0.4rem
+				0.9rem;
 		}
 
 		.pfp {

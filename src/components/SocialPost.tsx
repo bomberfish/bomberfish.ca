@@ -5,8 +5,7 @@
 // Their styles are the "Social post cards" section of src/style.css.
 
 import { ComponentChild, createState, FC, Stateful } from "dreamland/core";
-import humanizeDuration from "humanize-duration";
-import { compactAgo } from "../lib/ago";
+import { ago, compactAgo } from "../lib/format";
 import { wsrvPicture } from "./WsrvPicture";
 
 export type FeedView<T> =
@@ -225,9 +224,7 @@ export function postCount(title: string, icon: string, value: ComponentChild) {
 
 // the counts row; the post's age goes on the end
 export function postCounts(createdAt: string, counts: ComponentChild) {
-	const elapsed = Date.now() - new Date(createdAt).getTime();
-	const longForm =
-		humanizeDuration(elapsed, { largest: 1, round: true }) + " ago";
+	const longForm = ago(createdAt);
 	return (
 		<p class="social-post-counts">
 			{counts}
@@ -237,7 +234,7 @@ export function postCounts(createdAt: string, counts: ComponentChild) {
 				title={longForm}
 				aria-label={longForm}
 			>
-				{compactAgo(elapsed)}
+				{compactAgo(Date.now() - new Date(createdAt).getTime())}
 			</time>
 		</p>
 	);

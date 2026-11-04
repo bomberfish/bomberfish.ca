@@ -97,7 +97,6 @@ html {
 	--mantle-hsl: calc(var(--main-hue) + 6), 30%, 3%;
 	--crust-hsl: calc(var(--main-hue) + 5), 25%, 4.5%;
 	--base-hsl: calc(var(--main-hue) + 4), 22%, 6.5%;
-	--page-hsl: var(--main-hue), 36%, 13%;
 
 	--surface0-hsl: calc(var(--main-hue) + 5), 22%, 8%;
 	--surface1-hsl: calc(var(--main-hue) + 4), 22%, 12%;
@@ -344,7 +343,6 @@ html.has-rail body {
 		--mantle-hsl: var(--main-hue), 65%, 99%;
 		--crust-hsl: var(--main-hue), 50%, 98%;
 		--base-hsl: var(--main-hue), 35%, 97%;
-		--page-hsl: var(--main-hue), 20%, 96%;
 
 		--surface0-hsl: var(--main-hue), 35%, 95%;
 		--surface1-hsl: calc(var(--main-hue) - 2.5), 40%, 93%;
@@ -1645,15 +1643,6 @@ cap subt:not(:has(.material-symbols)) {
 	font: inherit;
 }
 
-/* When the refresh button is preceded by another auto-pushed element (badge,
-   timestamp, etc.) it should sit next to it instead of pushing itself to the
-   far right again. */
-.livecard-header
-	> :not(.livecard-icon, .livecard-platform, .livecard-stat)
-	+ .livecard-refresh {
-	margin-left: 0.4rem;
-}
-
 .livecard-refresh:hover {
 	color: var(--text);
 }
@@ -1663,16 +1652,10 @@ cap subt:not(:has(.material-symbols)) {
 	cursor: progress;
 }
 
-.livecard-stat,
-.livecard-badge {
+.livecard-stat {
 	color: var(--subtext1);
 	font-size: 0.75rem;
 	letter-spacing: 0.05em;
-}
-
-.livecard-badge {
-	margin-left: auto;
-	text-transform: uppercase;
 }
 
 .livecard-status {

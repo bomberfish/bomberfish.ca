@@ -10,7 +10,7 @@
 
 const WSRV = "https://wsrv.nl/";
 
-export const isWsrv = (src: string) => src.startsWith(WSRV);
+const isWsrv = (src: string) => src.startsWith(WSRV);
 
 // `src` in one output format (jxl, webp, jpg...); non-wsrv URLs as they are
 export function wsrvFormat(src: string, output: string) {

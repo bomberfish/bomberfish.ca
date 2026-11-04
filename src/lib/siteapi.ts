@@ -1,7 +1,7 @@
 // client for siteapi (https://github.com/.../siteapi)
 // proxies last.fm + mastodon. CORS is wildcard so calling from the browser is fine.
 
-export const SITE_API_BASE =
+const SITE_API_BASE =
 	"https://siteapi.bomberfish-industries.workers.dev";
 
 export interface LastfmProfile {

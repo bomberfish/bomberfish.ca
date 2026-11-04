@@ -256,7 +256,8 @@ export function Oneko(this: FC<{}, OnekoState>) {
 		// the cat is positioned within body, which starts further in when an
 		// iPhone Duo side rail is on the left (--bg-bleed-l in style.css)
 		this.mouseX =
-			event.pageX - (document.body.getBoundingClientRect().left + window.scrollX);
+			event.pageX -
+			(document.body.getBoundingClientRect().left + window.scrollX);
 		this.mouseY = event.pageY;
 	};
 
@@ -406,7 +407,7 @@ export function Oneko(this: FC<{}, OnekoState>) {
 			this.opacity = 0;
 		};
 
-		if (!window.matchMedia('(pointer: fine)').matches) {
+		if (!window.matchMedia("(pointer: fine)").matches) {
 			disable();
 			return;
 		}
@@ -483,7 +484,7 @@ Oneko.style = css`
 		background-repeat: no-repeat;
 		background-size: ${(NEKO_REM * 8).toString()}rem
 			${(NEKO_REM * 4).toString()}rem;
-		image-rendering: pixelated;
+		image-rendering: crisp-edges;
 		transition: opacity 0.5s;
 		z-index: 2147483647;
 		display: block;
