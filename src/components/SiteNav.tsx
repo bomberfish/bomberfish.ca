@@ -1,10 +1,9 @@
 import { FC } from "dreamland/core";
-import TransitionLink, { backInSite } from "./TransitionLink";
+import TransitionLink, { goBack } from "./TransitionLink";
 
-// The top bar on every page but the home page. `parent` is where back goes
-// when there's no page of this site to go back to (arrived from elsewhere).
+// The top bar on every page but the home page.
 export default function SiteNav(
-	this: FC<{ active?: "projects" | "blog"; parent?: string }>
+	this: FC<{ active?: "projects" | "blog" }>
 ) {
 	const active = this.active;
 	const link = (href: string, name: string, icon: string) => (
@@ -22,16 +21,16 @@ export default function SiteNav(
 
 	return (
 		<header class="site-nav">
-			<TransitionLink
-				href={this.parent ?? "/"}
-				class="nav-link background-container"
-				on:click={backInSite}
+			<button
+				type="button"
+				class="nav-link site-nav-back background-container"
+				on:click={goBack}
 			>
 				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
 					<path d="M313-440l224 224-57 56-320-320 320-320 57 56-224 224h487v80H313Z" />
 				</svg>
 				back
-			</TransitionLink>
+			</button>
 			<nav class="site-nav-links">
 				{link(
 					"/",

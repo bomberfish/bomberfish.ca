@@ -22,7 +22,7 @@ function BlogPost(this: FC<BlogPostProps>) {
 		<main>
 			<title>{title} – bomberfish.ca</title>
 			<div class="layout-container">
-				<SiteNav active="blog" parent="/blog" />
+				<SiteNav active="blog" />
 				<div class="main-content">
 					<article class="blog-content">
 						<div class="page-header">

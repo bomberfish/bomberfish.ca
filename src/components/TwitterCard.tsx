@@ -51,7 +51,7 @@ function TwitterCard(this: FC) {
 	);
 
 	return (
-		<div class="livecard social-card twitter-card background-container">
+		<div class="livecard feed-card twitter-card background-container">
 			{feedHeader({
 				icon: <XIcon />,
 				platform: "X",
@@ -77,7 +77,7 @@ function TwitterCard(this: FC) {
 						{bleedSrc ? (
 							<div
 								class={
-									"social-post-bleed social-post-bleed-" + (att?.type ?? "image")
+									"feed-post-bleed feed-post-bleed-" + (att?.type ?? "image")
 								}
 								aria-hidden="true"
 							>
@@ -97,7 +97,7 @@ function TwitterCard(this: FC) {
 								)}
 							</div>
 						) : null}
-						<div class="post social-post">
+						<div class="post feed-post">
 							{postAuthor({
 								url: s.account.url,
 								avatar: s.account.avatar,
@@ -105,7 +105,7 @@ function TwitterCard(this: FC) {
 								name: s.account.displayName,
 								handle: `@${s.account.screenName}`,
 							})}
-							<div class="social-post-body">
+							<div class="feed-post-body">
 								{fillText(postContent(size), s.text)}
 								{s.card ? (
 									<a
@@ -156,7 +156,7 @@ function TwitterCard(this: FC) {
 	);
 }
 
-// Styles: .livecard-* and the shared post styles (.social-*) are in
+// Styles: .livecard-* and the shared post styles (.feed-*) are in
 // src/style.css; only the link card / quote tweet are here.
 TwitterCard.style = css`
 	.tweet-linkcard,

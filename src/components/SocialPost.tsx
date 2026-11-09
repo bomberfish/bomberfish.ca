@@ -186,17 +186,17 @@ export function postAuthor(a: {
 	handle: string;
 }) {
 	return (
-		<a class="social-post-header" href={a.url} target="_blank" rel="me">
+		<a class="feed-post-header" href={a.url} target="_blank" rel="me">
 			{a.avatar
 				? wsrvPicture(a.avatar, {
-						class: "social-post-avatar",
+						class: "feed-post-avatar",
 						alt: a.avatarAlt,
 						loading: "lazy",
 					})
 				: null}
-			<div class="social-post-header-info">
-				<p class="social-post-header-name">{a.name}</p>
-				<p class="social-post-header-username">{a.handle}</p>
+			<div class="feed-post-header-info">
+				<p class="feed-post-header-name">{a.name}</p>
+				<p class="feed-post-header-username">{a.handle}</p>
 			</div>
 		</a>
 	);
@@ -208,7 +208,7 @@ export function postAuthor(a: {
 // displaySize) switches on the big-type treatment for short posts.
 export function postContent(size: number | null) {
 	const div = document.createElement("div");
-	div.className = "social-post-content" + (size ? " is-short" : "");
+	div.className = "feed-post-content" + (size ? " is-short" : "");
 	if (size) div.style.setProperty("--post-size", size + "rem");
 	return div;
 }
@@ -226,10 +226,10 @@ export function postCount(title: string, icon: string, value: ComponentChild) {
 export function postCounts(createdAt: string, counts: ComponentChild) {
 	const longForm = ago(createdAt);
 	return (
-		<p class="social-post-counts">
+		<p class="feed-post-counts">
 			{counts}
 			<time
-				class="social-post-when"
+				class="feed-post-when"
 				datetime={createdAt}
 				title={longForm}
 				aria-label={longForm}

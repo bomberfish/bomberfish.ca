@@ -23,7 +23,7 @@ function MastodonCard(this: FC) {
 	);
 
 	return (
-		<div class="livecard social-card mastodon-card background-container">
+		<div class="livecard feed-card mastodon-card background-container">
 			{feedHeader({
 				icon: <MastodonIcon />,
 				platform: "fediverse",
@@ -59,7 +59,7 @@ function MastodonCard(this: FC) {
 					<>
 						{att ? (
 							<div
-								class={"social-post-bleed social-post-bleed-" + att.type}
+								class={"feed-post-bleed feed-post-bleed-" + att.type}
 								aria-hidden="true"
 							>
 								{(function () {
@@ -80,7 +80,7 @@ function MastodonCard(this: FC) {
 											return <audio src={att.url} controls />;
 										default:
 											return (
-												<span class="social-post-bleed-fallback">
+												<span class="feed-post-bleed-fallback">
 													<span class="material-symbols">attachment</span>
 													{attachments}
 												</span>
@@ -89,7 +89,7 @@ function MastodonCard(this: FC) {
 								})()}
 							</div>
 						) : null}
-						<div class="post social-post">
+						<div class="post feed-post">
 							{postAuthor({
 								url: s.account.url,
 								avatar: s.account.avatar,
@@ -97,9 +97,9 @@ function MastodonCard(this: FC) {
 								name: s.account.displayName,
 								handle: `@${s.account.acct}@wetdry.world`,
 							})}
-							<div class="social-post-body">
+							<div class="feed-post-body">
 								{s.spoilerText ? (
-									<p class="social-post-spoiler">{s.spoilerText}</p>
+									<p class="feed-post-spoiler">{s.spoilerText}</p>
 								) : null}
 								{content}
 							</div>
@@ -122,7 +122,7 @@ function MastodonCard(this: FC) {
 	);
 }
 
-// Styles: .livecard-* and the shared post styles (.social-*) are in
+// Styles: .livecard-* and the shared post styles (.feed-*) are in
 // src/style.css.
 
 export default MastodonCard;

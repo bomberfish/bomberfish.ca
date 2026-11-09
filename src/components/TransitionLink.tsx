@@ -22,13 +22,22 @@ const getDocumentWithViewTransitions =
 		return typeof doc.startViewTransition === "function" ? doc : null;
 	};
 
-// On click of a back link: if the previous history entry is a page of this
-// site, go back to it instead of following the link. navigate() below marks
-// the entries it creates; it's kept in history.state so it survives reloads.
-export function backInSite(event: MouseEvent) {
-	if (isModifiedEvent(event) || history.state?.inSite !== true) return;
-	event.preventDefault();
+// navigate() below marks the history entries it creates, in history.state so
+// it survives reloads. An entry with the mark came from a page of this site,
+// so going back stays on the site; this class on <html> shows SiteNav's back
+// button only then (a page opened from elsewhere has nothing to go back to).
+const syncCanGoBack = () =>
+	document.documentElement.classList.toggle(
+		"can-go-back",
+		history.state?.inSite === true
+	);
 
+if (!import.meta.env.SSR) {
+	addEventListener("popstate", syncCanGoBack);
+	syncCanGoBack();
+}
+
+export function goBack() {
 	const doc = getDocumentWithViewTransitions();
 	if (!doc) {
 		history.back();
@@ -98,8 +107,10 @@ export function TransitionLink(this: FC<TransitionLinkProps>) {
 	}
 
 	const navigate = async () => {
-		if (await router?.navigate(href))
+		if (await router?.navigate(href)) {
 			history.replaceState({ inSite: true }, "");
+			syncCanGoBack();
+		}
 	};
 
 	const handleClick = (event: MouseEvent) => {

@@ -23,7 +23,7 @@ function ProjectView(this: FC<{ project: ProjectCardDetails }>) {
 		<main>
 			<title>{this.project.title} – bomberfish.ca</title>
 			<div class="layout-container">
-				<SiteNav active="projects" parent="/projects" />
+				<SiteNav active="projects" />
 				<div class="main-content">
 					<div>
 						<div class="page-header">

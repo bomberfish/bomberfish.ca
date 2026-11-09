@@ -30,6 +30,9 @@ type HistoryView =
 	  };
 
 const REFRESH_MS = 60_000;
+// when a manual refresh returns to the latest track: halfway through the
+// refresh button's 0.7s spin (.livecard-refresh.spin), as it's turning fastest
+const REFRESH_JUMP_MS = 350;
 const HISTORY_SIZE = 3; // the first page: what fits the card
 const HISTORY_PAGE = 10; // each page after that, while scrolling
 const PROFILE_URL = "https://www.last.fm/user/bmbrfsh";
@@ -671,7 +674,9 @@ function LastFmCard(this: FC) {
 	};
 
 	const onBack = () => browseTo(browseTarget + 1);
-	const onForward = () => browseTo(browseTarget - 1);
+	// (alt: straight to the latest)
+	const onForward = (e: MouseEvent) =>
+		browseTo(e.altKey ? 0 : browseTarget - 1);
 
 	// warm up the page the next back click needs
 	const prefetchBack = () => {
@@ -930,10 +935,17 @@ function LastFmCard(this: FC) {
 		this.root?.querySelector<HTMLElement>(".lastfm-history-btn")?.focus();
 	};
 
+	let refreshJumpTimer = 0;
 	const onRefresh = (e: MouseEvent) => {
 		e.preventDefault();
 		e.stopPropagation();
-		if (state.refreshing) return;
+		// back to the latest track, even if a refresh is already under way
+		// (unless they've browsed somewhere else in the meantime)
+		const target = browseTarget;
+		clearTimeout(refreshJumpTimer);
+		refreshJumpTimer = window.setTimeout(() => {
+			if (!cancelled && browseTarget === target) browseTo(0);
+		}, REFRESH_JUMP_MS);
 		// Restart the spin animation on every click — remove → reflow →
 		// re-add so a second click within the 0.5s window kicks fresh
 		// instead of being ignored as a no-op class toggle.
@@ -941,7 +953,7 @@ function LastFmCard(this: FC) {
 		btn.classList.remove("spin");
 		void btn.offsetWidth;
 		btn.classList.add("spin");
-		load(true);
+		if (!state.refreshing) load(true);
 	};
 
 	// Sizes the lastfm title to at most ~2 lines:
@@ -2069,7 +2081,8 @@ function LastFmCard(this: FC) {
 	};
 
 	// Holding alt (option) previews what an alt-click would do on the play
-	// button: play backwards, or pause if it already is (see syncPlayer).
+	// button (play backwards, or pause if it already is; see syncPlayer) and
+	// the forward button (jump to the latest).
 	// Tracked from keys and pointer moves (which carry altKey, in case a
 	// keyup went elsewhere); losing focus lets go of it.
 	let altHeld = false;
@@ -2077,6 +2090,17 @@ function LastFmCard(this: FC) {
 		if (held === altHeld) return;
 		altHeld = held;
 		syncPlayer();
+		syncForwardButton();
+	};
+	const syncForwardButton = () => {
+		const btn = this.root?.querySelector<HTMLElement>(".lastfm-fwd-btn");
+		if (!btn) return;
+		const label = altHeld ? "latest scrobble" : "newer scrobble";
+		btn.title = label;
+		btn.setAttribute("aria-label", label);
+		btn.querySelector(".material-symbols")!.textContent = altHeld
+			? "keyboard_double_arrow_right"
+			: "chevron_right";
 	};
 	const onAltKey = (e: KeyboardEvent) => {
 		if (e.key === "Alt" || e.altKey !== altHeld) setAltHeld(e.altKey);
