@@ -4,6 +4,19 @@ export default function ContactLinks(this: FC) {
 	return (
 		<span class="contact-links">
 			<span class="tooltip-wrapper">
+				<a
+					href="https://x.com/bomberfish77"
+					target="_blank"
+					rel="me"
+					referrer-policy="unsafe-url"
+					class="contact-item"
+				>
+					X
+				</a>
+				<span class="tooltip">@bomberfish77</span>
+			</span>
+			<span class="sep">/</span>
+			<span class="tooltip-wrapper">
 				<a href="mailto:me@bomberfish.ca" class="contact-item">
 					email
 				</a>
@@ -21,32 +34,6 @@ export default function ContactLinks(this: FC) {
 					fediverse
 				</a>
 				<span class="tooltip">@fish@wetdry.world</span>
-			</span>
-			<span class="sep">/</span>
-			<span class="tooltip-wrapper">
-				<a
-					href="https://x.com/bomberfish77"
-					target="_blank"
-					rel="me"
-					referrer-policy="unsafe-url"
-					class="contact-item"
-				>
-					X
-				</a>
-				<span class="tooltip">@bomberfish77</span>
-			</span>
-			<span class="sep">/</span>
-			<span class="tooltip-wrapper">
-				<a
-					href="https://bsky.app/profile/bomberfish.ca"
-					target="_blank"
-					rel="me"
-					referrer-policy="unsafe-url"
-					class="contact-item"
-				>
-					bluesky
-				</a>
-				<span class="tooltip">@bomberfish.ca</span>
 			</span>
 		</span>
 	);

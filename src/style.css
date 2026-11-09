@@ -306,10 +306,7 @@ html.has-rail body {
 		transform: translateY(
 			calc(
 				var(--scroll-max, 0px) -
-					min(
-						var(--bg-travel),
-						var(--parallax-speed) * var(--scroll-max, 0px)
-					)
+					min(var(--bg-travel), var(--parallax-speed) * var(--scroll-max, 0px))
 			)
 		);
 	}
@@ -531,7 +528,6 @@ h6 {
 
 em,
 strong {
-	font-family: "Geist", var(--font-display), sans-serif !important;
 	opacity: 0.96;
 }
 
@@ -1151,8 +1147,8 @@ ul.compact > :is(li > span, li > a) {
 .post-tags .tag {
 	background: hsla(var(--overlay1-hsl), 0.25);
 	color: var(--supertext);
-	padding: 0.15rem 0.5rem;
-	border-radius: 999px;
+	padding: 0.05rem 0.25rem;
+	/* border-radius: 999px; */
 	font-size: 0.8rem;
 	border: 1px solid hsla(var(--overlay2-hsl), 0.3);
 }
@@ -1163,6 +1159,7 @@ ul.compact > :is(li > span, li > a) {
 
 .post-body {
 	padding: 1.25rem !important;
+	padding-bottom: 0.01px !important;
 }
 
 /* Blog article content */
@@ -1191,7 +1188,7 @@ article.blog-content p {
 }
 
 article.blog-content .post-body {
-	margin-top: 1.5rem;
+	margin-block: 0.75rem;
 }
 
 article.blog-content blockquote {
@@ -1562,10 +1559,7 @@ cap subt:not(:has(.material-symbols)) {
 	position: absolute;
 	inset: 0;
 	background:
-		linear-gradient(
-			hsla(var(--crust-hsl), 0.25),
-			hsla(var(--crust-hsl), 0.25)
-		),
+		linear-gradient(hsla(var(--crust-hsl), 0.25), hsla(var(--crust-hsl), 0.25)),
 		radial-gradient(
 			ellipse at center,
 			transparent 30%,
