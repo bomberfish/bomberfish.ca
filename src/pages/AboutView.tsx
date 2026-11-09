@@ -1,5 +1,5 @@
 import { FC, createState, css, Stateful } from "dreamland/core";
-import Navbar from "../components/Navbar";
+import SiteNav from "../components/SiteNav";
 import Footer from "../components/Footer";
 
 const archives = [
@@ -138,7 +138,7 @@ export function AboutView(this: FC) {
 		<main>
 			<title>about – bomberfish.ca</title>
 			<div class="layout-container">
-				<Navbar />
+				<SiteNav />
 				<div class="main-content">
 					<h1>about this website</h1>
 					<p>

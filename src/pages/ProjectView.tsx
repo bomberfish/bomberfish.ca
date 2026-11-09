@@ -1,5 +1,5 @@
 import { FC, css } from "dreamland/core";
-import Navbar from "../components/Navbar";
+import SiteNav from "../components/SiteNav";
 import type { ProjectCardDetails } from "../Projects";
 import { getWebpPath } from "../lib/images";
 
@@ -23,16 +23,19 @@ function ProjectView(this: FC<{ project: ProjectCardDetails }>) {
 		<main>
 			<title>{this.project.title} – bomberfish.ca</title>
 			<div class="layout-container">
-				<Navbar active="projects" />
+				<SiteNav active="projects" parent="/projects" />
 				<div class="main-content">
 					<div>
-						<section id="details" class="background-container page-header">
+						<div class="page-header">
 							<h1>{this.project.title}</h1>
 							<p>{this.project.largeDesc}</p>
+						</div>
+						<section id="details">
 							<ul class="compact">
 								{this.project.links?.map((link) => (
 									<li>
 										<a
+											class="project-link background-container"
 											href={link.url}
 											target="_blank"
 											referrer-policy="unsafe-url"
@@ -44,7 +47,7 @@ function ProjectView(this: FC<{ project: ProjectCardDetails }>) {
 								))}
 							</ul>
 						</section>
-						<section id="image">
+						<section id="image" class="rain-surface">
 							<a href={image}>
 								<picture>
 									{webpSrcset ? (
@@ -108,6 +111,35 @@ ProjectView.style = css`
 
 	#details {
 		width: 100%;
+	}
+
+	#details ul {
+		gap: 0.5rem;
+		margin: 0;
+	}
+
+	#details li::after {
+		display: none;
+	}
+
+	#details .project-link {
+		display: inline-flex;
+		align-items: center;
+		padding: 0.4rem 0.7rem;
+		background: hsla(var(--crust-hsl), 0.65);
+		backdrop-filter: blur(6px);
+		text-decoration: none;
+		transition: background 0.15s ease;
+	}
+
+	#details .project-link:hover {
+		background: hsla(var(--crust-hsl), 0.85);
+	}
+
+	@media (pointer: coarse) {
+		#details .project-link {
+			min-height: 2.75rem;
+		}
 	}
 
 	.material-symbols {

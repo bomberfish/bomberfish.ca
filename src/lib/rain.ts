@@ -14,7 +14,7 @@
 
 // Anything that reads as a solid panel the rain can land on.
 const SURFACES =
-	".background-container, .contact-card, .project-card-wrapper, .buttons-section, .blog-item";
+	".background-container, .contact-card, .project-card-wrapper, .buttons-section, .blog-item, .rain-surface";
 
 const DENSITY = 1 / 100; // drops per px² of viewport
 const MAX_DROPS = 180;
@@ -358,8 +358,7 @@ export function startRain() {
 					p.life = p.maxLife = SPLASH_ORPHAN_LIFE;
 				}
 			}
-			// the rest stick to their card, scrolling or not (sticky nav pills,
-			// layout shifts)
+			// the rest stick to their card, scrolling or not (layout shifts)
 			const shift = p.surface ? p.surface.top - p.surface.prevTop : -scrollDelta;
 			p.floor += shift;
 			p.y += shift;

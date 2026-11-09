@@ -1,6 +1,5 @@
 import { FC, css } from "dreamland/core";
 import { WebButton, ButtonList, CopiedToast } from "../components/Buttons";
-import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import ContactCard from "../components/ContactCard";
 import LastFmCard from "../components/LastFmCard";
@@ -22,55 +21,70 @@ function Homepage(this: FC) {
 		<main>
 			<title>bomberfish.ca</title>
 			<div class="layout-container">
-				<Navbar active="home" />
 				<div class="main-content">
-					<section class="about-section" id="about">
-						<div class="about-text">
-							<h1>
-								<span class="emoji">👋</span>hiya!
-							</h1>
-							{/* floated beside the paragraphs (before them, so it can be),
-							    or placed in the grid in narrow portrait */}
-							<a href="/me.png" target="_blank" rel="noopener" class="pfp-link">
-								<picture>
-									<source type="image/webp" srcset="/me.480px.webp" />
-									<img
-										src="/me.480px.jpg"
-										class="pfp"
-										title="my profile picture! click to view full size."
-										width="220"
-										height="220"
-										loading="eager"
-										alt="profile picture"
-									/>
-								</picture>
-							</a>
-							<p>
-								i'm an 18 y/o high school student from waterloo, canada, and
-								sometimes i make <code>use(ful|less)</code> things.
-							</p>
-							<p>
-								my native languages are swift and javascript, though i'm also
-								decent at java and all the usual C-family languages.
-							</p>
-							<p>
-								i'm also a part of{" "}
-								<a href="https://mercurywork.shop" target="_blank">
-									mercury workshop
+					<div class="intro">
+						<div class="intro-main">
+							<div class="page-header home-title">
+								<a href="/me.png" target="_blank" rel="noopener" class="pfp-link">
+									<picture>
+										<source type="image/webp" srcset="/me.480px.webp" />
+										<img
+											src="/me.480px.jpg"
+											class="pfp"
+											title="my profile picture! click to view full size."
+											width="220"
+											height="220"
+											loading="eager"
+											alt="profile picture"
+										/>
+									</picture>
 								</a>
-								, a collective of software developers best known for the{" "}
-								<a href="https://sh1mmer.me" target="_blank">
-									sh1mmer
-								</a>{" "}
-								chromebook exploit. (fun fact: i actually made the current
-								iteration of the group's website too!)
-							</p>
-							<p>
-								i'm also somewhat active in the ios modding and jailbreak scene,
-								so say hi if you see me around!
-							</p>
+								<h1>bomberfish</h1>
+							</div>
+							<section class="about-section" id="about">
+								<div class="about-text">
+									<h3 class="whoami">whoami</h3>
+									<p>
+										i'm an 18 y/o high school student from waterloo, canada, and
+										sometimes i make <code>use(ful|less)</code> things.
+									</p>
+									<p>
+										my native languages are swift and javascript, though i'm also
+										decent at java and all the usual C-family languages.
+									</p>
+									<p>
+										i'm also a part of{" "}
+										<a href="https://mercurywork.shop" target="_blank">
+											mercury workshop
+										</a>
+										, a collective of software developers best known for the{" "}
+										<a href="https://sh1mmer.me" target="_blank">
+											sh1mmer
+										</a>{" "}
+										chromebook exploit. (fun fact: i actually made the current
+										iteration of the group's website too!)
+									</p>
+									<p>
+										i'm also somewhat active in the ios modding and jailbreak scene,
+										so say hi if you see me around!
+									</p>
+								</div>
+							</section>
 						</div>
-					</section>
+						<section class="projects-section" id="projects">
+							<div class="projects-heading">
+								<h3>(some) things i've made</h3>
+								<TransitionLink href="/projects" class="projects-more">
+									all projects →
+								</TransitionLink>
+							</div>
+							<div class="projects-row">
+								{featuredProjects.map((project) => (
+									<ProjectCard project={project} compact />
+								))}
+							</div>
+						</section>
+					</div>
 					<section class="live-section" id="status">
 						<div class="live-grid">
 							<h3 class="live-heading">what i'm up to</h3>
@@ -114,20 +128,14 @@ function Homepage(this: FC) {
 							</div>
 						</div>
 					</section>
-					<section class="projects-section" id="projects">
-						<div class="projects-heading">
-							<h3>(some) things i've made</h3>
-							<TransitionLink href="/projects" class="projects-more">
-								all projects →
+					<section class="blog-section" id="blog">
+						<h3>
+							<TransitionLink href="/blog" class="blog-link">
+								<span>see my (relatively dead) blog</span>
+								<span>→</span>
 							</TransitionLink>
-						</div>
-						<div class="projects-row">
-							{featuredProjects.map((project) => (
-								<ProjectCard project={project} compact />
-							))}
-						</div>
+						</h3>
 					</section>
-					<br />
 					<section class="buttons-section">
 						<div class="mine">
 							<WebButton
@@ -160,24 +168,24 @@ function Homepage(this: FC) {
 }
 
 Homepage.style = css`
-	/* Text on the left, the picture on the right, vertically centred on
-	   the whole text block. The picture sits right after the heading in the
-	   markup (narrow portrait floats it, below), so this is a grid on the
-	   text block rather than a row of the two: everything in the first
-	   column, the picture in the second, across all the rows. */
+	/* the picture beside the name, as tall as the name's line. The size has
+	   to leave room for both on a narrow phone, and (below) for them to fit
+	   in the left column once the projects sit beside the intro. */
+	.page-header.home-title {
+		--title-size: clamp(2.75rem, 14vw, 8.5rem);
+		display: flex;
+		align-items: center;
+		gap: 0.12em;
+		font-size: var(--title-size);
+	}
+
+	.page-header.home-title h1 {
+		font-size: var(--title-size);
+		min-width: 0;
+	}
+
 	.about-section {
 		margin-bottom: 0.75rem;
-		display: flow-root;
-	}
-
-	.about-text {
-		display: grid;
-		grid-template-columns: minmax(0, 1fr) auto;
-		column-gap: 1.25rem;
-	}
-
-	.about-text > * {
-		grid-column: 1;
 	}
 
 	.about-text > *:first-child {
@@ -190,42 +198,20 @@ Homepage.style = css`
 
 	.pfp-link {
 		display: block;
-		grid-column: 2 !important;
-		/* every row there is (the empty extra ones are 0 tall) */
-		grid-row: 1 / span 20;
-		align-self: center;
+		flex: none;
+		/* above the h1's padding for its glow, which reaches over this */
+		position: relative;
+		z-index: 1;
 	}
 
-	h1 .emoji {
-		font-size: 0.7em;
-		padding-right: 0.15em;
-	}
-
-	h1 {
-		display: flex;
-		align-items: center;
+	.whoami {
 		font-variation-settings: "ELSH" 80 !important;
 		transition: font-variation-settings 0.3s ease-in-out;
 	}
 
-	h1:hover {
+	.whoami:hover {
 		font-variation-settings: "ELSH" 35 !important;
 	}
-
-	h1 span.emoji {
-		display: inline-block;
-		transition: transform 0.3s cubic-bezier(0.5, 1.3, 0.86, 1.09);
-	}
-
-	h1:hover span.emoji {
-		transform: rotate(-15deg);
-	}
-
-	/* .about-section::after {
-		content: "";
-		display: table;
-		clear: both;
-	} */
 
 	.about-section p {
 		font-size: 0.95rem;
@@ -235,8 +221,8 @@ Homepage.style = css`
 
 	.pfp {
 		display: block;
-		width: 220px;
-		height: 220px;
+		width: calc(var(--title-size) * 0.95);
+		height: calc(var(--title-size) * 0.95);
 		border: 2px solid var(--surface3);
 	}
 
@@ -359,6 +345,44 @@ Homepage.style = css`
 		gap: 1rem;
 	}
 
+	.blog-section {
+		margin-bottom: 1rem;
+	}
+
+	.blog-section h3 {
+		margin: 0;
+	}
+
+	.blog-section :global(.blog-link) {
+		display: flex;
+		justify-content: space-between;
+		gap: 1rem;
+	}
+
+	/* Room for the projects beside the name and intro, one above another */
+	@media (min-width: 70rem) {
+		.intro {
+			display: grid;
+			grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+			column-gap: 2rem;
+			align-items: start;
+		}
+
+		.page-header.home-title {
+			--title-size: min(8.5rem, 9.5vw);
+		}
+
+		.projects-row {
+			grid-template-columns: minmax(0, 1fr);
+		}
+
+		/* the projects get taller as the page widens; the text keeps up, so
+		   there's no hole under it */
+		.about-section p {
+			font-size: clamp(0.95rem, 0.4rem + 0.78vw, 1.1rem);
+		}
+	}
+
 	/* in-between widths (iPhone Duo's inner screen in landscape is 890px,
 	   small laptops, tablets): the 16-col grid gets too cramped for the
 	   player and the contacts column, so go to two columns, with the
@@ -462,45 +486,14 @@ Homepage.style = css`
 		}
 	}
 
-	/* portrait but roomy (iPhone Duo inner screen, tablets): keep the
-	   picture beside the text, just smaller */
-	@media (orientation: portrait) and (min-width: 36rem) {
-		.pfp {
-			width: 160px;
-			height: 160px;
-		}
-	}
-
-	/* Narrow portrait: still floated, so every paragraph is one run of
-	   lines the browser can justify and hyphenate as a whole (the text
-	   wraps round the picture and carries on full width below), but lifted
-	   up beside the heading. A float can't start above the content before
-	   it, so it's pulled up with a negative top margin: the heading's box
-	   (font-size x 1.18 line-height) plus its 0.75rem margin, less the
-	   ~0.18em above its lettering = 1 heading font-size + 0.75rem, using
-	   the heading's own size (h1 in style.css). */
+	/* narrow portrait: justified and hyphenated */
 	@media (orientation: portrait) and (max-width: 35.9375rem) {
 		.about-section {
 			text-align: justify;
 		}
 
-		.about-text {
-			display: block;
-		}
-
 		.about-section p {
 			hyphens: auto;
-		}
-
-		.pfp-link {
-			float: right;
-			margin: calc(-1 * clamp(2.5rem, 1.75rem + 3.5vw, 4rem) - 0.75rem) 0 0.4rem
-				0.9rem;
-		}
-
-		.pfp {
-			width: clamp(6.5rem, 32vw, 9rem);
-			height: clamp(6.5rem, 32vw, 9rem);
 		}
 	}
 `;

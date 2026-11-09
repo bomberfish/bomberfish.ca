@@ -3,7 +3,7 @@ import { FC } from "dreamland/core";
 // Brand SVG path data sourced from simple-icons.org (CC0 1.0).
 // All icons render at 1em × 1em and inherit `currentColor` so they pick up
 // whatever colour the parent text is using (matches the rest of the site's
-// icon convention — see Sidebar.tsx).
+// icon convention).
 //
 // Email is a generic envelope (no canonical brand) drawn in the same 24×24
 // box for visual consistency with the brand glyphs.

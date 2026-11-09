@@ -22,6 +22,29 @@ const getDocumentWithViewTransitions =
 		return typeof doc.startViewTransition === "function" ? doc : null;
 	};
 
+// On click of a back link: if the previous history entry is a page of this
+// site, go back to it instead of following the link. navigate() below marks
+// the entries it creates; it's kept in history.state so it survives reloads.
+export function backInSite(event: MouseEvent) {
+	if (isModifiedEvent(event) || history.state?.inSite !== true) return;
+	event.preventDefault();
+
+	const doc = getDocumentWithViewTransitions();
+	if (!doc) {
+		history.back();
+		return;
+	}
+	doc.startViewTransition?.(
+		() =>
+			new Promise<void>((resolve) => {
+				// the router's own popstate listener swaps the page; the
+				// timeout lets it finish before the new state's captured
+				addEventListener("popstate", () => setTimeout(resolve), { once: true });
+				history.back();
+			})
+	);
+}
+
 const buildClassName = (componentInstance: Record<string, unknown>) => {
 	const classes: string[] = [];
 	if (
@@ -75,7 +98,8 @@ export function TransitionLink(this: FC<TransitionLinkProps>) {
 	}
 
 	const navigate = async () => {
-		await router?.navigate(href);
+		if (await router?.navigate(href))
+			history.replaceState({ inSite: true }, "");
 	};
 
 	const handleClick = (event: MouseEvent) => {
@@ -105,10 +129,8 @@ export function TransitionLink(this: FC<TransitionLinkProps>) {
 			}
 		}
 
-		if (sameDestination) {
-			navigate();
-			return;
-		}
+		// (navigating would only add a history entry back to the same page)
+		if (sameDestination) return;
 
 		const doc = getDocumentWithViewTransitions();
 		if (doc) {

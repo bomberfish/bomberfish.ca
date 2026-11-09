@@ -1,7 +1,7 @@
 import { FC, css } from "dreamland/core";
 import TransitionLink from "../components/TransitionLink";
 import ContactLinks from "../components/ContactLinks";
-import Navbar from "../components/Navbar";
+import SiteNav from "../components/SiteNav";
 import Footer from "../components/Footer";
 import { getBlogMetadata, type BlogModule } from "../lib/blog";
 import { getWebpPath } from "../lib/images";
@@ -34,7 +34,7 @@ function BlogList(this: FC) {
 		<main>
 			<title>blog – bomberfish.ca</title>
 			<div class="layout-container">
-				<Navbar active="blog" />
+				<SiteNav active="blog" />
 				<div class="main-content">
 					<div class="page-header">
 						<h1>blog</h1>

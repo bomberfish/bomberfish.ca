@@ -1,7 +1,7 @@
 import { FC, css } from "dreamland/core";
 import ProjectCard from "../components/ProjectCard";
 import { projects } from "../Projects";
-import Navbar from "../components/Navbar";
+import SiteNav from "../components/SiteNav";
 import Footer from "../components/Footer";
 
 const orderedProjects = [
@@ -16,7 +16,7 @@ function ProjectList(this: FC) {
 		<main>
 			<title>projects – bomberfish.ca</title>
 			<div class="layout-container">
-				<Navbar active="projects" />
+				<SiteNav active="projects" />
 				<div class="main-content">
 					<div class="page-header">
 						<h1>projects</h1>
