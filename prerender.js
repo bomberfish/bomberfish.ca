@@ -113,6 +113,8 @@ for (const [route, path] of paths) {
 			ogTags.push(
 				`<meta name="twitter:url" content="https://bomberfish.ca${route}" />`
 			);
+
+			ogTags.push(`<meta name="twitter:domain" content="og:site_name" />`);
 			ogTags.push(`<meta name="twitter:domain" content="bomberfish.ca" />`);
 
 			ogTags.push(`<meta property="og:type" content="article" />`);
@@ -132,7 +134,7 @@ for (const [route, path] of paths) {
 			}
 
 			ogTags.push(`<meta property="og:image" content="${ogImage}" />`);
-			ogTags.push(`<meta name="twitter:card" content="summary_large_image" />`);
+			ogTags.push(`<meta name="twitter:card" content="summary" />`);
 			ogTags.push(`<meta name="twitter:image" content="${ogImage}" />`);
 
 			// Replace the default og:image with the blog-specific one
@@ -169,8 +171,7 @@ console.log(
 // Sitemap: every prerendered page. Posts get their date as lastmod, and the
 // blog index its newest post's; nothing else has a date worth giving.
 const siteURL = "https://bomberfish.ca";
-const xmlEscape = (s) =>
-	s.replace(/[&<>"']/g, (c) => `&#${c.charCodeAt(0)};`);
+const xmlEscape = (s) => s.replace(/[&<>"']/g, (c) => `&#${c.charCodeAt(0)};`);
 const newestPost = [...blogMetadataMap.values()]
 	.map((post) => post.date)
 	.sort()
