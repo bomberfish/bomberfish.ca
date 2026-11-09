@@ -104,7 +104,7 @@ for (const [route, path] of paths) {
 				`<meta property="og:title" content="${fullTitle.replace(/"/g, "&quot;")}" />`
 			);
 			ogTags.push(
-				`<meta name="twitter:title" content="${fullTitle.replace(/"/g, "&quot;")}" />`
+				`<meta name="twitter:title" content="Blog: ${fullTitle.replace(/"/g, "&quot;")}" />`
 			);
 
 			ogTags.push(
@@ -114,7 +114,7 @@ for (const [route, path] of paths) {
 				`<meta name="twitter:url" content="https://bomberfish.ca${route}" />`
 			);
 
-			ogTags.push(`<meta name="twitter:domain" content="og:site_name" />`);
+			ogTags.push(`<meta name="og:site_name" content="bomberfish.ca" />`);
 			ogTags.push(`<meta name="twitter:domain" content="bomberfish.ca" />`);
 
 			ogTags.push(`<meta property="og:type" content="article" />`);
@@ -134,7 +134,7 @@ for (const [route, path] of paths) {
 			}
 
 			ogTags.push(`<meta property="og:image" content="${ogImage}" />`);
-			ogTags.push(`<meta name="twitter:card" content="summary" />`);
+			ogTags.push(`<meta name="twitter:card" content="summary_large_image" />`);
 			ogTags.push(`<meta name="twitter:image" content="${ogImage}" />`);
 
 			// Replace the default og:image with the blog-specific one
