@@ -165,23 +165,10 @@ export function AboutView(this: FC) {
 						.
 					</p>
 					<p>
-						for the main font, i'm using{" "}
-						<a
-							href="https://vercel.com/blog/introducing-geist-pixel"
-							target="_blank"
-							referrer-policy="unsafe-url"
-						>
-							geist pixel
-						</a>{" "}
-						by the talented folks over at vercel. the monospace font is{" "}
-						<a
-							href="https://github.com/microsoft/cascadia-code"
-							target="_blank"
-							referrer-policy="unsafe-url"
-						>
-							cascadia code
-						</a>{" "}
-						by microsoft.
+						for the main and monospace fonts, i'm using a custom variant of
+						Linux Libertine I call Stalwart (named as such because the mono
+						variant matches the metrics of Sun's Gallant VGA font). the display
+						font is apple's private Garamond variant, ADT Garamond.
 					</p>
 					<h2>archive of previous versions</h2>
 					<p>
