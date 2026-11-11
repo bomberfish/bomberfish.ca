@@ -113,6 +113,10 @@ function PeopleButtons(this: FC) {
 				src="https://circulars.dev/circular-88x31.gif"
 				href="https://circulars.dev"
 			/>
+			<WebButton
+				src="https://lunarion31.dev/static/img/buttons/lumi.gif"
+				href="https://lunarion31.dev"
+			/>
 			<WebButton src="https://gideon.sh/88x31.gif" href="https://gideon.sh" />
 			<WebButton
 				src="https://cdn.dispherical.com/88x31.png"
