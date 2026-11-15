@@ -97,6 +97,10 @@ function PeopleButtons(this: FC) {
 				href="https://doskel.net/"
 			/>
 			<WebButton
+				src="https://tiago.zip/button.gif"
+				href="https://tiago.zip"
+			/>
+			<WebButton
 				src="https://thememesniper.dev/images/88x31.png"
 				href="https://thememesniper.dev"
 			/>
