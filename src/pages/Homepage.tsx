@@ -145,7 +145,7 @@ function Homepage(this: FC) {
 									e.preventDefault();
 									try {
 										navigator.clipboard.writeText(
-											'<a href="https://bomberfish.ca/?ref=button" referrerpolicy="unsafe-url" >\n<img src="https://bomberfish.ca/button.gif" alt="BomberFish" title="BomberFish" />\n</a>'
+											'<a href="https://bomberfish.ca/?ref=button" referrerpolicy="unsafe-url" >\n<img src="https://bomberfish.ca/button.gif" alt="bomberfish.ca" title="bomberfish.ca" />\n</a>'
 										);
 										document.body.appendChild(<CopiedToast />);
 									} catch {
