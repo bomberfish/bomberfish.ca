@@ -39,11 +39,17 @@ import {
 	sunAltitude,
 	force,
 	forced,
-	reported,
-	scene,
 	type ForceKind,
 } from "../lib/weather/index";
 import { weatherGlyph } from "../components/WeatherGlyph";
+import {
+	gpuDetected,
+	gpuKnown,
+	gpuPicked,
+	gpuQuality,
+	pickGpu,
+	type Quality,
+} from "../lib/weather/gpu";
 import { airTint } from "../lib/weather/sky";
 
 const archives = [
@@ -124,6 +130,10 @@ const archives = [
 		version: "v10.3.0",
 		date: "20261101010933",
 	},
+	{
+		version: "v11.0.5",
+		date: "20261108064555"
+	}
 ];
 
 // the surface and text colours, darkest to lightest
@@ -308,20 +318,69 @@ export function AboutView(this: FC) {
 			const reset = pick.querySelector<HTMLButtonElement>(".time-reset");
 			if (reset) reset.hidden = now.time == null;
 		}
-		const said = this.root?.querySelector<HTMLElement>(".weather-said");
-		if (!said) return;
-		const live = reported();
-		said.textContent = live
-			? `right now in waterloo: ${(live.condition ?? "who knows").toLowerCase()}` +
-				(live.temperature == null ? "" : `, ${Math.round(live.temperature)}°`) +
-				`. (${live.attribution})`
-			: "environment canada hasn't said what it's doing right now, so it's raining.";
-		// and the cloud that's up there (or would be), lowest first
-		const { low, mid, high } = scene().layers;
-		const clouds = [low, mid, high].filter((l) => l.cover > 0.05).map((l) => l.kind);
-		said.textContent += clouds.length
-			? ` the sky above: ${clouds.join(", ")}.`
-			: " the sky above: no cloud to speak of.";
+	};
+	// How well the weather's drawn: as well as the graphics card was judged
+	// good for (auto), or a tier picked here. A slider of four stops.
+	const GPU_STOPS: (Quality | null)[] = [null, "low", "medium", "high"];
+	// what each does (LEVELS in sky.ts, PLENTY in rain.ts) and who it's for
+	// (the benchmark frame rates are gpu.ts's cut-offs)
+	const GPU_NOTES: Record<Quality, string> = {
+		low:
+			"flat 2d clouds at 15fps and 40% resolution, with half the rain and snow. " +
+			"for old integrated graphics, budget phones and anything without a real gpu " +
+			"(under 30fps in the benchmark).",
+		medium:
+			"layered clouds with shaded edges at 24fps and half resolution, with three " +
+			"quarters of the rain and snow. for recent integrated graphics and mid-range " +
+			"phones (30 to 60fps in the benchmark).",
+		high:
+			"volumetric, ray-marched clouds at 30fps and 70% resolution, with all of the " +
+			"rain and snow. for dedicated cards, apple silicon and flagship phones " +
+			"(60fps and up in the benchmark).",
+	};
+	let gpuShown = false;
+	const markGpu = () => {
+		if (this.root?.isConnected) gpuShown = true;
+		else if (gpuShown) {
+			window.removeEventListener("gpuquality", markGpu);
+			return;
+		}
+		const pick = this.root?.querySelector<HTMLElement>(".gpu-pick");
+		const slider = pick?.querySelector<HTMLInputElement>('input[type="range"]');
+		if (!pick || !slider) return;
+		const at = GPU_STOPS.indexOf(gpuPicked());
+		placeSlider(slider, at);
+		const readout = pick.querySelector("output");
+		if (readout) {
+			// (the address can overrule both: say what's really being drawn)
+			const drawn = gpuQuality();
+			const picked = gpuPicked();
+			readout.textContent = picked
+				? picked === drawn
+					? picked
+					: `${picked} (${drawn} for this visit)`
+				: gpuKnown() || drawn !== gpuDetected()
+					? `auto: ${drawn}`
+					: "auto: working it out";
+		}
+		const note = this.root?.querySelector<HTMLElement>(".gpu-note");
+		if (note) {
+			const picked = gpuPicked();
+			note.textContent = picked
+				? GPU_NOTES[picked]
+				: "looks your graphics card up in a table of benchmark results, once, and " +
+					"remembers the answer for a month. " +
+					(gpuKnown()
+						? `yours came out as ${gpuDetected()}: ${GPU_NOTES[gpuDetected()]}`
+						: "until that's in, it's low.");
+		}
+		pick.querySelectorAll<HTMLElement>(".gpu-stop").forEach((stop, i) => {
+			stop.setAttribute("aria-pressed", String(i === at));
+		});
+	};
+	const chooseGpu = (stop: number) => {
+		pickGpu(GPU_STOPS[Math.max(0, Math.min(GPU_STOPS.length - 1, Math.round(stop)))]);
+		markGpu();
 	};
 	const chooseWeather = (kind: ForceKind | null) => {
 		force(kind, forced().time);
@@ -374,6 +433,8 @@ export function AboutView(this: FC) {
 		if (import.meta.env.SSR) return;
 		markWeather();
 		window.addEventListener("weatherchange", markWeather);
+		markGpu();
+		window.addEventListener("gpuquality", markGpu);
 		const name = currentAccent();
 		const custom = customAccent();
 		mark(name);
@@ -405,7 +466,7 @@ export function AboutView(this: FC) {
 
 	return (
 		<Page kind="pivot">
-			<title>about – bomberfish.ca</title>
+			<title>site info – bomberfish.ca</title>
 			<div class="layout-container">
 				<SiteNav active="about" />
 				<div class="main-content about-page">
@@ -441,18 +502,94 @@ export function AboutView(this: FC) {
 								.
 							</p>
 							<p>
-								this version is done up in metro, the design language of windows
-								phone and windows 8: the type is segoe ui variable, and
-								everything that moves (tiles flipping, pages turning) is a
-								recreation of how those moved. the monospace is cascadia code.
+								this version is done up in a blend of the original windows 8 metro design language 
+								and the revised version of it found in windows 10. the fonts used are segoe ui variable for
+								most things, and cascadia mono for code.
 							</p>
 						</section>
 
 						<section data-m-feather>
+							<h2>graphics quality</h2>
+							<p>
+								how detailed the weather in the background is. auto goes by your
+								graphics card. persists across reloads.
+							</p>
+							<div class="gpu-pick">
+								<Slider
+									name="gpu"
+									label="quality"
+									min={0}
+									max={3}
+									value={0}
+									oninput={chooseGpu}
+								/>
+								<div class="gpu-stops">
+									{["auto", "low", "medium", "high"].map((name, i) => (
+										<button
+											type="button"
+											class="gpu-stop"
+											aria-pressed="false"
+											style={`--at: ${i}`}
+											on:click={() => chooseGpu(i)}
+										>
+											{name}
+										</button>
+									))}
+								</div>
+							</div>
+							<p class="gpu-note" aria-live="polite" />
+						</section>
+
+						<section data-m-feather>
+							<h2>weather</h2>
+							<p>
+								override the conditions for the weather visualizer in the background, or set it to the current conditions in waterloo.
+							</p>
+							<div class="weather-pick" role="radiogroup" aria-label="weather">
+								{([null, ...FORCE_KINDS] as (ForceKind | null)[]).map((kind) => (
+									<Tile
+										as="button"
+										type="button"
+										role="radio"
+										aria-checked="false"
+										color="accent"
+										class="material-sample weather-sample"
+										feather={false}
+										data-kind={kind ?? ""}
+										on:click={() => chooseWeather(kind)}
+									>
+										{weatherGlyph(kind ?? "live")}
+										<TileLabel>{kind ?? "live"}</TileLabel>
+										<span class="material-check" aria-hidden="true" />
+									</Tile>
+								))}
+							</div>
+							<div class="time-pick is-live">
+								<Slider
+									name="time"
+									label="time of day"
+									min={0}
+									max={1439}
+									value={720}
+									oninput={chooseTime}
+								/>
+								<span class="time-now" aria-hidden="true">
+									now
+								</span>
+								<Button class="time-reset" hidden on:click={backToNow}>
+									<span class="material-symbols" aria-hidden="true">
+										refresh
+									</span>
+									back to now
+								</Button>
+							</div>
+						</section>
+						
+						<section data-m-feather>
 							<h2>accent colour</h2>
 							<p>
 								pick one and the whole site takes it, or make your own with the
-								last. it's remembered on this device.
+								last. persists across reloads.
 							</p>
 							<div class="accent-picker">
 								<ColorStrip
@@ -510,15 +647,11 @@ export function AboutView(this: FC) {
 								</div>
 							</div>
 						</section>
-
+						
 						<section data-m-feather>
 							<h2>material</h2>
 							<p>
-								tiles here are windows 10's acrylic: frosted glass with the page
-								showing through, and a rim that lights up under the pointer. or
-								they can be flat, the way the phone and windows 8 had them: a
-								rectangle of colour and nothing else. remembered on this device
-								too.
+								pick between windows 10's frosted acrylic or windows 8's flat, vibrant look. persists across reloads.
 							</p>
 							<div
 								class="material-pick"
@@ -543,55 +676,6 @@ export function AboutView(this: FC) {
 										</Tile>
 									</span>
 								))}
-							</div>
-						</section>
-
-						<section data-m-feather>
-							<h2>weather</h2>
-							<p>
-								what's behind the page is the weather in waterloo, as environment
-								canada reports it: the rain, snow or ice coming down, the wind
-								it's slanted by, the cloud, the fog, and the sun and moon where
-								they really are. or pick some. remembered on this device too.
-							</p>
-							<p class="weather-said" />
-							<div class="weather-pick" role="radiogroup" aria-label="weather">
-								{([null, ...FORCE_KINDS] as (ForceKind | null)[]).map((kind) => (
-									<Tile
-										as="button"
-										type="button"
-										role="radio"
-										aria-checked="false"
-										color="accent"
-										class="material-sample weather-sample"
-										feather={false}
-										data-kind={kind ?? ""}
-										on:click={() => chooseWeather(kind)}
-									>
-										{weatherGlyph(kind ?? "live")}
-										<TileLabel>{kind ?? "live"}</TileLabel>
-										<span class="material-check" aria-hidden="true" />
-									</Tile>
-								))}
-							</div>
-							<div class="time-pick is-live">
-								<Slider
-									name="time"
-									label="time of day"
-									min={0}
-									max={1439}
-									value={720}
-									oninput={chooseTime}
-								/>
-								<span class="time-now" aria-hidden="true">
-									now
-								</span>
-								<Button class="time-reset" hidden on:click={backToNow}>
-									<span class="material-symbols" aria-hidden="true">
-										refresh
-									</span>
-									back to now
-								</Button>
 							</div>
 						</section>
 

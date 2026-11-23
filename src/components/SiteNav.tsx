@@ -6,7 +6,7 @@ export type Section = "projects" | "blog" | "about";
 export const SECTIONS: Record<Section, { href: string; label: string }> = {
 	projects: { href: "/projects", label: "projects" },
 	blog: { href: "/blog", label: "blog" },
-	about: { href: "/siteinfo", label: "about" },
+	about: { href: "/siteinfo", label: "site info" },
 };
 
 // The strip above the title on every page but the home page: the back

@@ -441,6 +441,17 @@ html[data-backdrop="sky"] .page-bg-photo::after {
 	will-change: transform;
 }
 
+/* (Said again, and harder. The build's postcss-merge-rules pulls the
+   "width: 100%" that's put in ahead of that calc() for old browsers out
+   into a rule this shares with .rain-canvas, which lands after this one and
+   so wins: the layer came out the window's width, rail or no rail. The home
+   page's panorama measures the photo against this layer to know how far it
+   can pan it, took the rail's width for room to spare, and slid the sky out
+   from under the rail.) */
+.page-bg > .page-bg-grain {
+	width: calc(100% + var(--bg-bleed-r));
+}
+
 /* Rain canvas (src/lib/weather/rain.ts), inside .page-bg-fixed. rain.ts draws in
    window coordinates, offset by where the canvas actually starts.
    (a canvas is a replaced element: insets alone don't stretch it) */
@@ -2332,6 +2343,105 @@ article {
    A mark under it says where now is; left alone, the thumb sits on the
    mark and goes with the clock. Slide away and a button comes up to go
    back (or slide back onto the mark). */
+/* The graphics quality: a slider of four stops (auto and the three tiers),
+   its bar cut into a segment a stop, with the stops' names under it where
+   the thumb comes to rest (they're buttons: a click goes there). */
+.gpu-pick {
+	--gap: var(--core);
+	position: relative;
+	max-width: 36rem;
+	padding-bottom: 1.9rem;
+}
+
+.gpu-pick .m-slider input {
+	/* (the cuts fall halfway between stops; the thumb's middle runs from
+	   half a thumb in to half a thumb out, 0.375rem each end) */
+	--cut-1: calc(0.375rem + (100% - 0.75rem) / 6);
+	--cut-2: calc(0.375rem + (100% - 0.75rem) / 2);
+	--cut-3: calc(0.375rem + (100% - 0.75rem) * 5 / 6);
+	--track:
+		linear-gradient(
+			to right,
+			transparent calc(var(--cut-1) - 1.5px),
+			var(--gap) calc(var(--cut-1) - 1.5px),
+			var(--gap) calc(var(--cut-1) + 1.5px),
+			transparent calc(var(--cut-1) + 1.5px),
+			transparent calc(var(--cut-2) - 1.5px),
+			var(--gap) calc(var(--cut-2) - 1.5px),
+			var(--gap) calc(var(--cut-2) + 1.5px),
+			transparent calc(var(--cut-2) + 1.5px),
+			transparent calc(var(--cut-3) - 1.5px),
+			var(--gap) calc(var(--cut-3) - 1.5px),
+			var(--gap) calc(var(--cut-3) + 1.5px),
+			transparent calc(var(--cut-3) + 1.5px)
+		),
+		linear-gradient(
+			to right,
+			var(--slider-fill) var(--fill, 0%),
+			var(--slider-rest) var(--fill, 0%)
+		);
+}
+
+/* what the stop it's on does, and what it's for (three lines' room kept,
+   so the page under it doesn't jump as the thumb moves) */
+.gpu-note {
+	max-width: 36rem;
+	min-height: 3.9em;
+	margin-top: 0.6rem;
+	font-size: 0.85rem;
+	line-height: 1.3;
+	color: var(--subtext0);
+}
+
+.gpu-note:empty {
+	display: none;
+}
+
+.gpu-stops {
+	position: absolute;
+	right: 0.375rem;
+	bottom: 0;
+	left: 0.375rem;
+	height: 1.5rem;
+}
+
+.gpu-stop {
+	position: absolute;
+	top: 0;
+	left: calc(100% * var(--at) / 3);
+	transform: translateX(-50%);
+	padding: 0.35rem 0.4rem;
+	border: 0;
+	background: none;
+	font: inherit;
+	font-size: 0.72rem;
+	line-height: 1;
+	color: var(--subtext0);
+	white-space: nowrap;
+	cursor: pointer;
+}
+
+.gpu-stop:first-child {
+	transform: none;
+	padding-left: 0;
+	margin-left: -0.375rem;
+}
+
+.gpu-stop:last-child {
+	transform: translateX(-100%);
+	padding-right: 0;
+	margin-left: 0.375rem;
+}
+
+.gpu-stop:hover,
+.gpu-stop[aria-pressed="true"] {
+	color: var(--supertext);
+}
+
+.gpu-stop[aria-pressed="true"] {
+	font-weight: 600;
+}
+
 .time-pick {
 	position: relative;
 	max-width: 36rem;

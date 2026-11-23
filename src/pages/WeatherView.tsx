@@ -622,7 +622,7 @@ function WeatherView(this: FC) {
 			then
 				? `(this is the sky that's forecast for ${then.label}: nobody's seen it yet, so the cloud is what usually goes with "${(then.condition ?? "that").toLowerCase()}".)`
 				: pretending()
-					? `(the sky behind this page is ${set ? `set to ${set} on the about page` : "one that's been asked for"}, so it and the cloud above aren't the real ones. the numbers are.)`
+					? `(the sky behind this page is ${set ? `set to ${set} on the site info page` : "one that's been asked for"}, so it and the cloud above aren't the real ones. the numbers are.)`
 					: ""
 		);
 

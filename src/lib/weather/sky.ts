@@ -189,6 +189,7 @@ precision highp float;
 
 uniform vec2 uSize;      // the canvas, CSS px
 uniform vec2 uWin;       // the window, CSS px
+uniform float uLeft;     // where the canvas's left edge is in the window, CSS px
 uniform float uScale;    // device px drawn per CSS px
 uniform float uTime;     // seconds
 uniform vec2 uDrift;     // how far the cloud has blown, cloud units
@@ -438,6 +439,9 @@ vec3 stars(vec2 px, float cell, float share, float size, float low) {
 
 void main() {
 	vec2 px = vec2(gl_FragCoord.x, uSize.y * uScale - gl_FragCoord.y) / uScale;
+	// (the sky's drawn in the window's coordinates, and the canvas can start
+	// left of the window: under the iPhone Duo's side rail)
+	px.x += uLeft;
 	vec2 q = px / uWin.y;
 	float up = heightAt(q.y);
 	float low = pow(1.0 - up, 3.0);
@@ -752,6 +756,7 @@ void main() {
 const UNIFORMS = [
 	"uSize",
 	"uWin",
+	"uLeft",
 	"uScale",
 	"uTime",
 	"uDrift",
@@ -1054,6 +1059,7 @@ export function startSky() {
 		return going;
 	};
 	let cssW = 0;
+	let left = 0; // the canvas's left edge, in the window (negative: under a rail)
 	let cssH = 0;
 	let drawnScale = 0;
 	let dirty = true;
@@ -1095,6 +1101,13 @@ export function startSky() {
 		const rect = host.getBoundingClientRect();
 		cssW = Math.max(1, rect.width);
 		cssH = Math.max(1, rect.height);
+		// With the iPhone Duo's rail on the left the canvas starts under it,
+		// that far left of the window (--rail-l, src/lib/pageBg.ts; read
+		// from there, not measured: the page is scrolled across to it a
+		// moment after the sizes change). Everything here is placed in the
+		// window, so the sun stays where the page thinks it is and the sky
+		// simply carries on under the rail.
+		left = -(parseFloat(getComputedStyle(root).getPropertyValue("--rail-l")) || 0);
 		let s = starry() ? level.starScale : level.scale;
 		s = Math.min(s, window.devicePixelRatio || 1);
 		s = Math.min(s, Math.sqrt(level.maxPixels / (cssW * cssH)));
@@ -1120,6 +1133,7 @@ export function startSky() {
 		gl.viewport(0, 0, canvas.width, canvas.height);
 		gl.uniform2f(u.uSize!, cssW, cssH);
 		gl.uniform2f(u.uWin!, winW, winH);
+		gl.uniform1f(u.uLeft!, left);
 		gl.uniform1f(u.uScale!, drawnScale);
 		gl.uniform1f(u.uTime!, clock);
 		gl.uniform2f(u.uDrift!, driftX, driftY);

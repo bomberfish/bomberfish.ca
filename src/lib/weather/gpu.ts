@@ -12,7 +12,9 @@
 // the other way. The answer's kept on the device for a month, so every
 // visit after the first starts at the right quality.
 //
-// ?gpu=low, medium or high in the address overrides it for that page load.
+// It can be overruled: the about page has a slider for it (pickGpu, kept on
+// the device until it's put back to auto), and ?gpu=low, medium or high in
+// the address overrides both for that page load.
 //
 // What was decided and from what is logged to the console (at the debug
 // level, so it's under "Verbose" in Chrome's): the tier, the card as WebGL
@@ -21,6 +23,7 @@
 export type Quality = "low" | "medium" | "high";
 
 const STORE = "gpu-quality";
+const PICK = "gpu-pick";
 const FRESH_MS = 30 * 86_400_000;
 const QUALITIES: Quality[] = ["low", "medium", "high"];
 
@@ -56,12 +59,34 @@ function log(from: string, to: Quality, details?: Details | null) {
 	);
 }
 
-let quality: Quality = "low";
+let quality: Quality = "low"; // the card's, as far as is known
+let picked: Quality | null = null; // the about page's, if it's said
+let asked: Quality | null = null; // the address's
 let known = false;
 let started = false;
 
-/** The quality to draw at, as far as is known yet. A "gpuquality" event on window says when it changes. */
-export const gpuQuality = () => quality;
+/** The quality to draw at, as far as is known yet. A "gpuquality" event on window says when it (or what it's made from) changes. */
+export const gpuQuality = () => asked ?? picked ?? quality;
+
+/** What the card itself was judged to be good for (see gpuKnown for whether that's in yet). */
+export const gpuDetected = () => quality;
+
+/** The quality picked on the about page, or null for the card's own. */
+export const gpuPicked = () => picked;
+
+/** Pick a quality whatever the card (null: go by the card again). Kept on the device. */
+export function pickGpu(to: Quality | null) {
+	if (to === picked) return;
+	picked = to;
+	try {
+		if (to) localStorage.setItem(PICK, to);
+		else localStorage.removeItem(PICK);
+	} catch {
+		// (no storage: it's for this page only)
+	}
+	console.debug(`[gpu] quality: ${gpuQuality()} (${to ? "picked on the site info page" : "back to the card's own"})`);
+	window.dispatchEvent(new Event("gpuquality"));
+}
 
 function settle(to: Quality) {
 	known = true;
@@ -117,13 +142,21 @@ export function startGpu() {
 	if (started || import.meta.env.SSR) return;
 	started = true;
 
-	const asked = new URLSearchParams(location.search).get("gpu") as Quality | null;
-	if (asked && QUALITIES.includes(asked)) {
-		quality = asked;
-		known = true;
-		log("asked for in the address", quality);
-		return;
+	const inAddress = new URLSearchParams(location.search).get("gpu") as Quality | null;
+	if (inAddress && QUALITIES.includes(inAddress)) {
+		asked = inAddress;
+		log("asked for in the address", asked);
 	}
+	try {
+		const kept = localStorage.getItem(PICK) as Quality | null;
+		if (kept && QUALITIES.includes(kept)) {
+			picked = kept;
+			if (!asked) log("picked on the site info page", picked);
+		}
+	} catch {
+		// (no storage)
+	}
+	// (the card's still sized up under either, so "auto" has something to say)
 	try {
 		const kept = JSON.parse(localStorage.getItem(STORE) ?? "null");
 		if (kept && QUALITIES.includes(kept.quality) && Date.now() - kept.at < FRESH_MS) {
