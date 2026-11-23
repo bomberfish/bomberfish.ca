@@ -312,3 +312,100 @@ export const getGithub = (signal?: AbortSignal, cacheBust?: boolean) =>
 		signal,
 		cacheBust
 	);
+
+// ---- weather (Environment and Climate Change Canada, by way of siteapi) ----
+
+export type WeatherKind =
+	| "clear"
+	| "cloudy"
+	| "fog"
+	| "rain"
+	| "snow"
+	| "mixed"
+	| "ice"
+	| "thunderstorm"
+	| "unknown";
+export type WeatherIntensity = "light" | "moderate" | "heavy";
+
+export interface WeatherWind {
+	speed: number | null; // km/h
+	gust: number | null; // km/h
+	bearing: number | null; // degrees it blows from; observations only
+	direction: string | null; // "SW"
+}
+
+export interface WeatherResponse {
+	location: { id: string; name: string | null; region: string | null; url: string | null };
+	/** ECCC's licence: show this wherever the data is shown. */
+	attribution: string;
+	updatedAt: string | null;
+	current: {
+		observedAt: string | null;
+		station: string | null;
+		condition: string | null;
+		iconCode: number | null;
+		kind: WeatherKind;
+		intensity: WeatherIntensity | null;
+		temperature: number | null; // °C
+		feelsLike: number | null;
+		humidity: number | null;
+		dewpoint: number | null;
+		pressure: number | null;
+		visibility: number | null; // km
+		wind: WeatherWind;
+	};
+	sun: { sunrise: string | null; sunset: string | null };
+	hourly: {
+		time: string | null;
+		condition: string | null;
+		iconCode: number | null;
+		kind: WeatherKind;
+		intensity: WeatherIntensity | null;
+		temperature: number | null;
+		precipChance: number | null; // %
+		wind: WeatherWind;
+	}[];
+	/** The days ahead, as days and nights in turn, soonest first. (Absent from an older siteapi.) */
+	daily?: {
+		name: string | null;
+		night: boolean;
+		summary: string | null;
+		iconCode: number | null;
+		kind: WeatherKind;
+		intensity: WeatherIntensity | null;
+		temperature: number | null; // the day's high or the night's low
+		precipChance: number | null;
+	}[];
+	warnings: {
+		type: string | null;
+		priority: string | null;
+		description: string | null;
+		effectiveAt: string | null;
+		expiresAt: string | null;
+		url: string | null;
+	}[];
+	/** A thunderstorm now, or a warning or watch for one in effect. */
+	thunderstorm: boolean;
+	/** The cloud layers over the airport (its METAR), or null if that couldn't be had. */
+	clouds?: WeatherClouds | null;
+}
+
+export interface WeatherClouds {
+	observedAt: string | null;
+	station: string;
+	/** Lowest first. Empty for a clear sky. */
+	layers: {
+		cover: "few" | "scattered" | "broken" | "overcast";
+		oktas: number;
+		base: number | null; // feet above the ground
+		type: "tcu" | "cb" | null;
+	}[];
+	/** The sky can't be seen at all (fog, heavy snow). */
+	obscured: boolean;
+	/** An automatic report: it can't see cloud much above 10,000 ft. */
+	automatic: boolean;
+	raw: string | null;
+}
+
+export const getWeather = (signal?: AbortSignal, cacheBust?: boolean) =>
+	fetchJson<WeatherResponse>("/v1/weather", signal, cacheBust);

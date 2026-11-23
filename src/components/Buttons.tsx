@@ -1,4 +1,5 @@
 import { FC, css } from "dreamland/core";
+import { swivelIn, swivelOut } from "../metro-dreamland";
 
 export function WebButton(
 	this: FC<
@@ -116,6 +117,10 @@ function PeopleButtons(this: FC) {
 			<WebButton
 				src="https://circulars.dev/circular-88x31.gif"
 				href="https://circulars.dev"
+			/>
+			<WebButton
+				src="https://malborge.cfd/assets/button.gif"
+				href="https://malborge.cfd"
 			/>
 			<WebButton
 				src="https://lunarion31.dev/static/img/buttons/lumi.gif"
@@ -323,66 +328,47 @@ ButtonList.style = css`
 	}
 `;
 
+// A phone toast: a strip in the accent colour that swings down from the
+// top edge of the screen and back up again (swivel, metro-dreamland).
 export function CopiedToast(this: FC) {
 	this.cx.mount = () => {
+		const el = this.root as HTMLElement;
+		void swivelIn(el);
 		setTimeout(() => {
-			this.root.remove();
+			void swivelOut(el).then(() => el.remove());
 		}, 2000);
 	};
 
 	return (
-		<div>
-			<span class="material-symbols-rounded">content_copy</span>
+		<div class="toast on-color c-accent" role="status">
+			<span class="material-symbols">content_copy</span>
 			Copied to clipboard!
 		</div>
 	);
 }
 
 CopiedToast.style = css`
+	/* body is the containing block for fixed elements (see style.css), so
+	   this is the top of the page; the one place a toast is shown is the
+	   home page, which is exactly one screen tall */
 	:scope {
 		position: fixed;
-		bottom: 0;
+		top: 0;
+		left: 0;
 		right: 0;
-		background-color: var(--surface0);
-		border: 0.083rem solid var(--overlay0);
-		color: var(--text);
-		padding: 0.5rem 1rem;
+		z-index: 100;
 		display: flex;
 		align-items: center;
-		gap: 0.5rem;
-		border-radius: 0%;
-		margin: 1rem;
-
-		animation:
-			fadein 0.35s,
-			fadeout 0.35s 1.75s;
-		animation-timing-function: cubic-bezier(0.2, 0.2, 0.5, 1);
-
-		box-shadow: 0 2px 8px var(--tooltip-shadow);
-
-		perspective: 1000px;
-		transform-origin: bottom center;
-	}
-
-	@keyframes fadein {
-		from {
-			opacity: 0;
-			transform: translateY(0) rotate3d(1, 0, 0, 70deg);
-		}
-		to {
-			opacity: 1;
-			transform: translateY(0) rotate3d(1, 0, 0, 0deg);
-		}
-	}
-
-	@keyframes fadeout {
-		from {
-			opacity: 1;
-			transform: translateY(0) rotate3d(1, 0, 0, 0deg);
-		}
-		to {
-			opacity: 0;
-			transform: translateY(1rem) rotate3d(1, 0, 0, 70deg);
-		}
+		gap: 0.6rem;
+		min-height: 3.25rem;
+		padding: 0.6rem 1.25rem;
+		padding-top: max(0.6rem, env(safe-area-inset-top));
+		background: var(--tile-bg);
+		font-size: 1.05rem;
+		font-weight: 600;
 	}
 `;
+
+export function showCopiedToast() {
+	document.body.appendChild(<CopiedToast />);
+}

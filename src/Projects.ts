@@ -328,7 +328,7 @@ export const projects = [
 		],
 		true,
 		true,
-		3
+		4
 	),
 	new ProjectCardDetails(
 		"mandelapro.jpg",
@@ -350,7 +350,7 @@ export const projects = [
 		[],
 		true,
 		true,
-		4
+		3
 	),
 	new ProjectCardDetails(
 		"dssos.jpg",

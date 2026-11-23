@@ -1,11 +1,16 @@
-import { FC, css } from "dreamland/core";
+import { Button, Page, PageHeader } from "../metro-dreamland";
+import { FC } from "dreamland/core";
 import SiteNav from "../components/SiteNav";
+import Footer from "../components/Footer";
 import type { ProjectCardDetails } from "../Projects";
 import { getWebpPath } from "../lib/images";
 
+// One project: its name as the page title, what it is, where to find it,
+// and a picture. Styles: "Projects" in src/style.css.
 function ProjectView(this: FC<{ project: ProjectCardDetails }>) {
-	const thumbnail = this.project.getThumbnailPath();
-	const image = this.project.getImagePath();
+	const project = this.project;
+	const thumbnail = project.getThumbnailPath();
+	const image = project.getImagePath();
 	const srcset = thumbnail
 		? `${thumbnail} 1x${image && image !== thumbnail ? `, ${image} 2x` : ""}`
 		: undefined;
@@ -18,38 +23,51 @@ function ProjectView(this: FC<{ project: ProjectCardDetails }>) {
 				webpImage && webpImage !== webpThumbnail ? `, ${webpImage} 2x` : ""
 			}`
 		: undefined;
+	const years =
+		typeof project.endYear === "number"
+			? project.endYear === project.startYear
+				? `${project.startYear}`
+				: `${project.startYear} — ${project.endYear}`
+			: `${project.startYear} — present`;
 
 	return (
-		<main>
-			<title>{this.project.title} – bomberfish.ca</title>
+		<Page kind="page">
+			<title>{project.title} – bomberfish.ca</title>
 			<div class="layout-container">
-				<SiteNav active="projects" />
-				<div class="main-content">
-					<div>
-						<div class="page-header">
-							<h1>{this.project.title}</h1>
-							<p>{this.project.largeDesc}</p>
-						</div>
-						<section id="details">
-							<ul class="compact">
-								{this.project.links?.map((link) => (
-									<li>
-										<a
-											class="project-link background-container"
-											href={link.url}
-											target="_blank"
-											referrer-policy="unsafe-url"
-										>
-											<span class="material-symbols">{link.icon}</span>
-											{link.name}
-										</a>
-									</li>
-								))}
-							</ul>
-						</section>
-						<section id="image" class="rain-surface">
-							<a href={image}>
-								<picture>
+				<SiteNav active="projects" inside />
+				<div class="main-content project-view">
+					<PageHeader data-m-feather>
+						{/* (the title and the picture are the tile's, kept through
+						    the change: data-m-keep, continuum) */}
+						<h1
+							class="post-title"
+							data-m-keep={`project-title:${project.lastPathComponent}`}
+						>
+							{project.title}
+						</h1>
+						<p class="project-meta">
+							{years}
+							{project.featured ? <span> · featured</span> : false}
+						</p>
+						<p class="project-desc">{project.largeDesc}</p>
+					</PageHeader>
+					<section id="details" data-m-feather>
+						{project.links?.map((link) => (
+							<Button
+								href={link.url}
+								class="project-link"
+								target="_blank"
+								referrer-policy="unsafe-url"
+							>
+								<span class="material-symbols">{link.icon}</span>
+								{link.name}
+							</Button>
+						))}
+					</section>
+					{thumbnail ? (
+						<section id="image" class="rain-surface" data-m-feather>
+							<a href={image} data-m-tilt>
+								<picture data-m-keep={`project:${project.lastPathComponent}`}>
 									{webpSrcset ? (
 										<source type="image/webp" srcset={webpSrcset} />
 									) : (
@@ -57,97 +75,21 @@ function ProjectView(this: FC<{ project: ProjectCardDetails }>) {
 									)}
 									<img
 										title="Click to open full-size"
-										alt={this.project.title}
+										alt={project.title}
 										src={thumbnail}
 										srcset={srcset}
 									/>
 								</picture>
 							</a>
 						</section>
-					</div>
+					) : (
+						false
+					)}
 				</div>
+				<Footer />
 			</div>
-		</main>
+		</Page>
 	);
 }
-
-ProjectView.style = css`
-	.main-content {
-		display: flex;
-		align-content: center;
-		align-items: center;
-		justify-content: center;
-	}
-
-	#details {
-		margin-bottom: 1rem;
-	}
-
-	#image a {
-		width: 100%;
-		display: flex;
-		align-content: center;
-		align-items: center;
-	}
-
-	#image {
-		display: flex;
-		align-content: center;
-		align-items: center;
-		justify-content: center;
-		margin: 0;
-		padding: 0;
-		position: relative;
-		overflow: visible;
-		width: 100%;
-		transform: scale(1.001);
-	}
-
-	#image > a > picture,
-	#image > a img {
-		width: 100%;
-		height: auto;
-	}
-
-	#details {
-		width: 100%;
-	}
-
-	#details ul {
-		gap: 0.5rem;
-		margin: 0;
-	}
-
-	#details li::after {
-		display: none;
-	}
-
-	#details .project-link {
-		display: inline-flex;
-		align-items: center;
-		padding: 0.4rem 0.7rem;
-		background: hsla(var(--crust-hsl), 0.65);
-		backdrop-filter: blur(6px);
-		text-decoration: none;
-		transition: background 0.15s ease;
-	}
-
-	#details .project-link:hover {
-		background: hsla(var(--crust-hsl), 0.85);
-	}
-
-	@media (pointer: coarse) {
-		#details .project-link {
-			min-height: 2.75rem;
-		}
-	}
-
-	.material-symbols {
-		vertical-align: middle;
-		padding-right: 0.3rem;
-		font-size: 1.2rem;
-		padding-bottom: 0.1rem;
-	}
-`;
 
 export default ProjectView;

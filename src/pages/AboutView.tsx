@@ -1,6 +1,50 @@
-import { FC, createState, css, Stateful } from "dreamland/core";
-import SiteNav from "../components/SiteNav";
+import { FC, createState, Stateful } from "dreamland/core";
+import SiteNav, { Pivot } from "../components/SiteNav";
 import Footer from "../components/Footer";
+import {
+	Button,
+	Page,
+	PageHeader,
+	Slider,
+	Tile,
+	TileLabel,
+	Tiles,
+	type Material,
+	material,
+	placeSlider,
+	setMaterial,
+} from "../metro-dreamland";
+
+// (this site's own first: it's what there is until flat is picked)
+const MATERIALS: Material[] = ["acrylic", "flat"];
+import ColorStrip, { paintStrip, placeStrip } from "../components/ColorStrip";
+import {
+	ACCENTS,
+	currentAccent,
+	CUSTOM_ACCENT,
+	CUSTOM_RANGE,
+	customAccent,
+	DEFAULT_ACCENT,
+	hexToHsl,
+	hslToHex,
+	hslVars,
+	setAccent,
+	setCustomAccent,
+	type Hsl,
+} from "../lib/accent";
+import {
+	FORCE_KINDS,
+	atMinutes,
+	minutesNow,
+	sunAltitude,
+	force,
+	forced,
+	reported,
+	scene,
+	type ForceKind,
+} from "../lib/weather/index";
+import { weatherGlyph } from "../components/WeatherGlyph";
+import { airTint } from "../lib/weather/sky";
 
 const archives = [
 	{
@@ -82,6 +126,7 @@ const archives = [
 	},
 ];
 
+// the surface and text colours, darkest to lightest
 const colors = [
 	"core",
 	"mantle",
@@ -98,176 +143,539 @@ const colors = [
 	"overlay1",
 	"overlay2",
 	"overlay3",
-	"supertext",
-	"text",
-	"text1",
-	"subtext0",
-	"subtext1",
-	"subtext2",
 	"subtext3",
-	"accent",
+	"subtext2",
+	"subtext1",
+	"subtext0",
+	"text1",
+	"text",
+	"supertext",
 ];
 
+// the ones light enough to need dark type on their swatch
 const brightColors = [
 	"supertext",
 	"text",
 	"text1",
 	"subtext0",
 	"subtext1",
+	"subtext2",
 	"overlay3",
 	"overlay2",
+	"overlay1",
+	"overlay0",
 ];
 
-let aboutState: Stateful<{ customHue: string }> = createState({
-	customHue: "210",
-});
-
+// Styles: "About" in src/style.css.
 export function AboutView(this: FC) {
-	this.cx.init = () => {
-		if (import.meta.env.SSR) return;
+	// Which colour on the strip is the one chosen. Put there by hand, not
+	// bound to state: the strip someone lands on is the server's, hydrated,
+	// and an attribute on a hydrated node doesn't follow a pointer (so the
+	// mark stayed on the default whatever was picked, or remembered).
+	const strip = () =>
+		this.root?.querySelector<HTMLElement>(".accent-picker .m-colorstrip");
+	const mark = (name: string) => placeStrip(strip(), name);
 
-		aboutState.customHue =
-			getComputedStyle(document.documentElement).getPropertyValue(
-				"--main-hue"
-			) || "210";
-		use(aboutState.customHue).listen((newHue) => {
-			document.documentElement.style.setProperty("--main-hue", newHue);
-		});
+	// The custom colour: its place on the strip takes it on, and its sliders
+	// (shown while it's the accent in use) are put where it is, each bar
+	// showing the colours that moving along it would give.
+	const sliders = () =>
+		Array.from(
+			this.root?.querySelectorAll<HTMLInputElement>(
+				".accent-custom .m-slider input"
+			) ?? []
+		);
+	const showCustom = (hsl: Hsl, open: boolean) => {
+		const panel = this.root?.querySelector<HTMLElement>(".accent-custom");
+		const [hue, sat, light] = sliders();
+		if (!panel || !light) return;
+		panel.hidden = !open;
+		const [h, s, l] = hsl;
+		paintStrip(strip(), CUSTOM_ACCENT, `hsl(${hslVars(h, s, l).hsl})`);
+		[hue, sat, light].forEach((input, i) => placeSlider(input, hsl[i]));
+		const along = (stops: string[]) =>
+			`linear-gradient(to right, ${stops.join(", ")})`;
+		hue.style.setProperty(
+			"--track",
+			along(
+				[0, 60, 120, 180, 240, 300, 360].map((d) => `hsl(${d} ${s}% ${l}%)`)
+			)
+		);
+		sat.style.setProperty(
+			"--track",
+			along([`hsl(${h} 0% ${l}%)`, `hsl(${h} 100% ${l}%)`])
+		);
+		const [from, to] = [CUSTOM_RANGE.min[2], CUSTOM_RANGE.max[2]];
+		light.style.setProperty(
+			"--track",
+			along([from, (from + to) / 2, to].map((at) => `hsl(${h} ${s}% ${at}%)`))
+		);
 	};
+
+	// The browser's own colour picker is another way to the same three
+	// numbers: an <input type="color"> under a button that opens it. It's
+	// kept at the custom colour, so that's where its picker starts. (Not
+	// while the picker's the one doing the choosing, though: writing a
+	// rounded colour back to it mid-drag would move what's under the hand.)
+	const picker = () =>
+		this.root?.querySelector<HTMLInputElement>(".accent-pick input") ?? null;
+	const setPicker = (hsl: Hsl) => {
+		const input = picker();
+		if (input) input.value = hslToHex(...hsl);
+	};
+	const openPicker = () => {
+		const input = picker();
+		if (!input) return;
+		try {
+			input.showPicker();
+		} catch {
+			// no showPicker() here (Safari before 16), or it wouldn't
+			input.click();
+		}
+	};
+	// it gives any colour at all; the accent takes the nearest it allows
+	const picked = (settled: boolean) => {
+		const input = picker();
+		if (!input) return;
+		const hsl = setCustomAccent(hexToHsl(input.value));
+		mark(CUSTOM_ACCENT);
+		showCustom(hsl, true);
+		if (settled) setPicker(hsl);
+	};
+
+	// The material: two sample tiles, one of each, and the one in use is
+	// marked (by hand, like the rest here: they're the server's, hydrated).
+	const markMaterial = () => {
+		const now = material();
+		for (const sample of this.root?.querySelectorAll<HTMLElement>(
+			".material-sample"
+		) ?? []) {
+			const on = sample.dataset.name === now;
+			sample.setAttribute("aria-checked", on ? "true" : "false");
+			sample.tabIndex = on ? 0 : -1;
+		}
+	};
+	const chooseMaterial = (name: Material) => {
+		setMaterial(name);
+		markMaterial();
+	};
+
+	// The weather: the real thing, or one picked here, and likewise the
+	// time of day. Marked by hand like the rest.
+	// "3:40 pm", from minutes after midnight
+	const clockWords = (minutes: number) => {
+		const h = Math.floor(minutes / 60);
+		const m = `${minutes % 60}`.padStart(2, "0");
+		return `${h % 12 || 12}:${m} ${h < 12 ? "am" : "pm"}`;
+	};
+	let shown = false; // this page has been on screen
+	const markWeather = () => {
+		const now = forced();
+		// (left the page: stop listening. Not just "not on the page", though:
+		// a page is made before it's put there.)
+		if (this.root?.isConnected) shown = true;
+		else if (shown) {
+			window.removeEventListener("weatherchange", markWeather);
+			return;
+		}
+		for (const sample of this.root?.querySelectorAll<HTMLElement>(
+			".weather-sample"
+		) ?? []) {
+			const on = (sample.dataset.kind ?? "") === (now.kind ?? "");
+			sample.setAttribute("aria-checked", on ? "true" : "false");
+			sample.tabIndex = on ? 0 : -1;
+		}
+		// the time of day: the slider's at the time that's been picked, or
+		// follows the clock; the day it runs through is today's, in the
+		// colours the sky is at each hour of it
+		const slider = this.root?.querySelector<HTMLInputElement>(
+			'.time-pick input[type="range"]'
+		);
+		if (slider) {
+			const clock = minutesNow();
+			const at = now.time ?? clock;
+			placeSlider(slider, at);
+			const stops: string[] = [];
+			for (let m = 0; m <= 1440; m += 30)
+				stops.push(`${airTint(sunAltitude(atMinutes(m)))} ${((m / 1440) * 100).toFixed(2)}%`);
+			slider.style.setProperty("--track", `linear-gradient(to right, ${stops.join(", ")})`);
+			const pick = slider.closest<HTMLElement>(".time-pick")!;
+			pick.style.setProperty("--now", `${((clock / 1439) * 100).toFixed(2)}`);
+			pick.classList.toggle("is-live", now.time == null);
+			const readout = pick.querySelector("output");
+			if (readout)
+				readout.textContent = now.time == null ? `now, ${clockWords(clock)}` : clockWords(at);
+			const reset = pick.querySelector<HTMLButtonElement>(".time-reset");
+			if (reset) reset.hidden = now.time == null;
+		}
+		const said = this.root?.querySelector<HTMLElement>(".weather-said");
+		if (!said) return;
+		const live = reported();
+		said.textContent = live
+			? `right now in waterloo: ${(live.condition ?? "who knows").toLowerCase()}` +
+				(live.temperature == null ? "" : `, ${Math.round(live.temperature)}°`) +
+				`. (${live.attribution})`
+			: "environment canada hasn't said what it's doing right now, so it's raining.";
+		// and the cloud that's up there (or would be), lowest first
+		const { low, mid, high } = scene().layers;
+		const clouds = [low, mid, high].filter((l) => l.cover > 0.05).map((l) => l.kind);
+		said.textContent += clouds.length
+			? ` the sky above: ${clouds.join(", ")}.`
+			: " the sky above: no cloud to speak of.";
+	};
+	const chooseWeather = (kind: ForceKind | null) => {
+		force(kind, forced().time);
+		markWeather();
+	};
+	// Sliding near enough to the time it is lets go of the slider: it's
+	// "now" again, and follows the clock. (The button beside it does the
+	// same from anywhere.)
+	const chooseTime = (time: number | null) => {
+		cancelAnimationFrame(returning);
+		this.root?.querySelector(".time-pick")?.classList.remove("is-returning");
+		const live = time == null || Math.abs(time - minutesNow()) <= 7;
+		force(forced().kind, live ? null : time);
+		markWeather();
+	};
+
+	// Back to now, from the button: the slider runs back along the day to
+	// the time it is, and the sky runs back through that much of the day
+	// with it, quickly at first and settling as it gets there.
+	let returning = 0;
+	const backToNow = () => {
+		const from = forced().time;
+		if (from == null) return;
+		cancelAnimationFrame(returning);
+		if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+			chooseTime(null);
+			return;
+		}
+		const to = minutesNow();
+		const began = performance.now();
+		const takes = 380 + Math.min(520, Math.abs(to - from) * 0.9);
+		const step = (at: number) => {
+			const t = Math.min(1, (at - began) / takes);
+			if (t >= 1 || !this.root?.isConnected) {
+				chooseTime(null);
+				return;
+			}
+			// (ease out, as everything Metro does that's coming to rest)
+			const eased = 1 - (1 - t) ** 4;
+			force(forced().kind, Math.round(from + (to - from) * eased));
+			markWeather();
+			// (the button's on its way out, not there to be pressed again)
+			this.root?.querySelector(".time-pick")?.classList.add("is-returning");
+			returning = requestAnimationFrame(step);
+		};
+		returning = requestAnimationFrame(step);
+	};
+
+	this.cx.mount = () => {
+		if (import.meta.env.SSR) return;
+		markWeather();
+		window.addEventListener("weatherchange", markWeather);
+		const name = currentAccent();
+		const custom = customAccent();
+		mark(name);
+		showCustom(custom, name === CUSTOM_ACCENT);
+		setPicker(custom);
+		markMaterial();
+	};
+
+	const pick = (name: string) => {
+		setAccent(name);
+		mark(name);
+		const custom = customAccent();
+		showCustom(custom, name === CUSTOM_ACCENT);
+		setPicker(custom);
+	};
+
+	// a slider moved: the three of them are the colour
+	const slide = () => {
+		const hsl = sliders().map((input) => +input.value) as Hsl;
+		setCustomAccent(hsl);
+		mark(CUSTOM_ACCENT);
+		showCustom(hsl, true);
+		setPicker(hsl);
+	};
+
+	// (what the server renders the sliders at: they're hidden until mount()
+	// has put them where they belong)
+	const start = customAccent();
+
 	return (
-		<main>
+		<Page kind="pivot">
 			<title>about – bomberfish.ca</title>
 			<div class="layout-container">
-				<SiteNav />
-				<div class="main-content">
-					<h1>about this website</h1>
-					<p>
-						i built this website using{" "}
-						<a
-							href="https://dreamland.js.org"
-							target="_blank"
-							referrer-policy="unsafe-url"
-						>
-							dreamland.js
-						</a>
-						, a small and utilitarian web framework with full reactivity.
-					</p>
-					<p>
-						it's open-source under the MIT license, and you can view the source
-						code{" "}
-						<a
-							href="https://github.com/bomberfish/bomberfish.ca"
-							target="_blank"
-							referrer-policy="unsafe-url"
-						>
-							here
-						</a>
-						.
-					</p>
-					<p>
-						for the main and monospace fonts, i'm using a custom variant of
-						Linux Libertine I call Stalwart (named as such because the mono
-						variant matches the metrics of Sun's Gallant VGA font). the display
-						font is apple's private Garamond variant, ADT Garamond.
-					</p>
-					<h2>archive of previous versions</h2>
-					<p>
-						versioning started with v6.0.0. previous versioning applied
-						retroactively.
-					</p>
-					<ul class="compact">
-						{archives.map((archive) => {
-							if (!archive.date) {
-								return <li>{archive.version} (no archived version exists)</li>;
-							} else if (archive.date?.endsWith("id_")) {
-								return (
-									<li>
-										<a
-											href={`https://web.archive.org/web/${archive.date}/https://bomberfish.ca/`}
+				<SiteNav active="about" />
+				<div class="main-content about-page">
+					<PageHeader>
+						<Pivot active="about" />
+						<p data-m-content data-m-feather>
+							this website, what it's made of, and what it used to be.
+						</p>
+					</PageHeader>
+					<div data-m-content>
+						<section class="about-prose" data-m-feather>
+							<p>
+								i built this website using{" "}
+								<a
+									href="https://dreamland.js.org"
+									target="_blank"
+									referrer-policy="unsafe-url"
+								>
+									dreamland.js
+								</a>
+								, a small and utilitarian web framework with full reactivity.
+							</p>
+							<p>
+								it's open-source under the MIT license, and you can view the
+								source code{" "}
+								<a
+									href="https://github.com/bomberfish/bomberfish.ca"
+									target="_blank"
+									referrer-policy="unsafe-url"
+								>
+									here
+								</a>
+								.
+							</p>
+							<p>
+								this version is done up in metro, the design language of windows
+								phone and windows 8: the type is segoe ui variable, and
+								everything that moves (tiles flipping, pages turning) is a
+								recreation of how those moved. the monospace is cascadia code.
+							</p>
+						</section>
+
+						<section data-m-feather>
+							<h2>accent colour</h2>
+							<p>
+								pick one and the whole site takes it, or make your own with the
+								last. it's remembered on this device.
+							</p>
+							<div class="accent-picker">
+								<ColorStrip
+									label="accent colour"
+									colors={[
+										...ACCENTS.map((accent) => ({
+											name: accent.name,
+											color: accent.hex,
+										})),
+										// (the last is your own: until there is one, the
+										// colour in use, which mount() paints it)
+										{
+											name: CUSTOM_ACCENT,
+											color: "var(--accent)",
+											icon: "Edit",
+										},
+									]}
+									selected={DEFAULT_ACCENT}
+									onpick={pick}
+								/>
+							</div>
+							<div class="accent-custom" hidden>
+								{(
+									[
+										["h", "hue", "°"],
+										["s", "saturation", "%"],
+										["l", "lightness", "%"],
+									] as const
+								).map(([name, label, unit], i) => (
+									<Slider
+										name={name}
+										label={label}
+										unit={unit}
+										min={CUSTOM_RANGE.min[i]}
+										max={CUSTOM_RANGE.max[i]}
+										value={start[i]}
+										oninput={slide}
+									/>
+								))}
+								<div class="accent-pick">
+									<Button on:click={openPicker}>
+										<span class="material-symbols" aria-hidden="true">
+											Eyedropper
+										</span>
+										colour picker
+									</Button>
+									<input
+										type="color"
+										value={hslToHex(...start)}
+										tabindex="-1"
+										aria-hidden="true"
+										on:input={() => picked(false)}
+										on:change={() => picked(true)}
+									/>
+								</div>
+							</div>
+						</section>
+
+						<section data-m-feather>
+							<h2>material</h2>
+							<p>
+								tiles here are windows 10's acrylic: frosted glass with the page
+								showing through, and a rim that lights up under the pointer. or
+								they can be flat, the way the phone and windows 8 had them: a
+								rectangle of colour and nothing else. remembered on this device
+								too.
+							</p>
+							<div
+								class="material-pick"
+								role="radiogroup"
+								aria-label="material"
+							>
+								{MATERIALS.map((name) => (
+									<span data-m-material={name}>
+										<Tile
+											as="button"
+											type="button"
+											role="radio"
+											aria-checked="false"
+											color="accent"
+											class="material-sample"
+											feather={false}
+											data-name={name}
+											on:click={() => chooseMaterial(name)}
 										>
-											{archive.version}
-										</a>{" "}
-										(broken archive)
-									</li>
-								);
-							} else {
-								return (
-									<li>
-										<a
+											<TileLabel>{name}</TileLabel>
+											<span class="material-check" aria-hidden="true" />
+										</Tile>
+									</span>
+								))}
+							</div>
+						</section>
+
+						<section data-m-feather>
+							<h2>weather</h2>
+							<p>
+								what's behind the page is the weather in waterloo, as environment
+								canada reports it: the rain, snow or ice coming down, the wind
+								it's slanted by, the cloud, the fog, and the sun and moon where
+								they really are. or pick some. remembered on this device too.
+							</p>
+							<p class="weather-said" />
+							<div class="weather-pick" role="radiogroup" aria-label="weather">
+								{([null, ...FORCE_KINDS] as (ForceKind | null)[]).map((kind) => (
+									<Tile
+										as="button"
+										type="button"
+										role="radio"
+										aria-checked="false"
+										color="accent"
+										class="material-sample weather-sample"
+										feather={false}
+										data-kind={kind ?? ""}
+										on:click={() => chooseWeather(kind)}
+									>
+										{weatherGlyph(kind ?? "live")}
+										<TileLabel>{kind ?? "live"}</TileLabel>
+										<span class="material-check" aria-hidden="true" />
+									</Tile>
+								))}
+							</div>
+							<div class="time-pick is-live">
+								<Slider
+									name="time"
+									label="time of day"
+									min={0}
+									max={1439}
+									value={720}
+									oninput={chooseTime}
+								/>
+								<span class="time-now" aria-hidden="true">
+									now
+								</span>
+								<Button class="time-reset" hidden on:click={backToNow}>
+									<span class="material-symbols" aria-hidden="true">
+										refresh
+									</span>
+									back to now
+								</Button>
+							</div>
+						</section>
+
+						<section data-m-feather>
+							<h2>archive of previous versions</h2>
+							<p>
+								versioning started with v6.0.0. previous versioning applied
+								retroactively.
+							</p>
+							<Tiles class="archive-tiles">
+								{archives.map((archive) => {
+									const broken = archive.date.endsWith("id_");
+									return (
+										<Tile
 											href={`https://web.archive.org/web/${archive.date}/${archive.origin || "https://bomberfish.ca/"}`}
+											color={broken ? "chrome" : "accent"}
+											class="archive-tile"
+											w={1}
+											h={1}
+											feather={false}
 										>
-											{archive.version}
-										</a>
-									</li>
-								);
-							}
-						})}
-					</ul>
-					<input
-						type="range"
-						min="0"
-						max="360"
-						value={use(aboutState.customHue)}
-					/>
-					<div class="swatches">
-						{colors.map((color) => (
-							<ColorSwatch color={color} />
-						))}
+											<span class="archive-version">{archive.version}</span>
+											<TileLabel>
+												{broken ? "(broken archive)" : archive.date.slice(0, 4)}
+											</TileLabel>
+										</Tile>
+									);
+								})}
+							</Tiles>
+						</section>
+
+						<section data-m-feather>
+							<h2>palette</h2>
+							<p>the neutrals everything else is drawn in, darkest first.</p>
+							<div class="swatches">
+								<ColorSwatch color="accent" />
+								{colors.map((color) => (
+									<ColorSwatch color={color} />
+								))}
+							</div>
+						</section>
 					</div>
 				</div>
-				<Footer />
+				<div data-m-content>
+					<Footer />
+				</div>
 			</div>
-		</main>
+		</Page>
 	);
 }
 
-AboutView.style = css`
-	.swatches {
-		display: flex;
-		flex-wrap: wrap;
-		gap: 0.5rem;
-		margin-top: 1rem;
-	}
-`;
-
 function ColorSwatch(this: FC<{ color: string }>) {
-	let state: Stateful<{ value: string }> = createState({
+	const state: Stateful<{ value: string }> = createState({
 		value: "",
 	});
 
-	this.cx.mount = () => {
-		use(aboutState.customHue).listen(() => {
-			updateValue();
-		});
-
-		window
-			.matchMedia("(prefers-color-scheme: dark)")
-			.addEventListener("change", () => {
-				updateValue();
-			});
-	};
-
 	const updateValue = () => {
 		if (import.meta.env.SSR) return;
-		const computedStyle = getComputedStyle(document.documentElement);
-		let val = computedStyle.getPropertyValue(`--${this.color}`).trim();
-		let hsl = val
-			.replaceAll(", ", ",")
-			.match(/hsl\(([^,]+),([^,]+)%,([^)]+)%\)/);
-		if (hsl) {
-			let [, hue, sat, lum] = hsl;
-			if (hue.includes("calc")) {
-				hue = (0, eval)(hue.replace("calc", ""));
-			}
-			val = `hsl(${hue},${sat}%,${lum}%)`;
-		}
-		state.value = val;
+		// the swatch's own background, as the browser resolved it
+		const preview = this.root?.querySelector<HTMLElement>(".preview");
+		if (!preview) return;
+		const rgb = getComputedStyle(preview).backgroundColor.match(/[\d.]+/g);
+		if (!rgb || rgb.length < 3) return;
+		state.value =
+			"#" +
+			rgb
+				.slice(0, 3)
+				.map((c) => Math.round(Number(c)).toString(16).padStart(2, "0"))
+				.join("");
 	};
+
+	this.cx.mount = () => {
+		if (import.meta.env.SSR) return;
+		updateValue();
+		window.addEventListener("accentchange", updateValue);
+		return () => window.removeEventListener("accentchange", updateValue);
+	};
+
+	const light =
+		this.color === "accent" ? false : brightColors.includes(this.color);
 
 	return (
 		<div
-			class="swatch"
-			style={`color: ${brightColors.includes(this.color) ? "var(--mantle)" : "var(--text)"};`}
+			class={`swatch${light ? " light" : ""}${this.color === "accent" ? " is-accent" : ""}`}
 		>
 			<div
 				class="preview"
@@ -278,35 +686,3 @@ function ColorSwatch(this: FC<{ color: string }>) {
 		</div>
 	);
 }
-
-ColorSwatch.style = css`
-	:scope {
-		display: inline-flex;
-		flex-direction: column;
-		align-items: flex-end;
-		justify-content: flex-end;
-		width: 9rem;
-		height: 9rem;
-		position: relative;
-		padding: 0.5rem;
-		box-sizing: border-box;
-	}
-
-	.preview {
-		position: absolute;
-		inset: 0;
-		z-index: -1;
-	}
-
-	.label,
-	.value {
-		font-family: var(--font-mono);
-		text-align: right;
-		line-height: 1.2;
-		font-size: 0.75rem;
-	}
-
-	.label {
-		font-weight: bold;
-	}
-`;

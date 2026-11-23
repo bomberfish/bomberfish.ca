@@ -9,43 +9,69 @@
 }
 
 @font-face {
-	font-family: "Geist";
-	font-weight: 100 900;
+	font-family: "Cascadia Code";
 	font-style: normal;
+	font-weight: 200 700;
 	font-display: swap;
 	src:
-		local("☺"),
-		url("/fonts/sans/Geist.woff2") format("woff2");
+		url("/fonts/mono/CascadiaCode-core.woff2") format("woff2-variations"),
+		url("/fonts/mono/CascadiaCode-core.woff2") format("woff2");
+	unicode-range:
+		U+0020-007E, U+00A0-017F, U+2008-2044, U+20A0-20BF, U+2105-212E,
+		U+2190-2195, U+21A8-21B2, U+21E1-21E3, U+2202-2236, U+2248, U+2260-2265,
+		U+2302-2321, U+23AF, U+23CE, U+2500-25FF, U+FFFD;
 }
 
 @font-face {
-	font-family: "Geist";
-	font-weight: 100 900;
-	font-style: italic;
-	font-display: swap;
-	src:
-		local("☺"),
-		url("/fonts/sans/Geist-Italic.woff2") format("woff2");
-}
-
-@font-face {
-	font-family: "Stalwart";
+	font-family: "Cascadia Code";
 	font-style: normal;
-	font-weight: 400 700;
+	font-weight: 200 700;
 	font-display: swap;
 	src:
-		local("☺"),
-		url("/fonts/mono/Stalwart[wght].woff2") format("woff2");
+		url("/fonts/mono/CascadiaCode.woff2") format("woff2-variations"),
+		url("/fonts/mono/CascadiaCode.woff2") format("woff2");
+	unicode-range:
+		U+0186-01B7, U+01CD-01FF, U+0218-021F, U+0232-0272, U+0283-02DD,
+		U+0300-0342, U+0374-03D7, U+0400-045F, U+0490-04EF, U+05B7-06FF,
+		U+0750-077F, U+08A0-08BD, U+0E3F, U+1D00, U+1DBB-1DBF, U+1E24-1E6E,
+		U+1E80-1E85, U+1E9E-1EF9, U+2070-2089, U+215B-215E, U+2400-2429, U+2619,
+		U+263A-2642, U+2660-266B, U+2713, U+2767-2771, U+2800-28FF, U+2A2F,
+		U+2B12-2B2F, U+2BC5-2BCB, U+2C62-2C6D, U+FB01-FB02, U+FB2A-FB4B,
+		U+FBBC-FBC0, U+FC5B-FC5D, U+FC90, U+FCD9, U+FD3C-FD3F, U+FDF2,
+		U+1CC21-1CC2F, U+1CD00-1CDE5, U+1CE1A-1CEAF, U+1FB00-1FB9B, U+1FBCE-1FBCF,
+		U+1FBE4-1FBF9;
 }
 
 @font-face {
-	font-family: "Stalwart";
+	font-family: "Cascadia Code";
 	font-style: italic;
-	font-weight: 400 700;
+	font-weight: 200 700;
 	font-display: swap;
 	src:
-		local("☺"),
-		url("/fonts/mono/Stalwart-Italic[wght].woff2") format("woff2");
+		url("/fonts/mono/CascadiaCode-Italic-core.woff2") format("woff2-variations"),
+		url("/fonts/mono/CascadiaCode-Italic-core.woff2") format("woff2");
+	unicode-range:
+		U+0020-007E, U+00A0-017F, U+2008-2044, U+20A0-20BF, U+2105-212E,
+		U+2190-2195, U+21A8-21B2, U+21E1-21E3, U+2202-2236, U+2248, U+2260-2265,
+		U+2302-2321, U+23AF, U+23CE, U+2500-25FF, U+FFFD;
+}
+
+@font-face {
+	font-family: "Cascadia Code";
+	font-style: italic;
+	font-weight: 200 700;
+	font-display: swap;
+	src:
+		url("/fonts/mono/CascadiaCode-Italic.woff2") format("woff2-variations"),
+		url("/fonts/mono/CascadiaCode-Italic.woff2") format("woff2");
+	unicode-range:
+		U+0186-01B7, U+01CD-01FF, U+0218-021F, U+0232-0272, U+0283-02DD,
+		U+0300-0342, U+0374-03D7, U+0400-045F, U+0490-04EF, U+0E3F, U+1D00,
+		U+1DBB-1DBF, U+1E24-1E6E, U+1E80-1E85, U+1E9E-1EF9, U+2070-2089,
+		U+215B-215E, U+2400-2429, U+2619, U+263A-2642, U+2660-266B, U+2713,
+		U+2767-2771, U+2800-28FF, U+2A2F, U+2B12-2B2F, U+2BC5-2BCB, U+2C62-2C6D,
+		U+FB01-FB02, U+1CC21-1CC2F, U+1CD00-1CDE5, U+1CE1A-1CEAF, U+1FB00-1FB9B,
+		U+1FBCE-1FBCF, U+1FBE4-1FBF9;
 }
 
 @font-face {
@@ -66,31 +92,55 @@
 }
 
 @font-face {
-	font-family: "NotoEmoji";
+	font-family: "SegoeEmoji";
 	font-display: swap;
-	src:
-		local("☺"),
-		url("/fonts/emoji/NotoColorEmoji.woff2") format("woff2"),
-		url("/fonts/emoji/NotoColorEmoji.woff") format("woff");
+	src: url("/fonts/emoji/SegoeUIEmoji.woff2") format("woff2");
 }
 
-/* Material Symbols Outlined, static instance: wght 300, GRAD -25, FILL 0
-   (instanced from Google's variable build with fontTools) */
+/* Icons: "Metro Symbols", a font built for the site by
+   scripts/icon-font/build.py (which says more). Icons are still written the
+   Material Symbols way (the icon's name as text in a .material-symbols
+   element, turned into the icon by a ligature), but the names draw Windows'
+   own glyphs: Segoe UI Symbol's (the Windows 8.1 version: the app bar
+   icons) wherever it has one, Segoe MDL2 Assets' where it doesn't, and for
+   any name neither covers, Material Symbols Sharp, filled and heavy so it
+   passes for the same set.
+
+   All of both Segoe sets is in the first file, whether the site uses it yet
+   or not. Besides Material's names, an icon can be asked for by Microsoft's
+   own name for it (GlobalNavigationButton, or global_navigation_button) or
+   by its codepoint in the Segoe fonts (&#xE700;).
+
+   The second file is Segoe UI Symbol's arrows, dingbats and emoji, for
+   writing an icon as the character itself (🎧). Its unicode-range keeps it
+   from being downloaded unless a page does that. */
 @font-face {
-	font-family: "Material Symbols Outlined";
+	font-family: "Metro Symbols";
 	font-style: normal;
-	font-weight: 300;
+	font-weight: 100 700;
 	font-display: block;
-	src: url("/fonts/icons/MaterialSymbolsOutlined-300-GRADm25.woff2")
-		format("woff2");
+	src: url("/fonts/icons/MetroSymbols.woff2") format("woff2");
+	unicode-range: U+0020-007E, U+E000-F8FF;
+}
+
+@font-face {
+	font-family: "Metro Symbols";
+	font-style: normal;
+	font-weight: 100 700;
+	font-display: block;
+	src: url("/fonts/icons/MetroSymbols-Pictographs.woff2") format("woff2");
+	unicode-range:
+		U+2190-21FF, U+2300-23FF, U+25A0-25FF, U+2600-27BF, U+2900-297F,
+		U+2B00-2BFF, U+1F300-1F5FF, U+1F600-1F64F, U+1F680-1F6FF;
 }
 
 .material-symbols,
 .material-symbols-sharp,
 .material-symbols-outlined,
 .material-symbols-rounded {
-	font-family: "Material Symbols Outlined";
-	font-weight: 300;
+	font-family: "Metro Symbols";
+	/* (the one weight the file has; declared wide so nothing synthesises bold) */
+	font-weight: 400;
 	font-style: normal;
 	line-height: 1;
 	font-display: block;
@@ -106,7 +156,7 @@
 
 :root {
 	--font-emoji:
-		"NotoEmoji", "Noto Color Emoji", "Segoe UI Emoji", "Apple Color Emoji",
+		"SegoeEmoji", "Segoe UI Emoji", "Noto Color Emoji", "Apple Color Emoji",
 		"Segoe UI Symbol", "Android Emoji Sans", "EmojiOne Color",
 		"Twitter Color Emoji", "JoyPixels", "OpenMoji Color", "Twemoji Mozilla",
 		"Mozilla Noto Color Emoji";
@@ -116,8 +166,60 @@
 		"Nimbus Roman No9 L", "Nimbus Roman", "Liberation Serif", serif,
 		var(--font-emoji);
 	--font-mono:
-		"Stalwart", "Libertinus Mono", "Linux Libertine Mono", ui-monospace,
-		"SF Mono", Menlo, "Liberation Mono", monospace, var(--font-emoji);
+		"Cascadia Code", "Cascadia Mono", ui-monospace, "SF Mono", Menlo, Consolas,
+		"Liberation Mono", monospace, var(--font-emoji);
 	--font-body: var(--font-serif);
 	--font-display: "ADT Garamond", var(--font-serif), serif, var(--font-emoji);
+}
+
+/* ==========================================================================
+   Metro type: Segoe UI Variable
+   ==========================================================================
+
+   The variable font (wght 300-700, opsz 5-36), self-hosted. Two files: a
+   core that every page needs (Basic Latin to Latin Extended-A, punctuation,
+   arrows, maths, the box and dingbat symbols; 214kB), and the whole font
+   (827kB) for the other scripts it has: Latin Extended-B, IPA, Greek,
+   Cyrillic and so on. unicode-range keeps that one off the wire unless
+   something on the page (a post in one of the live tiles, usually) is
+   written in those, and is limited to what the font really covers: a
+   range it only claimed would be downloaded for nothing whenever, say, a
+   Thai letter turned up in a display name. Both cut from SegoeUI-VF.ttf
+   v2.02; the core with pyftsubset, hinting and layout features kept. */
+
+@font-face {
+	font-family: "Segoe UI Variable";
+	font-weight: 300 700;
+	font-style: normal;
+	font-display: swap;
+	src:
+		url("/fonts/sans/SegoeUI-VF-core.woff2") format("woff2-variations"),
+		url("/fonts/sans/SegoeUI-VF-core.woff2") format("woff2");
+	unicode-range:
+		U+0000-017F, U+2000-206F, U+2070-209F, U+20A0-20BF, U+20E3-20F0,
+		U+2100-214F, U+2150-215F, U+2190-21FF, U+2200-22FF, U+2302-2321,
+		U+24FF-25FF, U+263A-266F, U+2776-277F, U+FB00-FB06;
+}
+
+@font-face {
+	font-family: "Segoe UI Variable";
+	font-weight: 300 700;
+	font-style: normal;
+	font-display: swap;
+	src:
+		url("/fonts/sans/SegoeUI-VF.woff2") format("woff2-variations"),
+		url("/fonts/sans/SegoeUI-VF.woff2") format("woff2");
+	unicode-range:
+		U+0180-0525, U+05BC-05EA, U+1D00-1DCA, U+1DFE-1FFE, U+2C60-2C7F,
+		U+A678-A67A, U+A722-A7FF, U+AB30-AB64;
+}
+
+:root {
+	/* one family for text and display: the opsz axis follows the font size
+	   by itself (font-optical-sizing: auto), so big type gets the Display
+	   cut and small type the Text/Small ones. Segoe UI (Windows' static
+	   one) and the system sans are only there for while it loads. */
+	--font-metro:
+		"Segoe UI Variable", "Segoe UI", system-ui, -apple-system, "Helvetica Neue",
+		Arial, sans-serif, var(--font-emoji);
 }

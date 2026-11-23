@@ -96,6 +96,38 @@ declare global {
 	}
 }
 
+// The cat is off until it's asked for (the cat at the end of the footer
+// asks), and stays asked for from one visit to the next.
+const KEY = "oneko";
+let wanted: boolean | undefined;
+let control:
+	| ((on: boolean, at?: { x: number; y: number }) => boolean)
+	| undefined;
+
+/** Whether the cat's been asked for. */
+export function onekoOn(): boolean {
+	if (wanted != null) return wanted;
+	try {
+		return localStorage.getItem(KEY) === "1";
+	} catch {
+		return false;
+	}
+}
+
+/** Turns the cat on or off (starting it at a place on the page, if one's
+    given), and says whether it's on afterwards. */
+export function toggleOneko(at?: { x: number; y: number }): boolean {
+	const on = !onekoOn();
+	wanted = on;
+	try {
+		if (on) localStorage.setItem(KEY, "1");
+		else localStorage.removeItem(KEY);
+	} catch {
+		// (no storage: it's on for this page only)
+	}
+	return control ? control(on, at) : on;
+}
+
 export function Oneko(this: FC<{}, OnekoState>) {
 	this.posX = 0;
 	this.posY = 0;
@@ -114,7 +146,7 @@ export function Oneko(this: FC<{}, OnekoState>) {
 	this.spriteName = "idle";
 	this.spriteFrame = 0;
 	this.opacity = 0;
-	this.enabled = true;
+	this.enabled = false;
 
 	const convertRemToPixels = (rem: number) =>
 		rem * parseFloat(getComputedStyle(document.documentElement).fontSize);
@@ -215,8 +247,31 @@ export function Oneko(this: FC<{}, OnekoState>) {
 		return direction as DirectionName;
 	};
 
+	// Lightning (src/lib/weather/lightning.ts says when: a "lightning" event on the
+	// window, as the bolt lands) startles it the way the pointer moving off
+	// does: if it's sitting about (idling, washing, asleep) it stops and
+	// looks up for a few frames. Not if it's on the run after the pointer:
+	// it has other things on its mind.
+	let startled = 0;
+	const handleLightning = () => {
+		const distance = Math.hypot(
+			this.posX - this.mouseX,
+			this.posY - this.mouseY
+		);
+		// (the same test frame() has for "it's where it's going")
+		if (distance < this.nekoSpeed || distance < 48) startled = 7;
+	};
+
 	const frame = () => {
 		this.frameCount += 1;
+
+		if (startled > 0) {
+			startled -= 1;
+			resetIdleAnimation();
+			this.idleTime = 0;
+			setSprite("alert", 0);
+			return;
+		}
 
 		const diffX = this.posX - this.mouseX;
 		const diffY = this.posY - this.mouseY;
@@ -319,6 +374,7 @@ export function Oneko(this: FC<{}, OnekoState>) {
 		}
 
 		document.removeEventListener("mousemove", handleMouseMove);
+		window.removeEventListener("lightning", handleLightning);
 		if (
 			this.reduceMotionQuery &&
 			(this.reduceMotionQuery as any).removeEventListener
@@ -383,13 +439,14 @@ export function Oneko(this: FC<{}, OnekoState>) {
 		}
 	};
 
-	this.cx.mount = () => {
-		if (typeof window === "undefined") {
-			return;
-		}
-
-		const startX = convertRemToPixels(3.5) + convertRemToPixels(2);
-		const startY = convertRemToPixels(3.5) + 32;
+	const start = (at?: { x: number; y: number }) => {
+		// (a place on the page, made one within body as the pointer's is below)
+		const bodyLeft =
+			document.body.getBoundingClientRect().left + window.scrollX;
+		const startX = at
+			? at.x - bodyLeft
+			: convertRemToPixels(3.5) + convertRemToPixels(2);
+		const startY = at ? at.y : convertRemToPixels(3.5) + 32;
 
 		this.posX = startX;
 		this.posY = startY;
@@ -443,6 +500,7 @@ export function Oneko(this: FC<{}, OnekoState>) {
 		});
 
 		document.addEventListener("mousemove", handleMouseMove, { passive: true });
+		window.addEventListener("lightning", handleLightning);
 		if (
 			this.reduceMotionQuery &&
 			(this.reduceMotionQuery as any).addEventListener
@@ -467,6 +525,23 @@ export function Oneko(this: FC<{}, OnekoState>) {
 				updateStyle();
 			}
 		});
+	};
+
+	this.cx.mount = () => {
+		if (typeof window === "undefined") {
+			return;
+		}
+		control = (on, at) => {
+			if (on) {
+				start(at);
+			} else {
+				cleanup();
+				updateStyle();
+			}
+			return this.enabled;
+		};
+		if (onekoOn()) start();
+		else updateStyle();
 	};
 
 	return <div id="oneko" data-oneko aria-hidden="true" on:click={handleWake} />;

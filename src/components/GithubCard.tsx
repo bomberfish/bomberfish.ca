@@ -1,5 +1,6 @@
 import { FC, createState, css, Stateful } from "dreamland/core";
 import { getGithub, GithubResponse } from "../lib/siteapi";
+import { ProgressBar, ProgressRing, runProgressBar } from "../metro-dreamland";
 import { GitHubIcon } from "./SocialIcons";
 import { wsrvPicture } from "./WsrvPicture";
 
@@ -19,13 +20,32 @@ function GithubCard(this: FC) {
 
 	let cancelled = false;
 	let controller: AbortController | null = null;
+	// Pointers whose listeners have to last as long as the card does.
+	// Dreamland holds a listener weakly, by way of its pointer: one made in
+	// mount() on a page that was hydrated belongs to nothing, and unless
+	// something holds on to it, it's gone at the next garbage collection (a
+	// few seconds in), and the listener with it, without a word.
+	const held: unknown[] = [];
+
+	// Fetching, or done: the refresh button goes by state.refreshing, and
+	// so does the line of dots along the card's top edge, if there's
+	// something showing already (a first load has the ring) and the fetch
+	// goes on a while: runProgressBar. Told here and not by listening for
+	// the state to change: see `held`, above.
+	const fetching = (busy: boolean) => {
+		state.refreshing = busy;
+		runProgressBar(
+			this.root?.querySelector<HTMLElement>(".livecard-progress"),
+			busy && state.view.kind !== "loading"
+		);
+	};
 
 	const load = async (cacheBust = false) => {
 		if (import.meta.env.SSR) return;
 		controller?.abort();
 		const request = new AbortController();
 		controller = request;
-		state.refreshing = true;
+		fetching(true);
 		try {
 			const data = await getGithub(request.signal, cacheBust);
 			if (cancelled || controller !== request) return;
@@ -42,7 +62,7 @@ function GithubCard(this: FC) {
 		} finally {
 			if (!cancelled && controller === request) {
 				controller = null;
-				state.refreshing = false;
+				fetching(false);
 			}
 		}
 	};
@@ -93,7 +113,12 @@ function GithubCard(this: FC) {
 		// animations). 1s is long enough for the slowest animation (the
 		// 0.9s bleed) to finish before the gate disappears.
 		let firstTransitionDone = false;
-		use(state.view).listen((v) => {
+		// (its pointer goes in `held`: without that, a load slow enough to
+		// have a garbage collection in it would leave .is-initial on for
+		// good, and the content would come up afresh at every refresh)
+		const view = use(state.view);
+		held.push(view);
+		view.listen((v) => {
 			if (!firstTransitionDone && v.kind !== "loading") {
 				firstTransitionDone = true;
 				initialTimer = window.setTimeout(() => {
@@ -104,6 +129,7 @@ function GithubCard(this: FC) {
 
 		return () => {
 			cancelled = true;
+			held.length = 0;
 			controller?.abort();
 			clearInterval(id);
 			document.removeEventListener("visibilitychange", refreshWhenVisible);
@@ -114,7 +140,11 @@ function GithubCard(this: FC) {
 	const fallbackUrl = "https://github.com/bomberfish";
 
 	return (
-		<div class="livecard github-card background-container">
+		<div
+			class="livecard github-card tile on-color c-emerald"
+			data-m-tilt
+			data-m-feather
+		>
 			<p class="livecard-header">
 				<span class="livecard-icon">
 					<GitHubIcon />
@@ -140,11 +170,19 @@ function GithubCard(this: FC) {
 				>
 					<span class="material-symbols">open_in_new</span>
 				</a>
+				{/* (runs while the card's fetching: runProgressBar, in mount) */}
+				<span class="livecard-progress">
+					<ProgressBar label="refreshing" />
+				</span>
 			</p>
 
 			{use(state.view).map((v) => {
 				if (v.kind === "loading")
-					return <p class="livecard-status">loading…</p>;
+					return (
+						<p class="livecard-status">
+							<ProgressRing size="medium" />
+						</p>
+					);
 				if (v.kind === "error")
 					return <p class="livecard-status">couldn't load ({v.message})</p>;
 				if (v.kind === "empty")
@@ -388,7 +426,6 @@ GithubCard.style = css`
 		margin: 0;
 		font-size: 1.5rem;
 		font-weight: 600;
-		font-variation-settings: "ELSH" 93;
 		color: var(--text);
 		overflow: hidden;
 		text-overflow: ellipsis;
@@ -455,7 +492,6 @@ GithubCard.style = css`
 	.gh-stat b {
 		font-size: 1.35rem;
 		color: var(--text);
-		font-variation-settings: "ELSH" 93;
 	}
 
 	.gh-pinned {
@@ -463,6 +499,83 @@ GithubCard.style = css`
 		grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
 		gap: 0.4rem;
 		margin-top: auto;
+	}
+
+	/* ---- in the home page's strip on a phone (see "Panorama" in
+	   style.css) ----
+	   The tile is as tall as its column lets it be, which can be a good
+	   deal less than all of this. The pinned repos take what height is
+	   left, a whole one at a time: one that doesn't fit wraps into a second
+	   column, and that's out of sight. */
+	@media not all and (min-width: 60rem) and (min-height: 36rem) {
+		.post {
+			min-height: 0;
+		}
+
+		.gh-top {
+			flex: none;
+		}
+
+		.gh-pinned {
+			display: flex;
+			flex-flow: column wrap;
+			align-content: flex-start;
+			justify-content: flex-end;
+			flex: 1 1 0;
+			min-height: 0;
+			margin-top: 0;
+			overflow: hidden;
+		}
+
+		.gh-repo {
+			flex: none;
+			width: 100%;
+			box-sizing: border-box;
+		}
+	}
+
+	/* (there the tile is never wide enough for the counts to sit beside the
+	   rest: they wrap under it, and line up on the left with it) */
+	@media not all and (min-width: 60rem) and (min-height: 36rem) {
+		.gh-top .gh-stats {
+			justify-content: start;
+			justify-items: start;
+			text-align: left;
+		}
+
+		.gh-stats .gh-stat {
+			align-items: flex-start;
+		}
+	}
+
+	/* where there isn't the height for even one (a short screen; or a tall
+	   one, where two tiles share the column), they're left out, and the
+	   bio too where it's tightest. Window heights: see --live-rows. */
+	@media (max-height: 35.49rem),
+		(min-height: 46rem) and (max-height: 61.99rem) and (max-width: 59.99rem) {
+		.gh-pinned {
+			display: none;
+		}
+	}
+
+	@media (max-height: 29.99rem),
+		(min-height: 46rem) and (max-height: 50rem) and (max-width: 59.99rem) {
+		.gh-bio {
+			display: none;
+		}
+	}
+
+	/* (a phone on its side with the browser's bars showing: the shortest
+	   the tile gets) */
+	@media (max-height: 22.5rem) {
+		.gh-meta {
+			display: none;
+		}
+
+		.gh-avatar {
+			width: 3.25rem;
+			height: 3.25rem;
+		}
 	}
 
 	.gh-repo {

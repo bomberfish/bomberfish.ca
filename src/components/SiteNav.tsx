@@ -1,53 +1,83 @@
 import { FC } from "dreamland/core";
-import TransitionLink, { goBack } from "./TransitionLink";
+import { Link, Pivot as MetroPivot, RingButton } from "../metro-dreamland";
 
-// The top bar on every page but the home page.
+export type Section = "projects" | "blog" | "about";
+
+export const SECTIONS: Record<Section, { href: string; label: string }> = {
+	projects: { href: "/projects", label: "projects" },
+	blog: { href: "/blog", label: "blog" },
+	about: { href: "/siteinfo", label: "about" },
+};
+
+// The strip above the title on every page but the home page: the back
+// button, then the site's name in small caps (the "application title" every
+// phone page had) and the section you're in. `inside` is for a page within
+// the section (a project, a post); `here` names a page that's in none of
+// them (the weather).
+//
+// Back goes back to where you came from: open a project from the start
+// screen and it returns you there, open it from the list of projects and
+// it's the list. If you didn't come from anywhere on the site (you landed
+// on this page from outside), it goes up a level instead: from a post to
+// the blog, from the blog to the home page, which is what `up` is here.
+// Either way it's the same move as the browser's own back button wherever
+// that's possible, so the two agree (see data-m-back in metro-dreamland, which
+// also points the link's href at wherever it's going to go). The breadcrumbs
+// beside it are the way up by name.
 export default function SiteNav(
-	this: FC<{ active?: "projects" | "blog" }>
+	this: FC<{ active?: Section; inside?: boolean; here?: string }>
 ) {
-	const active = this.active;
-	const link = (href: string, name: string, icon: string) => (
-		<TransitionLink
-			href={href}
-			class={`nav-link background-container ${active === name ? "active" : ""}`}
-			aria-label={name}
-		>
-			<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
-				<path d={icon} />
-			</svg>
-			<span class="nav-label">{name}</span>
-		</TransitionLink>
-	);
+	const section = this.active ? SECTIONS[this.active] : null;
+	const up = this.inside && section ? { href: section.href } : { href: "/" };
 
 	return (
-		<header class="site-nav">
-			<button
-				type="button"
-				class="nav-link site-nav-back background-container"
-				on:click={goBack}
+		<header class="site-nav" data-m-feather>
+			<RingButton
+				to={up.href}
+				arrow
+				class="site-nav-back"
+				title="back"
+				aria-label="back"
+				data-m-back={up.href}
 			>
-				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
-					<path d="M313-440l224 224-57 56-320-320 320-320 57 56-224 224h487v80H313Z" />
-				</svg>
-				back
-			</button>
-			<nav class="site-nav-links">
-				{link(
-					"/",
-					"home",
-					"M240-200h120v-240h240v240h120v-360L480-740 240-560v360Zm-80 80v-480l320-240 320 240v480H520v-240h-80v240H160Zm320-350Z"
-				)}
-				{link(
-					"/projects",
-					"projects",
-					"M400-120q-17 0-28.5-11.5T360-160v-480H160q0-83 58.5-141.5T360-840h240v120l120-120h80v320h-80L600-640v480q0 17-11.5 28.5T560-120H400Zm40-80h80v-240h-80v240Zm0-320h80v-240H360q-26 0-49 10.5T271-720h169v200Zm40 40Z"
-				)}
-				{link(
-					"/blog",
-					"blog",
-					"M200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h440l200 200v440q0 33-23.5 56.5T760-120H200Zm0-80h560v-400H600v-160H200v560Zm80-80h400v-80H280v80Zm0-320h200v-80H280v80Zm0 160h400v-80H280v80Zm-80-320v160-160 560-560Z"
+				{/* Windows 8's back button: one glyph of Segoe UI Symbol, ring
+				    and all (.m-ring-arrow in style.css) */}
+				<span class="material-symbols" aria-hidden="true">
+					{"\uE071"}
+				</span>
+			</RingButton>
+			<nav class="site-nav-crumbs" aria-label="you are here">
+				<Link href="/" data-m-up>
+					bomberfish.ca
+				</Link>
+				{section || this.here ? <span class="sep">/</span> : false}
+				{!section && this.here ? <span class="here">{this.here}</span> : false}
+				{section ? (
+					this.inside ? (
+						<Link href={section.href} data-m-up>
+							{section.label}
+						</Link>
+					) : (
+						<span class="here">{section.label}</span>
+					)
+				) : (
+					false
 				)}
 			</nav>
 		</header>
+	);
+}
+
+// The pivot: a top-level page's title, followed on the same line by the
+// other sections, dimmed and running off the edge of the screen. Picking
+// one slides it to the front (metro-dreamland's <Pivot>, which this hands
+// the site's sections to).
+// Goes inside .page-header, whose big fading title style it takes over.
+export function Pivot(this: FC<{ active: Section }>) {
+	return (
+		<MetroPivot
+			items={Object.values(SECTIONS)}
+			active={SECTIONS[this.active].href}
+		/>
 	);
 }

@@ -11,8 +11,10 @@ import {
 	postContent,
 	postCount,
 	postCounts,
+	postMedia,
+	PostShot,
+	shotsOf,
 } from "./SocialPost";
-import { wsrvFormat, wsrvPicture } from "./WsrvPicture";
 
 const REFRESH_MS = 5 * 60_000;
 
@@ -51,7 +53,11 @@ function TwitterCard(this: FC) {
 	);
 
 	return (
-		<div class="livecard feed-card twitter-card background-container">
+		<div
+			class="livecard feed-card twitter-card tile on-color c-graphite"
+			data-m-tilt
+			data-m-feather
+		>
 			{feedHeader({
 				icon: <XIcon />,
 				platform: "X",
@@ -66,38 +72,42 @@ function TwitterCard(this: FC) {
 				if (v.kind !== "loaded") return feedStatus(v);
 
 				const s = v.item;
-				const att = s.attachments[0];
+				const shots = shotsOf(s.attachments).map(
+					(a): PostShot => ({
+						kind: a.type,
+						src: a.type === "image" ? a.previewUrl || a.url : a.url,
+						poster: a.previewUrl,
+						alt: a.description,
+						width: a.width,
+						height: a.height,
+						// (X's video host only answers its own pages, going by the
+						// referrer; its pictures come through the image proxy)
+						noReferrer: a.type !== "image",
+					})
+				);
+				// a link's own picture has the tile where the post has none (and
+				// goes where the link does)
+				const linked: PostShot[] =
+					!shots.length && s.card?.image
+						? [
+								{
+									kind: "image",
+									src: s.card.image,
+									width: s.card.imageWidth,
+									height: s.card.imageHeight,
+								},
+							]
+						: [];
+				const media = linked.length
+					? postMedia(linked, { href: s.card!.url })
+					: postMedia(shots, { href: s.url, sensitive: s.sensitive });
 				// posts with a link card / quote are secondary content, keep text normal
 				const size =
 					s.card || s.quote ? null : displaySize(visibleLength(s.text));
-				const img = att ?? null;
-				const bleedSrc = img ? img.previewUrl || img.url : s.card?.image;
 				return (
 					<>
-						{bleedSrc ? (
-							<div
-								class={
-									"feed-post-bleed feed-post-bleed-" + (att?.type ?? "image")
-								}
-								aria-hidden="true"
-							>
-								{att && (att.type === "video" || att.type === "gifv") ? (
-									<video
-										src={att.url}
-										poster={
-											att.previewUrl ? wsrvFormat(att.previewUrl, "jpg") : undefined
-										}
-										autoplay
-										loop
-										muted
-										playsinline
-									/>
-								) : (
-									wsrvPicture(bleedSrc, { alt: "", loading: "lazy" })
-								)}
-							</div>
-						) : null}
-						<div class="post feed-post">
+						{media}
+						<div class={"post feed-post" + (media ? " is-caption" : "")}>
 							{postAuthor({
 								url: s.account.url,
 								avatar: s.account.avatar,
@@ -106,7 +116,7 @@ function TwitterCard(this: FC) {
 								handle: `@${s.account.screenName}`,
 							})}
 							<div class="feed-post-body">
-								{fillText(postContent(size), s.text)}
+								{s.text ? fillText(postContent(size), s.text) : null}
 								{s.card ? (
 									<a
 										class="tweet-linkcard"
@@ -145,7 +155,11 @@ function TwitterCard(this: FC) {
 								postCount("reposts", "repeat", s.counts.retweets),
 								postCount("likes", "favorite", s.counts.likes),
 								s.counts.views != null
-									? postCount("views", "visibility", compactNumber(s.counts.views))
+									? postCount(
+											"views",
+											"visibility",
+											compactNumber(s.counts.views)
+										)
 									: null,
 							])}
 						</div>
@@ -159,17 +173,19 @@ function TwitterCard(this: FC) {
 // Styles: .livecard-* and the shared post styles (.feed-*) are in
 // src/style.css; only the link card / quote tweet are here.
 TwitterCard.style = css`
+	/* A link, or the post this one quotes: a panel of the tile's own ink,
+	   thin, with what it is in it. Flat, no rule round it. */
 	.tweet-linkcard,
 	.tweet-quote {
 		display: flex;
 		flex-direction: column;
-		gap: 0.15rem;
-		padding: 0.5rem 0.65rem;
-		border: 1px solid var(--surface2);
-		background: hsla(var(--surface0-hsl), 0.5);
+		gap: 0.1rem;
+		padding: 0.5rem 0.65rem 0.55rem;
+		background: rgba(var(--ink), 0.1);
 		color: inherit;
 		text-decoration: none !important;
 		font-size: 0.82rem;
+		line-height: 1.3;
 		min-width: 0;
 	}
 
@@ -182,12 +198,21 @@ TwitterCard.style = css`
 	.tweet-quote-handle {
 		color: var(--subtext1);
 		font-size: 0.75rem;
+		font-weight: 400;
 	}
 
 	.tweet-linkcard-title,
 	.tweet-quote-author {
 		font-weight: 600;
 		color: var(--text);
+	}
+
+	.tweet-linkcard-title {
+		overflow-wrap: anywhere;
+		display: -webkit-box;
+		-webkit-line-clamp: 2;
+		-webkit-box-orient: vertical;
+		overflow: hidden;
 	}
 
 	.tweet-linkcard-desc,
@@ -198,6 +223,43 @@ TwitterCard.style = css`
 		-webkit-line-clamp: 3;
 		-webkit-box-orient: vertical;
 		overflow: hidden;
+	}
+
+	/* Where the post is a caption over its pictures (every tile but a tall
+	   one: "Social post cards" in style.css has the same condition) these
+	   keep to a line of it: a link is its title and where it goes, a
+	   quoted post who said it and how it starts, side by side. */
+	@media (min-width: 60rem), (max-height: 30rem), (min-height: 46rem) {
+		.is-caption .tweet-linkcard,
+		.is-caption .tweet-quote {
+			flex: none;
+			flex-direction: row;
+			align-items: baseline;
+			gap: 0.6rem;
+			padding-block: 0.35rem 0.4rem;
+		}
+
+		.is-caption .tweet-linkcard-title,
+		.is-caption .tweet-quote-text {
+			flex: 0 1 auto;
+			display: block;
+			min-width: 0;
+			white-space: nowrap;
+			text-overflow: ellipsis;
+		}
+
+		.is-caption .tweet-linkcard-domain,
+		.is-caption .tweet-quote-author {
+			flex: none;
+		}
+
+		.is-caption .tweet-linkcard-domain {
+			order: 1;
+		}
+
+		.is-caption .tweet-linkcard-desc {
+			display: none;
+		}
 	}
 `;
 

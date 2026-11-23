@@ -1,12 +1,14 @@
-/* ==========================================================================
-   CSS Custom Properties & Configuration
-   ========================================================================== */
+@import "./metro-dreamland/metro.css";
 
-@property --main-hue {
-	syntax: "<number>";
-	initial-value: 213;
-	inherits: true;
-}
+/* ==========================================================================
+   bomberfish.ca, Metro edition
+
+   The design language is Windows Phone 7/8 and Windows 8: flat surfaces,
+   vivid accent colours on black, big light Segoe type that runs off the
+   edge of the screen, content laid out as tiles, panoramas and pivots.
+   Motion (turnstiles, tile flips, tilts...) is all in metro-dreamland; this
+   file only holds the resting states it moves between.
+   ========================================================================== */
 
 @keyframes groove {
 	0% {
@@ -31,11 +33,89 @@ html,
 body {
 	padding: 0;
 	margin: 0;
-	color-scheme: light dark;
+	color-scheme: dark;
 }
 
 html {
-	/* Color system - HSL values */
+	/* ---- Accent ----
+	   One accent runs through the site (links, the tiles that aren't
+	   somebody's brand colour, highlights), as on the phone. The default is
+	   the site's own, "midnight" (#1766d3): the blue of the photo behind
+	   the page, taken deep. The about page has the picker;
+	   src/lib/accent.ts applies and remembers the choice by setting these
+	   on <html>, and these values are what its accentVars() gives for
+	   midnight (the type's is lifted a long way: a blue this dark can't be
+	   read on black). --on-accent is the ink that goes on an
+	   accent-coloured tile: white, or black for the light accents (frost,
+	   lime, yellow, amber...). */
+	--accent-hsl: 215, 80%, 46%;
+	--accent-text-hsl: 215, 80%, 68%;
+	--on-accent: 255, 255, 255;
+	--accent: hsl(var(--accent-hsl));
+	/* the accent for type on black: the same hue, lifted until it reads */
+	--accent-text: hsl(var(--accent-text-hsl));
+	/* ...and fainter, for the line under a link. (A token rather than an
+	   hsla() written at the link: the build's hsla-fallback plugin can't
+	   parse hsla(var()) in text-decoration-color, where the vendor-prefixed
+	   copies keep it from seeing the fallback preset-env already made.) */
+	--accent-underline: hsla(var(--accent-text-hsl), 0.55);
+	/* the accent as a tile's own colour. A name of its own because inside a
+	   coloured tile --accent means "ink" (see .on-color), and an accent
+	   tile is one */
+	--accent-fill: hsl(var(--accent-hsl));
+
+	/* ---- The accent set: Windows Phone 8's twenty ---- */
+	--m-lime: #a4c400;
+	--m-green: #60a917;
+	--m-emerald: #008a00;
+	--m-teal: #00aba9;
+	--m-cyan: #1ba1e2;
+	--m-cobalt: #0050ef;
+	--m-indigo: #6a00ff;
+	--m-violet: #aa00ff;
+	--m-pink: #f472d0;
+	--m-magenta: #d80073;
+	--m-crimson: #a20025;
+	--m-red: #e51400;
+	--m-orange: #fa6800;
+	--m-amber: #f0a30a;
+	--m-yellow: #e3c800;
+	--m-brown: #825a2c;
+	--m-olive: #6d8764;
+	--m-steel: #647687;
+	--m-mauve: #76608a;
+	--m-taupe: #87794e;
+
+	/* ---- Surfaces and text: the phone's dark theme ----
+	   Pure neutrals from black up, so the only colour on a page is accent
+	   colour. Kept as HSL triplets (and under their old names) because
+	   everything mixes its own alpha in with hsla(var(--x-hsl), a). */
+	--core-hsl: 0, 0%, 0%;
+	--mantle-hsl: 0, 0%, 2.5%;
+	--crust-hsl: 0, 0%, 5%;
+	--base-hsl: 0, 0%, 7.5%;
+
+	--surface0-hsl: 0, 0%, 10%;
+	--surface1-hsl: 0, 0%, 12%; /* #1f1f1f, the phone's "chrome" */
+	--surface2-hsl: 0, 0%, 17%;
+	--surface3-hsl: 0, 0%, 22%;
+	--surface4-hsl: 0, 0%, 27%;
+	--surface5-hsl: 0, 0%, 33%;
+	--surface6-hsl: 0, 0%, 40%;
+
+	--overlay0-hsl: 0, 0%, 50%;
+	--overlay1-hsl: 0, 0%, 60%;
+	--overlay2-hsl: 0, 0%, 72%;
+	--overlay3-hsl: 0, 0%, 84%;
+
+	--supertext-hsl: 0, 0%, 100%;
+	--text-hsl: 0, 0%, 96%;
+	--text1-hsl: 0, 0%, 82%;
+	--subtext0-hsl: 0, 0%, 74%;
+	--subtext1-hsl: 0, 0%, 66%;
+	--subtext2-hsl: 0, 0%, 56%;
+	--subtext3-hsl: 0, 0%, 44%;
+
 	--core: hsl(var(--core-hsl));
 	--mantle: hsl(var(--mantle-hsl));
 	--crust: hsl(var(--crust-hsl));
@@ -58,83 +138,69 @@ html {
 	--subtext1: hsl(var(--subtext1-hsl));
 	--subtext2: hsl(var(--subtext2-hsl));
 	--subtext3: hsl(var(--subtext3-hsl));
-	--accent: hsl(var(--accent-hsl));
 
-	/* Computed color variants */
-	--tooltip-shadow: hsla(var(--overlay3-hsl), 0.35);
-	--main-hue: 213;
+	--tooltip-shadow: hsla(0, 0%, 0%, 0.5);
 
-	/* translucent card fill, shared by every card-like surface */
-	--card-bg: hsla(var(--crust-hsl), 0.4);
-	--card-bg-hover: hsla(var(--crust-hsl), 0.6);
+	/* flat panels that sit on the photo: text you read at length goes on one */
+	--card-bg: hsla(var(--core-hsl), 0.62);
+	--card-bg-hover: hsla(var(--core-hsl), 0.78);
 
-	/* light-source glow for display text: three layers with growing blur
-	   approximate exponential falloff, and the wider layers get more
-	   saturated so near-white text still reads as vivid colour.
-	   --glow is for headings; --glow-soft is the same recipe, fainter and
-	   tighter, set on body so all running text inherits it. */
+	/* the big titles are lit in the accent colour, like a sign in the rain:
+	   three layers with growing blur approximate an exponential falloff */
 	--glow:
-		0 0 0.05em hsla(calc(var(--main-hue) - 3), 60%, 90%, 0.7),
-		0 0 0.22em hsla(calc(var(--main-hue) - 4), 85%, 76%, 0.45),
-		0 0 0.75em hsla(calc(var(--main-hue) - 6), 90%, 64%, 0.32);
-	/* two layers rather than three: it's on every bit of body text, and a
-	   slightly wider middle layer stands in for the old faint 0.5em one
-	   (simulated within ~3/255 of the three-layer look) at a third less
-	   shadow drawing */
-	--glow-soft:
-		0 0 0.04em hsla(calc(var(--main-hue) - 3), 55%, 90%, 0.22),
-		0 0 0.22em hsla(calc(var(--main-hue) - 5), 85%, 72%, 0.15);
-
-	/* Palette follows the pfp's rainy-street backdrop: hue drifts with
-	   lightness, shadows leaning graphite (+) and highlights leaning
-	   streetlight blue (-), at a muted saturation that matches the bg. */
-	--core-hsl: calc(var(--main-hue) + 8), 40%, 2%;
-	--mantle-hsl: calc(var(--main-hue) + 6), 30%, 3%;
-	--crust-hsl: calc(var(--main-hue) + 5), 25%, 4.5%;
-	--base-hsl: calc(var(--main-hue) + 4), 22%, 6.5%;
-
-	--surface0-hsl: calc(var(--main-hue) + 5), 22%, 8%;
-	--surface1-hsl: calc(var(--main-hue) + 4), 22%, 12%;
-	--surface2-hsl: calc(var(--main-hue) + 4), 22%, 14.5%;
-	--surface3-hsl: calc(var(--main-hue) + 3), 20%, 19%;
-	--surface4-hsl: calc(var(--main-hue) + 2), 19%, 23%;
-	--surface5-hsl: calc(var(--main-hue) + 1), 18%, 27.5%;
-	--surface6-hsl: var(--main-hue), 18%, 34%;
-
-	--overlay0-hsl: calc(var(--main-hue) - 1), 16%, 55%;
-	--overlay1-hsl: calc(var(--main-hue) - 2), 20%, 65%;
-	--overlay2-hsl: calc(var(--main-hue) - 3), 26%, 75%;
-	--overlay3-hsl: calc(var(--main-hue) - 4), 36%, 85%;
-
-	--supertext-hsl: calc(var(--main-hue) - 5), 70%, 98%;
-	--text-hsl: calc(var(--main-hue) - 4), 45%, 94%;
-	--text1-hsl: calc(var(--main-hue) - 2), 24%, 72%;
-	--subtext0-hsl: calc(var(--main-hue) - 1), 20%, 67%;
-	--subtext1-hsl: var(--main-hue), 17%, 60%;
-	--subtext2-hsl: calc(var(--main-hue) + 2), 13%, 50%;
-	--subtext3-hsl: calc(var(--main-hue) + 4), 11%, 40%;
-
-	--accent-hsl: calc(var(--main-hue) - 4), 85%, 76%;
-	--rain: hsl(calc(var(--main-hue) - 4), 55%, 86%);
+		0 0 0.04em hsla(var(--accent-hsl), 0.5),
+		0 0 0.3em hsla(var(--accent-hsl), 0.34),
+		0 0 0.9em hsla(var(--accent-hsl), 0.22);
 
 	/* Base styles */
 	color: var(--text);
 	/* The page background is .page-bg (index.html), styled below; html's
-	   own background is just the flat colour behind it. */
-	--bg-top: calc(var(--main-hue) + 3), 32.5%, 8.5%;
-	--bg-bottom: calc(var(--main-hue) - 3), 40%, 18.5%;
-	/* How far the background layers run past the sides and the bottom of
-	   the window (the safe-area inset on that axis plus some room), to
-	   reach under Safari's side rail / toolbars */
+	   own background is just the flat colour behind it: near-black, with
+	   what's left of the photo's blue in it. */
+	--bg-top: 214, 50%, 3%;
+	--bg-bottom: 212, 45%, 4.5%;
+	/* An accent other than the default turns the photo's hue to its own
+	   (--bg-turn, in degrees, and --bg-filter: src/lib/accent.ts). The
+	   photo's layer is
+	   turned by a filter, scrim and all; this is the flat colour turned as
+	   far, for what's outside that layer. */
+	--bg-bottom-now: calc(212 + var(--bg-turn, 0)), 45%, 4.5%;
+	--rain: hsl(205, 70%, 88%);
 	/* the background's sizes (bleeds, photo height) are on body, below */
 	--parallax-speed: 0.35;
 	min-height: 100%;
-	background-color: hsl(var(--bg-bottom));
+	background-color: hsl(var(--bg-bottom-now));
 	/* no rubber-banding (this has to be on html, the viewport scroller) */
 	overscroll-behavior: none;
 	accent-color: var(--accent);
 
 	word-break: auto-phrase;
+	/* a phone turned on its side doesn't get to enlarge the type */
+	-webkit-text-size-adjust: 100%;
+	text-size-adjust: 100%;
+}
+
+/* Type: one family, Segoe UI Variable (--font-metro, public/typography.css).
+   That file also sets --font-body and --font-display, to the old serifs
+   the legacy pages still use, on :root and later in the document than this
+   stylesheet; html:root outranks it. */
+html:root {
+	--font-body: var(--font-metro);
+	--font-display: var(--font-metro);
+}
+
+/* The home page is a start screen: its tiles are sized so four rows of
+   them fill the window, whatever its height, the way Windows 8 fitted its
+   rows to the screen. Everything on it is in rems, so the root font size
+   is what does it: the layout is 50.5rem tall. Only where the window is
+   wide and tall enough for the four-row layout (the same condition as
+   "start mode" under Panorama, below); a phone gets ordinary 16px rems. */
+@media (min-width: 60rem) and (min-height: 36rem) {
+	html:has(.pano-page) {
+		/* (no upper limit: a taller window is bigger tiles and type, not
+		   the same ones with a band of nothing under them) */
+		font-size: max(11.5px, calc(100vh / 50.5));
+	}
 }
 
 /* Page background sizes. On body rather than html on purpose: the CSS
@@ -179,7 +245,7 @@ html.has-rail body {
 	touch-action: pan-y pinch-zoom;
 }
 
-/* Page background: the photo, film grain and rain.
+/* Page background: the photo and the rain.
 
    None of it is position: fixed. Safari 26 won't paint fixed elements
    under its toolbars (it fills that strip with a flat colour sampled from
@@ -209,32 +275,134 @@ html.has-rail body {
 	pointer-events: none;
 }
 
-/* bg-rain.webp (the photo behind the pfp, gradient-mapped to this palette
-   and pre-blurred, so it's tiny and upscales smoothly) under a scrim that
-   dims it for legibility and fades its lower end into --bg-bottom */
+/* Without a rail there's nothing past the window to reach, and the home
+   page's photo is wider than the window (it pans): it mustn't make the
+   page any wider, or a phone lets the whole page be dragged sideways. */
+html:not(.has-rail) .page-bg {
+	overflow-x: clip;
+}
+
+/* bg-rain.webp (the photo behind the pfp, pre-blurred, so it's tiny and
+   upscales smoothly) under a scrim that takes it most of the way to black,
+   so the tiles are the brightest things on the page, and fades its lower
+   end into --bg-bottom. This is the panorama's background layer. */
 .page-bg-photo {
 	position: absolute;
 	top: 0;
 	left: 0;
 	width: calc(100% + var(--bg-bleed-r));
 	height: var(--photo-h);
-	background:
-		linear-gradient(
-			to bottom,
-			hsla(var(--bg-top), 0.62) 0%,
-			hsla(var(--bg-bottom), 0.8) 56%,
-			hsl(var(--bg-bottom)) 94%
-		),
-		url("/bg-rain.webp") center / cover no-repeat;
+	background: url("/bg-rain.webp") center / cover no-repeat;
+	/* (its hue, turned to the accent's: see --bg-bottom-now) */
+	filter: var(--bg-filter, none);
 	will-change: transform;
+}
+
+/* (a number, so it can be part-way between two values) */
+@property --daylight {
+	syntax: "<number>";
+	inherits: true;
+	initial-value: 0;
+}
+
+/* The scrim. How dark depends on how light it is out (--daylight, 0 to 1,
+   from src/lib/weather/index.ts): a rainy day's photo shows through more than a
+   rainy night's. */
+.page-bg-photo::after {
+	content: "";
+	position: absolute;
+	inset: 0;
+	background: linear-gradient(
+		to bottom,
+		hsla(var(--bg-top), calc(0.56 - 0.2 * var(--daylight, 0))) 0%,
+		hsla(var(--bg-bottom), calc(0.7 - 0.14 * var(--daylight, 0))) 56%,
+		hsl(var(--bg-bottom)) 96%
+	);
+}
+
+/* ---- any weather but rain: a drawn sky (src/lib/weather/sky.ts) ----
+   The photo is a rainy one, so it's only there when it's raining. The sky
+   is a canvas in its place, moving as it does; under that, for a browser
+   that can't draw it and for the moment before it's drawn, a gradient in
+   the same colours. The sky keeps its own colours whatever the accent, so
+   nothing's turned. */
+.sky-canvas {
+	position: absolute;
+	inset: 0;
+	width: 100%;
+	height: 100%;
+	opacity: 0;
+	transition: opacity 1.2s linear;
+}
+
+/* The sky doesn't end in the dark the way the photo does: under its
+   horizon is haze, and the page carries on in the haze's colour
+   (--sky-floor-hsl, from sky.ts) for as far as it goes. */
+html[data-backdrop="sky"] {
+	--bg-bottom-now: var(--sky-floor-hsl, var(--bg-bottom));
+}
+
+html[data-backdrop="sky"] .page-bg-photo {
+	background: linear-gradient(
+		to bottom,
+		var(--sky-top, hsl(var(--bg-top))),
+		var(--sky-low, hsl(var(--bg-bottom))) 60%
+	);
+	filter: none;
+}
+
+html[data-backdrop="sky"] .sky-canvas {
+	opacity: 1;
+}
+
+/* The page's text is white, and some of it sits straight on the sky (the
+   home page's columns, page headers, the about page). So the sky is kept
+   deep enough to read white on, by day too: sky.ts draws a saturated blue
+   and clouds well short of white, rather than anything here dimming it. */
+html[data-backdrop="sky"] #app {
+	/* (and its links go most of the way to white: the accent on a blue sky
+	   is blue on blue) */
+	--accent-text: color-mix(
+		in srgb,
+		hsl(var(--accent-text-hsl)),
+		#fff calc(75% * var(--daylight, 0))
+	);
+}
+
+/* (no weight to this one: a tile that has its own idea of the accent's
+   text colour, an accent-coloured one, keeps it) */
+:where(html[data-backdrop="sky"])
+	:where(
+		.tile,
+		.background-container,
+		.buttons-section,
+		.feed-post,
+		button,
+		input,
+		pre,
+		code
+	) {
+	--accent-text: hsl(var(--accent-text-hsl));
+}
+
+/* a sky is dark enough at night as it comes, and bright by day: the scrim
+   goes the other way to the photo's */
+html[data-backdrop="sky"] .page-bg-photo::after {
+	background: linear-gradient(
+		to bottom,
+		hsla(var(--bg-top), calc(0.14 - 0.04 * var(--daylight, 0))) 0%,
+		hsla(var(--bg-bottom), calc(0.38 - 0.1 * var(--daylight, 0))) 34%,
+		hsla(var(--bg-bottom-now), 0.82) 62%,
+		hsl(var(--bg-bottom-now)) 96%
+	);
 }
 
 /* The end of the page fades into html's background colour. Once you've
    scrolled all the way down, the strip under Safari's address bar is past
    the end of the page, so all it can show is that colour (like a side
    rail on the left); this makes the page run into it instead of stopping
-   at a hard edge. Under the rain and grain, so the rain still falls (and
-   splashes) right down to the bar; over the grain, whose lift would
+   at a hard edge. Under the rain and grain, so the rain still falls right
+   down to the bar; over the grain, whose lift would
    otherwise leave the page a shade lighter than the bar. */
 .page-bg-end {
 	position: absolute;
@@ -244,10 +412,10 @@ html.has-rail body {
 	height: min(45vh, 22rem);
 	background: linear-gradient(
 		to bottom,
-		hsla(var(--bg-bottom), 0) 0%,
-		hsla(var(--bg-bottom), 0.3) 40%,
-		hsla(var(--bg-bottom), 0.75) 75%,
-		hsl(var(--bg-bottom)) 100%
+		hsla(var(--bg-bottom-now), 0) 0%,
+		hsla(var(--bg-bottom-now), 0.3) 40%,
+		hsla(var(--bg-bottom-now), 0.75) 75%,
+		hsl(var(--bg-bottom-now)) 100%
 	);
 }
 
@@ -261,8 +429,9 @@ html.has-rail body {
 	will-change: transform;
 }
 
-/* Film grain, like a texture on the glass: also held in place on screen,
-   but its own layer so the end fade can go over it and under the rain */
+/* Where the film grain used to be. Metro surfaces are flat, so it draws
+   nothing now, but the layer stays: src/lib/pageBg.ts measures it to know
+   how far the background runs past the window's bottom. */
 .page-bg-grain {
 	position: absolute;
 	top: 0;
@@ -270,11 +439,9 @@ html.has-rail body {
 	width: calc(100% + var(--bg-bleed-r));
 	height: calc(100vh + var(--bg-bleed-y));
 	will-change: transform;
-	background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 .09 0 0 0 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")
-		0 0 / 180px 180px;
 }
 
-/* Rain canvas (src/lib/rain.ts), inside .page-bg-fixed. rain.ts draws in
+/* Rain canvas (src/lib/weather/rain.ts), inside .page-bg-fixed. rain.ts draws in
    window coordinates, offset by where the canvas actually starts.
    (a canvas is a replaced element: insets alone don't stretch it) */
 .rain-canvas {
@@ -283,8 +450,10 @@ html.has-rail body {
 	left: 0;
 	width: calc(100% + var(--bg-bleed-r));
 	height: calc(100% + var(--bg-bleed-y));
-	/* read back by rain.ts as a resolved rgb() for the canvas */
+	/* read back by rain.ts as a resolved rgb() for the canvas: white with
+	   a little of the accent in it */
 	color: var(--rain);
+	color: color-mix(in srgb, var(--accent) 22%, #fff);
 }
 
 /* Held in place: down by exactly the scroll, over the whole scroll. */
@@ -326,77 +495,15 @@ html.has-rail body {
 	}
 }
 
-/* @media (prefers-color-scheme: light) {
-	html {
-		--main-hue: 320;
-		--grid-lines: hsla(var(--main-hue), 12%, 16%);
-
-		--core-hsl: var(--main-hue), 100%, 100%;
-		--mantle-hsl: var(--main-hue), 65%, 99%;
-		--crust-hsl: var(--main-hue), 50%, 98%;
-		--base-hsl: var(--main-hue), 35%, 97%;
-
-		--surface0-hsl: var(--main-hue), 35%, 95%;
-		--surface1-hsl: calc(var(--main-hue) - 2.5), 40%, 93%;
-		--surface2-hsl: calc(var(--main-hue) - 2.5), 25%, 92%;
-		--surface3-hsl: calc(var(--main-hue) - 5), 25%, 90%;
-		--surface4-hsl: calc(var(--main-hue) - 5), 20%, 88%;
-		--surface5-hsl: calc(var(--main-hue) - 7.5), 25%, 86%;
-		--surface6-hsl: calc(var(--main-hue) - 7.5), 17.5%, 83%;
-
-		--overlay0-hsl: calc(var(--main-hue) - 7.5), 20%, 79%;
-		--overlay1-hsl: calc(var(--main-hue) - 7.5), 25%, 72%;
-		--overlay2-hsl: calc(var(--main-hue) - 7.5), 27.5%, 65%;
-		--overlay3-hsl: calc(var(--main-hue) - 7.5), 30%, 55%;
-
-		--supertext-hsl: calc(var(--main-hue) - 25), 100%, 3%;
-		--text-hsl: calc(var(--main-hue) - 17.5), 60%, 8%;
-		--text1-hsl: calc(var(--main-hue) - 20), 14%, 15%;
-		--subtext0-hsl: calc(var(--main-hue) - 15), 10%, 20%;
-		--subtext1-hsl: calc(var(--main-hue) - 15), 12.5%, 35%;
-		--subtext2-hsl: calc(var(--main-hue) - 15), 15%, 45%;
-		--subtext3-hsl: calc(var(--main-hue) - 15), 20%, 55%;
-
-		--accent-hsl: calc(var(--main-hue) - 15), 55%, 70%;
-
-		--shadow-soft: hsla(var(--text-hsl), 0.14);
-		--shadow-medium: hsla(var(--text-hsl), 0.24);
-		--shadow-strong: hsla(var(--text-hsl), 0.34);
-		--shadow-ultra: hsla(var(--text-hsl), 0.44);
-		--shadow-highlight: hsla(var(--surface1-hsl), 0.55);
-	}
-}
-
-/* } */
-
 ::selection {
-	background: hsla(var(--accent-hsl), 0.6);
+	background: var(--accent);
+	color: rgb(var(--on-accent));
 }
 
+/* the focus rectangle: Windows' dotted line, drawn in the text colour */
 :focus-visible {
-	outline: 1.5px dashed var(--accent);
-	outline-offset: -1px;
-}
-
-/* Project card keyboard focus.
-   The visible "card" is the wrapper <div>; the inner <a> is what actually
-   receives focus. Render the focus ring on the wrapper (so it isn't clipped
-   by the wrapper's overflow: hidden) and suppress the inner anchor's own
-   inset outline. Defined globally because Dreamland's component-scoped CSS
-   would rewrite descendant selectors in a way that breaks :has(a:...). */
-.project-card-wrapper:has(> a.project-card:focus-visible) {
-	outline: 1px dashed var(--accent);
-	outline-offset: -1px;
-	transform: scale(1.01) translateY(-2px);
-}
-
-.project-card-wrapper:has(> a.project-card:focus-visible) .project-title {
-	text-decoration: underline;
-}
-
-.project-card-wrapper > a.project-card:focus,
-.project-card-wrapper > a.project-card:focus-visible {
-	outline: none;
+	outline: 2px dashed var(--supertext);
+	outline-offset: 2px;
 }
 
 /* ==========================================================================
@@ -404,39 +511,31 @@ html.has-rail body {
    ========================================================================== */
 
 body {
-	/* lives here rather than on html so html's background photo upscales
-	   smoothly; everything on the page still inherits pixelated */
-	image-rendering: pixelated;
-	font-family: var(--font-body), sans-serif;
-	text-shadow: var(--glow-soft);
-	/* No font-weight / font-stretch / wght variation: GeistPixel only ships a single
-	   "normal" face. Any non-default weight/stretch triggers browser synthesis
-	   (faux-bold), which doubles strokes and smears the ELSH axis stripes together. */
+	font-family: var(--font-body);
+	font-weight: 400;
+	font-size: 1rem;
+	line-height: 1.5;
+	/* Segoe UI Variable's optical-size axis follows the font size: the
+	   Display cut for the big titles, Text and Small further down */
+	font-optical-sizing: auto;
 	font-synthesis: style;
-	letter-spacing: 0.01em;
-	line-height: 1.6;
-	font-size: clamp(15px, 0.4vw + 14px, 17px);
-	text-rendering: optimizeLegibility;
-	font-feature-settings:
-		"kern",
-		common-ligatures contextual;
 	font-kerning: normal;
-	font-variant-ligatures: common-ligatures contextual;
+	font-feature-settings: "kern";
+	text-rendering: optimizeLegibility;
+	/* light type on black: without this macOS fattens it */
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
 	text-wrap: pretty;
 
 	display: flex;
 	flex-direction: column;
 	justify-content: flex-start;
-	align-items: center;
+	align-items: stretch;
 	min-height: 100vh;
 	/* viewport-fit=cover (index.html) lets the background run under the
-	   rounded corners / Dynamic Island; keep the content inside the safe
-	   area. Left and right separately: they aren't always equal (iPhone Duo
-	   in landscape, for one) */
-	padding: 0 1.5rem;
-	padding-left: max(1.5rem, env(safe-area-inset-left));
-	padding-right: max(1.5rem, env(safe-area-inset-right));
-	padding-bottom: env(safe-area-inset-bottom);
+	   rounded corners / Dynamic Island; pages keep their content inside the
+	   safe area themselves (--page-margin, below) */
+	padding: 0;
 	margin: 0;
 	/* a rail on the left (--bg-bleed-l): push the page across by its width,
 	   keeping it window-wide (the negative right margin), so there's page
@@ -445,74 +544,70 @@ body {
 	margin-left: var(--bg-bleed-l);
 	margin-right: calc(-1 * var(--bg-bleed-l));
 
-	text-rendering: geometricPrecision;
-	-webkit-font-smoothing: none;
-	font-smooth: none;
-
-	scrollbar-color: var(--overlay1) var(--base);
-	scrollbar-width: thin;
-	/* also makes body the containing block for position: fixed, which
-	   Oneko relies on (it positions itself with pageX/pageY) */
+	/* makes body the containing block for position: fixed, which Oneko
+	   relies on (it positions itself with pageX/pageY), and for .page-bg.
+	   It only reaches body's own children: the transitions in metro-dreamland
+	   bring their own perspective(). */
 	perspective: 1400px;
 	perspective-origin: center 30vh;
+
+	/* the page's side margin: Metro lays everything out from one left edge */
+	--page-margin: max(clamp(1.25rem, 4.5vw, 4.5rem), env(safe-area-inset-left));
+	--page-margin-r: max(
+		clamp(1.25rem, 4.5vw, 4.5rem),
+		env(safe-area-inset-right)
+	);
 }
 
-@media (orientation: portrait) {
-	body {
-		padding: 0;
-		justify-content: flex-start;
-	}
-}
-
-/* Headings */
+/* Headings: light and big. Weight does the work that size alone did in the
+   serif; nothing here is bold. */
 h1,
 h2,
 h3,
 h4,
 h5,
 h6 {
-	font-family: var(--font-display), sans-serif;
+	font-family: var(--font-display);
 	color: var(--supertext);
-	font-synthesis: weight style small-caps;
-	font-weight: 270;
+	font-weight: 300;
+	letter-spacing: -0.012em;
 }
 
 h1 {
-	text-shadow: var(--glow);
 	font-size: clamp(2.5rem, 3.5vw + 1.75rem, 4rem);
 	margin-bottom: 0.75rem;
 	margin-top: 0;
-	line-height: 1.18;
-
-	font-synthesis: style !important;
-	/* font-weight: 350; */
+	line-height: 1.12;
+	letter-spacing: -0.03em;
 }
 
 h2 {
 	font-size: clamp(1.5rem, 1.6vw + 1rem, 2.2rem);
 	margin-block-start: 0.25em;
 	margin-block-end: 0.4em;
-	line-height: 1.24;
-	/* font-weight: 300; */
+	line-height: 1.2;
+	letter-spacing: -0.02em;
 }
 
 h3 {
-	font-size: clamp(1.2rem, 1vw + 0.95rem, 1.6rem);
+	font-size: clamp(1.25rem, 1vw + 0.95rem, 1.6rem);
+	font-weight: 350;
 	margin-block-start: 0.25em;
 	margin-block-end: 0.4em;
-	line-height: 1.26;
-	/* font-weight: 500; */
+	line-height: 1.25;
 }
 
 h4,
 h5,
 h6 {
+	font-weight: 600;
+	letter-spacing: 0;
 	margin-block-start: 0.2em;
 	margin-block-end: 0.35em;
 }
 
 h4 {
-	font-size: clamp(1rem, 0.9vw + 0.9rem, 1.35rem);
+	font-size: clamp(1rem, 0.9vw + 0.9rem, 1.3rem);
 	line-height: 1.3;
 }
 
@@ -526,13 +621,9 @@ h6 {
 	line-height: 1.4;
 }
 
-em,
-strong {
-	opacity: 0.96;
-}
-
-strong {
-	font-weight: 670;
+strong,
+b {
+	font-weight: 600;
 }
 
 /* Prose elements */
@@ -544,31 +635,45 @@ p {
 subt {
 	font-size: 0.85em;
 	color: var(--subtext0);
-	line-height: 1.2;
+	line-height: 1.3;
 }
 
-/* Code */
+/* Code: Cascadia Code (public/typography.css), the mono that came with
+   Windows Terminal. A big-bodied face: a size under the text it sits in,
+   it still reads as large as that text. */
 pre,
 code {
 	background: var(--surface0);
-	font-size: 0.95em;
+	font-size: 0.86em;
 	border-radius: 0;
-	padding: 0.05em 0.25em;
-	border: 0.075rem solid var(--surface2);
+	padding: 0.05em 0.3em;
+	border: 1px solid var(--surface3);
 	font-variation-settings: unset;
 	font-stretch: 100%;
 	font-family: var(--font-mono), monospace;
+	font-optical-sizing: none;
 }
 
 pre {
 	padding: 1rem;
 	overflow-x: auto;
+	/* at either end it stops there, rather than passing the drag on to the
+	   page (which, with the iPhone Duo's rail, has some sideways to give) */
+	overscroll-behavior-x: contain;
+	border: none;
+	border-left: 0.25rem solid var(--accent);
+	background: var(--mantle);
+	/* (closer set than prose: its lines are short, and read down as much
+	   as across) */
+	line-height: 1.6;
 }
 
 pre code {
 	background: transparent;
 	padding: 0;
 	border: none;
+	/* the block's already been brought down a size: not twice */
+	font-size: inherit;
 }
 
 /* ==========================================================================
@@ -577,21 +682,18 @@ pre code {
 
 a,
 a:visited {
-	color: var(--supertext);
-	text-decoration-color: var(--subtext1) !important;
+	color: var(--accent-text);
+	text-decoration-color: var(--accent-underline) !important;
+	text-underline-offset: 0.16em;
 	transition:
-		color 0.25s ease,
-		text-decoration-color 0.25s ease;
-}
-
-a:visited {
-	text-decoration-color: var(--overlay1) !important;
+		color 0.15s ease,
+		text-decoration-color 0.15s ease;
 }
 
 a:hover,
 .tooltip-wrapper:has(.tooltip:hover) a {
-	text-decoration-color: var(--accent) !important;
-	color: var(--accent);
+	text-decoration-color: var(--supertext) !important;
+	color: var(--supertext);
 }
 
 a::after {
@@ -599,36 +701,33 @@ a::after {
 	display: inline-block;
 	width: 1em;
 	height: 1em;
-	background-color: var(--accent);
+	background-color: currentColor;
 	mask-size: contain;
 	mask-repeat: no-repeat;
 	mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="black"><path d="M144-144v-672h336v72H216v528h528v-264h72v336H144Zm243-192-51-51 357-357H576v-72h240v240h-72v-117L387-336Z"/></svg>');
 	margin-left: 0.1em;
 	vertical-align: middle;
 	transform: translateY(-1px);
+	opacity: 0.8;
 }
 
 a.web-button::after,
+a.tile::after,
+.tile a::after,
 a[href^="/"]::after {
 	display: none;
 	content: "";
 }
 
 /* ==========================================================================
-   Layout Components
+   Layout
    ========================================================================== */
 
 app {
+	display: block;
 	margin: 0;
-	width: 95%;
+	width: 100%;
 	max-width: 100%;
-	margin-bottom: 1rem;
-}
-
-@media (min-width: 960px) and (orientation: landscape) {
-	app {
-		width: 100%;
-	}
 }
 
 main {
@@ -636,12 +735,18 @@ main {
 	min-height: 100vh;
 	display: flex;
 	flex-direction: column;
-	align-items: center;
+	align-items: stretch;
 	justify-content: flex-start;
-	margin-top: 1rem;
-	/* no filter/opacity/will-change here: filter or opacity makes main a
-	   backdrop root, and the cards' backdrop-filter would stop at main's edge
-	   instead of seeing the page background and rain behind it */
+	/* Nothing in a page reaches past the window sideways. A pivot's other
+	   titles run off the edge on purpose, and anything that makes the
+	   document wider than the window can be dragged into view on a phone
+	   (iOS doesn't go by html's overflow for that); with the iPhone Duo's
+	   rail it would be drawn under the rail too, which is for the
+	   background alone. (clip, not hidden: nothing here is a scroller, and
+	   the sticky strip on top still sticks to the window.) */
+	overflow-x: clip;
+	/* no filter/opacity/will-change here: they'd make main a containing
+	   block and a stacking context for good, not just while it's turning */
 }
 
 main > * {
@@ -652,82 +757,37 @@ article {
 	flex-grow: 1;
 }
 
-.webbtns > * {
-	animation: groove 2s cubic-bezier(0.3, 0, 0.7, 0.9) infinite;
-}
-
-.webbtns :nth-child(2n) {
-	animation-delay: -1s;
-}
-
-.webbtns.fast > * {
-	animation-delay: -1s;
-}
-
-.webbtns.fast :nth-child(2n) {
-	animation-delay: -2s;
-}
-
-/* not scrolled into view yet (ButtonList removes the class); without
-   scripting nothing would ever remove it, so only then */
-@media (scripting: enabled) {
-	.webbtns-wait .webbtns,
-	.webbtns-wait .webbtns > * {
-		animation-play-state: paused;
-	}
-}
-
-/* ==========================================================================
-   Layout Container
-   ========================================================================== */
-
+/* a page: one column from the left margin */
 .layout-container {
+	/* its tiles' unit and gap (see Tiles) */
+	--g: 0.5rem;
+	--u: 9rem;
 	display: flex;
 	flex-direction: column;
-	width: min(1440px, calc(100% - 48px));
-	margin: 0 auto;
+	flex: 1 0 auto;
+	width: 100%;
+	max-width: 100rem;
+	min-height: 100vh;
+	margin: 0;
+	padding: 0 var(--page-margin-r) env(safe-area-inset-bottom) var(--page-margin);
 	box-sizing: border-box;
 }
 
+.main-content {
+	box-sizing: border-box;
+	width: 100%;
+	max-width: 100%;
+	min-width: 0;
+	padding-bottom: 2.5rem;
+}
+
+/* a flat panel on the photo, for anything read at length */
 .background-container {
-	background: var(--card-bg);
-	/* colour-only, so it's a single cheap pass, but it's redone every rain
-	   frame. No contrast: on this dark backdrop it crushed nearly
-	   everything behind the card to black. */
-	backdrop-filter: saturate(160%) brightness(105%);
-	padding: 0.7rem;
-}
-
-/* a blog post body covers most of the screen; not worth a near full-screen
-   filter pass 60 times a second while reading */
-.post-body.background-container {
-	backdrop-filter: none;
-}
-
-.page-header {
-	padding-bottom: 0.8rem !important;
-}
-
-.page-header {
-	position: relative;
-}
-
-.page-header h1 {
-	/* A mask clips everything outside the box, glow included, and this box
-	   is tight (line-height 0.95). So pad the top and sides to give the
-	   glow room (about its outer blur radius), cancel that with negative
-	   margins so nothing moves, and put the fade back exactly where it
-	   was: 60% down the original box, which is now 100% minus the top pad. */
-	--glow-room: 0.8em;
-	font-size: clamp(3.75rem, 14vw, 8.5rem);
-	line-height: 0.95;
-	padding: var(--glow-room) var(--glow-room) 0;
-	mask-image: linear-gradient(
-		to bottom,
-		#000 calc(var(--glow-room) + (100% - var(--glow-room)) * 0.6),
-		transparent 100%
-	);
-	margin: calc(-1 * var(--glow-room)) calc(-1 * var(--glow-room)) 0 !important;
+	background: var(--grain), var(--card-bg);
+	box-shadow: var(--glass-rim);
+	-webkit-backdrop-filter: var(--frost);
+	backdrop-filter: var(--frost);
+	padding: 0.85rem 1rem;
 }
 
 .post-title {
@@ -737,140 +797,1820 @@ article {
 
 .page-header .post-title {
 	padding-top: calc(1.75rem + var(--glow-room));
+	/* a post's title is a sentence: let it wrap, a bit looser */
+	line-height: 1 !important;
+	text-wrap: balance;
 }
 
 .page-header:not(:has(.post-title)) p {
 	font-size: 1.1rem;
-	margin-top: -0.75rem;
-	margin-left: 0.6rem;
+	/* tucked up under the title (less far than with the old serif: Segoe's
+	   descenders reach further down) */
+	margin-top: -0.35rem;
+	margin-left: 0.25rem;
 	position: relative;
+	color: var(--text1);
+	max-width: 44rem;
 }
 
-/* Navigation Links */
-.nav-link {
-	display: inline-flex;
-	align-items: center;
-	gap: 0.35rem;
-	color: var(--accent) !important;
-	text-decoration: none !important;
-	font-size: 1rem;
-	flex-shrink: 0;
-}
-
-.nav-link svg {
-	width: 1em;
-	height: 1em;
-	vertical-align: -0.125em;
-	fill: currentColor;
-}
-
-.nav-link:hover {
-	color: var(--subtext1) !important;
-}
-
-/* Site nav: the top bar on non-root pages. The bar's transparent, so it
-   lets clicks through to what scrolls under it; the pills take them. */
+/* ---- Site nav: the strip above the title ----
+   The app's name in small caps, as on every phone page, with the way back
+   in front of it and where you are after it. Sticks to the top; it's
+   see-through, and lets clicks through to what scrolls under it. */
 .site-nav {
 	position: sticky;
-	top: max(0.5rem, env(safe-area-inset-top));
+	top: 0;
 	z-index: 10;
 	display: flex;
 	align-items: center;
-	justify-content: space-between;
-	gap: 0.5rem;
-	/* main's margin-top is 1rem; on a notched phone that's not enough */
-	margin-top: max(0px, calc(env(safe-area-inset-top) - 1rem));
-	margin-bottom: 1rem;
+	gap: 0.7rem;
+	min-height: 3.25rem;
+	padding-top: max(0.6rem, env(safe-area-inset-top));
+	padding-bottom: 0.4rem;
+	margin-bottom: 0.5rem;
 	pointer-events: none;
+	font-size: 0.8125rem;
+	font-weight: 600;
+	letter-spacing: 0.06em;
+	text-transform: uppercase;
 }
 
 .site-nav :is(a, button) {
 	pointer-events: auto;
 }
 
-.site-nav-links {
+.site-nav-crumbs {
 	display: flex;
-	gap: 0.4rem;
-	margin-left: auto;
+	align-items: center;
+	gap: 0.55rem;
+	min-width: 0;
 }
 
-/* only with somewhere on the site to go back to (TransitionLink.tsx) */
-.site-nav .site-nav-back {
-	display: none;
-	border: none;
-	font-family: inherit;
-	line-height: inherit;
+.site-nav-crumbs a,
+.site-nav-crumbs a:visited {
+	color: var(--supertext);
+	text-decoration: none !important;
+}
+
+.site-nav-crumbs a:hover {
+	color: var(--accent-text);
+}
+
+.site-nav-crumbs .sep {
+	color: var(--subtext2);
+}
+
+.site-nav-crumbs .here,
+.site-nav-crumbs .here:visited {
+	color: var(--subtext0);
+}
+
+/* (the site's own, of what metro-dreamland's stylesheet has the rest of:
+   round buttons) */
+.site-nav .ring {
+	background: hsla(var(--core-hsl), 0.55);
+}
+
+.site-nav .ring:hover {
+	background: hsla(var(--supertext-hsl), 0.22);
+}
+
+.site-nav .ring:active {
+	background: var(--supertext);
+}
+
+/* for a finger: bigger, and not hard up against the top edge (iOS takes
+   taps there for its own scroll-to-top) */
+@media (pointer: coarse) {
+	.site-nav {
+		padding-top: max(1rem, env(safe-area-inset-top));
+	}
+
+	.site-nav .ring {
+		--ring: 2.5rem;
+		width: 2.5rem;
+		height: 2.5rem;
+	}
+
+	.site-nav-crumbs a {
+		display: inline-flex;
+		align-items: center;
+		min-height: 2.5rem;
+	}
+}
+
+/* ---- Colour strip (src/components/ColorStrip.tsx) ----
+   Windows 8's, from the "Personalize" page of its setup. The measurements
+   are that page's, at sixteen pixels to the rem: cells 30px square (as wide
+   as the strip allows, here: on a phone they're slivers, and it's worked
+   like a slider), a 12px square of the colour 4px in from each cell's top
+   right corner, a hairline round the lot, and the arrowheads 20px across,
+   3px clear of the strip. A cell's own colour is the shade of --c, darkened;
+   the square is --c itself. --at is the number of the cell that's chosen,
+   and --n how many there are. */
+.m-colorstrip {
+	--n: 25;
+	--at: 0;
+	position: relative;
+	max-width: calc(var(--n) * 1.875rem + 2px);
+	padding-block: 0.875rem;
+	user-select: none;
+	-webkit-user-select: none;
+	/* a drag along it chooses; one across it still scrolls the page */
+	touch-action: pan-y;
+}
+
+.m-colorstrip-cells {
+	display: flex;
+	height: 2rem;
+	box-sizing: border-box;
+	border: 1px solid hsla(var(--supertext-hsl), 0.6);
 	cursor: pointer;
 }
 
-:root.can-go-back .site-nav .site-nav-back {
-	display: inline-flex;
+.m-colorstrip-cells > button {
+	position: relative;
+	flex: 1 1 0;
+	min-width: 0;
+	margin: 0;
+	padding: 0;
+	border: 0;
+	border-radius: 0;
+	background: color-mix(in srgb, var(--c) 64%, #000);
+	cursor: inherit;
+	-webkit-appearance: none;
+	appearance: none;
 }
 
-.site-nav .background-container {
-	padding: 0.4rem 0.7rem;
-	background: hsla(var(--crust-hsl), 0.65);
-	backdrop-filter: blur(6px);
-	transition: background 0.15s ease;
+.m-colorstrip-cells > button::after {
+	content: "";
+	position: absolute;
+	top: 0.25rem;
+	right: 13.3%;
+	width: 40%;
+	aspect-ratio: 1;
+	max-height: calc(100% - 0.5rem);
+	background: var(--c);
 }
 
-.site-nav .background-container:hover {
-	background: hsla(var(--crust-hsl), 0.85);
+/* a glyph on a cell's square (the pencil on the one that's yours to make:
+   it isn't one more colour). White with a dark edge, to show on whatever
+   colour that square is. */
+.m-colorstrip-icon {
+	position: absolute;
+	top: 0.25rem;
+	right: 13.3%;
+	z-index: 1;
+	display: grid;
+	place-items: center;
+	width: 40%;
+	aspect-ratio: 1;
+	max-height: calc(100% - 0.5rem);
+	font-size: 0.85rem;
+	line-height: 1;
+	color: #fff;
+	text-shadow:
+		0 0 1px rgba(0, 0, 0, 0.9),
+		0 0 3px rgba(0, 0, 0, 0.6);
+	pointer-events: none;
 }
 
-.nav-link.active {
-	color: var(--supertext) !important;
+.m-colorstrip-cells > button:focus-visible {
+	z-index: 1;
+	outline: 2px dashed var(--supertext);
+	outline-offset: 2px;
 }
 
-/* a comfortable size for a finger */
+/* The arrowheads: one over the chosen cell pointing down at it, one under
+   it pointing up. Each is a light triangle with a dark one a hairline
+   smaller on top of it, which leaves the outline. */
+.m-colorstrip-mark {
+	position: absolute;
+	top: 0;
+	left: calc((var(--at) + 0.5) / var(--n) * 100%);
+	width: 1.25rem;
+	height: 0.6875rem;
+	margin-left: -0.625rem;
+	background: var(--supertext);
+	clip-path: polygon(0 0, 100% 0, 50% 100%);
+	pointer-events: none;
+	transition: left 0.2s cubic-bezier(0.1, 0.9, 0.2, 1);
+}
+
+.m-colorstrip-mark::before {
+	content: "";
+	position: absolute;
+	inset: 0;
+	background: var(--surface3);
+	clip-path: polygon(13% 10%, 87% 10%, 50% 84%);
+}
+
+.m-colorstrip-cells + .m-colorstrip-mark {
+	top: auto;
+	bottom: 0;
+	transform: scaleY(-1);
+}
+
+/* What the chosen one is called: under the lower arrowhead, going along
+   with it. As far along its own width as the arrowhead is along the
+   strip's, which keeps it by the arrowhead and inside the strip's ends. */
+.m-colorstrip-name {
+	--along: calc((var(--at) + 0.5) / var(--n));
+	position: absolute;
+	top: 100%;
+	left: calc(var(--along) * 100%);
+	transform: translateX(calc(var(--along) * -100%));
+	color: var(--subtext0);
+	font-size: 0.875rem;
+	line-height: 1.3;
+	white-space: nowrap;
+	transition:
+		left 0.2s cubic-bezier(0.1, 0.9, 0.2, 1),
+		transform 0.2s cubic-bezier(0.1, 0.9, 0.2, 1);
+}
+
+/* for a finger: a taller strip to get hold of */
 @media (pointer: coarse) {
-	.site-nav .nav-link {
-		min-height: 2.75rem;
+	.m-colorstrip-cells {
+		height: 2.75rem;
 	}
 }
 
-/* Main Content */
-.main-content {
-	box-sizing: border-box;
-	width: 100%;
-	max-width: 100%;
-	min-width: 0;
-	padding-bottom: 1rem;
-	view-transition-name: page-content;
+@media (prefers-reduced-motion: reduce) {
+	.m-colorstrip-mark,
+	.m-colorstrip-name {
+		transition: none;
+	}
+}
+
+/* (the site's own, of what metro-dreamland's stylesheet has the rest of:
+   tiles) */
+/* on a narrow page four units span it exactly, and a tile can ask for a
+   different size there with --pw / --ph (the same ones the home page's
+   phone layout uses) */
+@media (max-width: 42rem) {
+	.layout-container {
+		--u: calc((100vw - var(--page-margin) - var(--page-margin-r) - 1.5rem) / 4);
+	}
+
+	.layout-container .tile {
+		grid-column: span var(--pw, var(--w, 2));
+		grid-row: span var(--ph, var(--h, 2));
+	}
+}
+
+.feed-post {
+	color: rgb(var(--ink));
+
+	--supertext: rgb(var(--ink));
+	--text: rgba(var(--ink), 0.97);
+	--text1: rgba(var(--ink), 0.9);
+	--subtext0: rgba(var(--ink), 0.86);
+	--subtext1: rgba(var(--ink), 0.8);
+	--subtext2: rgba(var(--ink), 0.74);
+	--subtext3: rgba(var(--ink), 0.6);
+
+	--surface0: rgba(0, 0, 0, 0.2);
+	--surface1: rgba(0, 0, 0, 0.24);
+	--surface2: rgba(var(--ink), 0.3);
+	--surface3: rgba(var(--ink), 0.4);
+	--overlay0: rgba(var(--ink), 0.5);
+	--overlay1: rgba(var(--ink), 0.6);
+
+	--crust-hsl: 0, 0%, 0%;
+	--surface0-hsl: 0, 0%, 0%;
+	--surface1-hsl: 0, 0%, 0%;
+	--overlay1-hsl: 0, 0%, 100%;
+	--overlay3-hsl: 0, 0%, 100%;
+	--supertext-hsl: 0, 0%, 100%;
+
+	--accent: rgb(var(--ink));
+	--accent-text: rgb(var(--ink));
+	--accent-underline: rgba(var(--ink), 0.6);
+	--accent-hsl: 0, 0%, 100%;
+	--accent-text-hsl: 0, 0%, 100%;
+}
+
+/* (flat: the panels on tiles are solid as the tiles are; a caption is as
+   it was, black over its picture with the picture showing through, only
+   not blurred) */
+:root:not([data-m-material="acrylic"]) {
+	--card-bg: hsl(var(--core-hsl));
+	--card-bg-hover: hsl(var(--core-hsl));
+}
+
+/* (...and darker for it: with the picture under it sharp, the words need
+   more between them and it) */
+:root:not([data-m-material="acrylic"]) .feed-post.feed-post.is-caption {
+	background: rgba(0, 0, 0, 0.82);
+}
+
+/* ---- About: the two materials to pick from (AboutView) ----
+   A sample tile of each, made of what it names whatever the page is
+   (data-m-material on what it's in), and a tick in the corner of the one
+   in use, the way Windows 8 marked a tile that was selected. */
+.material-pick {
+	display: flex;
+	flex-wrap: wrap;
+	gap: var(--g, 0.5rem);
+}
+
+.material-pick > span {
+	display: block;
+}
+
+.material-sample.tile {
+	display: block;
+	width: 11rem;
+	height: 5.5rem;
+	padding: 0;
+	border: 0;
+	border-radius: 0;
+	font: inherit;
+	color: rgb(var(--ink));
+	text-align: left;
+	cursor: pointer;
+	-webkit-appearance: none;
+	appearance: none;
+	overflow: hidden;
 }
 
 /* ==========================================================================
-   Portrait Layout (Mobile)
+   The weather page (src/pages/WeatherView.tsx)
+   After the Weather app in Windows 10: the temperature in the biggest type
+   on the site, straight on the sky, and everything else small and light
+   under it. Nothing on it is on a panel: it's all read off the sky.
    ========================================================================== */
+/* It's a panorama (metro-dreamland's, as the home page is: metro.css,
+   "Panorama"), so it goes sideways, a section after a section, each the
+   height of the window under the title. The first two hang from the
+   bottom of it, the way Bing's did: the weather now, and the days ahead
+   beside it. The rest start at the top, under their headings. */
+.weather-page .pano {
+	--title-size: clamp(2.2rem, 7vw, 3.5rem);
+	--pano-gap: 2.5rem;
+}
 
-@media (orientation: portrait) {
-	.layout-container {
-		width: 100%;
-		max-width: 100%;
-		padding: 0 1rem;
-		/* the safe-area bottom inset is on body now, for every orientation */
+.wx-title {
+	padding-top: 0.6rem;
+}
+
+.wx-title .pano-title-layer {
+	gap: 1.1rem;
+	margin-bottom: 0.6rem;
+}
+
+.wx-back {
+	flex: none;
+	font-size: 1rem;
+}
+
+.wx-place.wx-place {
+	margin: 0;
+	padding: 0;
+	font-weight: 200;
+	line-height: 1.15;
+}
+
+/* When it's showing: now, or a step along the forecast. Under the title,
+   and (like it) staying put while the sections go by. */
+.wx-when {
+	position: sticky;
+	left: 0;
+	z-index: 1;
+	display: flex;
+	flex: none;
+	align-items: center;
+	gap: 1.2rem;
+	box-sizing: border-box;
+	width: calc(100vw + var(--bg-bleed-l) + var(--bg-bleed-r));
+	margin-bottom: 0.6rem;
+	padding-left: calc(var(--pano-margin) + var(--bg-bleed-l));
+}
+
+.wx-when p {
+	display: flex;
+	flex: none;
+	flex-direction: column;
+	gap: 0.1rem;
+	width: 11.5rem;
+	margin: 0;
+}
+
+.wx-when-label {
+	font-family: var(--font-display);
+	font-size: 1.6rem;
+	font-weight: 300;
+	line-height: 1.15;
+	color: var(--supertext);
+	white-space: nowrap;
+}
+
+.wx-when-note {
+	font-size: 0.72rem;
+	font-weight: 600;
+	letter-spacing: 0.06em;
+	text-transform: uppercase;
+	color: var(--subtext0);
+}
+
+/* The ruler: the days ahead, a tick an hour, sliding under a needle that
+   stays in the middle. It's a strip wider than its window that scrolls
+   (so a finger, a trackpad and the keys all work it as they would
+   anything), fading out at either end. From the top: the forecast's own
+   pictures where it has them, the ticks (taller every six hours), a band
+   in the colours of the sky at each hour, and the names of the six-hour
+   marks, a midnight by the day it starts. */
+.wx-ruler-box {
+	position: relative;
+	flex: 0 1 46rem;
+	min-width: 10rem;
+}
+
+.wx-ruler-box::before,
+.wx-ruler-box::after {
+	content: "";
+	position: absolute;
+	left: 50%;
+	z-index: 1;
+	pointer-events: none;
+}
+
+/* (the needle, and the mark at its head) */
+.wx-ruler-box::after {
+	top: 0.5rem;
+	bottom: 1.25rem;
+	width: 0.125rem;
+	margin-left: -0.0625rem;
+	background: var(--supertext);
+}
+
+.wx-ruler-box::before {
+	top: 0;
+	margin-left: -0.4rem;
+	border: 0.4rem solid transparent;
+	border-bottom: 0;
+	border-top: 0.5rem solid var(--supertext);
+}
+
+.wx-ruler {
+	height: 5.6rem;
+	overflow-x: auto;
+	overflow-y: hidden;
+	overscroll-behavior: contain;
+	scrollbar-width: none;
+	touch-action: pan-x;
+	cursor: grab;
+	outline: none;
+	user-select: none;
+	-webkit-mask-image: linear-gradient(
+		to right,
+		transparent,
+		#000 14%,
+		#000 86%,
+		transparent
+	);
+	mask-image: linear-gradient(
+		to right,
+		transparent,
+		#000 14%,
+		#000 86%,
+		transparent
+	);
+}
+
+.wx-ruler::-webkit-scrollbar {
+	display: none;
+}
+
+.wx-ruler.is-held {
+	cursor: grabbing;
+}
+
+.wx-ruler:focus-visible {
+	outline: 2px solid var(--supertext);
+	outline-offset: -2px;
+}
+
+.wx-ruler-inner {
+	--h: 1.1rem; /* an hour */
+	position: relative;
+	width: calc(var(--span) * var(--h));
+	height: 100%;
+	/* (half the window's width either side, so both ends reach the needle) */
+	margin: 0 50%;
+	background:
+		linear-gradient(to right, rgba(255, 255, 255, 0.9) 1px, transparent 1px)
+			calc(var(--six) * var(--h)) 2.5rem / calc(6 * var(--h)) 1.15rem repeat-x,
+		linear-gradient(to right, rgba(255, 255, 255, 0.5) 1px, transparent 1px)
+			calc(var(--hour) * var(--h)) 3.1rem / var(--h) 0.55rem repeat-x,
+		var(--band) 0 3.75rem / 100% 0.3rem no-repeat;
+}
+
+.wx-ruler-stop,
+.wx-ruler-mark {
+	position: absolute;
+	left: calc(var(--at) * var(--h));
+	transform: translateX(-50%);
+	white-space: nowrap;
+	pointer-events: none;
+}
+
+.wx-ruler-stop {
+	top: 0.2rem;
+	display: flex;
+	align-items: center;
+	gap: 0.15rem;
+	color: var(--supertext);
+}
+
+.wx-ruler-stop .weather-glyph {
+	position: static;
+	width: 1.35rem;
+	height: 1.46rem;
+}
+
+.wx-ruler-stop b {
+	font-size: 0.72rem;
+	font-weight: 400;
+}
+
+.wx-ruler-mark {
+	top: 4.3rem;
+	font-size: 0.68rem;
+	color: var(--subtext0);
+}
+
+.wx-ruler-mark.is-day {
+	font-weight: 600;
+	letter-spacing: 0.06em;
+	text-transform: uppercase;
+	color: var(--supertext);
+}
+
+@media not ((min-width: 60rem) and (min-height: 36rem)) {
+	.wx-when {
+		flex-wrap: wrap;
+		row-gap: 0.2rem;
+		padding-right: var(--pano-margin);
 	}
 
-	/* not right at the top edge: iOS takes taps there for its scroll-to-top */
-	.site-nav {
-		top: max(1rem, env(safe-area-inset-top));
+	.wx-when p {
+		flex-direction: row;
+		align-items: baseline;
+		gap: 0.6rem;
+		width: auto;
 	}
 
-	.nav-label {
-		display: none;
+	.wx-ruler-box {
+		flex: 1 1 100%;
+		order: 3;
+	}
+}
+
+.wx-when button:disabled {
+	opacity: 0.35;
+	pointer-events: none;
+}
+
+.wx-back-now {
+	padding: 0.3rem 0.8rem;
+	border: 0.125rem solid var(--supertext);
+	background: none;
+	font: inherit;
+	font-size: 0.85rem;
+	font-weight: 600;
+	color: var(--supertext);
+	cursor: pointer;
+}
+
+.wx-back-now:hover {
+	background: var(--supertext);
+	color: var(--core);
+}
+
+.wx-back-now[hidden] {
+	display: none;
+}
+
+/* the hour or day that's showing, in the table and the row */
+.wx-pick {
+	cursor: pointer;
+}
+
+.wx-table tbody tr.is-picked,
+.wx-days li.is-picked {
+	background: rgba(255, 255, 255, 0.2);
+}
+
+.wx-pick:focus-visible {
+	outline: 2px solid var(--supertext);
+	outline-offset: -2px;
+}
+
+.weather-page .pano-item {
+	display: flex;
+	flex-direction: column;
+	padding-bottom: 2.75rem;
+}
+
+.wx-now-item,
+.wx-days-item {
+	justify-content: flex-end;
+}
+
+.wx-now-item {
+	min-width: 27rem;
+}
+
+/* (the sections after the first are as tall as the window too, and
+   what's in them is made to use it: the hours' line stretches, the sky's
+   levels share the height between them, the sun's arc is as big as fits) */
+.wx-hours-item {
+	width: 41rem;
+}
+
+.weather-page .wx-cloud {
+	width: 33rem;
+}
+
+.weather-page .wx-lights {
+	width: 31rem;
+}
+
+.wx-hours-item .wx-hours,
+.wx-cloud > div,
+.wx-lights > div:not(.wx-foot) {
+	display: flex;
+	flex: 1 1 auto;
+	flex-direction: column;
+	min-height: 0;
+}
+
+/* the hours ahead: a table, its rows sharing the height (up to a point:
+   on a very tall window they'd drift apart) */
+.wx-table {
+	flex: 0 1 auto;
+	width: 100%;
+	height: 100%;
+	max-height: 43rem;
+	border-collapse: collapse;
+	color: var(--supertext);
+}
+
+.wx-table th,
+.wx-table td {
+	padding: 0 1.2rem 0 0;
+	border-top: 1px solid rgba(255, 255, 255, 0.2);
+	font-size: 0.95rem;
+	font-weight: 400;
+	text-align: left;
+	vertical-align: middle;
+	white-space: nowrap;
+}
+
+.wx-table thead th {
+	height: 2rem;
+	border-top: 0;
+	font-size: 0.75rem;
+	font-weight: 600;
+	letter-spacing: 0.06em;
+	text-transform: uppercase;
+	color: var(--subtext0);
+}
+
+.wx-table tbody th {
+	width: 4.6rem;
+	font-size: 0.8rem;
+	font-weight: 600;
+	letter-spacing: 0.06em;
+	text-transform: uppercase;
+}
+
+.wx-table-glyph {
+	width: 2.4rem;
+}
+
+.wx-table .wx-table-glyph {
+	padding-right: 0.7rem;
+}
+
+.wx-table .weather-glyph {
+	position: static;
+	display: block;
+	width: 2rem;
+	height: 2.17rem;
+}
+
+.wx-table .wx-table-words {
+	width: 100%;
+	white-space: normal;
+	color: var(--text);
+}
+
+.wx-table .wx-table-temp {
+	font-family: var(--font-display);
+	font-size: 1.7rem;
+	font-weight: 200;
+}
+
+.wx-table tbody tr {
+	transition: background-color 0.15s;
+}
+
+.wx-table tbody tr:hover {
+	background: rgba(255, 255, 255, 0.08);
+}
+
+.wx-foot {
+	margin-top: auto;
+	padding-top: 2rem;
+}
+
+.wx-foot p + p {
+	margin-top: 0.4rem;
+}
+
+.wx-now {
+	min-width: 0;
+}
+
+.wx-big {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+}
+
+.wx-glyph {
+	display: block;
+	flex: none;
+	width: 6.2rem;
+	height: 6.7rem;
+	margin-top: 1rem;
+	color: var(--supertext);
+}
+
+.wx-glyph .weather-glyph {
+	position: static;
+	width: 100%;
+	height: 100%;
+	stroke-width: 0.9;
+}
+
+.wx-temp {
+	margin: 0 0 0 -0.06em;
+	font-family: var(--font-display);
+	font-size: clamp(8rem, 17vw, 15rem);
+	font-weight: 200;
+	line-height: 0.92;
+	letter-spacing: -0.05em;
+	color: var(--supertext);
+}
+
+.wx-cond {
+	margin: 0.4rem 0 0;
+	font-family: var(--font-display);
+	font-size: clamp(1.7rem, 2.6vw, 2.4rem);
+	font-weight: 300;
+	line-height: 1.2;
+	color: var(--supertext);
+}
+
+.wx-asof {
+	margin: 0.3rem 0 0;
+	font-size: 0.8rem;
+	color: var(--subtext0);
+}
+
+/* (what else there is to say about now: a name and a number a line, in
+   two columns, as Bing had them) */
+.wx-now .wx-facts {
+	display: grid;
+	grid-template-columns: repeat(2, max-content);
+	gap: 0.2rem 3rem;
+	margin: 1.1rem 0 0;
+}
+
+.wx-now .wx-fact {
+	display: flex;
+	align-items: baseline;
+	gap: 0.8rem;
+}
+
+.wx-now .wx-fact dt {
+	min-width: 5.2rem;
+	font-size: 0.9rem;
+	color: var(--subtext0);
+}
+
+.wx-now .wx-fact dd {
+	display: flex;
+	align-items: baseline;
+	gap: 0.5rem;
+	font-size: 0.95rem;
+	font-weight: 400;
+}
+
+.wx-now .wx-fact dd small {
+	display: inline;
+	font-size: 0.8rem;
+}
+
+.wx-facts {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.9rem 2.5rem;
+	margin: 1.4rem 0 0;
+}
+
+.wx-fact dt {
+	font-size: 0.8rem;
+	color: var(--subtext0);
+}
+
+.wx-fact dd {
+	margin: 0;
+	font-size: 1.4rem;
+	font-weight: 300;
+	line-height: 1.25;
+	color: var(--supertext);
+}
+
+.wx-fact dd small {
+	display: block;
+	font-size: 0.8rem;
+	font-weight: 400;
+	color: var(--subtext0);
+}
+
+/* the days ahead: columns with a hairline between them, each lit a little
+   under the pointer */
+.wx-days {
+	display: flex;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	min-width: 0;
+	overflow-x: auto;
+	scrollbar-width: none;
+}
+
+.wx-days:empty {
+	display: none;
+}
+
+.wx-days li {
+	display: flex;
+	flex: none;
+	flex-direction: column;
+	gap: 0.15rem;
+	width: 7rem;
+	min-height: 15.5rem;
+	padding: 0.7rem 0.8rem 0.9rem;
+	border-left: 1px solid rgba(255, 255, 255, 0.28);
+	color: var(--supertext);
+	transition: background-color 0.15s;
+}
+
+.wx-days li:hover {
+	background: rgba(255, 255, 255, 0.1);
+}
+
+.wx-day-name {
+	font-size: 0.8rem;
+	font-weight: 600;
+	letter-spacing: 0.06em;
+	text-transform: uppercase;
+}
+
+.wx-days .weather-glyph {
+	position: static;
+	width: 2.9rem;
+	height: 3.14rem;
+	margin: 0.6rem 0 0.2rem -0.2rem;
+	stroke-width: 1.15;
+}
+
+.wx-day-temps {
+	display: flex;
+	align-items: baseline;
+	gap: 0.4rem;
+	font-family: var(--font-display);
+	font-size: 2.2rem;
+	font-weight: 200;
+	line-height: 1.1;
+}
+
+.wx-day-low {
+	color: var(--subtext0);
+}
+
+.wx-day-temps small {
+	font-size: 1.15rem;
+	font-weight: 300;
+	color: var(--subtext0);
+}
+
+.wx-day-words {
+	margin-top: 0.3rem;
+	font-size: 0.8rem;
+	line-height: 1.3;
+	color: var(--text);
+}
+
+.wx-day-rain {
+	margin-top: auto;
+	padding-top: 0.4rem;
+	font-size: 0.72rem;
+	color: var(--subtext0);
+}
+
+/* a phone: sections a bit narrower than the screen, so the next one shows */
+@media not ((min-width: 60rem) and (min-height: 36rem)) {
+	.wx-now-item {
+		min-width: 0;
+		width: min(27rem, 86vw);
 	}
 
-	.main-content {
-		padding: 0.75rem 0;
+	.weather-page .wx-cloud,
+	.weather-page .wx-lights {
+		width: min(27rem, 86vw);
 	}
 
-	.blog-list {
-		gap: 1rem;
+	.wx-kind,
+	.wx-moonbox b {
+		font-size: 1.6rem;
 	}
 
-	.blog-item {
-		background: var(--card-bg);
+	.wx-moon {
+		width: 4.5rem;
+		height: 4.5rem;
 	}
+
+	.wx-hours-item {
+		width: auto;
+	}
+
+	.weather-page .pano-item {
+		padding-bottom: 1.5rem;
+	}
+
+	.wx-days li {
+		min-height: 13rem;
+	}
+}
+
+@media (max-width: 34rem) {
+	.wx-now .wx-facts {
+		grid-template-columns: minmax(0, 1fr);
+	}
+}
+
+.wx-warnings:empty {
+	display: none;
+}
+
+.wx-warning.tile {
+	display: block;
+	margin-top: 1.25rem;
+	padding: 0.7rem 1rem;
+	max-width: 32rem;
+	text-decoration: none;
+	color: #fff;
+}
+
+.wx-warning b,
+.wx-warning span {
+	display: block;
+}
+
+.wx-warning span {
+	font-size: 0.8rem;
+	opacity: 0.85;
+}
+
+/* the hours ahead: a line through their temperatures (it can't be said
+   how tall that is until the temperatures are known, so the points are
+   placed by hand: WeatherView.tsx), and under each its picture, its chance
+   of rain and its time. On a phone it's wider than the window and goes
+   sideways. */
+.wx-hours {
+	margin-top: 0.5rem;
+}
+
+.wx-hours-strip {
+	min-width: calc(var(--hours) * 3.4rem);
+}
+
+.wx-line {
+	position: relative;
+	flex: 1 1 5.5rem;
+	min-height: 5.5rem;
+	max-height: 26rem;
+	margin: 2.6rem 0 1.6rem;
+}
+
+.wx-line svg {
+	position: absolute;
+	inset: 0;
+	width: 100%;
+	height: 100%;
+	overflow: visible;
+}
+
+.wx-line-stroke {
+	fill: none;
+	stroke: var(--supertext);
+	stroke-width: 1.5;
+	vector-effect: non-scaling-stroke;
+}
+
+.wx-line-under {
+	fill: rgba(255, 255, 255, 0.11);
+	stroke: none;
+}
+
+.wx-line-point {
+	position: absolute;
+	width: 0.45rem;
+	height: 0.45rem;
+	margin: -0.225rem;
+	background: var(--supertext);
+}
+
+.wx-line-point b {
+	position: absolute;
+	bottom: 0.7rem;
+	left: 50%;
+	transform: translateX(-50%);
+	font-family: var(--font-display);
+	font-size: 1.5rem;
+	font-weight: 300;
+	color: var(--supertext);
+}
+
+.wx-hour-list {
+	display: grid;
+	grid-template-columns: repeat(var(--hours), minmax(0, 1fr));
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.wx-hour-list li {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 0.1rem;
+	color: var(--supertext);
+}
+
+.wx-hour-list li {
+	padding-bottom: 0.25rem;
+}
+
+.wx-hour-list .weather-glyph {
+	position: static;
+	width: 2.7rem;
+	height: 2.93rem;
+	stroke-width: 1.2;
+}
+
+.wx-hour-rain {
+	font-size: 0.8rem;
+	color: var(--subtext0);
+}
+
+.wx-hour-list time {
+	margin-top: 0.2rem;
+	font-size: 0.8rem;
+	font-weight: 600;
+	letter-spacing: 0.06em;
+	text-transform: uppercase;
+	color: var(--supertext);
+}
+
+.wx-none {
+	color: var(--subtext0);
+}
+
+/* overhead: the cloud, level by level, and the sun's day and the moon */
+
+.wx-levels {
+	display: flex;
+	flex: 1 1 auto;
+	flex-direction: column;
+	max-height: 30rem;
+	margin: 0.3rem 0 0;
+	padding: 0;
+	list-style: none;
+}
+
+.wx-levels li {
+	display: grid;
+	flex: 1 1 0;
+	grid-template-columns: 6.2rem minmax(0, 1fr);
+	align-items: center;
+	gap: 1.2rem;
+	min-height: 5.5rem;
+	border-top: 1px solid rgba(255, 255, 255, 0.28);
+	color: var(--supertext);
+}
+
+.wx-levels li:last-child {
+	border-bottom: 1px solid rgba(255, 255, 255, 0.28);
+}
+
+.wx-level {
+	font-size: 0.8rem;
+	font-weight: 600;
+	letter-spacing: 0.06em;
+	text-transform: uppercase;
+}
+
+.wx-level small {
+	display: block;
+	font-size: 0.75rem;
+	font-weight: 400;
+	letter-spacing: 0;
+	text-transform: none;
+	color: var(--subtext0);
+}
+
+.wx-kind {
+	display: block;
+	font-family: var(--font-display);
+	font-size: 2.1rem;
+	font-weight: 200;
+	line-height: 1.15;
+}
+
+.wx-level-more {
+	display: block;
+	font-size: 0.85rem;
+	color: var(--text);
+}
+
+.wx-levels li.is-clear .wx-kind,
+.wx-levels li.is-clear .wx-level-more {
+	color: var(--subtext0);
+}
+
+.wx-bar {
+	display: block;
+	height: 0.4rem;
+	margin-top: 0.6rem;
+	background: rgba(255, 255, 255, 0.18);
+}
+
+.wx-bar i {
+	display: block;
+	height: 100%;
+	background: var(--supertext);
+}
+
+.wx-metar {
+	display: inline-block;
+	margin-top: 0.9rem;
+	padding: 0.3rem 0.55rem;
+	border: 0;
+	background: rgba(0, 0, 0, 0.28);
+	font-size: 0.72rem;
+	color: var(--text);
+	overflow-wrap: anywhere;
+}
+
+.wx-metar:empty,
+.wx-picked:empty,
+.wx-credit:empty {
+	display: none;
+}
+
+.wx-picked,
+.wx-credit,
+.wx-more {
+	margin: 0;
+	font-size: 0.8rem;
+	color: var(--subtext0);
+}
+
+.wx-picked {
+	margin-top: 0.8rem;
+	max-width: 30rem;
+}
+
+.wx-sun.wx-facts {
+	display: block;
+	margin-top: 0;
+}
+
+.wx-arc {
+	display: block;
+	width: 100%;
+	max-height: 15rem;
+	overflow: visible;
+}
+
+.wx-arc-all,
+.wx-arc-done,
+.wx-arc-ground {
+	fill: none;
+	stroke: var(--supertext);
+	vector-effect: non-scaling-stroke;
+}
+
+.wx-arc-all {
+	stroke-width: 1;
+	stroke-dasharray: 2 5;
+	opacity: 0.6;
+}
+
+.wx-arc-done {
+	stroke-width: 2;
+}
+
+.wx-arc-ground {
+	stroke-width: 1;
+	opacity: 0.45;
+}
+
+.wx-arc-sun {
+	fill: var(--supertext);
+}
+
+.wx-arc-ends {
+	display: flex;
+	justify-content: space-between;
+	gap: 1rem;
+	margin-top: 0.5rem;
+}
+
+.wx-arc-ends .wx-fact:nth-child(2) {
+	text-align: center;
+}
+
+.wx-arc-ends .wx-fact:last-child {
+	text-align: right;
+}
+
+.wx-moonbox {
+	display: flex;
+	align-items: center;
+	gap: 1rem;
+	margin-top: 1.4rem;
+}
+
+.wx-moon {
+	flex: none;
+	width: 6.5rem;
+	height: 6.5rem;
+}
+
+/* When the window's short, it's the sun's arc that gives up the height:
+   the moon and the lines under the arc keep theirs (they were being
+   pushed out of the bottom of their box, over the credit). */
+.wx-lights .wx-sun.wx-facts {
+	display: flex;
+	flex: 0 1 auto;
+	flex-flow: column nowrap;
+	min-height: 0;
+}
+
+.wx-lights .wx-arc {
+	flex: 0 1 auto;
+	min-height: 0;
+}
+
+.wx-lights .wx-arc-ends,
+.wx-lights .wx-moonbox {
+	flex: none;
+}
+
+@media (max-height: 40rem) {
+	.wx-lights .wx-moon {
+		width: 4rem;
+		height: 4rem;
+	}
+
+	.wx-lights .wx-moonbox {
+		margin-top: 1rem;
+	}
+
+	.wx-lights .wx-foot {
+		padding-top: 1rem;
+	}
+}
+
+.wx-moon-dark {
+	fill: rgba(255, 255, 255, 0.15);
+}
+
+.wx-moon-lit {
+	fill: var(--supertext);
+}
+
+.wx-moonbox {
+	margin-top: 2.2rem;
+	gap: 1.4rem;
+}
+
+.wx-moonbox b {
+	display: block;
+	font-family: var(--font-display);
+	font-size: 2.1rem;
+	font-weight: 200;
+	line-height: 1.15;
+	color: var(--supertext);
+}
+
+.wx-moonbox span {
+	font-size: 0.8rem;
+	color: var(--subtext0);
+}
+
+@media (max-width: 48rem) {
+	.wx-glyph {
+		width: 4.4rem;
+		height: 4.8rem;
+	}
+}
+
+/* the weather picker (about page): the same samples, smaller, in rows */
+.weather-pick {
+	display: flex;
+	flex-wrap: wrap;
+	gap: var(--g, 0.5rem);
+	margin-bottom: 0.75rem;
+}
+
+.weather-sample.material-sample.tile {
+	width: 6.5rem;
+	height: 4.6rem;
+}
+
+/* the little pictures in them (src/components/WeatherGlyph.tsx): line
+   drawings in the tile's ink, and what moves in them */
+.weather-glyph {
+	position: absolute;
+	top: 0.45rem;
+	left: 0.6rem;
+	z-index: 2;
+	width: 2rem;
+	height: 2.17rem;
+	overflow: visible;
+	pointer-events: none;
+}
+
+.weather-glyph .wg-solid,
+.weather-glyph .wg-solid > * {
+	fill: currentColor;
+	stroke: none;
+}
+
+@keyframes wg-fall {
+	from {
+		transform: translate(0.5px, -1.6px);
+		opacity: 0;
+	}
+	25% {
+		opacity: 1;
+	}
+	70% {
+		opacity: 1;
+	}
+	to {
+		transform: translate(-0.9px, 2.6px);
+		opacity: 0;
+	}
+}
+
+@keyframes wg-drift {
+	from {
+		transform: translate(-0.8px, -2px);
+		opacity: 0;
+	}
+	20% {
+		opacity: 1;
+	}
+	50% {
+		transform: translate(0.8px, 0.4px);
+	}
+	80% {
+		opacity: 1;
+	}
+	to {
+		transform: translate(-0.4px, 2.8px);
+		opacity: 0;
+	}
+}
+
+@keyframes wg-turn {
+	to {
+		transform: rotate(360deg);
+	}
+}
+
+@keyframes wg-flash {
+	0%,
+	62%,
+	70%,
+	78%,
+	100% {
+		opacity: 1;
+	}
+	66%,
+	74% {
+		opacity: 0.15;
+	}
+}
+
+@keyframes wg-waft {
+	from {
+		transform: translateX(-1.4px);
+	}
+	to {
+		transform: translateX(1.4px);
+	}
+}
+
+@keyframes wg-pulse {
+	0%,
+	100% {
+		opacity: 0.25;
+	}
+	45% {
+		opacity: 1;
+	}
+}
+
+@keyframes wg-bounce {
+	0%,
+	100% {
+		transform: translateY(0);
+		animation-timing-function: cubic-bezier(0.33, 0, 0.67, 0);
+	}
+	50% {
+		transform: translateY(-3.2px);
+		animation-timing-function: cubic-bezier(0.33, 1, 0.67, 1);
+	}
+}
+
+@keyframes wg-nudge-up {
+	0%,
+	100% {
+		transform: translateY(0.8px);
+	}
+	50% {
+		transform: translateY(-0.8px);
+	}
+}
+
+@media (prefers-reduced-motion: no-preference) {
+	.weather-glyph .wg-fall > * {
+		animation: wg-fall 0.8s linear infinite;
+	}
+
+	.weather-glyph .wg-drift > * {
+		animation: wg-drift 2.4s linear infinite;
+	}
+
+	.weather-glyph .wg-sun:not(.wg-sun-behind) {
+		transform-box: fill-box;
+		transform-origin: center;
+		animation: wg-turn 24s linear infinite;
+	}
+
+	.weather-glyph .wg-flash {
+		animation: wg-flash 3.2s linear infinite;
+	}
+
+	.weather-glyph .wg-waft > *,
+	.weather-glyph .wg-blow > * {
+		animation: wg-waft 2.6s ease-in-out infinite alternate;
+	}
+
+	.weather-glyph .wg-pulse > *,
+	.weather-glyph .wg-twinkle > *,
+	.weather-glyph .wg-glint > * {
+		animation: wg-pulse 2.4s ease-in-out infinite;
+	}
+
+	.weather-glyph .wg-bounce > * {
+		animation: wg-bounce 0.9s infinite;
+	}
+
+	.weather-glyph .wg-rise,
+	.weather-glyph .wg-set {
+		animation: wg-nudge-up 1.8s ease-in-out infinite;
+	}
+
+	.weather-glyph .wg-hand {
+		transform-origin: 12px 13px;
+		animation: wg-turn 12s linear infinite;
+	}
+}
+
+.weather-sample .material-check {
+	width: 1.6rem;
+	height: 1.6rem;
+}
+
+.weather-sample .material-check::after {
+	top: 0.12rem;
+	right: 0.28rem;
+	width: 0.22rem;
+	height: 0.46rem;
+	border-width: 0 0.11rem 0.11rem 0;
+}
+
+.weather-said {
+	color: var(--subtext1);
+}
+
+/* The time of day: a slider through today, its bar the colours the sky
+   goes through (night, dawn, the day, dusk, night: set in AboutView.tsx).
+   A mark under it says where now is; left alone, the thumb sits on the
+   mark and goes with the clock. Slide away and a button comes up to go
+   back (or slide back onto the mark). */
+.time-pick {
+	position: relative;
+	max-width: 36rem;
+	padding-bottom: 1.6rem;
+}
+
+.time-now {
+	position: absolute;
+	bottom: 0;
+	/* (the thumb's middle runs from half a thumb in to half a thumb out) */
+	left: calc(0.5rem + (100% - 1rem) * var(--now, 50) / 100);
+	transform: translateX(-50%);
+	padding-top: 0.5rem;
+	font-size: 0.72rem;
+	line-height: 1;
+	color: var(--subtext0);
+	white-space: nowrap;
+	pointer-events: none;
+}
+
+.time-now::before {
+	content: "";
+	position: absolute;
+	top: 0;
+	left: 50%;
+	margin-left: -0.3rem;
+	border: 0.3rem solid transparent;
+	border-top: 0;
+	border-bottom: 0.38rem solid var(--subtext0);
+}
+
+.time-pick.is-live .time-now {
+	color: var(--supertext);
+}
+
+.time-pick.is-live .time-now::before {
+	border-bottom-color: var(--supertext);
+}
+
+.time-reset[hidden] {
+	display: none;
+}
+
+.time-reset {
+	position: absolute;
+	top: -0.35rem;
+	right: 0;
+}
+
+/* (it comes in from the side when there's somewhere to go back to, and
+   fades as the slider's on its way there) */
+@keyframes time-reset-in {
+	from {
+		opacity: 0;
+		transform: translateX(1.5rem);
+	}
+}
+
+@media (prefers-reduced-motion: no-preference) {
+	.time-reset {
+		animation: time-reset-in 0.3s cubic-bezier(0.1, 0.9, 0.2, 1) backwards;
+		transition: opacity 0.25s linear;
+	}
+
+	.time-reset .material-symbols {
+		transition: transform 0.6s cubic-bezier(0.1, 0.9, 0.2, 1);
+	}
+
+	.time-pick.is-returning .time-reset {
+		opacity: 0;
+		pointer-events: none;
+	}
+
+	.time-pick.is-returning .time-reset .material-symbols {
+		transform: rotate(-360deg);
+	}
+}
+
+.time-pick:not(.is-live) .m-slider-value {
+	/* (room for the button beside it) */
+	margin-right: 9.5rem;
+}
+
+.material-sample .tile-label {
+	font-size: 0.95rem;
+}
+
+/* (the corner: a triangle of the type's colour, and a tick drawn in it in
+   the accent: two sides of a small box, turned) */
+.material-check {
+	position: absolute;
+	top: 0;
+	right: 0;
+	z-index: 3;
+	display: none;
+	width: 2.25rem;
+	height: 2.25rem;
+	background: rgb(var(--ink));
+	clip-path: polygon(0 0, 100% 0, 100% 100%);
+}
+
+.material-check::after {
+	content: "";
+	position: absolute;
+	top: 0.22rem;
+	right: 0.42rem;
+	width: 0.3rem;
+	height: 0.62rem;
+	border: solid var(--accent-fill);
+	border-width: 0 0.14rem 0.14rem 0;
+	transform: rotate(45deg);
+}
+
+.material-sample[aria-checked="true"] .material-check {
+	display: block;
+}
+
+.material-sample[aria-checked="true"] {
+	outline: 0.1875rem solid rgb(var(--ink));
+	outline-offset: -0.1875rem;
+}
+
+.material-sample:focus-visible {
+	outline: 2px solid var(--accent-text);
+	outline-offset: 3px;
+}
+
+@media (prefers-reduced-transparency: reduce) {
+	:root:root {
+		--card-bg: hsl(var(--core-hsl));
+		--card-bg-hover: hsl(var(--core-hsl));
+	}
+
+	:root .feed-post.feed-post.is-caption {
+		background: #000;
+	}
+}
+
+/* (the site's own, of what metro-dreamland's stylesheet has the rest of:
+   panorama 1) */
+/* with a rail, the strip isn't cut off at the page's edge on its way there */
+html.has-rail main.pano-page {
+	overflow-x: visible;
+	overflow-y: clip;
+}
+
+/* the ".ca" after the name in the home page's title: darker, and part
+   see-through (its glow goes down with it) */
+.home-title .title-tld {
+	filter: brightness(0.78);
+	opacity: 0.5;
+}
+
+/* the picture beside the name, as tall as the name's line */
+.pfp-link {
+	display: block;
+	flex: none;
+	/* above the h1's padding for its glow, which reaches over this */
+	position: relative;
+	z-index: 1;
+	width: calc(var(--title-size) * 0.95);
+	height: calc(var(--title-size) * 0.95);
+	background: var(--surface1);
+}
+
+.pfp {
+	display: block;
+	width: 100%;
+	height: 100%;
+	image-rendering: pixelated;
+}
+
+/* (the site's own, of what metro-dreamland's stylesheet has the rest of:
+   panorama 2) */
+/* a heading that goes somewhere says so with Metro's arrow in a ring
+   (MoreArrow in Homepage.tsx; .m-ring-arrow, above): about as tall as the
+   heading's capitals, in whatever colour the heading is */
+.pano-item-title .more-arrow {
+	--ring: 0.9em;
+	margin-left: 0.35em;
+	/* (centred on the lowercase, which is most of what a heading is) */
+	vertical-align: -0.2em;
+}
+
+@media not all and (min-width: 60rem) and (min-height: 36rem) {
+	/* the live tiles: a column wide, sharing its height between them */
+	.pano .live-stack {
+		grid-template-rows: repeat(var(--live-rows), minmax(0, 1fr));
+		grid-auto-columns: var(--sec-w);
+		grid-auto-rows: auto;
+		grid-auto-flow: column;
+	}
+
+	.pano .live-stack > .livecard {
+		grid-column: auto;
+		grid-row: auto;
+		min-height: 0;
+	}
+
+	/* last.fm's cover: two fifths of the tile across, or as much as the
+	   tile's height leaves once its header and player have theirs */
+	.pano .lastfm-card .lastfm-art {
+		width: min(40%, calc(var(--card-h) - 10.5rem));
+		min-width: 4.5rem;
+	}
+}
+
+/* (an upright phone with one live tile to a column: the cover sits above
+   the track's details, see LastFmCard.tsx, and is as big as the tile's
+   height allows after those, the header and the two-row player) */
+@media (max-width: 27rem) and (min-height: 30rem) and (max-height: 45.99rem) {
+	.pano .lastfm-card .lastfm-art {
+		width: min(100%, calc(var(--card-h) - 18.75rem));
+	}
+}
+
+/* ---- the live tiles' places (what i'm up to) ----
+   start mode: last.fm and fediverse above, X and github below, staggered */
+@media (min-width: 60rem) and (min-height: 36rem) {
+	.pano .live-stack > .lastfm-card {
+		grid-area: 1 / 1 / span 2 / span 4;
+	}
+
+	.pano .live-stack > .mastodon-card {
+		grid-area: 1 / 5 / span 2 / span 3;
+	}
+
+	.pano .live-stack > .twitter-card {
+		grid-area: 3 / 1 / span 2 / span 3;
+	}
+
+	.pano .live-stack > .github-card {
+		grid-area: 3 / 4 / span 2 / span 4;
+	}
+
+	/* here the tiles are a fixed 2 units tall, and what's in them is cut
+	   to fit: the cover leaves room for the preview player under it... */
+	.pano .lastfm-card .lastfm-art {
+		width: 10rem;
+	}
+
+	/* ...and github's profile is set a little tighter, its pinned repos
+	   down to a line of description each */
+	.pano .github-card .livecard-header {
+		margin-bottom: 0.3rem;
+	}
+
+	.pano .github-card .post {
+		gap: 0.35rem;
+	}
+
+	.pano .github-card .gh-about {
+		gap: 0.35rem;
+	}
+
+	.pano .github-card .gh-avatar {
+		width: 3.25rem;
+		height: 3.25rem;
+	}
+
+	.pano .github-card .gh-bio {
+		display: -webkit-box;
+		-webkit-line-clamp: 2;
+		-webkit-box-orient: vertical;
+		overflow: hidden;
+	}
+
+	.pano .github-card .gh-repo-desc {
+		-webkit-line-clamp: 1;
+	}
+}
+
+/* ---- the photo behind, on the home page ----
+   wider than the window, so there's some of it left to pan to (metro-dreamland
+   moves it with the `translate` property; its `transform` belongs to the
+   vertical parallax below). Not with the iPhone Duo's side rail, where the
+   page's width is already spoken for. */
+html:not(.has-rail):has(.pano-page) .page-bg-photo {
+	width: 135%;
 }
 
 /* ==========================================================================
@@ -896,7 +2636,7 @@ ul.compact > li {
 ul.compact > li::after {
 	content: "/";
 	margin: 0 0.75rem;
-	opacity: 0.6;
+	color: var(--subtext3);
 }
 
 ul.compact > li:last-child::after {
@@ -906,16 +2646,6 @@ ul.compact > li:last-child::after {
 
 ul.compact a {
 	text-decoration: underline;
-	text-underline-offset: 2px;
-}
-
-li:not(:has(a)) {
-	transform: translateY(-0.25rem);
-}
-
-li:has(a),
-ul.compact > :is(li > span, li > a) {
-	margin-bottom: 0;
 }
 
 /* ==========================================================================
@@ -950,54 +2680,35 @@ ul.compact > :is(li > span, li > a) {
 	bottom: 100%;
 }
 
+/* Windows' own: a white slip with dark type, square, no arrow */
 .tooltip {
 	position: absolute;
 	top: calc(100% + 0.5rem);
 	left: 50%;
 	transform: translateX(-50%) translateY(-0.25rem);
-	background: var(--surface0);
-	color: var(--text);
-	padding: 0.25rem 0.5rem;
+	background: var(--supertext);
+	color: var(--core);
+	padding: 0.2rem 0.55rem 0.28rem;
 	border-radius: 0;
-	border: 0.083rem solid var(--overlay0);
-	font-size: 0.875rem;
+	border: none;
+	font-size: 0.8125rem;
+	font-weight: 400;
+	letter-spacing: 0;
+	text-transform: none;
 	white-space: pre-line;
 	z-index: 1000;
-	box-shadow: 0 2px 8px var(--tooltip-shadow);
 	max-width: 40rem;
 	width: max-content;
 	text-align: center;
 	opacity: 0;
 	visibility: hidden;
 	transition:
-		opacity 0.15s ease-in-out,
-		visibility 0.15s ease-in-out,
-		transform 0.15s ease-in-out;
+		opacity 0.12s ease-in-out,
+		visibility 0.12s ease-in-out,
+		transform 0.12s ease-in-out;
 	user-select: text;
 	cursor: text;
 	pointer-events: none;
-}
-
-.tooltip::after {
-	content: "";
-	position: absolute;
-	bottom: 100%;
-	left: 50%;
-	transform: translateX(-50%);
-	border: 0.525rem solid transparent;
-	border-bottom-color: var(--overlay0);
-	z-index: 1001;
-}
-
-.tooltip::before {
-	content: "";
-	position: absolute;
-	bottom: calc(100% - 1px);
-	left: 50%;
-	transform: translateX(-50%);
-	border: 0.5rem solid transparent;
-	border-bottom-color: var(--surface0);
-	z-index: 1002;
 }
 
 .tooltip:hover,
@@ -1008,25 +2719,10 @@ ul.compact > :is(li > span, li > a) {
 	transform: translateX(-50%) translateY(0);
 }
 
-/* Tooltip - Top Position */
 .tooltip.top {
 	top: auto;
 	bottom: calc(100% + 0.5rem);
 	transform: translateX(-50%) translateY(0.25rem);
-}
-
-.tooltip.top::after {
-	bottom: auto;
-	top: 100%;
-	border-bottom-color: transparent;
-	border-top-color: var(--overlay0);
-}
-
-.tooltip.top::before {
-	bottom: auto;
-	top: calc(100% - 1px);
-	border-bottom-color: transparent;
-	border-top-color: var(--surface0);
 }
 
 .tooltip.top:hover,
@@ -1035,165 +2731,284 @@ ul.compact > :is(li > span, li > a) {
 }
 
 /* ==========================================================================
-   Blog Styles
+   Blog
    ========================================================================== */
 
+/* ---- the list: a phone list. A date tile, then the title big and light,
+   what it's about, and its tags, down one edge ---- */
+
 .blog-list {
-	margin: 0.8rem auto 0;
+	margin: 1rem 0 0;
 	display: flex;
 	flex-direction: column;
+	gap: 0.35rem;
+	max-width: 62rem;
+}
+
+/* years: the jump list's coloured squares */
+.blog-year {
+	display: grid;
+	place-items: end start;
+	width: 4.5rem;
+	height: 4.5rem;
+	margin: 1.4rem 0 0.5rem;
+	padding: 0.3rem 0.45rem;
+	background: var(--accent);
+	color: rgb(var(--on-accent));
+	font-family: var(--font-display);
+	font-size: 1.35rem;
+	font-weight: 350;
+	line-height: 1;
+	letter-spacing: -0.01em;
+}
+
+.blog-year:first-child {
+	margin-top: 0.25rem;
 }
 
 .blog-item {
-	border-bottom: 1px solid var(--surface3);
-	padding: 1rem 1.25rem 1rem 0.75rem;
 	position: relative;
 }
 
-.blog-item h3 {
-	margin: 0 0 0.5rem 0;
-	font-size: clamp(1.25rem, 1.6vw + 0.5rem, 2rem);
-	font-variation-settings: "ELSH" 0 !important;
-	text-rendering: optimizeLegibility !important;
+.blog-link,
+.blog-link:visited {
+	display: flex;
+	align-items: flex-start;
+	gap: 1rem;
+	padding: 0.5rem 0.6rem 0.6rem 0;
+	color: inherit;
+	text-decoration: none !important;
+	-webkit-tap-highlight-color: transparent;
 }
 
-.blog-item time {
-	color: var(--subtext0);
-	font-size: 0.9rem;
-	display: block;
-}
-
-/* Blog item with cover image */
-.blog-item.has-cover {
+/* the day, big, on the post's cover picture if it has one */
+.blog-date {
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-end;
+	flex: none;
+	width: 5.5rem;
+	height: 5.5rem;
+	padding: 0.35rem 0.5rem 0.4rem;
+	background: var(--surface1);
+	color: var(--supertext);
+	line-height: 1;
 	overflow: hidden;
+	isolation: isolate;
 }
 
-.blog-item.has-cover::before {
+.blog-date b {
+	font-family: var(--font-display);
+	font-size: 2.5rem;
+	font-weight: 300;
+	letter-spacing: -0.04em;
+}
+
+.blog-date span {
+	margin-top: 0.2rem;
+	font-size: 0.75rem;
+	font-weight: 600;
+	letter-spacing: 0.02em;
+}
+
+.blog-item.has-cover .blog-date::before {
 	content: "";
 	position: absolute;
 	inset: 0;
+	z-index: -2;
 	background-image: var(--cover-image);
 	background-size: cover;
-	background-position: 90% 45%;
-	z-index: -1;
-	opacity: 1;
-	mask-image: linear-gradient(
-		-45deg,
-		rgba(0, 0, 0, 0.35) 40%,
-		rgba(0, 0, 0, 0.25) 52.5%,
-		transparent 80%
-	);
+	background-position: center;
 }
 
 /* When the browser supports image-set() with type() hints, prefer the WebP
    cover via `--cover-image-set` (set inline by BlogList.tsx). Browsers
    without support keep using `--cover-image` (the plain JPEG url()) above. */
 @supports (background-image: image-set(url("x.webp") type("image/webp"))) {
-	.blog-item.has-cover::before {
+	.blog-item.has-cover .blog-date::before {
 		background-image: var(--cover-image-set, var(--cover-image));
 	}
 }
 
-.blog-item.has-cover h3,
-.blog-item.has-cover .post-desc,
-.blog-item.has-cover time,
-.blog-item.has-cover .tag {
-	text-shadow: none;
+/* a flat scrim so the date reads on any picture */
+.blog-item.has-cover .blog-date::after {
+	content: "";
+	position: absolute;
+	inset: 0;
+	z-index: -1;
+	background: hsla(var(--core-hsl), 0.5);
 }
 
-@media (prefers-color-scheme: dark) {
-	.blog-item.has-cover h3,
-	.blog-item.has-cover .post-desc,
-	.blog-item.has-cover time,
-	.blog-item.has-cover .tag {
-		text-shadow: 0 1px 8px rgba(0, 0, 0, 0.3);
-	}
+.blog-text {
+	display: flex;
+	flex-direction: column;
+	min-width: 0;
+	flex: 1;
+	padding-top: 0.1rem;
 }
 
-.blog-item.has-cover .tag {
-	backdrop-filter: blur(2px);
-}
-
-/* Blog link */
-.blog-link {
-	text-decoration: none !important;
-	display: block;
+.blog-item h3 {
+	margin: 0;
+	font-size: clamp(1.4rem, 1.2vw + 1.05rem, 2rem);
+	font-weight: 300;
+	line-height: 1.15;
+	letter-spacing: -0.02em;
+	color: var(--supertext);
+	transition: color 0.12s ease;
 }
 
 .blog-list a.blog-link:hover h3,
 .blog-list a.blog-link:focus-visible h3 {
-	color: var(--supertext);
-	text-decoration: underline;
-	text-decoration-color: var(--subtext1) !important;
+	color: var(--accent-text);
 }
 
-/* Keyboard focus indicator for blog items.
-   The global :focus-visible rule renders an inset dashed outline that's hard
-   to see (especially on cover-image variants), so we override with a solid
-   accent ring with positive offset and a subtle backdrop on the parent. */
 .blog-link:focus-visible {
-	outline: 1px dashed var(--accent);
-	outline-offset: 10px;
-}
-
-.blog-item:has(.blog-link:focus-visible) {
-	background: hsla(var(--accent-hsl), 0.08);
-}
-
-.blog-item.has-cover:has(.blog-link:focus-visible)::before {
-	opacity: 0.85;
+	outline: 2px dashed var(--supertext);
+	outline-offset: 2px;
 }
 
 /* Post metadata */
 .post-desc {
 	color: var(--subtext0);
-	margin-top: 0.5rem;
+	margin: 0.3rem 0 0;
+	line-height: 1.35;
 }
 
 .post-tags {
-	margin-top: 0.5rem;
+	margin-top: 0.4rem;
 	display: flex;
 	align-items: center;
-	gap: 0.5rem;
+	gap: 0.15rem 0.7rem;
 	flex-wrap: wrap;
 }
 
+/* tags are words in the accent colour, not chips */
 .post-tags .tag {
-	background: hsla(var(--overlay1-hsl), 0.25);
-	color: var(--supertext);
-	padding: 0.05rem 0.25rem;
-	/* border-radius: 999px; */
-	font-size: 0.8rem;
-	border: 1px solid hsla(var(--overlay2-hsl), 0.3);
+	color: var(--accent-text);
+	font-size: 0.8125rem;
+	font-weight: 600;
 }
 
 .post-tags .material-symbols {
-	color: var(--subtext0);
+	display: none;
 }
 
-.post-body {
-	padding: 1.25rem !important;
-	padding-bottom: 0.01px !important;
-}
+/* ---- a post ---- */
 
-/* Blog article content */
 article.blog-content {
-	margin: 0 auto;
-	line-height: 1.9;
+	margin: 0;
+	line-height: 1.7;
 	text-wrap: pretty;
 }
 
-article.blog-content .post-title {
+/* its header: when and what about, small, over the title; the one line of
+   what it says under it, as a standfirst */
+.post-header {
+	max-width: 58rem;
+}
+
+.post-kicker {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: baseline;
+	gap: 0.2rem 0.9rem;
+	margin: 1.75rem 0 0;
+	font-size: 0.8125rem;
+	font-weight: 600;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+	color: var(--subtext1);
+}
+
+/* (the title's own room above it is for when nothing's over it) */
+.post-header .post-title {
+	padding-top: calc(0.5rem + var(--glow-room));
+}
+
+.post-body > :first-child {
 	margin-top: 0;
-	margin-bottom: 0.75rem;
+}
+
+.post-kicker time {
+	color: var(--accent-text);
+}
+
+.post-kicker .tag {
+	font-weight: 400;
+}
+
+.post-header .post-desc {
+	max-width: 44rem;
+	margin: 0.35rem 0 0;
+	font-family: var(--font-display);
+	font-size: 1.45rem;
+	font-weight: 300;
+	line-height: 1.3;
+	color: var(--text1);
+	text-wrap: balance;
+}
+
+/* The post, in a column no wider than a line reads well at, and what's
+   next beside it where there's the room (it stays put as the post goes
+   by); under it where there isn't. */
+.post-columns {
+	display: grid;
+	grid-template-columns: minmax(0, 46rem) minmax(0, 15rem);
+	gap: 0.75rem 2.5rem;
+	align-items: start;
+	margin-top: 1.1rem;
+}
+
+.post-aside {
+	position: sticky;
+	top: 4.5rem;
+	padding-top: 0.4rem;
+}
+
+.post-aside .post-end {
+	margin: 0;
+	gap: 1.1rem;
+}
+
+.post-aside .post-end > * {
+	flex-direction: column;
+	align-items: flex-start;
+	gap: 0.35rem;
+}
+
+@media (max-width: 68rem) {
+	.post-columns {
+		grid-template-columns: minmax(0, 46rem);
+	}
+
+	.post-aside {
+		position: static;
+		padding-top: 0;
+	}
+}
+
+.post-body {
+	padding: 1.5rem 1.6rem 0.01px !important;
+	font-size: 1.0625rem;
 }
 
 article.blog-content h1 {
 	margin-top: 0;
 }
 
-article.blog-content h2 {
+article.blog-content .post-body h1 {
+	font-size: 2.1rem;
 	margin-top: 2rem;
+}
+
+article.blog-content h2 {
+	margin-top: 2.2rem;
+	font-size: 1.85rem;
+}
+
+article.blog-content h3 {
+	margin-top: 1.6rem;
 }
 
 article.blog-content p {
@@ -1202,22 +3017,26 @@ article.blog-content p {
 }
 
 article.blog-content .post-body {
-	margin-block: 0.75rem;
+	margin-block: 0;
 }
 
 article.blog-content blockquote {
-	border-left: 4px solid var(--overlay1);
+	border-left: 0.25rem solid var(--accent);
 	padding-left: 1rem;
-	color: var(--subtext1);
+	color: var(--subtext0);
 	margin-left: 0;
 	font-style: italic;
-	font-variation-settings: "slnt" -5;
+}
+
+article.blog-content hr {
+	border: none;
+	border-top: 0.125rem solid var(--surface3);
+	margin: 2rem 0;
 }
 
 article.blog-content img {
 	width: 100%;
 	height: auto;
-	image-rendering: pixelated;
 	text-align: center;
 }
 
@@ -1233,6 +3052,22 @@ article.blog-content .image-item img {
 	display: block;
 	margin-left: auto;
 	margin-right: auto;
+}
+
+article.blog-content table {
+	border-collapse: collapse;
+	margin-bottom: 1rem;
+}
+
+article.blog-content :is(th, td) {
+	border-bottom: 1px solid var(--surface3);
+	padding: 0.35rem 0.9rem 0.35rem 0;
+	text-align: left;
+}
+
+article.blog-content th {
+	font-weight: 600;
+	border-bottom: 0.125rem solid var(--accent);
 }
 
 /* Image captions */
@@ -1253,75 +3088,41 @@ cap subt:not(:has(.material-symbols)) {
 	color: var(--subtext1);
 }
 
-/* Splash view transition overrides */
-:root[data-vt-scope="splash"] ::view-transition-old(root),
-:root[data-vt-scope="splash"] ::view-transition-new(root),
-:root[data-vt-scope="splash"] ::view-transition-old(page-content),
-:root[data-vt-scope="splash"] ::view-transition-new(page-content) {
-	animation: none !important;
-	animation-duration: 0ms !important;
-	opacity: 1 !important;
-	transform: none !important;
-	filter: none !important;
-	mix-blend-mode: normal !important;
+/* the "subscribe / get in touch" lines under a list or a post */
+.post-end {
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+	margin: 0.75rem 0 0;
+	font-size: 0.95rem;
+	color: var(--subtext0);
 }
 
-:root[data-vt-scope="splash"] main,
-:root[data-vt-scope="splash"] h1 {
-	view-transition-name: none !important;
+.post-end > * {
+	display: flex;
+	align-items: center;
+	flex-wrap: wrap;
+	gap: 0.3rem 0.5rem;
 }
 
-/* Page crossfade */
-::view-transition-group(root),
-::view-transition-group(page-content) {
-	animation-duration: 0.175s;
-}
-
-/* Splash message transitions */
-@keyframes transition-new {
-	from {
-		opacity: 0;
-		transform: translateY(5px);
-		filter: blur(4px);
-	}
-
-	to {
-		opacity: 1;
-		transform: translateY(0px);
-		filter: blur(0px);
-	}
-}
-
-@keyframes transition-old {
-	from {
-		opacity: 1;
-		transform: translateY(0px);
-		filter: blur(0px);
-	}
-
-	to {
-		opacity: 0;
-		transform: translateY(-5px);
-		filter: blur(4px);
-	}
-}
-
-::view-transition-old(splash-message) {
-	animation: transition-old 0.35s ease forwards;
-}
-
-::view-transition-new(splash-message) {
-	animation: transition-new 0.35s ease forwards;
+.post-end .material-symbols {
+	color: var(--accent-text);
+	font-size: 1.25rem;
 }
 
 /* ==========================================================================
-   Live Cards (shared between MastodonCard, LastFmCard, etc.)
+   Live tiles (LastFmCard, TwitterCard, MastodonCard, GithubCard)
    ========================================================================== */
 
 .livecard {
-	display: block;
-	text-decoration: none;
-	color: inherit;
+	display: flex;
+	flex-direction: column;
+	padding: 0.7rem 0.8rem 0.75rem;
+	overflow: hidden;
+	user-select: auto;
+	/* its own stacking context: the picture bleeds sit at z-index -1,
+	   over the tile's colour and under its content */
+	isolation: isolate;
 }
 
 .livecard,
@@ -1341,6 +3142,7 @@ cap subt:not(:has(.material-symbols)) {
 	align-items: center;
 	gap: 0.4rem;
 	margin: 0 0 0.5rem 0;
+	min-height: 1.75rem;
 }
 
 .livecard-icon {
@@ -1348,40 +3150,64 @@ cap subt:not(:has(.material-symbols)) {
 	align-items: center;
 	justify-content: center;
 	color: var(--supertext);
-	font-size: 1.2rem;
+	font-size: 1.15rem;
 	line-height: 1;
 }
 
 .livecard-platform {
-	font-family: var(--font-display), sans-serif;
 	color: var(--supertext);
+	font-size: 0.95rem;
+	font-weight: 600;
+}
+
+/* the header's buttons are app bar buttons: rings */
+.livecard-topbtn,
+.livecard-topbtn:visited {
+	display: inline-grid;
+	place-items: center;
+	flex: none;
+	width: 1.75rem;
+	height: 1.75rem;
+	padding: 0 !important;
+	margin: 0 !important;
+	border: 0.125rem solid currentColor !important;
+	border-radius: 50%;
+	background: transparent;
+	color: var(--supertext) !important;
+	text-decoration: none !important;
+	font-size: 1rem;
+	line-height: 1;
+	cursor: pointer;
+	transition:
+		background-color 0.12s ease,
+		opacity 0.12s ease;
+}
+
+.livecard-topbtn .material-symbols {
 	font-size: 1.05rem;
 }
 
-.livecard-topbtn {
-	display: inline-flex;
-	align-items: center;
-	justify-content: center;
-	color: var(--subtext0) !important;
-	text-decoration: none !important;
-	font-size: 1.2rem;
-	line-height: 1;
+.livecard-topbtn:hover {
+	background: hsla(var(--supertext-hsl), 0.2);
 }
 
+.livecard-topbtn:active {
+	background: var(--supertext);
+	color: var(--tile-bg, var(--core)) !important;
+}
+
+.livecard-topbtn:disabled {
+	opacity: 0.35;
+	cursor: default;
+	background: transparent;
+}
+
+/* The header's buttons go at its far end: the refresh button, the first
+   of them, takes up the slack before it. (!important, because
+   .livecard-topbtn zeroes its margins that way.) */
 .livecard-refresh {
-	margin-left: auto;
-	background: none;
-	border: none;
-	padding: 0.2rem;
-	color: var(--subtext0);
-	cursor: pointer;
-	display: inline-flex;
-	align-items: center;
+	margin-left: auto !important;
 	font: inherit;
-}
-
-.livecard-refresh:hover {
-	color: var(--text);
 }
 
 .livecard-refresh.refreshing {
@@ -1391,8 +3217,43 @@ cap subt:not(:has(.material-symbols)) {
 
 .livecard-stat {
 	color: var(--subtext1);
-	font-size: 0.75rem;
-	letter-spacing: 0.05em;
+	font-size: 0.78rem;
+}
+
+/* for a finger: bigger rings, and a little more of each to hit than there
+   is to see (::before; ::after is the links' own, switched off in tiles) */
+@media (pointer: coarse) {
+	.livecard-header {
+		gap: 0.3rem;
+		min-height: 2.25rem;
+	}
+
+	.livecard-topbtn,
+	.livecard-topbtn:visited {
+		position: relative;
+		width: 2.25rem;
+		height: 2.25rem;
+	}
+
+	.livecard-topbtn::before {
+		content: "";
+		position: absolute;
+		inset: -0.25rem;
+		border-radius: 50%;
+	}
+
+	.livecard-topbtn .material-symbols {
+		font-size: 1.25rem;
+	}
+}
+
+/* (five of those and a name are more than a small phone is wide) */
+@media (pointer: coarse) and (max-width: 23.5rem) {
+	.livecard-topbtn,
+	.livecard-topbtn:visited {
+		width: 2rem;
+		height: 2rem;
+	}
 }
 
 .livecard-status {
@@ -1401,19 +3262,40 @@ cap subt:not(:has(.material-symbols)) {
 	   horizontal via cross axis), and text-align catches multi-line cases
 	   like the error message which can wrap. */
 	margin: auto;
-	color: var(--subtext2);
-	font-size: 0.85rem;
+	color: var(--subtext1);
+	font-size: 0.9rem;
 	text-align: center;
+}
+
+/* (loading: the ring of dots, metro-dreamland/components/Progress.tsx) */
+.livecard-status .m-progress-ring {
+	display: block;
+}
+
+/* When a card that's showing something already is fetching again (a
+   refresh, or one of its own every so often) and that takes more than a
+   moment, the line of dots runs along its top edge, and on to the end of
+   the pass it's on: runProgressBar in metro-dreamland/components/Progress.tsx, which each
+   card calls, sets data-running. A fetch that's over at once never shows
+   it; nor does a card's first, which has the ring. It's in the card's
+   header, and placed against the tile. */
+.livecard-progress {
+	position: absolute;
+	top: 0;
+	right: 0;
+	left: 0;
+	display: none;
+}
+
+.livecard-progress[data-running] {
+	display: block;
 }
 
 /* Social post cards (MastodonCard, TwitterCard; markup in
    src/components/SocialPost.tsx) */
 
 .feed-card {
-	display: flex;
-	flex-direction: column;
 	position: relative;
-	overflow: hidden;
 }
 
 .feed-post {
@@ -1422,13 +3304,13 @@ cap subt:not(:has(.material-symbols)) {
 	gap: 0.6rem;
 	flex: 1;
 	min-width: 0;
-	/* container for cqi-based fluid type sizing in .is-short.
-	   position: relative so the post sits above the .feed-post-bleed
-	   (which is at z-index: -1 in the card's stacking context). */
+	min-height: 0;
+	/* container for cqi-based fluid type sizing in .is-short */
 	container-type: inline-size;
 	position: relative;
 }
 
+/* who it's by: a square picture, the name, the handle under it */
 .feed-post-header {
 	display: flex;
 	align-items: center;
@@ -1447,8 +3329,7 @@ cap subt:not(:has(.material-symbols)) {
 	height: 2.5rem;
 	flex-shrink: 0;
 	object-fit: cover;
-	border: 1px solid var(--surface2);
-	background: var(--surface2);
+	background: var(--surface1);
 }
 
 .feed-post-header-info {
@@ -1481,7 +3362,6 @@ cap subt:not(:has(.material-symbols)) {
 	margin-left: auto;
 	flex-shrink: 0;
 	color: var(--subtext2);
-	letter-spacing: 0.05em;
 }
 
 .feed-post-body {
@@ -1490,38 +3370,65 @@ cap subt:not(:has(.material-symbols)) {
 	gap: 0.5rem;
 	flex: 1;
 	min-width: 0;
+	min-height: 0;
+	overflow: hidden;
 }
 
+/* a content warning: what it warns of, on a panel of the tile's ink */
 .feed-post-spoiler {
 	margin: 0;
-	font-style: italic;
-	color: var(--subtext0);
-	font-size: 0.85rem;
-	padding: 0.35rem 0.5rem;
-	border-left: 2px solid var(--surface2);
-	background: hsla(var(--surface0-hsl), 0.4);
+	padding: 0.3rem 0.55rem 0.35rem;
+	background: rgba(var(--ink), 0.12);
+	color: var(--text1);
+	font-size: 0.82rem;
+	font-weight: 600;
 }
 
 .feed-post-content {
 	color: var(--text1);
 	font-size: 0.9rem;
-	line-height: 1.45;
+	line-height: 1.4;
 	overflow-wrap: anywhere;
 }
 
-/* twitter-style: short, text-only posts get the big-font display
-   treatment. fluid clamp scales with the card column, ELSH adds the
-   chunky stripe weight that h2 uses. */
+/* short posts get the big light type: the post as a headline. fluid clamp
+   scales with the card column. */
 .feed-post-content.is-short {
 	color: var(--text);
+	font-family: var(--font-display);
 	font-size: min(var(--post-size, 1.7rem), max(1.05rem, 7.5cqi));
-	line-height: 1.25;
-	font-variation-settings: "ELSH" 93;
-	font-synthesis: style;
-	font-weight: 50;
-	text-rendering: geometricPrecision;
-	text-wrap: balance;
+	font-weight: 300;
+	line-height: 1.18;
+	letter-spacing: -0.015em;
+	/* (its lines run the width of the tile, not evened out and short of
+	   it: fitPost sees to a last line that would be nearly empty) */
+	text-wrap: pretty;
 	hyphens: auto;
+	/* (lines this tight are shorter than their letters: the last one's
+	   descenders hang out of the box, which is cut off at its foot) */
+	padding-bottom: 0.14em;
+}
+
+/* These are the biggest a post's type gets. All of a post is there to be
+   read, so where it doesn't fit at that it's set smaller until it does
+   (fitPost in src/components/SocialPost.tsx, which measures it); and one
+   too long even for the smallest is cut short there, at the last line
+   there's room for (--lines). */
+.feed-post-content,
+.feed-post-content * {
+	/* (not evened out, as the rest of a live tile's text is: a post's lines
+	   run the width of the tile) */
+	text-wrap: pretty;
+}
+
+.feed-post-content.is-cut {
+	/* (as tall as its lines, so it's they that are counted down to what
+	   fits and not its box that's squeezed, mid-line) */
+	flex: none;
+	display: -webkit-box;
+	-webkit-box-orient: vertical;
+	-webkit-line-clamp: var(--lines, 3);
+	overflow: hidden;
 }
 
 .feed-post-content p {
@@ -1537,95 +3444,28 @@ cap subt:not(:has(.material-symbols)) {
 }
 
 .feed-post-content a {
-	color: var(--accent);
+	color: var(--accent-text);
+	text-decoration: underline;
 }
 
-/* Bleed: visual attachments (image/video/gifv) fill the card behind the
-   post, heavily darkened so the foreground text stays readable. inset is
-   negative so the bleed extends past .background-container's padding all
-   the way to the inside of the card border. */
-.feed-post-bleed {
-	position: absolute;
-	inset: -0.7rem;
-	z-index: -1;
-	pointer-events: none;
-	background: var(--crust);
-	opacity: 0.67;
-}
-
-.feed-post-bleed :is(img, video) {
-	width: 100%;
-	height: 100%;
-	object-fit: cover;
+.feed-post-audio {
 	display: block;
-	/* contrast() runs after brightness() and pushes highlights back up
-	   (0.85 -> 0.92 at 1.2), so keep it mild; brightness is what caps how
-	   light a white photo can get behind the text */
-	filter: brightness(0.45) saturate(0.8) contrast(1.05);
-	image-rendering: auto;
-}
-
-/* dark vignette over the image so edges fade to the card bg, plus an even
-   scrim under it so even the middle of a bright photo keeps the text
-   (incl. subtext) at 4.5:1 or better */
-.feed-post-bleed::after {
-	content: "";
-	position: absolute;
-	inset: 0;
-	background:
-		linear-gradient(hsla(var(--crust-hsl), 0.25), hsla(var(--crust-hsl), 0.25)),
-		radial-gradient(
-			ellipse at center,
-			transparent 30%,
-			hsla(var(--crust-hsl), 0.55) 100%
-		),
-		linear-gradient(
-			to bottom,
-			hsla(var(--crust-hsl), 0.5) 0%,
-			transparent 25%,
-			transparent 75%,
-			hsla(var(--crust-hsl), 0.5) 100%
-		);
-	pointer-events: none;
-}
-
-/* audio + unknown have no good "bleed" representation. Render them inline
-   at the bottom of the card instead. */
-.feed-post-bleed-audio,
-.feed-post-bleed-unknown {
-	position: static;
-	inset: auto;
-	z-index: auto;
-	pointer-events: auto;
-	background: none;
-	margin-top: 0.5rem;
-}
-
-.feed-post-bleed-audio::after,
-.feed-post-bleed-unknown::after {
-	display: none;
-}
-
-.feed-post-bleed-audio audio {
 	width: 100%;
+	height: 2rem;
 }
 
-.feed-post-bleed-fallback {
-	display: inline-flex;
-	align-items: center;
-	gap: 0.3rem;
-	font-size: 0.8rem;
-	color: var(--subtext0);
-}
-
+/* The counts are the foot of the tile, where a tile's badge goes: glyphs
+   and numbers in a row, the post's age at the far end. Nothing rules them
+   off from the post. */
 .feed-post-counts {
 	display: flex;
+	align-items: center;
 	gap: 1rem;
 	margin: 0;
-	padding-top: 0.5rem;
-	border-top: 1px solid var(--surface2);
 	font-size: 0.8rem;
-	color: var(--subtext2);
+	line-height: 1.25;
+	color: var(--subtext1);
+	white-space: nowrap;
 }
 
 .feed-post-counts span {
@@ -1638,26 +3478,312 @@ cap subt:not(:has(.material-symbols)) {
 	font-size: 1rem;
 }
 
-/* Fade-in for live card content. The .is-initial gate is added in the JSX
-   and stripped by the component ~1s after the first state.view transition
-   out of "loading" completes (long enough for the slow bleed animation to
-   finish). After it's gone, periodic auto-refreshes and manual refresh
-   clicks — both of which replace the reactive subtree's DOM nodes — no
-   longer match these rules, so the fade-in only plays on initial reveal. */
-@keyframes livecard-fade-in {
+/* ---- a post's pictures and clips (postMedia) ----
+   As a picture tile has them: across the tile from edge to edge, as they
+   are (nothing laid over them to make type readable, nothing done to
+   them), cut to the shape there is. More than one are a mosaic, with the
+   tile's colour showing between them the way it does between tiles. */
+.feed-media {
+	position: relative;
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	grid-auto-rows: minmax(0, 1fr);
+	gap: 0.1875rem;
+	/* (out to the tile's edges, through its padding) */
+	margin: 0 -0.8rem 0.7rem;
+	overflow: hidden;
+	/* On a tall tile (a column to itself on a phone: below) it's between
+	   the header and the post, the shape the pictures are themselves
+	   (--ar), and gives way before the post does if there's a lot of
+	   that. */
+	flex: 0 100 auto;
+	aspect-ratio: var(--ar, 16 / 9);
+	min-height: 7rem;
+}
+
+/* (...which is to say: the post under pictures is as tall as what's in it,
+   and it's the pictures that are cut down to what that leaves, a hundred
+   times sooner than the post is) */
+.feed-post.is-caption {
+	flex: 1 1 auto;
+}
+
+.feed-media[data-n="1"] {
+	grid-template-columns: minmax(0, 1fr);
+}
+
+/* (three: the first has the left half, top to bottom) */
+.feed-media[data-n="3"] > :first-child {
+	grid-row: span 2;
+}
+
+.feed-media-cell {
+	position: relative;
+	display: block;
+	min-width: 0;
+	min-height: 0;
+	overflow: hidden;
+	background: rgba(0, 0, 0, 0.3);
+}
+
+.feed-media-cell :is(img, video, iframe) {
+	display: block;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+/* (a clip in a frame of its own: framedClip, in SocialPost.tsx. There's
+   nothing in it to press: what's pressed is the link it's in.) */
+.feed-media-frame {
+	border: 0;
+	pointer-events: none;
+}
+
+/* (the picture's the link, and has all of its cell) */
+.feed-media-link {
+	display: block;
+	width: 100%;
+	height: 100%;
+}
+
+/* A clip's buttons, in its corner (clipButtons): an app bar's rings, to
+   play or pause it and to give it its sound. Over the picture, beside the
+   link and not in it. */
+.feed-media-controls {
+	position: absolute;
+	top: 0.6rem;
+	left: 0.6rem;
+	z-index: 1;
+	display: flex;
+	gap: 0.4rem;
+}
+
+.feed-media-kind {
+	display: grid;
+	place-items: center;
+	flex: none;
+	width: 1.75rem;
+	height: 1.75rem;
+	padding: 0;
+	border: 0.125rem solid #fff;
+	border-radius: 50%;
+	background: rgba(0, 0, 0, 0.45);
+	color: #fff;
+	font: inherit;
+	font-size: 1rem;
+	line-height: 1;
+	cursor: pointer;
+}
+
+.feed-media-kind:hover {
+	background: rgba(90, 90, 90, 0.6);
+}
+
+.feed-media-kind:active {
+	background: #fff;
+	color: #000;
+}
+
+/* (for a finger, as the header's are) */
+@media (pointer: coarse) {
+	.feed-media-kind:not(.is-gif) {
+		width: 2.25rem;
+		height: 2.25rem;
+		font-size: 1.2rem;
+	}
+}
+
+/* (a GIF has none: it says what it is, and is the link like a picture) */
+.feed-media-kind.is-gif {
+	position: absolute;
+	top: 0.6rem;
+	left: 0.6rem;
+	width: auto;
+	height: auto;
+	padding: 0.15rem 0.4rem 0.2rem;
+	border: 0;
+	border-radius: 0;
+	background: rgba(0, 0, 0, 0.7);
+	font-size: 0.7rem;
+	font-weight: 600;
+	letter-spacing: 0.04em;
+	pointer-events: none;
+}
+
+/* Marked sensitive: blurred until it's asked for. The button is over all
+   of it, so nothing under it can be opened by accident either; what it
+   says is in the top corner, which a caption never reaches. */
+.feed-media[data-veiled] .feed-media-cell :is(img, video, iframe) {
+	filter: blur(1.75rem) saturate(0.7) brightness(0.75);
+	transform: scale(1.25);
+}
+
+.feed-media[data-veiled] :is(.feed-media-kind, .feed-media-controls) {
+	display: none;
+}
+
+.feed-media-veil {
+	position: absolute;
+	inset: 0;
+	z-index: 1;
+	display: flex;
+	align-items: flex-start;
+	justify-content: flex-start;
+	gap: 0.45rem;
+	padding: 0.65rem 0.8rem;
+	border: 0;
+	background: rgba(0, 0, 0, 0.35);
+	color: #fff;
+	font: inherit;
+	font-size: 0.9rem;
+	cursor: pointer;
+}
+
+/* (each on the one line, level with the word in the box) */
+.feed-media-veil > * {
+	line-height: 1.75rem;
+}
+
+.feed-media-veil .material-symbols {
+	font-size: 1.2rem;
+}
+
+.feed-media-veil-show {
+	margin-left: 0.3rem;
+	padding: 0 0.6rem;
+	border: 0.125rem solid #fff;
+	font-weight: 600;
+	line-height: 1.5rem;
+}
+
+/* ---- ...and the post that goes with them ----
+   On a tall tile, as said: the pictures, then the post under them on the
+   tile's own colour, laid out as any post is. That's a phone's when the
+   tile has a column to itself (the strip's --live-rows is 1), and the
+   phone isn't on its side.
+
+   Everywhere else the tile's about as wide as it's tall, or wider (the
+   start screen's; two to a column on a phone; a phone on its side), there
+   isn't the height for one under the other, and it's Windows 8's
+   picture-and-text tile: the pictures have all of the tile under its
+   header, and the post is a caption across the foot of them, on a band of
+   black they show through. What it says, in up to three lines; then one
+   line for who by (small) and the counts.
+   (The same condition is in TwitterCard.tsx, for what's in a caption.) */
+@media (min-width: 60rem), (max-height: 30rem), (min-height: 46rem) {
+	.feed-card:has(> .feed-media) {
+		display: grid;
+		grid-template-columns: minmax(0, 1fr);
+		grid-template-rows: auto minmax(0, 1fr);
+	}
+
+	/* (the header's a strip of the tile's colour over the pictures: as
+	   much of it under its buttons as over them) */
+	.feed-card:has(> .feed-media) > .livecard-header {
+		margin-bottom: 0.7rem;
+	}
+
+	.feed-card > .feed-media {
+		grid-area: 2 / 1;
+		margin-bottom: -0.75rem;
+		aspect-ratio: auto;
+		min-height: 0;
+	}
+
+	.feed-post.is-caption {
+		grid-area: 2 / 1;
+		align-self: end;
+		display: grid;
+		grid-template-columns: minmax(0, 1fr) auto;
+		/* (if it comes to more than that, it's what it says that's cut
+		   short, not who by) */
+		grid-template-rows: minmax(0, 1fr) auto;
+		grid-template-areas:
+			"body body"
+			"who counts";
+		align-items: center;
+		gap: 0.45rem 1rem;
+		/* (some of the picture is always clear of it) */
+		max-height: 72%;
+		margin: 0 -0.8rem -0.75rem;
+		padding: 0.6rem 0.8rem 0.65rem;
+		/* (acrylic as well: the pictures under it blurred, a tint of black,
+		   the grain) */
+		background: var(--grain), rgba(0, 0, 0, 0.56);
+		-webkit-backdrop-filter: var(--frost);
+		backdrop-filter: var(--frost);
+		--ink: 255, 255, 255;
+	}
+
+	.is-caption .feed-post-body {
+		grid-area: body;
+		align-self: stretch;
+		gap: 0.4rem;
+	}
+
+	.is-caption .feed-post-content {
+		flex: none;
+	}
+
+	/* (a caption's headline type is no bigger than a caption can carry) */
+	.is-caption .feed-post-content.is-short {
+		font-size: min(var(--post-size, 1.45rem), 1.45rem, max(1.05rem, 7.5cqi));
+	}
+
+	.is-caption .feed-post-header {
+		grid-area: who;
+		gap: 0.45rem;
+	}
+
+	.is-caption .feed-post-avatar {
+		width: 1.5rem;
+		height: 1.5rem;
+	}
+
+	.is-caption .feed-post-header-info {
+		flex-direction: row;
+		align-items: baseline;
+		gap: 0.4rem;
+	}
+
+	.is-caption .feed-post-header-name {
+		flex: none;
+		font-size: 0.85rem;
+	}
+
+	.is-caption .feed-post-header-username {
+		font-size: 0.75rem;
+	}
+
+	.is-caption .feed-post-counts {
+		grid-area: counts;
+		gap: 0.8rem;
+	}
+
+	.is-caption .feed-post-when {
+		margin-left: 0.2rem;
+	}
+}
+
+/* Reveal of a live tile's content the first time it loads. The
+   .is-initial gate is added imperatively by the component and stripped
+   ~1s after the first view change out of "loading", so periodic
+   auto-refreshes and manual refresh clicks (both of which replace the
+   reactive subtree's DOM nodes) don't replay it. The content comes up from
+   the tile's bottom edge, the way a Windows tile takes an update. */
+@keyframes livecard-rise {
 	from {
 		opacity: 0;
-		filter: blur(8px);
+		transform: translate3d(0, 2.5rem, 0);
 	}
 
 	to {
 		opacity: 1;
-		filter: blur(0);
+		transform: translate3d(0, 0, 0);
 	}
 }
 
-/* Opacity-only variant for header chrome (stats) — blur on small text in a
-   tight header row reads as a glitch, not an effect. */
 @keyframes livecard-fade-in-plain {
 	from {
 		opacity: 0;
@@ -1668,71 +3794,45 @@ cap subt:not(:has(.material-symbols)) {
 	}
 }
 
-@keyframes masto-fade-in {
-	from {
-		opacity: 0;
-		filter: blur(8px);
-	}
-
-	to {
-		opacity: 0.67;
-		filter: blur(0);
-	}
-}
-
-/* The LastFm bleed has a baseline filter chain
-   (brightness/contrast/saturate + a small constant blur). A naïve
-   `filter: blur(8px) → blur(0)` animation would override that whole chain
-   for the duration, so these bespoke keyframes re-assert the same values
-   and only vary the blur magnitude (8px → 0.8px = bleed's natural rest). */
-@keyframes lastfm-bleed-fade-in {
-	from {
-		opacity: 0;
-		filter: brightness(0.75) contrast(1.1) saturate(1.3) blur(8px);
-	}
-
-	to {
-		opacity: 1;
-		filter: brightness(0.75) contrast(1.1) saturate(1.3) blur(0.8px);
-	}
-}
-
-/* Foreground content: Mastodon post and the LastFm art/meta. We
-   deliberately do NOT animate .lastfm-track itself — its
-   `filter: blur(...)` would propagate down through the subtree, double-
-   blurring the absolutely-positioned bleed and stomping its own animation.
-   The loading status (.livecard-status) is intentionally excluded: the
-   .is-initial gate is added imperatively in cx.mount, AFTER the SSR'd
-   loading status is already in the DOM, so animating it would flash from
-   visible → opacity 0 → fade in. The loaded content nodes are inserted
-   after mount and animate cleanly on first paint. */
+/* Foreground content: the posts and the LastFm art/meta. We deliberately
+   do NOT animate .lastfm-track itself: a transform there would move the
+   absolutely-positioned bleed with it. The loading status
+   (.livecard-status) is intentionally excluded: the .is-initial gate is
+   added imperatively in cx.mount, AFTER the SSR'd loading status is
+   already in the DOM, so animating it would flash from visible → opacity 0
+   → back in. The loaded content nodes are inserted after mount and animate
+   cleanly on first paint. */
 .livecard.is-initial > .post,
 .livecard.is-initial .lastfm-track .lastfm-art,
+.livecard.is-initial .lastfm-track > .lastfm-meta,
+.livecard.is-initial .lastfm-player {
+	animation: livecard-rise 0.5s cubic-bezier(0.1, 0.9, 0.2, 1) both;
+}
+
 .livecard.is-initial .lastfm-track > .lastfm-meta {
-	animation: livecard-fade-in 0.35s ease-out;
+	animation-delay: 0.06s;
 }
 
-/* Bleeds reveal independently and slower for an atmospheric feel — the
-   foreground snaps in, the backdrop drifts in behind it. */
-.livecard.is-initial > .feed-post-bleed {
-	animation: masto-fade-in 0.9s ease-out;
+.livecard.is-initial .lastfm-player {
+	animation-delay: 0.12s;
 }
 
-.livecard.is-initial .lastfm-art-bleed {
-	animation: lastfm-bleed-fade-in 0.9s ease-out;
+/* Pictures (a post's; the ones behind) and the header's counts just
+   appear. */
+.livecard.is-initial > .feed-media,
+.livecard.is-initial .lastfm-art-bleed,
+.livecard.is-initial > .gh-bleed {
+	animation: livecard-fade-in-plain 0.6s ease-out both;
 }
 
-/* Header stats (scrobble count, follower count) fade in opacity-only,
-   faster than the body so the count reads as ambient chrome rather than
-   competing with the main content's reveal. */
 .livecard.is-initial .livecard-header .livecard-stat {
 	animation: livecard-fade-in-plain 0.18s ease-out;
 }
 
-/* Refresh button: a quick 360° turn on every click. The component toggles
-   the .spin class off-and-on via reflow on each click so a second click
+/* Refresh button: a quick turn on every click. The component toggles the
+   .spin class off-and-on via reflow on each click so a second click
    restarts the animation cleanly. Rotates the inner icon (not the button)
-   so the focus ring stays put. */
+   so the ring stays put. */
 @keyframes livecard-refresh-spin {
 	from {
 		transform: rotate(0);
@@ -1749,11 +3849,518 @@ cap subt:not(:has(.material-symbols)) {
 }
 
 /* ==========================================================================
+   Projects
+   ========================================================================== */
+
+.projects-group {
+	margin-top: 1rem;
+}
+
+/* the back of a project tile: years up top, name and pitch at the bottom */
+.project-tile .tile-back {
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-end;
+	gap: 0.15rem;
+	padding: 0.55rem 0.7rem 0.6rem;
+}
+
+.project-year {
+	display: flex;
+	align-items: center;
+	flex-wrap: wrap;
+	gap: 0.1rem 0.6rem;
+	margin-bottom: auto;
+	font-size: 0.75rem;
+	font-weight: 600;
+	color: var(--subtext0);
+}
+
+.featured-indicator {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.2rem;
+}
+
+.featured-indicator .material-symbols {
+	font-size: 1rem;
+}
+
+.project-title {
+	font-family: var(--font-display);
+	font-size: 1.3rem;
+	font-weight: 350;
+	line-height: 1.1;
+	letter-spacing: -0.01em;
+}
+
+.project-description {
+	display: -webkit-box;
+	-webkit-line-clamp: 3;
+	-webkit-box-orient: vertical;
+	overflow: hidden;
+	font-size: 0.85rem;
+	line-height: 1.25;
+	color: var(--subtext0);
+}
+
+.project-tile.large .project-title {
+	font-size: 2.1rem;
+	font-weight: 300;
+	letter-spacing: -0.02em;
+}
+
+.project-tile.large .project-description {
+	font-size: 1rem;
+	max-width: 30rem;
+}
+
+.project-tile.small .project-title {
+	font-size: 1rem;
+}
+
+.project-tile.small .tile-label {
+	font-size: 0.75rem;
+}
+
+/* ---- one project ---- */
+
+.project-view {
+	max-width: 74rem;
+}
+
+.project-view .page-header .project-meta {
+	margin: 0.5rem 0 0 0.2rem;
+	color: var(--accent-text);
+	font-size: 0.9rem;
+	font-weight: 600;
+}
+
+.project-view .page-header .project-desc {
+	margin: 0.6rem 0 0 0.2rem;
+	max-width: 48rem;
+	font-size: 1.1rem;
+	color: var(--text1);
+}
+
+#details {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.6rem;
+	margin: 0.4rem 0 1.25rem;
+}
+
+#image {
+	margin: 0;
+	max-width: 64rem;
+	background: var(--surface1);
+}
+
+#image a,
+#image picture,
+#image img {
+	display: block;
+	width: 100%;
+	height: auto;
+}
+
+/* ==========================================================================
+   Contact tiles (ContactCard)
+   ========================================================================== */
+
+.contact-card {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	padding: 0.65rem 0.7rem 0.55rem;
+	overflow: hidden;
+}
+
+.contact-card .platform-icon {
+	display: inline-flex;
+	font-size: 2.1rem;
+	line-height: 1;
+}
+
+.contact-text {
+	display: flex;
+	flex-direction: column;
+	min-width: 0;
+	line-height: 1.2;
+}
+
+.platform-name {
+	font-size: 1.05rem;
+	font-weight: 600;
+}
+
+.contact-name {
+	font-size: 0.8rem;
+	color: var(--subtext0);
+	overflow-wrap: anywhere;
+}
+
+/* ==========================================================================
+   Inside the live tiles: what the components' own styles (written for the
+   old cards) need to sit right on a flat, coloured tile
+   ========================================================================== */
+
+.lastfm-card .lastfm-title {
+	font-weight: 300;
+	letter-spacing: -0.02em;
+}
+
+.lastfm-card .lastfm-history-title {
+	font-weight: 350;
+}
+
+.lastfm-card :is(.lastfm-art, .lastfm-history-art) {
+	border: none;
+}
+
+/* the play button is an app bar button */
+.lastfm-card .lastfm-play {
+	border: 0.125rem solid currentColor;
+	border-radius: 50%;
+	background: transparent;
+	color: var(--supertext);
+}
+
+.lastfm-card .lastfm-play:hover {
+	background: hsla(var(--supertext-hsl), 0.2);
+}
+
+.lastfm-card .lastfm-play:active {
+	background: var(--supertext);
+	color: var(--tile-bg);
+}
+
+/* a rose heart doesn't show on a red tile */
+.lastfm-card :is(.lastfm-stat-loved, .lastfm-history-loved) {
+	color: var(--supertext);
+}
+
+/* the contribution graph behind: squares of ink on the tile's green,
+   stronger the busier the day */
+.github-card .gh-day {
+	background: hsla(0, 0%, 0%, 0.14);
+}
+
+.github-card .gh-l1 {
+	background: hsla(0, 0%, 100%, 0.1);
+}
+
+.github-card .gh-l2 {
+	background: hsla(0, 0%, 100%, 0.2);
+}
+
+.github-card .gh-l3 {
+	background: hsla(0, 0%, 100%, 0.32);
+}
+
+.github-card .gh-l4 {
+	background: hsla(0, 0%, 100%, 0.46);
+}
+
+.github-card .gh-bleed::after {
+	background: none;
+}
+
+.github-card .gh-name,
+.github-card .gh-stat b {
+	font-family: var(--font-display);
+	font-weight: 350;
+	letter-spacing: -0.015em;
+}
+
+.github-card .gh-avatar {
+	border: none;
+}
+
+.github-card .gh-repo {
+	border: none;
+	background: hsla(0, 0%, 0%, 0.34);
+}
+
+/* ==========================================================================
+   Blog list: the notes above the list
+   ========================================================================== */
+
+.blog-notes {
+	display: flex;
+	flex-direction: column;
+	gap: 0.4rem;
+	margin-top: 0.75rem;
+	max-width: 62rem;
+}
+
+.blog-notes subt {
+	font-size: 0.9rem;
+}
+
+.blog-notes .feeds {
+	display: flex;
+	align-items: center;
+	flex-wrap: wrap;
+	gap: 0.4rem;
+}
+
+.blog-notes .feeds .material-symbols {
+	color: var(--accent-text);
+	font-size: 1.2rem;
+}
+
+.blog-notes ul.compact,
+.post-end ul.compact {
+	margin: 0;
+}
+
+.post-meta time {
+	color: var(--subtext0);
+	font-size: 0.8125rem;
+	font-weight: 600;
+}
+
+/* ==========================================================================
+   About
+   ========================================================================== */
+
+.about-page section {
+	margin-top: 2.25rem;
+	max-width: 62rem;
+}
+
+.about-page section > p {
+	max-width: 44rem;
+	color: var(--text1);
+}
+
+.about-page .about-prose {
+	margin-top: 0.75rem;
+	font-size: 1.05rem;
+}
+
+.about-page .about-prose p {
+	color: var(--text);
+	margin-block: 0 0.75rem;
+}
+
+.about-page h2 {
+	margin: 0 0 0.2rem;
+}
+
+/* The accent picker: the colour strip (components/ColorStrip.tsx), with
+   room under it for the name it shows there. */
+.accent-picker {
+	margin-top: 0.9rem;
+	margin-bottom: 1.6rem;
+}
+
+.archive-tiles {
+	--u: 5.5rem;
+	margin-top: 0.9rem;
+}
+
+/* The last colour on the strip is one of your own, and these are its
+   sliders, under the strip while it's the one in use. Each bar shows the
+   colours along it (AboutView sets their --track). */
+.accent-custom {
+	display: grid;
+	gap: 0.75rem;
+	max-width: 27rem;
+	margin-top: 1.25rem;
+}
+
+.accent-custom[hidden] {
+	display: none;
+}
+
+/* Under them, a button for the browser's own colour picker. The input it
+   opens lies under the button, unseen and untouchable: it has to be on the
+   page somewhere for its picker to have a place to open from. */
+.accent-pick {
+	position: relative;
+	justify-self: start;
+	margin-top: 0.5rem;
+}
+
+.accent-pick input {
+	position: absolute;
+	inset: 0;
+	z-index: -1;
+	width: 100%;
+	height: 100%;
+	margin: 0;
+	padding: 0;
+	border: 0;
+	opacity: 0;
+	pointer-events: none;
+}
+
+.archive-tile .tile-label {
+	left: 0.45rem;
+	right: 0.3rem;
+	bottom: 0.35rem;
+	font-size: 0.72rem;
+}
+
+.archive-tile .tile-label {
+	white-space: normal;
+}
+
+.archive-version {
+	position: absolute;
+	top: 0.3rem;
+	left: 0.45rem;
+	font-family: var(--font-display);
+	font-size: 1.3rem;
+	font-weight: 350;
+	letter-spacing: -0.02em;
+}
+
+.swatches {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.5rem;
+	margin-top: 0.9rem;
+}
+
+.swatch {
+	position: relative;
+	display: inline-flex;
+	flex-direction: column;
+	align-items: flex-start;
+	justify-content: flex-end;
+	width: 7rem;
+	height: 7rem;
+	padding: 0.4rem 0.5rem;
+	color: var(--supertext);
+	isolation: isolate;
+}
+
+.swatch.light {
+	color: var(--core);
+}
+
+.swatch.is-accent {
+	color: rgb(var(--on-accent));
+}
+
+.swatch .preview {
+	position: absolute;
+	inset: 0;
+	z-index: -1;
+	/* the darkest ones would vanish into the page */
+	box-shadow: inset 0 0 0 1px hsla(var(--supertext-hsl), 0.16);
+}
+
+.swatch .label,
+.swatch .value {
+	font-family: var(--font-mono), monospace;
+	font-size: 0.72rem;
+	line-height: 1.25;
+}
+
+.swatch .label {
+	font-weight: bold;
+}
+
+/* on a phone, squares that fill the page's width between them: four of
+   the small ones to a row, three of the palette's */
+@media (max-width: 42rem) {
+	.archive-tiles {
+		--u: min(
+			5.5rem,
+			calc((100vw - var(--page-margin) - var(--page-margin-r) - 1.5rem) / 4)
+		);
+	}
+
+	.swatch {
+		width: min(
+			7rem,
+			calc((100vw - var(--page-margin) - var(--page-margin-r) - 1rem) / 3)
+		);
+		height: min(
+			7rem,
+			calc((100vw - var(--page-margin) - var(--page-margin-r) - 1rem) / 3)
+		);
+	}
+}
+
+/* ==========================================================================
+   404
+   ========================================================================== */
+
+/* the sad face Windows 8 pulled when it fell over, on a tile of its own */
+.not-found .frown {
+	display: grid;
+	place-items: center;
+	width: 9rem;
+	height: 9rem;
+	margin: 1rem 0 0 !important;
+	padding-bottom: 0.6rem;
+	font-family: var(--font-display);
+	font-size: 5.5rem;
+	font-weight: 300;
+	line-height: 1;
+	letter-spacing: -0.02em;
+}
+
+.not-found .page-header p:not(.frown) {
+	margin: 0.5rem 0 0 0.2rem;
+	font-size: 1.1rem;
+	color: var(--text1);
+}
+
+.go-back {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 0.6rem;
+	margin-top: 1rem;
+}
+
+/* ==========================================================================
+   Web buttons (88x31s)
+   ========================================================================== */
+
+.webbtns > * {
+	animation: groove 2s cubic-bezier(0.3, 0, 0.7, 0.9) infinite;
+}
+
+.webbtns :nth-child(2n) {
+	animation-delay: -1s;
+}
+
+.webbtns.fast > * {
+	animation-delay: -1s;
+}
+
+.webbtns.fast :nth-child(2n) {
+	animation-delay: -2s;
+}
+
+/* not scrolled into view yet (ButtonList removes the class); without
+   scripting nothing would ever remove it, so only then */
+@media (scripting: enabled) {
+	.webbtns-wait .webbtns,
+	.webbtns-wait .webbtns > * {
+		animation-play-state: paused;
+	}
+}
+
+/* ==========================================================================
    Miscellaneous
    ========================================================================== */
 
 img {
 	user-select: none;
+}
+
+/* pixel art stays pixel art */
+.web-button img,
+.pfp {
+	image-rendering: pixelated;
 }
 
 /* wsrv images' format picker (src/components/WsrvPicture.tsx): no box of its
@@ -1768,20 +4375,7 @@ img {
 	display: none;
 }
 
-.project-card * {
-	text-decoration: none !important;
-}
-
-:root {
-	--ctp-mauve: #cba6f7;
-	--ctp-red: #f38ba8;
-	--ctp-peach: #fab387;
-	--ctp-yellow: #f9e2af;
-	--ctp-green: #a6e3a1;
-	--ctp-teal: #94e2d5;
-	--ctp-blue: #89b4fa;
-	--ctp-csurface2: #585b70;
-}
+/* ---- syntax highlighting (starry-night's classes), in accent colours ---- */
 
 /* Comments */
 .pl-c {
@@ -1792,29 +4386,29 @@ img {
 /* Constants, numbers, booleans, decorators, vars inside strings */
 .pl-c1,
 .pl-s .pl-v {
-	color: var(--ctp-blue);
+	color: var(--m-cyan);
 }
 
 /* Entity / function names */
 .pl-e,
 .pl-en {
-	color: var(--ctp-blue);
+	color: var(--m-cyan);
 }
 
 /* Imports, storage modifiers, string interpolation source */
 .pl-smi,
 .pl-s .pl-s1 {
-	color: var(--ctp-peach);
+	color: var(--m-amber);
 }
 
 /* HTML/XML/JSX tags */
 .pl-ent {
-	color: var(--ctp-blue);
+	color: var(--m-cyan);
 }
 
-/* Keywords — the Mauve accent */
+/* Keywords */
 .pl-k {
-	color: var(--ctp-mauve);
+	color: var(--m-pink);
 }
 
 /* Strings (and the matching regex base color) */
@@ -1825,41 +4419,41 @@ img {
 .pl-sr .pl-cce,
 .pl-sr .pl-sre,
 .pl-sr .pl-sra {
-	color: var(--ctp-green);
+	color: var(--m-lime);
 }
 
 /* Variables and semantic warnings */
 .pl-v,
 .pl-smw {
-	color: var(--ctp-peach);
+	color: var(--m-amber);
 }
 
 /* Bracket-highlighter: unmatched */
 .pl-bu {
-	color: var(--ctp-red);
+	color: var(--m-red);
 }
 
 /* Invalid / illegal */
 .pl-ii {
-	color: var(--ctp-red);
-	background: rgba(243, 139, 168, 0.15);
+	color: var(--supertext);
+	background: var(--m-red);
 }
 
 /* Carriage return marker */
 .pl-c2 {
-	color: var(--text);
-	background: rgba(243, 139, 168, 0.5);
+	color: var(--supertext);
+	background: var(--m-crimson);
 }
 
 /* Regex character-class escape */
 .pl-sr .pl-cce {
 	font-weight: bold;
-	color: var(--ctp-teal);
+	color: var(--m-teal);
 }
 
 /* Markdown list */
 .pl-ml {
-	color: var(--ctp-yellow);
+	color: var(--m-yellow);
 }
 
 /* Markdown headings / sections */
@@ -1867,45 +4461,45 @@ img {
 .pl-mh .pl-en,
 .pl-ms {
 	font-weight: bold;
-	color: var(--ctp-red);
+	color: var(--m-orange);
 }
 
 /* Markdown italic / bold */
 .pl-mi {
 	font-style: italic;
-	color: var(--ctp-yellow);
+	color: var(--m-yellow);
 }
 
 .pl-mb {
 	font-weight: bold;
-	color: var(--ctp-yellow);
+	color: var(--m-yellow);
 }
 
 /* Diff hunks */
 .pl-md {
-	color: var(--text);
-	background: rgba(243, 139, 168, 0.25);
+	color: var(--supertext);
+	background: hsla(6, 100%, 45%, 0.35);
 }
 
 .pl-mi1 {
-	color: var(--text);
-	background: rgba(166, 227, 161, 0.25);
+	color: var(--supertext);
+	background: hsla(120, 100%, 27%, 0.45);
 }
 
 .pl-mc {
-	color: var(--text);
-	background: rgba(249, 226, 175, 0.25);
+	color: var(--supertext);
+	background: hsla(40, 92%, 49%, 0.35);
 }
 
 .pl-mi2 {
-	color: var(--text);
-	background: rgba(137, 180, 250, 0.25);
+	color: var(--supertext);
+	background: hsla(220, 100%, 47%, 0.4);
 }
 
 /* Diff range header (e.g. @@ -1,3 +1,4 @@) */
 .pl-mdr {
 	font-weight: bold;
-	color: var(--ctp-mauve);
+	color: var(--m-pink);
 }
 
 /* Bracket-highlighter angle */
@@ -1915,13 +4509,13 @@ img {
 
 /* Subdued separator */
 .pl-sg {
-	color: var(--ctp-csurface2);
+	color: var(--surface6);
 }
 
 /* Reference link */
 .pl-corl {
 	text-decoration: underline;
-	color: var(--ctp-blue);
+	color: var(--m-cyan);
 }
 
 /* ==========================================================================

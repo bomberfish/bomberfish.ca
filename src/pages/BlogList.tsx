@@ -1,59 +1,37 @@
-import { FC, css } from "dreamland/core";
-import TransitionLink from "../components/TransitionLink";
+import { FC } from "dreamland/core";
+import { Link, Page, PageHeader } from "../metro-dreamland";
 import ContactLinks from "../components/ContactLinks";
-import SiteNav from "../components/SiteNav";
+import SiteNav, { Pivot } from "../components/SiteNav";
 import Footer from "../components/Footer";
-import { getBlogMetadata, type BlogModule } from "../lib/blog";
-import { getWebpPath } from "../lib/images";
+import { blogPosts, coverStyle, postDateParts } from "../lib/blog";
 
-const blogModules = import.meta.glob<BlogModule>("../blog/*.mdx", {
-	eager: true,
-});
-
-const blogPosts = Object.entries(blogModules)
-	.map(([path, module]) => getBlogMetadata(path, module))
-	.filter((post): post is NonNullable<typeof post> => post !== null)
-	.sort((a, b) => b.date.localeCompare(a.date));
-
-function getCoverStyle(image: string | undefined) {
-	if (!image) return undefined;
-
-	const style: Record<string, string> = {
-		"--cover-image": `url("${image}")`,
-	};
-	const webp = getWebpPath(image);
-	if (webp) {
-		style["--cover-image-set"] =
-			`image-set(url("${webp}") type("image/webp"), url("${image}") type("image/jpeg"))`;
-	}
-	return style;
-}
-
+// The posts as a phone list: grouped by year (the squares are the jump
+// list's), each row a date tile, on the post's cover if it has one, and
+// the title, big and light, with its description and tags.
+// Styles: "Blog" in src/style.css.
 function BlogList(this: FC) {
+	let lastYear = "";
 	return (
-		<main>
+		<Page kind="pivot">
 			<title>blog – bomberfish.ca</title>
 			<div class="layout-container">
 				<SiteNav active="blog" />
 				<div class="main-content">
-					<div class="page-header">
-						<h1>blog</h1>
-						<p>
+					<PageHeader>
+						<Pivot active="blog" />
+						<p data-m-content data-m-feather>
 							various assorted thoughts and ramblings. very infrequently updated
 						</p>
-					</div>
-					<div class="background-container" style="margin-top: 0.5rem;">
-						<subt style="font-size: 0.95rem; color: var(--text1)">
-							** obligatory disclaimer: all opinions are my own and do not
-							reflect those of any employer, past, present, or future.
-						</subt>
-						<span style="margin-bottom: 0; margin-top: 0.5rem;">
-							<subt style="display: flex; align-items: center; gap: 0.5rem; margin-top: 0.25rem; margin-bottom: 0;">
+					</PageHeader>
+					<div data-m-content>
+						<div class="blog-notes" data-m-feather>
+							<subt>
+								** obligatory disclaimer: all opinions are my own and do not
+								reflect those of any employer, past, present, or future.
+							</subt>
+							<subt class="feeds">
 								<span class="material-symbols">rss_feed</span> Subscribe:{" "}
-								<ul
-									class="compact"
-									style="display: inline; margin-left: 0.25rem; transform: translateY(-2px);"
-								>
+								<ul class="compact">
 									<li>
 										<a href="/feed.xml" target="_blank">
 											RSS
@@ -71,62 +49,78 @@ function BlogList(this: FC) {
 									</li>
 								</ul>
 							</subt>
-						</span>
-					</div>
-					<div class="blog-list">
-						{blogPosts.map((post) => (
-							<div
-								class={`blog-item ${post.image ? "has-cover" : ""}`}
-								style={getCoverStyle(post.image)}
-							>
-								<TransitionLink href={`/blog/${post.slug}`} class="blog-link">
-									<h3>{post.title}</h3>
-									{post.description ? (
-										<p class="post-desc">{post.description}</p>
-									) : (
-										false
-									)}
-									<div class="post-footer">
-										{post.tags ? (
-											<div class="post-tags">
-												<span class="material-symbols">label_important</span>
-												{post.tags.map((t) => (
-													<span class="tag">{t}</span>
-												))}
-											</div>
+						</div>
+						<div class="blog-list">
+							{blogPosts.map((post) => {
+								const date = postDateParts(post.date);
+								const newYear = date.year !== lastYear;
+								lastYear = date.year;
+								return (
+									<>
+										{newYear ? (
+											<h2 class="blog-year" data-m-feather>
+												{date.year}
+											</h2>
 										) : (
-											<div />
+											false
 										)}
-										<time>{post.date}</time>
-									</div>
-								</TransitionLink>
-							</div>
-						))}
+										<div
+											class={`blog-item ${post.image ? "has-cover" : ""}`}
+											style={coverStyle(post.image)}
+											data-m-feather
+										>
+											<Link
+												href={`/blog/${post.slug}`}
+												class="blog-link"
+												data-m-nav="continuum"
+												data-m-tilt
+											>
+												<time class="blog-date" datetime={post.date}>
+													<b>{date.day}</b>
+													<span>{date.month}</span>
+												</time>
+												<span class="blog-text">
+													<h3 data-m-keep={`post:${post.slug}`}>
+														{post.title}
+													</h3>
+													{post.description ? (
+														<p class="post-desc">{post.description}</p>
+													) : (
+														false
+													)}
+													{post.tags ? (
+														<span class="post-tags">
+															<span class="material-symbols">
+																label_important
+															</span>
+															{post.tags.map((t) => (
+																<span class="tag">{t}</span>
+															))}
+														</span>
+													) : (
+														false
+													)}
+												</span>
+											</Link>
+										</div>
+									</>
+								);
+							})}
+						</div>
+						<div class="post-end" data-m-feather>
+							<span>
+								<span class="material-symbols">email</span> get in touch:
+								<ContactLinks />
+							</span>
+						</div>
 					</div>
-					<br />
-					<span style="font-size: 0.9rem; color: var(--subtext1);">
-						<span class="material-symbols">email</span> get in touch:{"    "}
-						<ContactLinks />
-					</span>
 				</div>
-				<Footer />
+				<div data-m-content>
+					<Footer />
+				</div>
 			</div>
-		</main>
+		</Page>
 	);
 }
-
-BlogList.style = css`
-	p {
-		margin: 0;
-		margin-bottom: 0.5rem;
-	}
-
-	.post-footer {
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-		margin-top: auto;
-	}
-`;
 
 export default BlogList;

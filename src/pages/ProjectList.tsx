@@ -1,7 +1,8 @@
-import { FC, css } from "dreamland/core";
-import ProjectCard from "../components/ProjectCard";
+import { Page, PageHeader, Tiles } from "../metro-dreamland";
+import { FC } from "dreamland/core";
+import ProjectTile from "../components/ProjectTile";
 import { projects } from "../Projects";
-import SiteNav from "../components/SiteNav";
+import SiteNav, { Pivot } from "../components/SiteNav";
 import Footer from "../components/Footer";
 
 const orderedProjects = [
@@ -11,98 +12,46 @@ const orderedProjects = [
 	...projects.filter((project) => !project.featured),
 ];
 
+// Every project as a tile: the featured ones large, the rest wide (square
+// on a phone). Styles: "Tiles" in metro-dreamland/metro.css, "Projects" in
+// src/style.css.
 function ProjectList(this: FC) {
 	return (
-		<main>
+		<Page kind="pivot">
 			<title>projects – bomberfish.ca</title>
 			<div class="layout-container">
 				<SiteNav active="projects" />
 				<div class="main-content">
-					<div class="page-header">
-						<h1>projects</h1>
-						<p>
+					<PageHeader>
+						<Pivot active="projects" />
+						<p data-m-content data-m-feather>
 							a collection of my major projects, along with various smaller
 							utilities, experiments, and explorations.
 						</p>
-					</div>
-					<section class="projects-group">
-						{orderedProjects.map((project, index) => (
-							<ProjectCard project={project} eager={index < 2} />
-						))}
-					</section>
+					</PageHeader>
+					<Tiles as="section" class="projects-group" data-m-content>
+						{orderedProjects.map((project, index) =>
+							project.featured ? (
+								<ProjectTile
+									project={project}
+									w={4}
+									h={2}
+									pw={4}
+									ph={2}
+									eager={index < 3}
+								/>
+							) : (
+								<ProjectTile project={project} w={2} h={1} pw={2} ph={2} />
+							)
+						)}
+					</Tiles>
 				</div>
-				<Footer />
+				<div data-m-content>
+					<Footer />
+				</div>
 			</div>
-		</main>
+		</Page>
 	);
 }
-
-ProjectList.style = css`
-	.projects-group {
-		display: flex;
-		flex-wrap: wrap;
-		gap: 1rem;
-		margin-top: 1rem;
-	}
-
-	@supports (display: grid) {
-		.projects-group {
-			display: grid;
-			grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
-			gap: 1rem;
-			margin-top: 1rem;
-			grid-auto-flow: dense;
-		}
-	}
-
-	@supports (grid-template-rows: masonry) {
-		.projects-group {
-			display: grid;
-			grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr));
-			grid-template-rows: masonry;
-			grid-auto-rows: masonry;
-			grid-auto-flow: dense;
-		}
-	}
-
-	/* Firefox-specific masonry implementation.
-	 * Detected via the masonry-auto-flow property which is unique to
-	 * Firefox's experimental impl (behind layout.css.grid-template-masonry-value.enabled).
-	 * https://drafts.csswg.org/css-grid-3/#masonry-auto-flow
-	 */
-	@supports (masonry-auto-flow: pack) {
-		.projects-group {
-			display: grid;
-			grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr));
-			grid-template-rows: masonry;
-			masonry-auto-flow: pack;
-			align-tracks: start;
-			justify-tracks: start;
-		}
-	}
-
-	@supports (display: masonry) {
-		.projects-group {
-			display: masonry;
-			masonry-auto-flow: next;
-			grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr));
-		}
-	}
-
-	@supports (display: grid-lanes) {
-		.projects-group {
-			display: grid-lanes;
-			grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr));
-		}
-	}
-
-	@media (orientation: portrait) {
-		.projects-group {
-			display: flex;
-			flex-direction: column;
-			gap: 1rem;
-		}
-	}
-`;
 
 export default ProjectList;

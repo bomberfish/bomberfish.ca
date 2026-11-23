@@ -8,6 +8,7 @@ import ProjectView from "./pages/ProjectView";
 import ProjectList from "./pages/ProjectList";
 import { AboutView } from "./pages/AboutView";
 import NotFoundView from "./pages/NotFoundView";
+import WeatherView from "./pages/WeatherView";
 import BlogList from "./pages/BlogList";
 import BlogPost from "./pages/BlogPost";
 import PhotoSphereTool from "./pages/PhotoSphereTool";
@@ -54,6 +55,7 @@ function App(this: FC<AppProps>) {
 							/>
 						)),
 						<Route path="siteinfo" show={() => <AboutView />} />,
+						<Route path="weather" show={() => <WeatherView />} />,
 						<Route path="*" show={() => <NotFoundView />} />,
 					]}
 				/>

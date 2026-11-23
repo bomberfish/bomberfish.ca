@@ -9,6 +9,14 @@ import {
 	LastfmTrack,
 } from "../lib/siteapi";
 import { ago, compactNumber } from "../lib/format";
+import {
+	ProgressBar,
+	ProgressRing,
+	Slider,
+	marquee,
+	placeSlider,
+	runProgressBar,
+} from "../metro-dreamland";
 import { AppleMusicWordmark, LastFmIcon } from "./SocialIcons";
 import { wsrvPicture } from "./WsrvPicture";
 
@@ -64,21 +72,6 @@ const historyAsTrack = (
 const infoKey = (t: LastfmHistoryTrack) =>
 	`${t.artist}\n${t.name}`.toLowerCase();
 
-// Resolve a computed line-height value (which may be "normal", "Npx", or a
-// unitless multiplier like "1.1") to a concrete pixel height for the element.
-function lineHeightPx(cs: CSSStyleDeclaration): number {
-	const fontSize = parseFloat(cs.fontSize);
-	const raw = cs.lineHeight;
-	if (raw === "normal") return fontSize * 1.2;
-	if (raw.endsWith("px")) return parseFloat(raw);
-	const n = parseFloat(raw);
-	return Number.isFinite(n) ? n * fontSize : fontSize * 1.2;
-}
-
-// Floor for the JS font-size shrink — below this the title gets unreadable and
-// we'd rather switch to the marquee than keep shrinking.
-const TITLE_MIN_PX = 16;
-
 // "3:42" / "1:02:33" style runtime from a millisecond duration.
 function formatDuration(ms: number): string {
 	const totalSec = Math.max(0, Math.round(ms / 1000));
@@ -92,7 +85,7 @@ function formatDuration(ms: number): string {
 
 // Number of bars in the preview waveform. On narrow waveforms only every
 // 2nd/4th one is shown (fitWave sets data-wave-step).
-const WAVE_BARS = 90;
+const WAVE_BARS = 72;
 
 // Loading sweep: when the crest reaches bar i (s). The crest travels an
 // ease-in-out-quart path that starts and ends a little past the waveform
@@ -388,12 +381,31 @@ function LastFmCard(this: FC) {
 		requestAnimationFrame(afterRender);
 	};
 
+	// Fetching, or done: the refresh button goes by state.refreshing, and
+	// so does the line of dots along the card's top edge, if there's
+	// something showing already (a first load has the ring) and the fetch
+	// goes on a while: runProgressBar. Told here and not by listening for
+	// the state to change: see `held`, below.
+	const fetching = (busy: boolean) => {
+		state.refreshing = busy;
+		runProgressBar(
+			this.root?.querySelector<HTMLElement>(".livecard-progress"),
+			busy && state.view.kind !== "loading"
+		);
+	};
+	// Pointers whose listeners have to last as long as the card does.
+	// Dreamland holds a listener weakly, by way of its pointer: one made in
+	// mount() on a page that was hydrated belongs to nothing, and unless
+	// something holds on to it, it's gone at the next garbage collection (a
+	// few seconds in), and the listener with it, without a word.
+	const held: unknown[] = [];
+
 	const load = async (cacheBust = false) => {
 		if (import.meta.env.SSR) return;
 		controller?.abort();
 		const request = new AbortController();
 		controller = request;
-		state.refreshing = true;
+		fetching(true);
 		try {
 			const data = await getLastfm(request.signal, cacheBust);
 			if (cancelled || controller !== request) return;
@@ -423,7 +435,7 @@ function LastFmCard(this: FC) {
 		} finally {
 			if (!cancelled && controller === request) {
 				controller = null;
-				state.refreshing = false;
+				fetching(false);
 			}
 		}
 	};
@@ -956,71 +968,16 @@ function LastFmCard(this: FC) {
 		if (!state.refreshing) load(true);
 	};
 
-	// Sizes the lastfm title to at most ~2 lines:
-	//   1. Reset overrides, let the CSS clamp drive the natural size.
-	//   2. If natural rendering exceeds 2 lines, shrink font-size proportionally
-	//      (up to two passes — the first pass usually nails it, the second
-	//      stabilises any line-break shifts caused by the new size).
-	//   3. If the title still doesn't fit at the 1rem floor, enable marquee
-	//      mode: single-line nowrap + a bouncing translateX animation whose
-	//      distance and duration are computed from the actual overflow.
+	// The title has one line, and so has the artist and album under it. One
+	// that would need more keeps its size, and travels through its line
+	// instead (marquee, in metro-dreamland).
 	const fitTitle = () => {
 		if (!this.root) return;
-		const title = this.root.querySelector<HTMLElement>(".lastfm-title");
-		const inner = this.root.querySelector<HTMLElement>(".lastfm-title-inner");
-		if (!title || !inner) return;
-
-		// Wipe any prior overrides so we measure against the natural CSS size.
-		title.classList.remove("is-marquee");
-		title.style.removeProperty("font-size");
-		title.style.removeProperty("--marquee-distance");
-		title.style.removeProperty("--marquee-duration");
-
-		const cs = getComputedStyle(title);
-		const naturalSize = parseFloat(cs.fontSize);
-		let lh = lineHeightPx(cs);
-		let maxHeight = lh * 2 + 0.5;
-		let height = title.offsetHeight;
-		if (height <= maxHeight) return; // already fits in 1–2 lines
-
-		// Proportional shrink. line-height is a unitless multiplier so it
-		// scales with font-size and we have to re-read it after each change.
-		let size = naturalSize;
-		for (let i = 0; i < 2; i++) {
-			const target = Math.max(TITLE_MIN_PX, (size * (lh * 2)) / height);
-			if (Math.abs(target - size) < 0.5) break;
-			size = target;
-			title.style.fontSize = `${size}px`;
-			const cs2 = getComputedStyle(title);
-			lh = lineHeightPx(cs2);
-			maxHeight = lh * 2 + 0.5;
-			height = title.offsetHeight;
-			if (height <= maxHeight) return; // fits now
-			if (size <= TITLE_MIN_PX + 0.5) break; // hit the floor
-		}
-
-		// Still too tall even at the floor → marquee mode.
-		title.style.fontSize = `${TITLE_MIN_PX}px`;
-		title.classList.add("is-marquee");
-
-		const overflow = inner.scrollWidth - title.clientWidth;
-		if (overflow <= 0) {
-			// Pathological: text actually fits on one line at the floor size.
-			// No animation needed.
-			title.classList.remove("is-marquee");
-			return;
-		}
-
-		// Motion runs across 80% of the animation; the other 20% is split into
-		// two end-pauses (see keyframes). Aim for ~40 px/s of perceived motion
-		// and clamp the total duration to keep short/long titles both sane.
-		const motionSec = overflow / 40;
-		const totalSec = Math.min(22, Math.max(6, motionSec / 0.8));
-		title.style.setProperty("--marquee-distance", `${overflow}px`);
-		title.style.setProperty("--marquee-duration", `${totalSec}s`);
+		marquee(this.root.querySelector<HTMLElement>(".lastfm-title"), 1);
+		marquee(this.root.querySelector<HTMLElement>(".lastfm-artist"), 1);
 	};
 
-	// Thin out the waveform bars when it's narrow so each stays >= ~1.5px.
+	// Thin out the waveform bars when it's narrow, so there's room between them.
 	// (Done here rather than with a container query: dreamland's CSS
 	// processing drops @container rules.)
 	const fitWave = () => {
@@ -1028,8 +985,9 @@ function LastFmCard(this: FC) {
 		const wave = el?.querySelector<HTMLElement>(".lastfm-wave");
 		if (!el || !wave) return;
 		const w = wave.clientWidth;
-		// 1.5px bars with at least 1px between: 90 bars need 224px, 45 need 112
-		el.dataset.waveStep = w >= 224 ? "1" : w >= 112 ? "2" : "4";
+		// 2.25px bars with at least 1.75px between: 72 bars need 287px, 36
+		// need 143
+		el.dataset.waveStep = w >= 287 ? "1" : w >= 143 ? "2" : "4";
 	};
 
 	let rafId = 0;
@@ -1475,13 +1433,12 @@ function LastFmCard(this: FC) {
 
 		const silent = muted || volume === 0;
 		el.dataset.volume = volumeSupported ? "" : "unsupported";
-		el.style.setProperty("--vol", String(silent ? 0 : volume));
 		// the inline slider and the touch popover's one
-		const pct = String(Math.round((silent ? 0 : volume) * 100));
+		const pct = Math.round((silent ? 0 : volume) * 100);
 		for (const range of el.querySelectorAll<HTMLInputElement>(
-			".lastfm-vol-range"
+			".lastfm-vol-slide input"
 		))
-			if (range.value !== pct) range.value = pct;
+			if (+range.value !== pct) placeSlider(range, pct);
 		const icon = silent
 			? "volume_off"
 			: volume < 0.5
@@ -1581,8 +1538,8 @@ function LastFmCard(this: FC) {
 		return audio;
 	};
 
-	const onVolumeInput = (e: Event) => {
-		volume = (e.currentTarget as HTMLInputElement).valueAsNumber / 100;
+	const onVolumeInput = (percent: number) => {
+		volume = percent / 100;
 		if (volume > 0) muted = false;
 		try {
 			localStorage.setItem(VOLUME_KEY, String(volume));
@@ -2430,6 +2387,8 @@ function LastFmCard(this: FC) {
 			ro = new ResizeObserver(scheduleFit);
 			ro.observe(this.root);
 		}
+		// ...and when the type arrives: the title's another width in it
+		document.fonts?.addEventListener("loadingdone", scheduleFit);
 
 		// View changes (new track, refresh, error→ok) replace the title node
 		// inside the reactive subtree, so re-run fit on the new node. Also
@@ -2439,7 +2398,11 @@ function LastFmCard(this: FC) {
 		// is long enough for the slowest animation (the 0.9s bleed) to
 		// finish before the gate disappears.
 		let firstTransitionDone = false;
-		use(state.view).listen((v) => {
+		// (its pointer goes in `held`: without that, later tracks' titles
+		// would never be fitted)
+		const view = use(state.view);
+		held.push(view);
+		view.listen((v) => {
 			if (!firstTransitionDone && v.kind !== "loading") {
 				firstTransitionDone = true;
 				initialTimer = window.setTimeout(() => {
@@ -2453,6 +2416,8 @@ function LastFmCard(this: FC) {
 
 		return () => {
 			cancelled = true;
+			held.length = 0;
+			document.fonts?.removeEventListener("loadingdone", scheduleFit);
 			window.removeEventListener("keydown", onAltKey);
 			window.removeEventListener("keyup", onAltKey);
 			window.removeEventListener("pointermove", onAltPointer);
@@ -2482,7 +2447,11 @@ function LastFmCard(this: FC) {
 	const fallbackUrl = "https://www.last.fm/user/bmbrfsh";
 
 	return (
-		<div class="livecard lastfm-card background-container">
+		<div
+			class="livecard lastfm-card tile on-color c-red"
+			data-m-tilt
+			data-m-feather
+		>
 			<p class="livecard-header">
 				<span class="livecard-icon">
 					<LastFmIcon />
@@ -2557,6 +2526,10 @@ function LastFmCard(this: FC) {
 					>
 						<span class="material-symbols">open_in_new</span>
 					</a>
+					{/* (runs while the card's fetching: runProgressBar, in mount) */}
+					<span class="livecard-progress">
+						<ProgressBar label="refreshing" />
+					</span>
 				</span>
 			</p>
 
@@ -2568,7 +2541,11 @@ function LastFmCard(this: FC) {
 				<div class="lastfm-now">
 					{use(state.view).map((v) => {
 						if (v.kind === "loading")
-							return <p class="livecard-status">loading…</p>;
+							return (
+								<p class="livecard-status">
+									<ProgressRing size="medium" />
+								</p>
+							);
 						if (v.kind === "error")
 							return <p class="livecard-status">couldn't load ({v.message})</p>;
 						if (v.kind === "empty")
@@ -2625,6 +2602,8 @@ function LastFmCard(this: FC) {
 									on:focus={onPlayHover}
 								>
 									<span class="material-symbols">play_arrow</span>
+									{/* (in the icon's place while the preview loads) */}
+									<ProgressRing label="" />
 								</button>
 								<div
 									class="lastfm-wave"
@@ -2657,16 +2636,18 @@ function LastFmCard(this: FC) {
 									>
 										<span class="material-symbols">volume_down</span>
 									</button>
-									<input
-										type="range"
-										class="lastfm-vol-range"
-										min="0"
-										max="100"
-										step="1"
-										value={String(Math.round(volume * 100))}
-										aria-label="preview volume"
-										on:input={onVolumeInput}
-									/>
+									<span class="lastfm-vol-slide">
+										<Slider
+											name="volume"
+											label="preview volume"
+											min={0}
+											max={100}
+											value={Math.round(volume * 100)}
+											size="small"
+											bare
+											oninput={onVolumeInput}
+										/>
+									</span>
 									{/* touch screens in portrait: opened by the button above */}
 									<div
 										class="lastfm-vol-pop"
@@ -2682,16 +2663,17 @@ function LastFmCard(this: FC) {
 										>
 											<span class="material-symbols">volume_down</span>
 										</button>
-										<input
-											type="range"
-											class="lastfm-vol-range"
-											min="0"
-											max="100"
-											step="1"
-											value={String(Math.round(volume * 100))}
-											aria-label="preview volume"
-											on:input={onVolumeInput}
-										/>
+										<span class="lastfm-vol-slide">
+											<Slider
+												name="volume"
+												label="preview volume"
+												min={0}
+												max={100}
+												value={Math.round(volume * 100)}
+												bare
+												oninput={onVolumeInput}
+											/>
+										</span>
 									</div>
 								</div>
 								{am?.url ? (
@@ -2731,21 +2713,23 @@ function LastFmCard(this: FC) {
 											</h3>
 										</a>
 										<p class="lastfm-artist">
-											{t.artistUrl ? (
-												<a href={t.artistUrl}>{t.artist}</a>
-											) : (
-												t.artist
-											)}
-											{t.album ? (
-												<span class="lastfm-album">
-													{" – "}
-													{t.albumUrl ? (
-														<a href={t.albumUrl}>{t.album}</a>
-													) : (
-														t.album
-													)}
-												</span>
-											) : null}
+											<span class="lastfm-artist-inner">
+												{t.artistUrl ? (
+													<a href={t.artistUrl}>{t.artist}</a>
+												) : (
+													t.artist
+												)}
+												{t.album ? (
+													<span class="lastfm-album">
+														{" – "}
+														{t.albumUrl ? (
+															<a href={t.albumUrl}>{t.album}</a>
+														) : (
+															t.album
+														)}
+													</span>
+												) : null}
+											</span>
 										</p>
 										{hasStats ? (
 											<p class="lastfm-stats">
@@ -2877,7 +2861,7 @@ LastFmCard.style = css`
 		flex: 1 1 0;
 		min-height: 0;
 		overflow-y: auto;
-		scrollbar-width: thin;
+		/* (its scrollbar is the site's: "Scrollbars" in metro-dreamland/metro.css) */
 		container-type: size;
 		mask-image: linear-gradient(
 			to bottom,
@@ -2958,6 +2942,23 @@ LastFmCard.style = css`
 	/* five buttons don't leave room for the scrobble count on a phone */
 	@media (max-width: 30rem) {
 		.livecard-header .livecard-stat {
+			display: none;
+		}
+	}
+
+	/* ...nor, at the size they are for a finger, anywhere the tile is a
+	   section wide (everything but the home page's four-row layout: the
+	   same condition as "start mode" in style.css, turned round) */
+	@media (pointer: coarse) and (max-width: 59.99rem),
+		(pointer: coarse) and (max-height: 35.99rem) {
+		.livecard-header .livecard-stat {
+			display: none;
+		}
+	}
+
+	/* and on the narrowest phones the logo says "last.fm" by itself */
+	@media (max-width: 21.5rem) {
+		.livecard-header .livecard-platform {
 			display: none;
 		}
 	}
@@ -3240,72 +3241,14 @@ LastFmCard.style = css`
 		);
 	}
 
+	/* (a title or an artist line too long for its one line travels through
+	   it instead: fitTitle, and "Marquee" in metro-dreamland/metro.css) */
 	.lastfm-title {
 		color: var(--supertext);
 		margin-block: 0;
-		/* fluid baseline driven by the meta column width. JS may override
-		   font-size inline if the natural value wraps to >2 lines. */
+		/* fluid, driven by the meta column's width */
 		font-size: clamp(1.25rem, 13cqi, 2.25rem);
 		line-height: 1.1;
-		font-variation-settings: "ELSH" 85;
-	}
-
-	/* When a title still doesn't fit two lines even at the floor font size,
-	   the component switches to single-line marquee mode. The mask fades the
-	   text at the clip edges so it doesn't pop in/out abruptly. */
-	.lastfm-title.is-marquee {
-		white-space: nowrap;
-		overflow: hidden;
-		hyphens: none;
-		text-wrap: nowrap;
-		-webkit-mask-image: linear-gradient(
-			90deg,
-			transparent 0,
-			#000 0.75rem,
-			#000 calc(100% - 0.75rem),
-			transparent 100%
-		);
-		mask-image: linear-gradient(
-			90deg,
-			transparent 0,
-			#000 0.75rem,
-			#000 calc(100% - 0.75rem),
-			transparent 100%
-		);
-	}
-
-	.lastfm-title.is-marquee .lastfm-title-inner {
-		display: inline-block;
-		animation: lastfm-title-marquee var(--marquee-duration, 10s) ease-in-out
-			infinite alternate;
-		will-change: transform;
-	}
-
-	/* Pause while the user is reading / interacting. */
-	.lastfm-title.is-marquee:hover .lastfm-title-inner,
-	.lastfm-title.is-marquee:focus-within .lastfm-title-inner {
-		animation-play-state: paused;
-	}
-
-	/* alternate + the 10% pauses on each end give a smooth bounce that lingers
-	   long enough on each side to actually read the start/end of the title. */
-	@keyframes lastfm-title-marquee {
-		0%,
-		10% {
-			transform: translateX(0);
-		}
-		90%,
-		100% {
-			transform: translateX(calc(-1 * var(--marquee-distance, 0px)));
-		}
-	}
-
-	/* The global prefers-reduced-motion rule kills the animation; fall back to
-	   plain ellipsis so the title is still readable as truncation. */
-	@media (prefers-reduced-motion: reduce) {
-		.lastfm-title.is-marquee {
-			text-overflow: ellipsis;
-		}
 	}
 
 	.lastfm-artist {
@@ -3360,11 +3303,13 @@ LastFmCard.style = css`
 	}
 
 	/* "/" separator between consecutive stats. Sibling-only selector means
-	   conditionally-hidden stats don't leave dangling slashes. */
-	.lastfm-stat + .lastfm-stat::before {
+	   conditionally-hidden stats don't leave dangling slashes. It trails
+	   the stat before it rather than leading the next one, so when they
+	   wrap (a phone) no line starts with a slash. */
+	.lastfm-stat:has(+ .lastfm-stat)::after {
 		content: "/";
 		color: var(--subtext1);
-		margin-right: 0.3rem;
+		margin-left: 0.3rem;
 	}
 
 	.lastfm-stats .material-symbols {
@@ -3424,24 +3369,28 @@ LastFmCard.style = css`
 		transform: scaleX(-1);
 	}
 
+	/* loading: the ring of dots (metro-dreamland/components/Progress.tsx) in the icon's
+	   place */
+	.lastfm-play :global(.m-progress-ring) {
+		display: none;
+	}
+
+	.lastfm-player[data-state="loading"] .lastfm-play :global(.m-progress-ring) {
+		display: block;
+	}
+
 	.lastfm-player[data-state="loading"] .lastfm-play .material-symbols {
-		animation: lastfm-spin 0.9s linear infinite;
+		display: none;
 	}
 
-	@keyframes lastfm-spin {
-		to {
-			transform: rotate(1turn);
-		}
-	}
-
-	/* SoundCloud-style: bars sit on a baseline 66% of the way down, with a
-	   reflection underneath that fades out (it can spill a little past the
-	   bottom of the box; the tallest ones run into the card's padding). Three identical rows are stacked and
-	   clipped: the dim base, a hover highlight up to the pointer, and the
-	   played part up to --progress. */
+	/* Flat bars standing on the bottom of the box, in the tile's ink (white).
+	   Three identical rows are stacked and clipped: the base, a hover
+	   highlight up to the pointer, and the played part up to --progress.
+	   What's been played is solid and the rest is dim, so how far along
+	   it is shows (and at 0:00, before it's started, that's none of it). */
 	.lastfm-wave {
 		position: relative;
-		height: 2.6rem;
+		height: 2rem;
 		cursor: pointer;
 		touch-action: none;
 		outline-offset: 3px;
@@ -3449,10 +3398,10 @@ LastFmCard.style = css`
 
 	.lastfm-wave-bars {
 		position: absolute;
-		inset: 0 0 34% 0;
+		inset: 0;
 		display: flex;
 		align-items: flex-end;
-		/* thin fixed-width bars, evenly spread: the spacing absorbs the width */
+		/* fixed-width bars, evenly spread: the spacing absorbs the width */
 		justify-content: space-between;
 		pointer-events: none;
 	}
@@ -3466,11 +3415,11 @@ LastFmCard.style = css`
 
 	/* Bars are full height, drawn at scaleY(--h) from the baseline, so the
 	   loading ripple and the morph into the real waveform are both
-	   transforms (GPU only; animating height on 270 bars meant a layout pass
-	   every frame). The reflection scales along with its bar. */
+	   transforms (GPU only; animating height on 216 bars meant a layout pass
+	   every frame). */
 	.lastfm-wave-bars i {
 		position: relative;
-		flex: 0 0 1.5px;
+		flex: 0 0 2.25px;
 		height: 100%;
 		background: currentColor;
 		transform-origin: bottom;
@@ -3479,31 +3428,19 @@ LastFmCard.style = css`
 			transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1),
 			color 0.8s ease;
 		/* keep them as (tiny) GPU layers for good: otherwise the browser
-		   promotes all 270 when the morph starts and demotes them when it
+		   promotes all 216 when the morph starts and demotes them when it
 		   ends, and each of those costs a dropped frame or two */
 		will-change: transform;
 	}
 
-	.lastfm-wave-bars i::after {
-		content: "";
-		position: absolute;
-		left: 0;
-		right: 0;
-		top: calc(100% + 1.5px);
-		height: 70%;
-		background: linear-gradient(to bottom, currentColor, transparent);
-		opacity: 0.55;
-		/* soft, like a reflection on a wet surface; bars stay crisp */
-		filter: blur(0.9px);
-	}
-
+	/* (what hasn't been played is dim, which at 0:00 is all of it) */
 	.lastfm-wave-bars.is-base {
-		color: hsla(var(--overlay1-hsl), 0.4);
+		color: hsla(var(--supertext-hsl), 0.4);
 	}
 
 	/* the shape is a guess when the real audio couldn't be decoded */
 	.lastfm-player[data-peaks="placeholder"] .lastfm-wave-bars.is-base {
-		color: hsla(var(--overlay1-hsl), 0.28);
+		color: hsla(var(--supertext-hsl), 0.28);
 	}
 
 	/* while the preview downloads: a single low, broad crest sweeping left
@@ -3530,10 +3467,9 @@ LastFmCard.style = css`
 		}
 	}
 
-	/* negative bottom inset keeps the (longer) reflections inside the clip */
 	.lastfm-wave-bars.is-hover {
-		color: hsla(var(--overlay3-hsl), 0.55);
-		clip-path: inset(0 calc((1 - var(--hover)) * 100%) -100% 0);
+		color: hsla(var(--supertext-hsl), 0.7);
+		clip-path: inset(0 calc((1 - var(--hover)) * 100%) 0 0);
 		opacity: 0;
 		transition: opacity 0.15s ease;
 	}
@@ -3543,38 +3479,8 @@ LastFmCard.style = css`
 	}
 
 	.lastfm-wave-bars.is-played {
-		color: var(--accent);
-		clip-path: inset(0 calc((1 - var(--progress)) * 100%) -100% 0);
-	}
-
-	/* Album art palette (see applyPalette): every bar gets its own --c along
-	   the cover's gradient. Played is the full colour; the rest of the track
-	   is a faint version of the same gradient, so the colours are there
-	   before you press play, like the Dynamic Island's idle tint. */
-	.lastfm-player[data-palette]:not([data-palette="none"])
-		.lastfm-wave-bars.is-played
-		i {
-		color: var(--c);
-	}
-
-	.lastfm-player[data-palette]:not([data-palette="none"])
-		.lastfm-wave-bars.is-hover
-		i {
-		color: color-mix(in oklab, var(--c) 55%, transparent);
-	}
-
-	.lastfm-player[data-palette]:not([data-palette="none"])
-		.lastfm-wave-bars.is-base
-		i {
-		color: color-mix(in oklab, var(--c) 30%, transparent);
-	}
-
-	.lastfm-player[data-palette]:not(
-			[data-palette="none"]
-		)[data-peaks="placeholder"]
-		.lastfm-wave-bars.is-base
-		i {
-		color: color-mix(in oklab, var(--c) 20%, transparent);
+		color: var(--supertext);
+		clip-path: inset(0 calc((1 - var(--progress)) * 100%) 0 0);
 	}
 
 	.lastfm-time {
@@ -3582,6 +3488,65 @@ LastFmCard.style = css`
 		font-size: 0.75rem;
 		font-variant-numeric: tabular-nums;
 		white-space: nowrap;
+	}
+
+	/* (doubled up to beat the shared .livecard * { text-wrap: balance },
+	   which turned wrapping back on: squeezed, it broke into two lines) */
+	.lastfm-time.lastfm-time {
+		text-wrap: nowrap;
+	}
+
+	/* In the home page's strip on an upright phone, the tile is a column
+	   wide and the whole height of the screen under the headings: more
+	   tall than wide. So the cover goes above the track's details, not
+	   beside them, and gets what height is left (its size is set with the
+	   strip's own measurements: see .pano .lastfm-art in style.css). The
+	   window sizes are those where the strip has one live tile to a
+	   column, and a column is the phone's width. */
+	@media (max-width: 27rem) and (min-height: 30rem) and (max-height: 45.99rem) {
+		.lastfm-track {
+			flex-direction: column;
+			align-items: flex-start;
+			gap: 0.75rem;
+		}
+
+		.lastfm-meta {
+			flex: none;
+			width: 100%;
+		}
+	}
+
+	/* ...and on a phone on its side with the browser's bars showing, the
+	   tile is at its shortest: when it was played gives way */
+	@media (max-height: 22.5rem) {
+		.lastfm-when {
+			display: none;
+		}
+
+		.lastfm-player {
+			margin-top: 0.5rem;
+		}
+	}
+
+	/* On a phone the tile isn't wide enough for all five in a row, and
+	   it was the scrubber that gave way, down to nothing. So two rows:
+	   play, scrubber, time; then the volume under play and the Apple
+	   Music mark at the far end. */
+	@media (max-width: 27rem) {
+		.lastfm-player {
+			grid-template-columns: auto minmax(0, 1fr) auto;
+			row-gap: 0.3rem;
+		}
+
+		.lastfm-volume {
+			grid-column: 1 / span 2;
+			justify-self: start;
+		}
+
+		.lastfm-am-link {
+			grid-column: 3;
+			justify-self: end;
+		}
 	}
 
 	/* Volume. With a mouse: the icon mutes and the slider slides out on
@@ -3614,23 +3579,35 @@ LastFmCard.style = css`
 		color: var(--supertext);
 	}
 
+	/* for a finger */
+	@media (pointer: coarse) {
+		.lastfm-play {
+			width: 2.5rem;
+			height: 2.5rem;
+		}
+
+		.lastfm-vol-btn {
+			min-width: 2.25rem;
+			min-height: 2.25rem;
+		}
+	}
+
 	.lastfm-vol-btn .material-symbols {
 		font-size: 1.15rem;
 	}
 
-	.lastfm-vol-range {
-		-webkit-appearance: none;
-		appearance: none;
-		height: 1.25rem;
-		margin: 0;
-		background: transparent;
-		cursor: pointer;
+	/* The sliders are the site's own (metro-dreamland/components/Slider.tsx, styled in
+	   style.css): the small one inline, a full-sized one in the popover.
+	   What's here is only the room each is given. */
+	.lastfm-vol-slide {
+		display: block;
 	}
 
 	/* the inline one, next to the icon */
-	.lastfm-volume > .lastfm-vol-range {
+	.lastfm-volume > .lastfm-vol-slide {
 		width: 0;
 		opacity: 0;
+		pointer-events: none;
 		transition:
 			width 0.2s ease,
 			margin 0.2s ease,
@@ -3638,18 +3615,20 @@ LastFmCard.style = css`
 	}
 
 	@media (hover: hover) {
-		.lastfm-volume:hover > .lastfm-vol-range,
-		.lastfm-volume:focus-within > .lastfm-vol-range {
+		.lastfm-volume:hover > .lastfm-vol-slide,
+		.lastfm-volume:focus-within > .lastfm-vol-slide {
 			width: 4.5rem;
 			margin-left: 0.35rem;
 			opacity: 1;
+			pointer-events: auto;
 		}
 	}
 
-	.lastfm-player[data-vol-open="1"] .lastfm-volume > .lastfm-vol-range {
+	.lastfm-player[data-vol-open="1"] .lastfm-volume > .lastfm-vol-slide {
 		width: 4.5rem;
 		margin-left: 0.35rem;
 		opacity: 1;
+		pointer-events: auto;
 	}
 
 	/* Portrait touch popover: in the top layer, so the card can't clip it;
@@ -3665,6 +3644,8 @@ LastFmCard.style = css`
 		padding: 0.4rem 0.75rem 0.4rem 0.5rem;
 		color: inherit;
 		background: hsla(var(--crust-hsl), 0.72);
+		/* (what the slider's thumb is cut out against, in here) */
+		--tile-bg: hsl(var(--crust-hsl));
 		-webkit-backdrop-filter: blur(14px) saturate(160%);
 		backdrop-filter: blur(14px) saturate(160%);
 	}
@@ -3680,57 +3661,8 @@ LastFmCard.style = css`
 	}
 
 	/* bigger, for a finger */
-	.lastfm-vol-pop .lastfm-vol-range {
+	.lastfm-vol-pop .lastfm-vol-slide {
 		width: 9rem;
-		height: 2rem;
-	}
-
-	.lastfm-vol-pop .lastfm-vol-range::-webkit-slider-thumb {
-		width: 16px;
-		height: 16px;
-		margin-top: -6.5px;
-	}
-
-	.lastfm-vol-pop .lastfm-vol-range::-moz-range-thumb {
-		width: 16px;
-		height: 16px;
-	}
-
-	.lastfm-vol-range::-webkit-slider-runnable-track {
-		height: 3px;
-		background: linear-gradient(
-			to right,
-			var(--accent) calc(var(--vol) * 100%),
-			hsla(var(--overlay1-hsl), 0.35) 0
-		);
-	}
-
-	.lastfm-vol-range::-moz-range-track {
-		height: 3px;
-		background: linear-gradient(
-			to right,
-			var(--accent) calc(var(--vol) * 100%),
-			hsla(var(--overlay1-hsl), 0.35) 0
-		);
-	}
-
-	.lastfm-vol-range::-webkit-slider-thumb {
-		-webkit-appearance: none;
-		appearance: none;
-		width: 10px;
-		height: 10px;
-		margin-top: -3.5px;
-		border: none;
-		border-radius: 0;
-		background: var(--supertext);
-	}
-
-	.lastfm-vol-range::-moz-range-thumb {
-		width: 10px;
-		height: 10px;
-		border: none;
-		border-radius: 0;
-		background: var(--supertext);
 	}
 
 	.lastfm-am-link {

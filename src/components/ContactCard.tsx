@@ -1,4 +1,5 @@
-import { ComponentChild, FC, css } from "dreamland/core";
+import { Tile } from "../metro-dreamland";
+import { ComponentChild, FC } from "dreamland/core";
 
 interface Contact {
 	platform: string;
@@ -6,148 +7,44 @@ interface Contact {
 	url: string;
 }
 
+// A way to reach me, as a tile: the service's mark up in the corner, its
+// name and my handle along the bottom. `color` is one of the tile colour
+// classes (c-accent, c-cobalt...), `w` x `h` its size in tile units and
+// `pw` x `ph` the same on the home page's phone layout.
+// Styles: "Contact tiles" in src/style.css.
 function ContactCard(
 	this: FC<{
 		contact: Contact;
-		compact?: boolean;
+		color?: string;
+		w?: number;
+		h?: number;
+		pw?: number;
+		ph?: number;
 		children?: ComponentChild;
 	}>
 ) {
+	const w = this.w ?? 2;
+	const h = this.h ?? 1;
 	return (
-		<a
+		<Tile
 			href={this.contact.url}
 			target="_blank"
 			rel="me"
 			referrer-policy="unsafe-url"
-			class={`contact-card${this.compact ? " compact" : ""}`}
+			color={this.color ?? "c-accent"}
+			class="contact-card"
+			w={w}
+			h={h}
+			pw={this.pw ?? w}
+			ph={this.ph ?? h}
 		>
-			{this.compact ? (
-				<>
-					<span class="platform-icon">{this.children}</span>
-					<span class="contact-text">
-						<span class="platform-name">{this.contact.platform}</span>
-						<span class="contact-name">{this.contact.username}</span>
-					</span>
-				</>
-			) : (
-				<>
-					<p class="contact-platform">
-						<span class="platform-icon">{this.children}</span>
-						<span class="platform-name">{this.contact.platform}</span>
-					</p>
-					<p class="contact-name">{this.contact.username}</p>
-				</>
-			)}
-		</a>
+			<span class="platform-icon">{this.children}</span>
+			<span class="contact-text">
+				<span class="platform-name">{this.contact.platform}</span>
+				<span class="contact-name">{this.contact.username}</span>
+			</span>
+		</Tile>
 	);
 }
-
-ContactCard.style = css`
-	:scope {
-		display: flex;
-		flex-direction: column;
-		align-items: flex-start;
-		justify-content: flex-start;
-		text-decoration: none;
-		padding: 1rem;
-		background-color: var(--card-bg);
-		width: 100%;
-		min-width: 0;
-		min-height: 100%;
-		box-sizing: border-box;
-		transform: scale(1) translateY(0);
-		transition:
-			transform 0.2s,
-			background-color 0.2s;
-	}
-
-	:scope:is(a):hover {
-		background-color: var(--card-bg-hover);
-		transform: scale(1.02) translateY(-2px);
-	}
-
-	p {
-		margin: 0 !important;
-	}
-
-	.contact-platform {
-		display: flex;
-		align-items: center;
-		gap: 0.5rem;
-	}
-
-	.platform-icon {
-		display: inline-flex;
-		align-items: center;
-		justify-content: center;
-	}
-
-	.platform-icon svg {
-		color: var(--supertext);
-		margin-right: 0.5rem;
-	}
-
-	.platform-name {
-		font-family: var(--font-display);
-		color: var(--supertext);
-		font-size: 1.15rem;
-	}
-
-	.contact-name {
-		font-family: var(--font-body);
-		color: var(--text1);
-		font-weight: 400;
-		font-size: 0.95rem;
-		overflow-wrap: anywhere;
-	}
-
-	:scope::after {
-		display: none;
-		content: "";
-	}
-
-	:scope.compact {
-		flex-direction: row;
-		align-items: center;
-		gap: 0.65rem;
-		padding: 0.55rem 0.75rem;
-		min-height: 0;
-	}
-
-	:scope.compact .platform-icon {
-		display: inline-flex;
-		align-items: center;
-		justify-content: center;
-		font-size: 1.05rem;
-		color: var(--supertext);
-		flex-shrink: 0;
-	}
-
-	:scope.compact .platform-icon svg {
-		margin-right: 0;
-	}
-
-	:scope.compact .contact-text {
-		display: flex;
-		flex-direction: column;
-		min-width: 0;
-		gap: 0.05rem;
-		line-height: 1.2;
-	}
-
-	:scope.compact .platform-name {
-		font-family: var(--font-display);
-		color: var(--supertext);
-		font-size: 0.95rem;
-	}
-
-	:scope.compact .contact-name {
-		font-family: var(--font-body);
-		color: var(--text1);
-		font-size: 0.78rem;
-		font-weight: 400;
-		overflow-wrap: anywhere;
-	}
-`;
 
 export default ContactCard;

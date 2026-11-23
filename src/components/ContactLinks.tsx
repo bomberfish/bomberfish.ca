@@ -55,6 +55,14 @@ ContactLinks.style = css`
 		display: none !important;
 	}
 
+	/* for a finger */
+	@media (pointer: coarse) {
+		.contact-item {
+			display: inline-block;
+			padding: 0.5rem 0.15rem;
+		}
+	}
+
 	.sep {
 		color: var(--subtext2);
 		margin: 0 0.25rem;

@@ -4,14 +4,72 @@
 		<!--ssr-head-->
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,viewport-fit=cover" />
-		<meta name="theme-color" content="#434d65" media="(prefers-color-scheme: light)" />
-		<meta name="theme-color" content="#1c2f42" media="(prefers-color-scheme: dark)" />
+		<meta name="theme-color" content="#000000" />
 		<meta name="description" content="bomberfish's personal website" />
 		<meta name="author" content="bomberfish" />
 		<meta name="og:image" content="https://bomberfish.ca/me.png" />
 		<link rel="apple-touch-icon" href="me.jpg">
 		<meta name="darkreader-lock" />
 		<base target="_blank" />
+		<!-- before the first paint: the remembered accent colour (see
+		     src/lib/accent.ts), and html.m-boot, which holds the page back so
+		     metro-dreamland can swing it in once it's running; given up on after
+		     a moment, so a slow connection just gets the page -->
+		<script>
+			(function (d) {
+				try {
+					// (what tiles are made of: acrylic here, unless flat's been
+					// chosen on the about page. metro-dreamland's setMaterial
+					// keeps the choice; src/main-client.ts says the same.)
+					if (localStorage.getItem("m-material") !== "flat")
+						d.setAttribute("data-m-material", "acrylic");
+					// (what's behind the page: the rainy photo, or a drawn sky for
+					// any other weather. src/lib/weather/index.ts decides; this is
+					// its last answer, so the photo doesn't show for a moment
+					// under a sky that's about to replace it.)
+					var w = localStorage.getItem("weather-force");
+					if (!w) {
+						var k = JSON.parse(localStorage.getItem("weather") || "null");
+						w = k && Date.now() - k.at < 2700000 ? k.report.kind : "rain";
+					}
+					d.setAttribute(
+						"data-backdrop",
+						localStorage.getItem("rain-backdrop") === "photo" &&
+							/^(rain|drizzle|storm|thunderstorm)/.test(w)
+							? "photo"
+							: "sky"
+					);
+					// (the record src/lib/accent.ts's store keeps)
+					var a = JSON.parse(localStorage.getItem("dls-accent") || "{}");
+					var hsl = /^\d+, \d+%, \d+%$/;
+					if (
+						hsl.test(a.hsl) &&
+						hsl.test(a.text) &&
+						/^(255, 255, 255|0, 0, 0)$/.test(a.ink)
+					) {
+						d.style.setProperty("--accent-hsl", a.hsl);
+						d.style.setProperty("--accent-text-hsl", a.text);
+						d.style.setProperty("--on-accent", a.ink);
+					}
+					// (and how far it turns the photo behind the page)
+					var t = a.turn;
+					if (typeof t === "number" && t && Math.abs(t) <= 180) {
+						d.style.setProperty("--bg-turn", String(t));
+						d.style.setProperty("--bg-filter", "hue-rotate(" + t + "deg)");
+					}
+				} catch (e) {}
+				if (
+					d.animate &&
+					window.matchMedia &&
+					!matchMedia("(prefers-reduced-motion: reduce)").matches
+				) {
+					d.classList.add("m-boot");
+					setTimeout(function () {
+						d.classList.remove("m-boot");
+					}, 900);
+				}
+			})(document.documentElement);
+		</script>
 		<script type="speculationrules">{"prerender": [{"where": { "href_matches": "/projects" },"eagerness": "moderate"}]}</script>
 		<link rel="alternate" type="application/rss+xml" title="bomberfish's blog" href="/feed.xml" />
 		<link rel="alternate" type="application/atom+xml" title="bomberfish's blog" href="/atom.xml" />
@@ -22,9 +80,9 @@
 	</head>
 
 	<body>
-		<!-- page background: photo, film grain, a fade at the end of the page,
-		     then the screen-fixed rain canvas (src/lib/rain.ts goes in
-		     .page-bg-fixed). Ordinary content, not
+		<!-- page background: photo, a (now empty) layer where the film grain
+		     was, a fade at the end of the page, then the screen-fixed rain
+		     canvas (src/lib/weather/rain.ts goes in .page-bg-fixed). Ordinary content, not
 		     position: fixed, so Safari draws it under its toolbars; see
 		     .page-bg in src/style.css -->
 		<div class="page-bg" aria-hidden="true">
