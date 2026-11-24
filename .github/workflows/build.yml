@@ -12,6 +12,8 @@ on:
 # Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
 permissions:
   contents: read
+  # (deploy-pages looks up the uploaded artifact)
+  actions: read
   pages: write
   id-token: write
 
@@ -22,30 +24,29 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  # Single deploy job since we're just deploying
-  deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+  # Build and deploy are separate jobs: with both in one job, deploy-pages
+  # asks for the artifact a fraction of a second after it's uploaded and
+  # sometimes isn't told about it yet ("No artifacts named github-pages").
+  build:
     runs-on: ubuntu-24.04
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           submodules: recursive
+      # (the pnpm version comes from packageManager in package.json)
       - name: Setup pnpm
-        uses: pnpm/action-setup@v4
+        uses: pnpm/action-setup@v6
         with:
-          version: 10.12.4
           run_install: false
       - name: Setup Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
           node-version: 24.7.0
           cache: pnpm
           cache-dependency-path: pnpm-lock.yaml
       - name: Setup Pages
-        uses: actions/configure-pages@v5
+        uses: actions/configure-pages@v6
       - name: Install Dreamland Dependencies
         working-directory: vendor/dreamland
         run: "pnpm install --frozen-lockfile"
@@ -56,9 +57,19 @@ jobs:
       - name: "Fix router"
         run: "cp dist/static/index.html dist/static/404.html"
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v5
         with:
           path: "dist/static"
+          # (for .well-known/matrix)
+          include-hidden-files: true
+
+  deploy:
+    needs: build
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-24.04
+    steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5
