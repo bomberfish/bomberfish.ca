@@ -472,9 +472,6 @@ export function AboutView(this: FC) {
 				<div class="main-content about-page">
 					<PageHeader>
 						<Pivot active="about" />
-						<p data-m-content data-m-feather>
-							this website, what it's made of, and what it used to be.
-						</p>
 					</PageHeader>
 					<div data-m-content>
 						<section class="about-prose" data-m-feather>
@@ -488,24 +485,15 @@ export function AboutView(this: FC) {
 									dreamland.js
 								</a>
 								, a small and utilitarian web framework with full reactivity.
+								i'm also using <a target="_blank" href="https://github.com/bomberfish/metro-dreamland">metro-dreamland</a>,
+								my own custom ui library built to recreate the metro ui from windows phone 7/8 and windows 8.
 							</p>
 							<p>
-								it's open-source under the MIT license, and you can view the
-								source code{" "}
-								<a
-									href="https://github.com/bomberfish/bomberfish.ca"
-									target="_blank"
-									referrer-policy="unsafe-url"
-								>
-									here
-								</a>
-								.
+								for typography, the site is done up with segoe ui variable, with cascadia mono as the 
+								font for code. emoji are the set from windows 10 1903, and the symbols are a custom mix 
+								of various symbols from windows 8-10 and some roughly matched material symbols.
 							</p>
-							<p>
-								this version is done up in a blend of the original windows 8 metro design language 
-								and the revised version of it found in windows 10. the fonts used are segoe ui variable for
-								most things, and cascadia mono for code.
-							</p>
+							<p>this site is also open source, and you can find the source code <a target="_blank" href="https://github.com/bomberfish/bomberfish.ca">here</a>.</p>
 						</section>
 
 						<section data-m-feather>
