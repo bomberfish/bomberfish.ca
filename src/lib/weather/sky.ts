@@ -1061,7 +1061,16 @@ export function startSky() {
 	let cssW = 0;
 	let left = 0; // the canvas's left edge, in the window (negative: under a rail)
 	let cssH = 0;
+	// The window's height, as the sky has it: with a phone's bars put away.
+	// They come and go as the page scrolls, and a sky that's laid out by the
+	// window as it is that moment grows and shrinks with them, sun and
+	// cloud and all, under whatever's being read. The layer the rain's in
+	// is the height that doesn't change (100vh, which a phone takes with
+	// its bars away; anywhere else it's the window's).
+	const steady = document.querySelector<HTMLElement>(".page-bg-fixed");
+	let winH = 1;
 	let drawnScale = 0;
+	let drawnSize = ""; // what resize() last found, all of it
 	let dirty = true;
 	let raf = 0;
 	let lastDraw = 0;
@@ -1108,6 +1117,7 @@ export function startSky() {
 		// window, so the sun stays where the page thinks it is and the sky
 		// simply carries on under the rail.
 		left = -(parseFloat(getComputedStyle(root).getPropertyValue("--rail-l")) || 0);
+		winH = Math.max(window.innerHeight, steady?.offsetHeight ?? 0) || 1;
 		let s = starry() ? level.starScale : level.scale;
 		s = Math.min(s, window.devicePixelRatio || 1);
 		s = Math.min(s, Math.sqrt(level.maxPixels / (cssW * cssH)));
@@ -1118,6 +1128,10 @@ export function startSky() {
 			canvas.height = h;
 		}
 		drawnScale = w / cssW;
+		// (nothing's different, a phone's bars going aside: nothing to draw)
+		const sized = `${w} ${h} ${cssW} ${cssH} ${left} ${winH} ${window.innerWidth}`;
+		if (sized === drawnSize) return;
+		drawnSize = sized;
 		dirty = true;
 	};
 
@@ -1129,7 +1143,6 @@ export function startSky() {
 			gl!.uniform3f(u[name]!, l[0], l[1], l[2]);
 		};
 		const winW = window.innerWidth || 1;
-		const winH = window.innerHeight || 1;
 		gl.viewport(0, 0, canvas.width, canvas.height);
 		gl.uniform2f(u.uSize!, cssW, cssH);
 		gl.uniform2f(u.uWin!, winW, winH);
@@ -1194,7 +1207,7 @@ export function startSky() {
 			if (!meteor && time > meteorAt) {
 				meteorAt = time + METEOR_GAP_MS[0] + Math.random() * (METEOR_GAP_MS[1] - METEOR_GAP_MS[0]);
 				if (starry() && now.cover < 0.6) {
-					const aspect = window.innerWidth / Math.max(1, window.innerHeight);
+					const aspect = window.innerWidth / winH;
 					const x = (0.1 + 0.8 * Math.random()) * aspect;
 					const y = 0.04 + 0.4 * Math.random();
 					const angle = (0.15 + 0.5 * Math.random()) * (Math.random() < 0.5 ? 1 : -1);
@@ -1257,6 +1270,7 @@ export function startSky() {
 		level = LEVELS[gpuQuality()];
 		if (gl) ok = build();
 		root.classList.toggle("has-sky", ok);
+		drawnSize = "";
 		resize();
 	};
 	const onLost = (e: Event) => {

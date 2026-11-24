@@ -34,7 +34,7 @@
 //              from its tile to its page (and back again). That part is
 //              motion/continuum.ts, which stands alone.
 //   pivot      the header strip and the content slide sideways at
-//              different speeds
+//              different speeds; a swipe across the page turns it too
 //   tilt       whatever you press leans away under your finger
 //   flip       live tiles turn over to their other face
 //   cycle      live tiles push a new slide up from underneath
@@ -49,6 +49,8 @@
 // same (a paragraph with data-m-feather, a title with data-m-keep):
 //
 //   <main data-m-page="pano|pivot|page">   a page (the router's outlet): <Page>
+//   data-m-strip                           on a pano page: its panorama is a
+//                                          strip on a phone too, not a column
 //   data-m-feather                         leaves/arrives on its own beat
 //   data-m-tilt                            leans when pressed
 //   data-m-flip   (+ .tile-flipper)        a two-faced live tile

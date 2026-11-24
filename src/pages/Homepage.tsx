@@ -24,7 +24,8 @@ import {
 	Tiles,
 } from "../metro-dreamland";
 import { projects } from "../Projects";
-import { reported } from "../lib/weather/index";
+import { reported, scene } from "../lib/weather/index";
+import { glyphFor, weatherGlyph } from "../components/WeatherGlyph";
 import { blogPosts, coverStyle, formatPostDate } from "../lib/blog";
 
 const featuredProjects = projects
@@ -39,8 +40,8 @@ const recentProjects = projects
 
 const latestPosts = blogPosts.slice(0, 3);
 
-// Under whoami, where the window has a row to spare (see .about-nav): three
-// start tiles that pan along to the sections further off. They're anchors
+// Under whoami: three start tiles that pan along (on a phone, scroll down)
+// to the sections further off. They're anchors
 // to those sections ("#projects"), and the address takes the # like any
 // anchor's would, so a section can be linked to and opened at; metro-dreamland
 // does the panning (data-m-pan). Each turns over, like the project tiles, to
@@ -70,6 +71,14 @@ const jumps = [
 	},
 ];
 
+// On a phone those are at the top of the page instead, with one more for the
+// section that's first under them: four small tiles in a row, and a small
+// tile was only ever its glyph.
+const smallJumps = [
+	{ to: "status", icon: "headphones", label: "what i'm up to" },
+	...jumps,
+];
+
 // The arrow after a section's heading that says the heading goes somewhere:
 // Metro's own arrow in a ring, which is one glyph of Segoe UI Symbol. U+E0AA
 // is the Windows 8 back button's glyph (U+E071, which is what the site's
@@ -86,7 +95,8 @@ function MoreArrow(this: FC) {
 
 // The home page is a panorama (metro-dreamland's <Panorama>; see "Panorama" in its metro.css):
 // the name across the top, and under it the sections side by side, each a
-// group of tiles, panning sideways.
+// group of tiles, panning sideways. On a phone it's a phone's start
+// screen: the same sections one under another, scrolling down.
 function Homepage(this: FC) {
 	// What it's doing in Waterloo, at the end of whoami's first paragraph:
 	// a sentence whose link says "doing this" (the sky behind the page is
@@ -116,6 +126,7 @@ function Homepage(this: FC) {
 			window.removeEventListener("weatherchange", sayWeather);
 			return;
 		}
+		tellWeather();
 		const now = reported();
 		if (!link || !now || !now.condition) return;
 		const words = now.condition.toLowerCase();
@@ -129,6 +140,44 @@ function Homepage(this: FC) {
 				? words
 				: `${Math.round(now.temperature)}° ${joiner} ${words}`;
 	};
+	// ...and on a phone, where the top of the page is a start screen's tiles
+	// (.home-start, below), the weather has one: the picture for it, the
+	// temperature in a tile's big light figures, and what it's doing as the
+	// tile's name. It's the sky's weather (what's behind the page, real or
+	// picked), and goes to the weather's page. Made here, like the
+	// sentence: there's no weather without scripting.
+	const tellWeather = () => {
+		const start = this.root?.querySelector<HTMLElement>(".home-start");
+		if (!start) return;
+		let tile = start.querySelector<HTMLElement>(".weather-tile");
+		if (!tile) {
+			tile = (
+				<Tile to="/weather" color="accent" class="weather-tile" w={2} h={2}>
+					<span class="weather-tile-glyph" />
+					<TileCount />
+					<TileLabel>waterloo</TileLabel>
+				</Tile>
+			) as HTMLElement;
+			start.querySelector(".me-tile")?.after(tile);
+		}
+		const sky = scene();
+		const temperature = sky.temperature ?? reported()?.temperature ?? null;
+		tile
+			.querySelector(".weather-tile-glyph")!
+			.replaceChildren(
+				weatherGlyph(
+					glyphFor(sky.kind, sky.condition, sky.intensity, sky.day < 0.35)
+				) as Node
+			);
+		tile.querySelector(".tile-count")!.textContent =
+			temperature == null ? "" : `${Math.round(temperature)}°`;
+		const words = sky.condition?.toLowerCase();
+		tile.querySelector(".tile-label")!.textContent = words || "waterloo";
+		tile.setAttribute(
+			"aria-label",
+			`the weather in waterloo${words ? `: ${words}` : ""}`
+		);
+	};
 	this.cx.mount = () => {
 		if (import.meta.env.SSR) return;
 		sayWeather();
@@ -140,8 +189,10 @@ function Homepage(this: FC) {
 	// The 88x31s: my own button (click it for its code) over the two rows
 	// of everyone else's going by. They're on the page twice, and each
 	// layout shows one: under "jump to" in whoami's column on the start
-	// screen, where there's room for them there, and as a section of their
-	// own at the end of the strip on a phone, where there isn't.
+	// screen, and as a section of their own at the foot of the page on a
+	// phone, where everything under whoami is a scroll further from the
+	// tiles. (The footer's the same: under whoami's column there, under
+	// everything here.)
 	const buttons = (where: string) => (
 		<div class={`buttons-section ${where}`} data-m-feather>
 			<div class="mine">
@@ -206,13 +257,56 @@ function Homepage(this: FC) {
 
 				<PanoramaTrack>
 					<PanoramaSection class="about-section" id="about">
+						{/* A phone's start screen begins with its tiles: me (a
+							    phone had a tile by that name, your picture on it),
+							    the weather (put in by tellWeather, above), and a row
+							    of small ones that scroll down to the sections. */}
+						<Tiles class="home-start">
+							<Tile
+								href="/me.png"
+								target="_blank"
+								rel="noopener"
+								class="me-tile"
+								w={2}
+								h={2}
+								title="my profile picture! click to view full size."
+							>
+								<span class="tile-image">
+									<picture>
+										<source type="image/webp" srcset="/me.480px.webp" />
+										<img
+											src="/me.480px.jpg"
+											class="pfp"
+											width="220"
+											height="220"
+											loading="eager"
+											alt="profile picture"
+										/>
+									</picture>
+								</span>
+								<TileLabel>me</TileLabel>
+							</Tile>
+							{smallJumps.map((j) => (
+								<Tile
+									href={`#${j.to}`}
+									color="accent"
+									class="small-tile"
+									w={1}
+									h={1}
+									title={j.label}
+									aria-label={j.label}
+									data-m-pan
+								>
+									<TileIcon>
+										<span class="material-symbols">{j.icon}</span>
+									</TileIcon>
+								</Tile>
+							))}
+						</Tiles>
 						<PanoramaHeading class="whoami">whoami</PanoramaHeading>
-						{/* The text, and "jump to" and the 88x31s to go with it:
-							    under it if the column has the height for all three,
-							    and if not, beside it (data-m-fit-stack: metro-dreamland
-							    finds out which, where it isn't the stylesheet's to
-							    say; the layouts are below). */}
-						<div class="about-column" data-m-fit-stack>
+						{/* The text, and "jump to" and the 88x31s under it (the
+							    layouts are below). */}
+						<div class="about-column">
 							<div class="about-text" data-m-feather data-m-fit>
 								<p>
 									i'm an 18 y/o high school student from waterloo, canada, and
@@ -449,6 +543,9 @@ function Homepage(this: FC) {
 						{buttons("")}
 					</PanoramaSection>
 				</PanoramaTrack>
+				<div class="home-foot">
+					<Footer />
+				</div>
 			</Panorama>
 		</main>
 	);
@@ -487,13 +584,9 @@ Homepage.style = css`
 		padding-top: 1.5rem;
 	}
 
-	/* "jump to" with its three tiles, and the 88x31s, go with the text:
-	   under it where the column has the height for all three (the start
-	   screen, and a phone or a narrow window that's tall enough), and as a
-	   column of their own beside it where it hasn't (most phones). Those
-	   two layouts are further down; this is what they share. On a phone on
-	   its side there's the height for neither: "jump to" isn't shown, and
-	   the 88x31s are a section of their own at the end of the strip. */
+	/* "jump to" with its three tiles goes under the text, and on the start
+	   screen the 88x31s under that. The two layouts are further down; this
+	   is what they share. */
 	.about-section {
 		/* (a button's height, as components/Buttons.tsx has it, and how far
 		   one dips as it goes by: groove, in style.css) */
@@ -591,13 +684,6 @@ Homepage.style = css`
 		margin-block: 0 var(--btn-dip);
 	}
 
-	/* (the section of their own: only on a phone on its side) */
-	@media not all and (max-height: 30rem) {
-		.buttons-item {
-			display: none;
-		}
-	}
-
 	/* ---- (some) things i've made ----
 	   (One class to a :global(): with a space inside one, ":global(.a .b)",
 	   the scoping sometimes loses the space and the rule matches nothing.) */
@@ -682,149 +768,65 @@ Homepage.style = css`
 	}
 
 	/* ---- phone mode (see "Panorama" in metro-dreamland/metro.css) ----
-	   whoami is a column of the strip like any other: as tall as the strip
-	   and no taller, since nothing scrolls down. So the text has to fit the
-	   height it's got, whatever it says and whatever the screen: at its
-	   own size in one column if that'll do, a little smaller if that will,
-	   and otherwise in as many columns as it takes, evened out. Nothing
-	   here knows which: metro-dreamland tries them in that order (data-m-fit)
-	   and says so with --fit-scale and --fit-cols, and these rules lay it
-	   out from those. The footer keeps its place under the first column. */
-	@media not all and (min-width: 60rem) and (min-height: 36rem) {
-		/* (heights given outright, like the rest of the strip's: the text's
-		   columns need to be told theirs) */
-		.about-section {
-			--foot-h: 4rem;
+	   A column that scrolls down, so nothing has to fit a height: whoami's
+	   text at its own size, then "jump to" (whose tiles scroll on down the
+	   page), then the tiles, a section after a section; the 88x31s and the
+	   footer at the foot of it all. */
+	@media not all and (min-width: 37.5rem) and (min-height: 36rem) {
+		/* The start tiles: me and the weather, a medium tile each, and
+		   the four small ones, under them or (eight across) beside. Each
+		   is given its place, further down, where it's known there'll be
+		   a weather tile to go beside me: left to place themselves the
+		   small ones would fill that corner, and move when it arrived.
+		   Without scripting it never does, and they do fill it: a medium
+		   tile and four small, as start screens began. */
+		.home-start {
+			margin-bottom: 1.5rem;
+		}
+
+		/* (a small tile is its glyph and nothing else: all of the tile is
+		   the glyph's to be in the middle of) */
+		.home-start :global(.small-tile) :global(.tile-icon) {
+			inset: 0;
+			font-size: min(2.5rem, calc(var(--u) * 0.48));
+		}
+
+		/* the weather's: its picture in the top corner, the figures over
+		   the name */
+		.home-start :global(.weather-tile) :global(.weather-glyph) {
+			top: 0.55rem;
+			left: 0.6rem;
+			width: min(3rem, calc(var(--u) * 0.6));
+			height: auto;
+			aspect-ratio: 24 / 26;
+			stroke-width: 1.2;
+		}
+
+		.home-start :global(.weather-tile) :global(.tile-count) {
+			position: absolute;
+			left: 0.6rem;
+			bottom: 1.45rem;
+			font-family: var(--font-display);
+			font-size: min(4rem, calc(var(--u) * 0.8));
+			font-weight: 200;
+			line-height: 1;
+			letter-spacing: -0.04em;
 		}
 
 		.about-text {
-			--scale: var(--fit-scale, 1);
-			--cols: var(--fit-cols, 1);
-			flex: none;
-			box-sizing: border-box;
-			width: calc(
-				var(--cols) * var(--sec-w) + (var(--cols) - 1) * var(--pano-gap)
-			);
-			height: calc(var(--body-h) - var(--foot-h));
-			font-size: calc(0.975rem * var(--scale));
-			/* (a little tighter as it gets smaller) */
-			line-height: calc(1.5 - (1 - var(--scale)) * 0.8);
-			/* auto, one column, isn't columns at all: the text just runs down */
-			column-count: var(--fit-cols, auto);
-			column-gap: var(--pano-gap);
-			column-fill: balance;
-			orphans: 2;
-			widows: 2;
-			/* What it does if it's never fitted (no script): scroll, sooner
-			   than lose the end of it. Fitted, there's nothing to scroll. */
-			overflow: auto;
-			overscroll-behavior: contain;
-			scrollbar-width: none;
+			max-width: 36rem;
 		}
 
-		.about-text::-webkit-scrollbar {
+		/* ("jump to" is those small tiles, here; and the 88x31s' place
+		   and the footer's is the foot of the page) */
+		.about-nav,
+		.about-buttons.buttons-section,
+		.pano-item.about-section > :global(footer) {
 			display: none;
 		}
 
-		.about-text p {
-			margin-bottom: calc(0.75rem * var(--scale));
-		}
-
-		.pano-item.about-section > :global(footer) {
-			flex: none;
-			box-sizing: border-box;
-			width: var(--sec-w);
-			height: var(--foot-h);
-			margin-top: 0;
-			padding: 0.4rem 0 0;
-			overflow: hidden;
-		}
-
-		/* (its two lines closer together than a page's footer has them) */
-		.pano-item.about-section > :global(footer) :global(:is(a, .splash)) {
-			padding-block: 0.2rem;
-		}
-
-		/* "jump to" and the 88x31s. Beside the text, as the column after
-		   it: somewhere the strip comes to rest, its heading up on the line
-		   the sections' headings are on, its three tiles the column's
-		   width between them... */
-		.about-section {
-			--about-gap: 1.25rem;
-		}
-
-		.about-column {
-			display: flex;
-			flex: none;
-			gap: var(--pano-gap);
-			height: calc(var(--body-h) - var(--foot-h));
-		}
-
-		.about-more {
-			display: flex;
-			flex-direction: column;
-			flex: none;
-			box-sizing: border-box;
-			width: var(--sec-w);
-			margin-top: calc(-1 * var(--heading-h));
-			scroll-snap-align: start;
-		}
-
-		.about-nav-tiles {
-			--u: calc((var(--sec-w) - 2 * var(--g)) / 3);
-		}
-
-		/* (a third of a phone's column isn't wide enough for "ways to
-		   reach me" on one line: these labels may take two, and the glyph
-		   over them moves up to leave them the room) */
-		.about-nav-tiles .tile-label {
-			white-space: normal;
-			text-wrap: balance;
-		}
-
-		.about-nav-tiles .tile-icon {
-			inset: 0 0 1.9rem;
-		}
-
-		.about-buttons {
-			margin-top: var(--about-gap);
-		}
-
-		/* ...or under it, where the column's tall enough for all three
-		   with the text at (or near) its own size. metro-dreamland tries that
-		   first and says so (data-m-fit-stack); the text has what height
-		   the other two leave, and the same space is over "jump to" as
-		   under its tiles (less, as on the start screen, the room a line of
-		   type has of its own: the text's under its baseline, the heading's
-		   over its capitals). */
-		.about-column[data-m-stacked] {
-			flex-direction: column;
-			gap: 0;
-		}
-
-		.about-column[data-m-stacked] .about-text {
-			flex: 0 1 auto;
-			height: auto;
-			min-height: 0;
-		}
-
-		.about-column[data-m-stacked] .about-more {
-			margin-top: calc(var(--about-gap) - 0.34rem - 0.59rem);
-			scroll-snap-align: none;
-		}
-
-		.buttons-item {
-			width: var(--sec-w);
-		}
-
-		/* (with reduced motion the buttons don't scroll past in two rows,
-		   they wrap, into more than a column is tall: the one thing in
-		   the strip left to scroll down, and only then) */
-		.buttons-section {
-			box-sizing: border-box;
-			max-height: var(--body-h);
-			overflow-y: auto;
-			overscroll-behavior-y: contain;
+		.home-foot {
+			padding: 0.75rem var(--pano-margin) 0;
 		}
 
 		/* "all projects" is one row tall here: its count goes at the far
@@ -837,19 +839,57 @@ Homepage.style = css`
 		}
 	}
 
-	/* ---- a phone on its side: no room for them with the text at all ---- */
-	@media (max-height: 30rem) {
-		.about-column {
-			display: contents;
+	/* The start tiles' places (see .home-start, above): phone mode's
+	   conditions again, with scripting. Four across, the small ones are
+	   the third row; eight across, the far half of the first. (.tiles as
+	   well, to outrank the panorama's own rule for a tile's place.) */
+	@media (scripting: enabled) and (max-width: 37.49rem),
+		(scripting: enabled) and (max-height: 35.99rem) {
+		.home-start.tiles :global(.me-tile) {
+			grid-area: 1 / 1 / span 2 / span 2;
 		}
 
-		.about-more {
-			display: none;
+		.home-start.tiles :global(.weather-tile) {
+			grid-area: 1 / 3 / span 2 / span 2;
+		}
+
+		.home-start.tiles :global(.small-tile) {
+			grid-row: 3;
+		}
+	}
+
+	@media (scripting: enabled) and (min-width: 30rem) and (max-height: 35.99rem) {
+		.home-start.tiles :global(.small-tile) {
+			grid-row: 1;
+		}
+
+		.home-start.tiles :global(.small-tile:nth-last-child(4)) {
+			grid-column: 5;
+		}
+
+		.home-start.tiles :global(.small-tile:nth-last-child(3)) {
+			grid-column: 6;
+		}
+
+		.home-start.tiles :global(.small-tile:nth-last-child(2)) {
+			grid-column: 7;
+		}
+
+		.home-start.tiles :global(.small-tile:nth-last-child(1)) {
+			grid-column: 8;
 		}
 	}
 
 	/* ---- start mode: four rows of tiles (see "Panorama" in metro-dreamland/metro.css) ---- */
-	@media (min-width: 60rem) and (min-height: 36rem) {
+	@media (min-width: 37.5rem) and (min-height: 36rem) {
+		/* (these are a phone's: see above. .tiles as well, to outrank
+		   the rule that makes one a grid.) */
+		.home-start.tiles,
+		.buttons-item,
+		.home-foot {
+			display: none;
+		}
+
 		/* The column's on the same four rows as the tiles beside it, top
 		   edge to bottom edge, and three things share it: the text; "jump
 		   to" (a section heading's line and the gap under it, 2.9375rem)
@@ -858,7 +898,7 @@ Homepage.style = css`
 		   its buttons dip into as they go by). Whatever height those don't
 		   use is the space between them, half above "jump to" and half
 		   under its tiles (the two margin-top: auto). The text is fitted to
-		   what it may have at most (data-m-fit, as on a phone: a longer bio
+		   what it may have at most (data-m-fit: a longer bio
 		   comes out a little smaller before it comes out too long), which
 		   is what leaves each space --about-gap at the least. The footer
 		   goes under it all, in the strip's bottom margin, on one line to

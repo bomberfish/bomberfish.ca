@@ -501,13 +501,12 @@ GithubCard.style = css`
 		margin-top: auto;
 	}
 
-	/* ---- in the home page's strip on a phone (see "Panorama" in
-	   style.css) ----
-	   The tile is as tall as its column lets it be, which can be a good
-	   deal less than all of this. The pinned repos take what height is
+	/* ---- on a phone's home page (see "Panorama" in metro.css) ----
+	   The tile is as tall as it's wide, which can be a good deal less
+	   than all of this comes to. The pinned repos take what height is
 	   left, a whole one at a time: one that doesn't fit wraps into a second
 	   column, and that's out of sight. */
-	@media not all and (min-width: 60rem) and (min-height: 36rem) {
+	@media not all and (min-width: 37.5rem) and (min-height: 36rem) {
 		.post {
 			min-height: 0;
 		}
@@ -536,7 +535,7 @@ GithubCard.style = css`
 
 	/* (there the tile is never wide enough for the counts to sit beside the
 	   rest: they wrap under it, and line up on the left with it) */
-	@media not all and (min-width: 60rem) and (min-height: 36rem) {
+	@media not all and (min-width: 37.5rem) and (min-height: 36rem) {
 		.gh-top .gh-stats {
 			justify-content: start;
 			justify-items: start;
@@ -548,26 +547,26 @@ GithubCard.style = css`
 		}
 	}
 
-	/* where there isn't the height for even one (a short screen; or a tall
-	   one, where two tiles share the column), they're left out, and the
-	   bio too where it's tightest. Window heights: see --live-rows. */
-	@media (max-height: 35.49rem),
-		(min-height: 46rem) and (max-height: 61.99rem) and (max-width: 59.99rem) {
+	/* where there isn't the height for even one they're left out, and the
+	   bio too where it's tightest. The tile's the column's width each way
+	   (the window's, less its margins), or half that on a phone on its
+	   side, where they're eight across: see --cols. */
+	@media (max-width: 28.49rem),
+		(max-width: 54.99rem) and (max-height: 35.99rem) {
 		.gh-pinned {
 			display: none;
 		}
 	}
 
-	@media (max-height: 29.99rem),
-		(min-height: 46rem) and (max-height: 50rem) and (max-width: 59.99rem) {
+	@media (max-width: 22.5rem),
+		(min-width: 30rem) and (max-width: 43rem) and (max-height: 35.99rem) {
 		.gh-bio {
 			display: none;
 		}
 	}
 
-	/* (a phone on its side with the browser's bars showing: the shortest
-	   the tile gets) */
-	@media (max-height: 22.5rem) {
+	/* (a small phone on its side: the shortest the tile gets) */
+	@media (min-width: 30rem) and (max-width: 36rem) and (max-height: 35.99rem) {
 		.gh-meta {
 			display: none;
 		}
@@ -577,62 +576,6 @@ GithubCard.style = css`
 			height: 3.25rem;
 		}
 	}
-
-	.gh-repo {
-		display: flex;
-		flex-direction: column;
-		gap: 0.15rem;
-		padding: 0.45rem 0.6rem;
-		border: 1px solid var(--surface2);
-		background: hsla(var(--surface0-hsl), 0.7);
-		color: inherit;
-		text-decoration: none !important;
-		font-size: 0.8rem;
-		min-width: 0;
-	}
-
-	.gh-repo::after {
-		display: none !important;
-	}
-
-	.gh-repo-name {
-		font-weight: 600;
-		color: var(--accent);
-	}
-
-	.gh-repo-desc {
-		color: var(--subtext0);
-		display: -webkit-box;
-		-webkit-line-clamp: 2;
-		-webkit-box-orient: vertical;
-		overflow: hidden;
-	}
-
-	.gh-repo-meta {
-		display: flex;
-		gap: 0.6rem;
-		margin-top: auto;
-		color: var(--subtext1);
-		font-size: 0.75rem;
-	}
-
-	.gh-repo-meta > span {
-		display: inline-flex;
-		align-items: center;
-		gap: 0.2rem;
-	}
-
-	.gh-repo-meta .material-symbols {
-		font-size: 0.9rem;
-	}
-
-	.gh-lang {
-		width: 0.6rem;
-		height: 0.6rem;
-		border-radius: 50%;
-		display: inline-block;
-	}
-
 `;
 
 export default GithubCard;

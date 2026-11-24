@@ -1785,22 +1785,29 @@ a.tile:focus-visible {
    side under it. ./motion moves the title and the photo behind at their
    own slower speeds and turns the mouse wheel sideways.
 
-   Either way it's one strip that only moves sideways: every section is
-   laid out in columns as tall as the window allows, and nothing in it
-   scrolls down.
+   That's Windows 8's, and a window big enough for it gets it. A phone gets
+   Windows Phone's start screen, which went the other way: the same
+   title and the same sections one under another, and the page scrolls
+   down.
 
    Two layouts:
-     start mode  (a window at least 60rem x 36rem): tiles in four fixed
-                 rows, sections as wide as their tiles; rems are scaled to
-                 the window's height (see html); scrolls freely
-     phone mode  (anything smaller): columns a bit narrower than the
-                 screen, so the next one shows; four tiles across a column
-                 and as many rows as fit; the live tiles one or two to a
-                 column, each cut to the height it gets; comes to rest on
-                 the edge of a tile or a section (scroll snap)
+     start mode  (a window at least 37.5rem x 36rem, 600px by 576: a
+                 desk's, a tablet's either way up, a folding phone's
+                 opened out): one strip that only moves sideways; tiles in
+                 four fixed rows, sections as wide as their tiles; rems are
+                 scaled to the window's height (see html); nothing in it
+                 scrolls down
+     phone mode  (anything narrower or shorter: a phone, either way up;
+                 unless the page says it stays a strip, data-m-strip): a
+                 column the width of the screen that scrolls down, as any
+                 page does (it's the window that scrolls: the panorama
+                 isn't a scroller here, and ./motion leaves the wheel and
+                 the keys alone). Four tiles across it, as a phone's start
+                 screen had, or eight on a phone on its side; as many rows
+                 as there are tiles.
 
    With the iPhone Duo's rail the strip runs on under it, like the
-   background (--bg-bleed-l/r, 0 without a rail).
+   background (--bg-bleed-l/r, 0 without a rail); the column doesn't.
    ========================================================================== */
 
 main[data-m-page="pano"] {
@@ -1815,7 +1822,6 @@ main[data-m-page="pano"] {
 	--g: 0.5rem;
 	--pano-margin: max(1.25rem, env(safe-area-inset-left));
 	--pano-gap: 1.25rem;
-	--pano-vh: 100vh;
 	--title-size: clamp(3.75rem, 19vw, 6rem);
 
 	/* (under the rail on either side, if there is one) */
@@ -1825,18 +1831,11 @@ main[data-m-page="pano"] {
 	overflow-x: auto;
 	overflow-y: hidden;
 	overscroll-behavior-x: contain;
-	scroll-snap-type: x mandatory;
 	/* what it comes to rest against: the page's left margin, clear of a
 	   rail on that side */
 	scroll-padding-left: calc(var(--pano-margin) + var(--bg-bleed-l));
 	scrollbar-width: none;
 	outline: none;
-}
-
-@supports (height: 100dvh) {
-	.pano {
-		--pano-vh: 100dvh;
-	}
 }
 
 .pano::-webkit-scrollbar {
@@ -1908,7 +1907,6 @@ main[data-m-page="pano"] {
 .pano-item {
 	flex: none;
 	min-width: 0;
-	scroll-snap-align: start;
 }
 
 .pano-item-title {
@@ -1939,105 +1937,128 @@ main[data-m-page="pano"] {
 	align-content: start;
 }
 
-/* ---- phone mode: the strip's measurements ----
-   The heights are spelled out here, not left to fall out of the layout:
-   what's in a column has to be told how tall the column is, to know how
-   many rows of tiles it holds and how much of itself a live tile shows. */
-@media not all and (min-width: 60rem) and (min-height: 36rem) {
-	.pano {
+/* ---- phone mode: a start screen, scrolling down ----
+   (Not a page that's said it stays a strip, data-m-strip: the :where()
+   says so, and leaves these rules weighing what they would without it.) */
+@media not all and (min-width: 37.5rem) and (min-height: 36rem) {
+	main[data-m-page="pano"]:not([data-m-strip]) {
+		height: auto;
+		min-height: 100vh;
+		overflow: visible;
+		overflow-x: clip;
+	}
+
+	:where(main[data-m-page="pano"]:not([data-m-strip])) .pano {
+		/* (the same margin both sides: the tiles span the column exactly) */
+		--pano-margin: max(
+			1.25rem,
+			env(safe-area-inset-left),
+			env(safe-area-inset-right)
+		);
+		--pano-gap: 1.75rem;
 		--pano-top: max(1rem, env(safe-area-inset-top));
 		--pano-bottom: calc(1rem + env(safe-area-inset-bottom));
-		--title-h: calc(var(--title-size) * 0.95 + 0.35rem);
-		--heading-h: 2.75rem;
-		/* the strip under the title, and what's left of it under a
-		   section's heading */
-		--strip-h: calc(
-			var(--pano-vh) - var(--pano-top) - var(--title-h) - var(--pano-bottom)
-		);
-		--body-h: calc(var(--strip-h) - var(--heading-h));
-		/* a column: the screen less the margin and a peek of the next one */
-		--sec-w: min(calc(100vw - var(--pano-margin) - 2.75rem), 27rem);
-		/* four tiles across it; smaller where the window's too short for
-		   two rows of that size */
-		--u: min(
-			calc((var(--sec-w) - 3 * var(--g)) / 4),
-			calc((var(--body-h) - var(--g)) / 2)
-		);
-		/* the live tiles: how many to a column, and so how tall each */
-		--live-rows: 1;
-		--card-h: calc(
-			(var(--body-h) - (var(--live-rows) - 1) * var(--g)) / var(--live-rows)
-		);
+		/* the column: the window less its margins (and no wider than reads
+		   well, where it's a short window on a desk and not a phone). The
+		   window's width is --page-w where the app says so: with the
+		   iPhone Duo's rail, 100vw counts what's under the rail too. */
+		--sec-w: min(calc(var(--page-w, 100vw) - 2 * var(--pano-margin)), 64rem);
+		--cols: 4;
+		--u: calc((var(--sec-w) - (var(--cols) - 1) * var(--g)) / var(--cols));
+		/* the title fits the column: a phone's page titles were 72px on a
+		   screen 480 wide, which is about what this comes to */
+		--title-size: min(calc(var(--sec-w) / 6.5), 6rem);
+
+		width: auto;
+		height: auto;
+		margin-left: 0;
+		overflow: visible;
+		overscroll-behavior-x: auto;
 	}
 
-	.pano-inner {
+	:where(main[data-m-page="pano"]:not([data-m-strip])) .pano-inner {
+		width: auto;
+		min-width: 0;
+		height: auto;
 		padding-top: var(--pano-top);
+		padding-bottom: var(--pano-bottom);
 	}
 
-	.pano-title {
+	:where(main[data-m-page="pano"]:not([data-m-strip])) .pano-title {
+		position: static;
 		box-sizing: border-box;
-		height: var(--title-h);
+		width: auto;
+		padding-left: var(--pano-margin);
+		padding-right: var(--pano-margin);
+		padding-bottom: 0.75rem !important;
 	}
 
-	.pano-track {
+	:where(main[data-m-page="pano"]:not([data-m-strip])) .pano-track {
 		flex: none;
-		height: var(--strip-h);
-		/* room after the last column for it to come to rest on the left
-		   like the others */
-		padding-right: calc(
-			max(var(--pano-margin), 100vw - var(--sec-w) - var(--pano-margin)) +
-				var(--bg-bleed-r)
-		);
+		flex-direction: column;
+		padding-left: var(--pano-margin);
+		padding-right: var(--pano-margin);
 	}
 
-	.pano-item {
-		height: var(--strip-h);
-		/* a section of tiles is too wide to be somewhere to come to rest
-		   itself (anywhere inside one counts as being there): its tiles
-		   are, and the first of them is where it starts anyway */
-		scroll-snap-align: none;
-	}
-
-	.pano-item:not(:has(.tiles)) {
-		scroll-snap-align: start;
-	}
-
-	.pano-item-title {
+	:where(main[data-m-page="pano"]:not([data-m-strip])) .pano-item {
 		box-sizing: border-box;
-		height: var(--heading-h);
-		margin: 0;
+		width: var(--sec-w);
+		/* (where a jump to it comes to rest: clear of the window's top) */
+		scroll-margin-top: var(--pano-top);
 	}
 
-	/* as many rows as fit */
-	.pano .tiles {
-		height: var(--body-h);
-		grid-template-rows: repeat(auto-fill, var(--u));
+	/* (a heading longer than the column takes a second line) */
+	:where(main[data-m-page="pano"]:not([data-m-strip])) .pano-item-title {
+		white-space: normal;
+		text-wrap: balance;
 	}
 
-	.pano .tile {
+	/* tiles go across the column, then on to the next row */
+	:where(main[data-m-page="pano"]:not([data-m-strip])) .pano .tiles {
+		grid-template-columns: repeat(var(--cols), var(--u));
+		grid-auto-flow: row dense;
+	}
+
+	:where(main[data-m-page="pano"]:not([data-m-strip])) .pano .tile {
 		grid-column: span var(--pw, var(--w, 2));
 		grid-row: span var(--ph, var(--h, 2));
-		/* somewhere to come to rest: its left edge on the page's margin */
+	}
+}
+
+/* ...unless the page has said it's a strip whatever the window (data-m-strip
+   on it: something that's read off across, with nothing in it to be a
+   start screen's tiles). Then it's the strip a big window has, with a
+   phone's margins, sections as wide as they say and as tall as the window
+   leaves; and it comes to rest on the edge of one. */
+@media not all and (min-width: 37.5rem) and (min-height: 36rem) {
+	:where(main[data-m-strip]) .pano {
+		scroll-snap-type: x mandatory;
+	}
+
+	:where(main[data-m-strip]) .pano-inner {
+		padding-bottom: calc(1rem + env(safe-area-inset-bottom));
+	}
+
+	:where(main[data-m-strip]) .pano-item {
 		scroll-snap-align: start;
 	}
 }
 
-/* (a window tall enough for two live tiles to a column: 17.5rem each and
-   the strip's other parts; that tall, it's phone mode by being narrow) */
-@media (min-height: 46rem) and (max-width: 59.99rem) {
-	.pano {
-		--live-rows: 2;
+/* (a phone on its side, or a window as short and wide: eight across, two
+   of a phone's columns side by side) */
+@media (min-width: 30rem) and (max-height: 35.99rem) {
+	:where(main[data-m-page="pano"]:not([data-m-strip])) .pano {
+		--cols: 8;
 	}
 }
 
 /* ---- start mode ---- */
-@media (min-width: 60rem) and (min-height: 36rem) {
+@media (min-width: 37.5rem) and (min-height: 36rem) {
 	.pano {
 		--pano-margin: max(4.5rem, env(safe-area-inset-left));
 		--pano-gap: 4rem;
 		--u: 8.5rem;
 		--title-size: 8.5rem;
-		scroll-snap-type: none;
 		/* (its scrollbar shows here: the one in "Scrollbars", below) */
 		scrollbar-width: auto;
 	}
@@ -2066,28 +2087,6 @@ main[data-m-page="pano"] {
 	.pano .tile {
 		grid-column: span var(--w, 2);
 		grid-row: span var(--h, 2);
-	}
-}
-
-/* ---- a short window (a phone on its side; the iPhone Duo's outer screen
-   is 368px tall that way) ----
-   still phone mode, but the name on top gives up most of its height to
-   what's under it */
-@media (max-height: 30rem) {
-	.pano {
-		--title-size: clamp(2.5rem, 15vh, 6rem);
-		--pano-top: max(0.5rem, env(safe-area-inset-top));
-		--pano-bottom: calc(0.75rem + env(safe-area-inset-bottom));
-		--title-h: calc(var(--title-size) * 0.95 + 0.1rem);
-		--heading-h: 2.25rem;
-	}
-
-	.pano-title {
-		padding-bottom: 0.1rem !important;
-	}
-
-	.pano-item-title {
-		font-size: 1.4rem;
 	}
 }
 

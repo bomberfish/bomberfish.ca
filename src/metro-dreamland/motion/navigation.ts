@@ -17,6 +17,7 @@ import {
 import { material, startMaterial } from "./material";
 import { bindPano, pano, panLinks, unbindPano } from "./panorama";
 import { startReveal } from "./reveal";
+import { startSwipe, swipes } from "./swipe";
 import { flipOf, flipTo, hoverFlip, tickTiles } from "./tiles";
 import { press, pressTarget, unpress } from "./tilt";
 import {
@@ -388,6 +389,34 @@ export async function navigate(
 	);
 }
 
+/**
+ * On a pivot page, turn to the section after this one in its strip (1) or
+ * the one before it (-1), which is the last in the strip: it goes round.
+ * What a swipe across the page does (./swipe.ts). It's a page change like
+ * picking the header would be, a new entry and all; going back, it plays
+ * the other way. False if this isn't a pivot with somewhere to turn to.
+ */
+export function turnPivot(dir: 1 | -1) {
+	const links = Array.from(
+		pageEl()?.querySelectorAll<HTMLAnchorElement>(
+			'[data-m-pivot] a[data-m-nav="pivot"]'
+		) ?? []
+	);
+	const link = dir > 0 ? links[0] : links[links.length - 1];
+	if (!link || flags.busy) return false;
+	const href = link.getAttribute("href") ?? "";
+	const url = new URL(href, location.href);
+	const to = norm(url.pathname);
+	if (!isPivot(to) || to === path) return false;
+	void transition(
+		async () => {
+			if (await router?.navigate(href)) stamp(false, url.hash);
+		},
+		{ kind: "pivot", back: dir < 0, to }
+	);
+	return true;
+}
+
 // The browser's back/forward. The router listens for popstate too and
 // swaps the page the moment it fires, which leaves no room for the old
 // page to make an exit; so this listener (registered first: startMetro()
@@ -463,6 +492,9 @@ export function startMetro(options?: Partial<MetroConfig>) {
 	// (the panorama's own links to its sections come through here)
 	panLinks.section = sectionOf;
 	panLinks.jump = jump;
+	// (and a swipe across a pivot)
+	swipes.turn = turnPivot;
+	startSwipe();
 
 	path = norm(location.pathname);
 	readEntry();

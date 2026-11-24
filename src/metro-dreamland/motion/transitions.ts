@@ -12,6 +12,7 @@ import {
 	onScreen,
 	play,
 } from "./core";
+import { takePull } from "./swipe";
 
 // ---------------------------------------------------------------------------
 // Turnstile and feather
@@ -312,13 +313,15 @@ export function pivotOut(
 				})
 		);
 	}
+	// (swiped here, the content's already part of the way: ./swipe.ts)
+	const pull = takePull();
 	return all([
 		...moves,
 		...contents.map((content) =>
 			play(
 				content,
 				[
-					{ transform: "translate3d(0, 0, 0)", opacity: 1 },
+					{ transform: `translate3d(${pull}px, 0, 0)`, opacity: 1 },
 					{ opacity: 1, offset: 0.4 },
 					{
 						transform: `translate3d(${-dir * innerWidth * 0.4}px, 0, 0)`,

@@ -80,6 +80,13 @@ export function startPageBg() {
 			: Math.max(screen.width, screen.height);
 		const gap = screenW - root.clientWidth;
 		const rail = coarse.matches && gap >= 8 && gap <= 160 ? gap : 0;
+		// With a rail, 100vw isn't the page's width: it's the screen's,
+		// rail and all (seen on the Duo: a column sized by it ran on under
+		// the rail and was cut off there). So what's laid out by the
+		// window's width goes by --page-w instead, where there is one: the
+		// width that's clear of the rail, as measured.
+		if (rail) root.style.setProperty("--page-w", `${root.clientWidth}px`);
+		else root.style.removeProperty("--page-w");
 		const onRight = portrait.matches || angle === 270;
 		railLeft = rail && !onRight ? rail : 0;
 		root.style.setProperty("--rail-l", `${railLeft}px`);

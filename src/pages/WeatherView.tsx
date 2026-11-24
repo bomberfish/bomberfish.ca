@@ -35,6 +35,10 @@ import type { WeatherResponse } from "../lib/siteapi";
 // rises and falls with them, and what's overhead (the cloud, level by
 // level, the sun's day and the moon).
 //
+// It's a strip on a phone too (data-m-strip: the home page's panorama is a
+// column there), with the ruler (below) docked along the bottom of the
+// screen: the stylesheet's doing.
+//
 // The numbers are Environment Canada's for Kitchener-Waterloo, by way of
 // siteapi (src/lib/weather/index.ts keeps the last report); the cloud
 // levels are the airport's. None of it is known on the server, so the page
@@ -775,7 +779,7 @@ function WeatherView(this: FC) {
 	};
 
 	return (
-		<main class="pano-page weather-page" data-m-page="pano">
+		<main class="pano-page weather-page" data-m-page="pano" data-m-strip>
 			<title>weather – bomberfish.ca</title>
 			<meta
 				name="description"

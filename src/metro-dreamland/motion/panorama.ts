@@ -20,6 +20,12 @@ export const panLinks: {
 //
 // A mouse wheel only goes up and down, so here it pans: over a section
 // that still has somewhere to scroll vertically it scrolls that first.
+//
+// That's the strip, which is what a big window gets. On a phone the same
+// sections are one under another and the page scrolls down like any other
+// (metro.css, "phone mode"): nothing pans, the wheel and the keys are the
+// browser's, and a jump to a section is a scroll down the page to it. The
+// stylesheet says which it is, by whether the panorama scrolls sideways.
 
 export interface Pano {
 	el: HTMLElement;
@@ -67,6 +73,8 @@ export function bindPano(page: Element) {
 		.ScrollTimeline;
 	const canTranslate = CSS.supports("translate", "1px 0");
 
+	// (a strip, or a phone's column: as of the last measure())
+	let strip = true;
 	let range = 0;
 	let titleTravel = 0;
 	let photoTravel = 0;
@@ -86,7 +94,7 @@ export function bindPano(page: Element) {
 	};
 
 	// Text that has to fit: [data-m-fit] is in a box of a set height where
-	// nothing scrolls (whoami, in the phone strip), and it has to fit
+	// nothing scrolls (whoami, on the start screen), and it has to fit
 	// whatever it says. The stylesheet lays it out from two custom
 	// properties, --fit-scale (its size) and --fit-cols (how many columns,
 	// which it evens out, and makes the box that many wide); this finds the
@@ -131,8 +139,19 @@ export function bindPano(page: Element) {
 	};
 
 	const measure = () => {
+		strip = /auto|scroll/.test(getComputedStyle(el).overflowX);
 		// (first: it changes how wide the strip is)
 		fitText();
+		if (!strip) {
+			// a column: nothing to pan, so nothing for the layers to do
+			range = 0;
+			if (pinned) scrollTo(0, restOf(pinned));
+			driven.forEach((a) => a.cancel());
+			driven = [];
+			if (title) title.style.transform = "";
+			if (photo) photo.style.translate = "";
+			return;
+		}
 		range = Math.max(0, el.scrollWidth - el.clientWidth);
 		// (a section the page was opened at stays put while what's before it
 		// is still changing size: see to(), below)
@@ -223,6 +242,18 @@ export function bindPano(page: Element) {
 			Math.min(reach(), section.getBoundingClientRect().left - base - pad)
 		);
 	}
+	// ...and in a phone's column, how far down the page it is: its top at
+	// the window's (less the room the stylesheet asks for over it). The
+	// first one is the top of the page, title and all.
+	function restOf(section: HTMLElement) {
+		if (section === sections()[0]) return 0;
+		const over = parseFloat(getComputedStyle(section).scrollMarginTop) || 0;
+		const max = document.documentElement.scrollHeight - innerHeight;
+		return Math.max(
+			0,
+			Math.min(max, section.getBoundingClientRect().top + scrollY - over)
+		);
+	}
 	const stops = () => sections().map(stopOf);
 	const step = (dir: 1 | -1) => {
 		const here = el.scrollLeft;
@@ -291,6 +322,7 @@ export function bindPano(page: Element) {
 		el,
 		"wheel",
 		(e) => {
+			if (!strip) return;
 			if (e.ctrlKey || e.metaKey || e.shiftKey) return;
 			if (Math.abs(e.deltaX) >= Math.abs(e.deltaY)) {
 				// sideways already (a two-finger swipe): the browser's to
@@ -352,10 +384,9 @@ export function bindPano(page: Element) {
 		if (!section.getClientRects().length) return false;
 		stopGlide();
 		letGo();
-		el.scrollTo({
-			left: stopOf(section),
-			behavior: smooth && !still() ? "smooth" : "auto",
-		});
+		const behavior = smooth && !still() ? "smooth" : "auto";
+		if (strip) el.scrollTo({ left: stopOf(section), behavior });
+		else scrollTo({ top: restOf(section), behavior });
 		if (!smooth) {
 			pinned = section;
 			unpin = window.setTimeout(letGo, 3000);
@@ -381,6 +412,7 @@ export function bindPano(page: Element) {
 
 	// --- keys: left/right walk the sections ---
 	listen<KeyboardEvent>(window, "keydown", (e) => {
+		if (!strip) return;
 		if (e.defaultPrevented || e.altKey || e.ctrlKey || e.metaKey) return;
 		const t = e.target as HTMLElement | null;
 		if (

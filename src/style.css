@@ -195,11 +195,14 @@ html:root {
    is what does it: the layout is 50.5rem tall. Only where the window is
    wide and tall enough for the four-row layout (the same condition as
    "start mode" under Panorama, below); a phone gets ordinary 16px rems. */
-@media (min-width: 60rem) and (min-height: 36rem) {
+@media (min-width: 37.5rem) and (min-height: 36rem) {
 	html:has(.pano-page) {
 		/* (no upper limit: a taller window is bigger tiles and type, not
-		   the same ones with a band of nothing under them) */
-		font-size: max(11.5px, calc(100vh / 50.5));
+		   the same ones with a band of nothing under them. Unless it's a
+		   good deal taller than it's wide, a tablet held upright: whoami's
+		   column and the page's margin are 31.5rem across, and the window
+		   holds that and a little of what's next.) */
+		font-size: max(11.5px, min(calc(100vh / 50.5), calc(100vw / 34)));
 	}
 }
 
@@ -1058,10 +1061,13 @@ article {
    tiles) */
 /* on a narrow page four units span it exactly, and a tile can ask for a
    different size there with --pw / --ph (the same ones the home page's
-   phone layout uses) */
-@media (max-width: 42rem) {
+   phone layout uses). (--page-w: the window's width clear of the iPhone
+   Duo's rail, where there is one: src/lib/pageBg.ts.) */
+@media (max-width: 37.49rem) {
 	.layout-container {
-		--u: calc((100vw - var(--page-margin) - var(--page-margin-r) - 1.5rem) / 4);
+		--u: calc(
+			(var(--page-w, 100vw) - var(--page-margin) - var(--page-margin-r) - 1.5rem) / 4
+		);
 	}
 
 	.layout-container .tile {
@@ -1156,7 +1162,13 @@ article {
    "Panorama"), so it goes sideways, a section after a section, each the
    height of the window under the title. The first two hang from the
    bottom of it, the way Bing's did: the weather now, and the days ahead
-   beside it. The rest start at the top, under their headings. */
+   beside it. The rest start at the top, under their headings.
+
+   On a phone it's the same strip (the page says so: data-m-strip, which
+   the home page doesn't), sections a bit narrower than the screen so the
+   next one shows; but the ruler is docked along the bottom of the screen,
+   where a phone's app bar was and a thumb is. Those rules are after each
+   part's own, under the same condition as the panorama's "phone mode". */
 .weather-page .pano {
 	--title-size: clamp(2.2rem, 7vw, 3.5rem);
 	--pano-gap: 2.5rem;
@@ -1359,23 +1371,147 @@ article {
 	color: var(--supertext);
 }
 
-@media not ((min-width: 60rem) and (min-height: 36rem)) {
+/* A phone: the ruler's docked along the bottom of the screen. It's the
+   last thing in the page's column (its place there, whatever its place in
+   the markup), under the sections, which have what height that leaves;
+   and like the title it stays put while they pan. There's nothing behind
+   it but the sky, and it's on no panel of its own.
+
+   One line over the ruler: when it is on the left, and the way back to
+   now, once it isn't now, on the right (what kind of time it is goes
+   without saying then: the button says it).
+
+   For a finger: bigger than the one a pointer gets, an hour a little wider,
+   and the needle a quarter of the way along, not half: at rest, with now
+   under it, there's nothing on its left, and that much more of what's
+   ahead on its right. (The strip's own margins are what bring both its
+   ends to the needle: they move with it.)
+
+   (--page-w, not 100vw, where there is one: the window's width clear of
+   the iPhone Duo's rail. src/lib/pageBg.ts.) */
+@media not ((min-width: 37.5rem) and (min-height: 36rem)) {
+	.weather-page .pano-inner {
+		padding-bottom: 0;
+	}
+
 	.wx-when {
+		order: 1;
 		flex-wrap: wrap;
-		row-gap: 0.2rem;
-		padding-right: var(--pano-margin);
+		align-items: baseline;
+		gap: 0 0.75rem;
+		width: calc(var(--page-w, 100vw) + var(--bg-bleed-l));
+		margin: 0;
+		padding: 0.4rem var(--pano-margin) calc(0.5rem + env(safe-area-inset-bottom))
+			calc(var(--pano-margin) + var(--bg-bleed-l));
 	}
 
 	.wx-when p {
+		flex: 1 1 0;
 		flex-direction: row;
 		align-items: baseline;
 		gap: 0.6rem;
 		width: auto;
+		min-width: 0;
+		min-height: 2.25rem;
+	}
+
+	.wx-when-label {
+		overflow: hidden;
+		font-size: min(1.6rem, 5.6vw);
+		line-height: 2.25rem;
+		text-overflow: ellipsis;
+	}
+
+	.wx-when-note {
+		font-size: 0.75rem;
+	}
+
+	.wx-when.is-ahead .wx-when-note {
+		display: none;
+	}
+
+	.wx-back-now {
+		flex: none;
+		align-self: center;
+		height: 2.25rem;
+		padding: 0 0.7rem;
+		font-size: 0.8rem;
 	}
 
 	.wx-ruler-box {
 		flex: 1 1 100%;
 		order: 3;
+	}
+
+	.wx-ruler-box::before,
+	.wx-ruler-box::after {
+		left: 26%;
+	}
+
+	.wx-ruler-box::after {
+		bottom: 1.4rem;
+	}
+
+	.wx-ruler {
+		height: 6.1rem;
+		-webkit-mask-image: linear-gradient(
+			to right,
+			transparent,
+			#000 9%,
+			#000 90%,
+			transparent
+		);
+		mask-image: linear-gradient(
+			to right,
+			transparent,
+			#000 9%,
+			#000 90%,
+			transparent
+		);
+	}
+
+	.wx-ruler-inner {
+		--h: 1.3rem;
+		margin: 0 74% 0 26%;
+		background:
+			linear-gradient(to right, rgba(255, 255, 255, 0.9) 1px, transparent 1px)
+				calc(var(--six) * var(--h)) 2.8rem / calc(6 * var(--h)) 1.15rem repeat-x,
+			linear-gradient(to right, rgba(255, 255, 255, 0.5) 1px, transparent 1px)
+				calc(var(--hour) * var(--h)) 3.4rem / var(--h) 0.55rem repeat-x,
+			var(--band) 0 4.05rem / 100% 0.35rem no-repeat;
+	}
+
+	.wx-ruler-stop .weather-glyph {
+		width: 1.6rem;
+		height: 1.73rem;
+	}
+
+	.wx-ruler-stop b {
+		font-size: 0.85rem;
+	}
+
+	.wx-ruler-mark {
+		top: 4.65rem;
+		font-size: 0.75rem;
+	}
+}
+
+/* (a phone on its side hasn't the height for two lines of it: when it is,
+   then the ruler beside that, then the way back) */
+@media (min-width: 30rem) and (max-height: 35.99rem) {
+	.wx-when {
+		flex-wrap: nowrap;
+		align-items: center;
+	}
+
+	.wx-when p {
+		flex: none;
+		width: 10.5rem;
+	}
+
+	.wx-ruler-box {
+		flex: 1 1 0;
+		order: 0;
 	}
 }
 
@@ -1737,15 +1873,15 @@ article {
 }
 
 /* a phone: sections a bit narrower than the screen, so the next one shows */
-@media not ((min-width: 60rem) and (min-height: 36rem)) {
+@media not ((min-width: 37.5rem) and (min-height: 36rem)) {
 	.wx-now-item {
 		min-width: 0;
-		width: min(27rem, 86vw);
+		width: min(27rem, calc(var(--page-w, 100vw) * 0.86));
 	}
 
 	.weather-page .wx-cloud,
 	.weather-page .wx-lights {
-		width: min(27rem, 86vw);
+		width: min(27rem, calc(var(--page-w, 100vw) * 0.86));
 	}
 
 	.wx-kind,
@@ -1762,8 +1898,65 @@ article {
 		width: auto;
 	}
 
+	/* (the sun's times stay whole: it's what's under them that wraps) */
+	.wx-arc-ends .wx-fact dd {
+		white-space: nowrap;
+	}
+
+	.wx-arc-ends .wx-fact dd small {
+		white-space: normal;
+	}
+
+	/* A section with more in it than the screen is tall (the hours, on
+	   most phones) scrolls down by itself, under the title and over the
+	   ruler. So the two that hang from the bottom do it with a margin, not
+	   by how the section's packed: packed to its end, what didn't fit
+	   would be off its top, where nothing scrolls to. */
 	.weather-page .pano-item {
-		padding-bottom: 1.5rem;
+		padding-bottom: 1rem;
+		overflow-y: auto;
+		overscroll-behavior-y: contain;
+		scrollbar-width: none;
+	}
+
+	.weather-page .pano-item::-webkit-scrollbar {
+		display: none;
+	}
+
+	.wx-now-item,
+	.wx-days-item {
+		justify-content: flex-start;
+	}
+
+	.wx-now,
+	.wx-days {
+		margin-top: auto;
+	}
+
+	.wx-days {
+		flex: none;
+	}
+
+	/* (nothing in them gives up its height for it, either) */
+	.wx-table {
+		flex: none;
+		height: auto;
+	}
+
+	.wx-table tbody :is(th, td) {
+		height: 2.9rem;
+	}
+
+	.wx-levels,
+	.wx-hours-item .wx-hours,
+	.wx-cloud > div,
+	.wx-lights > div:not(.wx-foot) {
+		flex: none;
+	}
+
+	.wx-lights .wx-arc {
+		flex: none;
+		max-height: 11rem;
 	}
 
 	.wx-days li {
@@ -1771,9 +1964,165 @@ article {
 	}
 }
 
-@media (max-width: 34rem) {
+/* A phone on its side: there's very little height, so the title's small,
+   the ruler's the pointer's size, and the weather now is laid out across:
+   the temperature and what it's doing, and the rest of it beside them. */
+@media (min-width: 30rem) and (max-height: 35.99rem) {
+	.weather-page .pano {
+		--title-size: 1.6rem;
+	}
+
+	.wx-title {
+		padding-top: 0;
+		padding-bottom: 0.1rem !important;
+	}
+
+	.wx-title .pano-title-layer {
+		margin-bottom: 0.2rem;
+	}
+
+	.wx-when {
+		padding-top: 0;
+		padding-bottom: calc(0.25rem + env(safe-area-inset-bottom));
+	}
+
+	.wx-when p {
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 0;
+		width: 9.5rem;
+	}
+
+	.wx-when-label {
+		font-size: 1.3rem;
+		line-height: 1.5rem;
+	}
+
+	.wx-ruler {
+		height: 5.2rem;
+	}
+
+	.wx-ruler-inner {
+		--h: 1.1rem;
+		background:
+			linear-gradient(to right, rgba(255, 255, 255, 0.9) 1px, transparent 1px)
+				calc(var(--six) * var(--h)) 2.2rem / calc(6 * var(--h)) 1.15rem repeat-x,
+			linear-gradient(to right, rgba(255, 255, 255, 0.5) 1px, transparent 1px)
+				calc(var(--hour) * var(--h)) 2.8rem / var(--h) 0.55rem repeat-x,
+			var(--band) 0 3.45rem / 100% 0.3rem no-repeat;
+	}
+
+	.wx-ruler-box::after {
+		bottom: 1.2rem;
+	}
+
+	.wx-ruler-stop .weather-glyph {
+		width: 1.35rem;
+		height: 1.46rem;
+	}
+
+	.wx-ruler-stop b {
+		font-size: 0.75rem;
+	}
+
+	.wx-ruler-mark {
+		top: 3.95rem;
+		font-size: 0.68rem;
+	}
+
+	.weather-page .pano-item {
+		padding-bottom: 0.5rem;
+	}
+
+	.wx-now-item {
+		width: auto;
+	}
+
+	.wx-now {
+		display: grid;
+		grid-template-columns: auto auto;
+		align-items: end;
+		column-gap: 2.5rem;
+	}
+
+	.wx-now > * {
+		grid-column: 1;
+	}
+
 	.wx-now .wx-facts {
-		grid-template-columns: minmax(0, 1fr);
+		grid-row: 1 / span 3;
+		grid-column: 2;
+		margin: 0 0 0.2rem;
+	}
+
+	.wx-now .wx-warnings {
+		grid-column: 1 / -1;
+	}
+
+	.wx-temp {
+		font-size: 6rem;
+	}
+
+	.wx-glyph {
+		width: 3.6rem;
+		height: 3.9rem;
+		margin-top: 0.6rem;
+	}
+
+	.wx-cond {
+		margin-top: 0.1rem;
+		font-size: 1.5rem;
+	}
+
+	.wx-days li {
+		min-height: 0;
+		padding-block: 0.4rem 0.5rem;
+	}
+
+	.wx-days .weather-glyph {
+		width: 2.3rem;
+		height: 2.5rem;
+		margin-block: 0.25rem 0;
+	}
+
+	.wx-day-temps {
+		font-size: 1.8rem;
+	}
+}
+
+/* (a phone: three to a row, each a name over its figure, as a phone's
+   own weather had them. Two columns of names and numbers side by side
+   don't fit, and one is a list as long as the screen.) */
+@media (max-width: 37.49rem) {
+	.wx-now .wx-facts {
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+		gap: 0.9rem 0.8rem;
+		margin-top: 1.3rem;
+	}
+
+	.wx-now .wx-fact {
+		display: block;
+		min-width: 0;
+	}
+
+	.wx-now .wx-fact dt {
+		min-width: 0;
+		font-size: 0.75rem;
+	}
+
+	.wx-now .wx-fact dd {
+		display: block;
+		font-size: 1.3rem;
+		font-weight: 300;
+		line-height: 1.2;
+		white-space: nowrap;
+	}
+
+	.wx-now .wx-fact dd small {
+		display: block;
+		font-size: 0.72rem;
+		font-weight: 400;
+		white-space: normal;
 	}
 }
 
@@ -2582,10 +2931,20 @@ article {
 
 /* (the site's own, of what metro-dreamland's stylesheet has the rest of:
    panorama 1) */
-/* with a rail, the strip isn't cut off at the page's edge on its way there */
-html.has-rail main.pano-page {
+/* with a rail, the strip isn't cut off at the page's edge on its way there
+   (the strip: a phone's column keeps to the window. So it's a big window's
+   panorama, or one that's a strip whatever the window, as the weather's
+   is.) */
+html.has-rail main.pano-page[data-m-strip] {
 	overflow-x: visible;
 	overflow-y: clip;
+}
+
+@media (min-width: 37.5rem) and (min-height: 36rem) {
+	html.has-rail main.pano-page {
+		overflow-x: visible;
+		overflow-y: clip;
+	}
 }
 
 /* the ".ca" after the name in the home page's title: darker, and part
@@ -2593,6 +2952,19 @@ html.has-rail main.pano-page {
 .home-title .title-tld {
 	filter: brightness(0.78);
 	opacity: 0.5;
+}
+
+/* (on a phone the picture's a tile of its own, under the name: see
+   .home-start in Homepage.tsx. The name has the column to itself, and
+   fills it.) */
+@media not all and (min-width: 37.5rem) and (min-height: 36rem) {
+	.home-title {
+		--title-size: min(calc(var(--sec-w) / 5.5), 6rem);
+	}
+
+	.home-title .pfp-link {
+		display: none;
+	}
 }
 
 /* the picture beside the name, as tall as the name's line */
@@ -2626,19 +2998,16 @@ html.has-rail main.pano-page {
 	vertical-align: -0.2em;
 }
 
-@media not all and (min-width: 60rem) and (min-height: 36rem) {
-	/* the live tiles: a column wide, sharing its height between them */
+@media not all and (min-width: 37.5rem) and (min-height: 36rem) {
+	/* the live tiles: each a large tile, four by four (what's in one is
+	   cut to that height: --card-h) */
 	.pano .live-stack {
-		grid-template-rows: repeat(var(--live-rows), minmax(0, 1fr));
-		grid-auto-columns: var(--sec-w);
-		grid-auto-rows: auto;
-		grid-auto-flow: column;
+		--card-h: calc(4 * var(--u) + 3 * var(--g));
 	}
 
 	.pano .live-stack > .livecard {
-		grid-column: auto;
-		grid-row: auto;
-		min-height: 0;
+		grid-column: span 4;
+		grid-row: span 4;
 	}
 
 	/* last.fm's cover: two fifths of the tile across, or as much as the
@@ -2649,18 +3018,9 @@ html.has-rail main.pano-page {
 	}
 }
 
-/* (an upright phone with one live tile to a column: the cover sits above
-   the track's details, see LastFmCard.tsx, and is as big as the tile's
-   height allows after those, the header and the two-row player) */
-@media (max-width: 27rem) and (min-height: 30rem) and (max-height: 45.99rem) {
-	.pano .lastfm-card .lastfm-art {
-		width: min(100%, calc(var(--card-h) - 18.75rem));
-	}
-}
-
 /* ---- the live tiles' places (what i'm up to) ----
    start mode: last.fm and fediverse above, X and github below, staggered */
-@media (min-width: 60rem) and (min-height: 36rem) {
+@media (min-width: 37.5rem) and (min-height: 36rem) {
 	.pano .live-stack > .lastfm-card {
 		grid-area: 1 / 1 / span 2 / span 4;
 	}
@@ -2718,9 +3078,16 @@ html.has-rail main.pano-page {
    wider than the window, so there's some of it left to pan to (metro-dreamland
    moves it with the `translate` property; its `transform` belongs to the
    vertical parallax below). Not with the iPhone Duo's side rail, where the
-   page's width is already spoken for. */
-html:not(.has-rail):has(.pano-page) .page-bg-photo {
+   page's width is already spoken for; and not on a phone, where the page
+   goes down and nothing pans (unless it's a strip there too). */
+html:not(.has-rail):has(.pano-page[data-m-strip]) .page-bg-photo {
 	width: 135%;
+}
+
+@media (min-width: 37.5rem) and (min-height: 36rem) {
+	html:not(.has-rail):has(.pano-page) .page-bg-photo {
+		width: 135%;
+	}
 }
 
 /* ==========================================================================
@@ -3602,10 +3969,10 @@ cap subt:not(:has(.material-symbols)) {
 	/* (out to the tile's edges, through its padding) */
 	margin: 0 -0.8rem 0.7rem;
 	overflow: hidden;
-	/* On a tall tile (a column to itself on a phone: below) it's between
-	   the header and the post, the shape the pictures are themselves
-	   (--ar), and gives way before the post does if there's a lot of
-	   that. */
+	/* Left to itself it's between the header and the post, the shape the
+	   pictures are themselves (--ar), and gives way before the post does
+	   if there's a lot of that. (On a tile it has the whole face, and the
+	   post is its caption: further down.) */
 	flex: 0 100 auto;
 	aspect-ratio: var(--ar, 16 / 9);
 	min-height: 7rem;
@@ -3768,112 +4135,103 @@ cap subt:not(:has(.material-symbols)) {
 }
 
 /* ---- ...and the post that goes with them ----
-   On a tall tile, as said: the pictures, then the post under them on the
-   tile's own colour, laid out as any post is. That's a phone's when the
-   tile has a column to itself (the strip's --live-rows is 1), and the
-   phone isn't on its side.
+   It's Windows 8's picture-and-text tile: the pictures have all of the
+   tile under its header, and the post is a caption across the foot of
+   them, on a band of black they show through. What it says, in up to
+   three lines; then one line for who by (small) and the counts. (Every
+   tile here is about as wide as it's tall, or wider: there isn't the
+   height for one under the other.) */
+.feed-card:has(> .feed-media) {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr);
+	grid-template-rows: auto minmax(0, 1fr);
+}
 
-   Everywhere else the tile's about as wide as it's tall, or wider (the
-   start screen's; two to a column on a phone; a phone on its side), there
-   isn't the height for one under the other, and it's Windows 8's
-   picture-and-text tile: the pictures have all of the tile under its
-   header, and the post is a caption across the foot of them, on a band of
-   black they show through. What it says, in up to three lines; then one
-   line for who by (small) and the counts.
-   (The same condition is in TwitterCard.tsx, for what's in a caption.) */
-@media (min-width: 60rem), (max-height: 30rem), (min-height: 46rem) {
-	.feed-card:has(> .feed-media) {
-		display: grid;
-		grid-template-columns: minmax(0, 1fr);
-		grid-template-rows: auto minmax(0, 1fr);
-	}
+/* (the header's a strip of the tile's colour over the pictures: as
+   much of it under its buttons as over them) */
+.feed-card:has(> .feed-media) > .livecard-header {
+	margin-bottom: 0.7rem;
+}
 
-	/* (the header's a strip of the tile's colour over the pictures: as
-	   much of it under its buttons as over them) */
-	.feed-card:has(> .feed-media) > .livecard-header {
-		margin-bottom: 0.7rem;
-	}
+.feed-card > .feed-media {
+	grid-area: 2 / 1;
+	margin-bottom: -0.75rem;
+	aspect-ratio: auto;
+	min-height: 0;
+}
 
-	.feed-card > .feed-media {
-		grid-area: 2 / 1;
-		margin-bottom: -0.75rem;
-		aspect-ratio: auto;
-		min-height: 0;
-	}
+.feed-post.is-caption {
+	grid-area: 2 / 1;
+	align-self: end;
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) auto;
+	/* (if it comes to more than that, it's what it says that's cut
+	   short, not who by) */
+	grid-template-rows: minmax(0, 1fr) auto;
+	grid-template-areas:
+		"body body"
+		"who counts";
+	align-items: center;
+	gap: 0.45rem 1rem;
+	/* (some of the picture is always clear of it) */
+	max-height: 72%;
+	margin: 0 -0.8rem -0.75rem;
+	padding: 0.6rem 0.8rem 0.65rem;
+	/* (acrylic as well: the pictures under it blurred, a tint of black,
+	   the grain) */
+	background: var(--grain), rgba(0, 0, 0, 0.56);
+	-webkit-backdrop-filter: var(--frost);
+	backdrop-filter: var(--frost);
+	--ink: 255, 255, 255;
+}
 
-	.feed-post.is-caption {
-		grid-area: 2 / 1;
-		align-self: end;
-		display: grid;
-		grid-template-columns: minmax(0, 1fr) auto;
-		/* (if it comes to more than that, it's what it says that's cut
-		   short, not who by) */
-		grid-template-rows: minmax(0, 1fr) auto;
-		grid-template-areas:
-			"body body"
-			"who counts";
-		align-items: center;
-		gap: 0.45rem 1rem;
-		/* (some of the picture is always clear of it) */
-		max-height: 72%;
-		margin: 0 -0.8rem -0.75rem;
-		padding: 0.6rem 0.8rem 0.65rem;
-		/* (acrylic as well: the pictures under it blurred, a tint of black,
-		   the grain) */
-		background: var(--grain), rgba(0, 0, 0, 0.56);
-		-webkit-backdrop-filter: var(--frost);
-		backdrop-filter: var(--frost);
-		--ink: 255, 255, 255;
-	}
+.is-caption .feed-post-body {
+	grid-area: body;
+	align-self: stretch;
+	gap: 0.4rem;
+}
 
-	.is-caption .feed-post-body {
-		grid-area: body;
-		align-self: stretch;
-		gap: 0.4rem;
-	}
+.is-caption .feed-post-content {
+	flex: none;
+}
 
-	.is-caption .feed-post-content {
-		flex: none;
-	}
+/* (a caption's headline type is no bigger than a caption can carry) */
+.is-caption .feed-post-content.is-short {
+	font-size: min(var(--post-size, 1.45rem), 1.45rem, max(1.05rem, 7.5cqi));
+}
 
-	/* (a caption's headline type is no bigger than a caption can carry) */
-	.is-caption .feed-post-content.is-short {
-		font-size: min(var(--post-size, 1.45rem), 1.45rem, max(1.05rem, 7.5cqi));
-	}
+.is-caption .feed-post-header {
+	grid-area: who;
+	gap: 0.45rem;
+}
 
-	.is-caption .feed-post-header {
-		grid-area: who;
-		gap: 0.45rem;
-	}
+.is-caption .feed-post-avatar {
+	width: 1.5rem;
+	height: 1.5rem;
+}
 
-	.is-caption .feed-post-avatar {
-		width: 1.5rem;
-		height: 1.5rem;
-	}
+.is-caption .feed-post-header-info {
+	flex-direction: row;
+	align-items: baseline;
+	gap: 0.4rem;
+}
 
-	.is-caption .feed-post-header-info {
-		flex-direction: row;
-		align-items: baseline;
-		gap: 0.4rem;
-	}
+.is-caption .feed-post-header-name {
+	flex: none;
+	font-size: 0.85rem;
+}
 
-	.is-caption .feed-post-header-name {
-		flex: none;
-		font-size: 0.85rem;
-	}
+.is-caption .feed-post-header-username {
+	font-size: 0.75rem;
+}
 
-	.is-caption .feed-post-header-username {
-		font-size: 0.75rem;
-	}
+.is-caption .feed-post-counts {
+	grid-area: counts;
+	gap: 0.8rem;
+}
 
-	.is-caption .feed-post-counts {
-		grid-area: counts;
-		gap: 0.8rem;
-	}
-
-	.is-caption .feed-post-when {
-		margin-left: 0.2rem;
-	}
+.is-caption .feed-post-when {
+	margin-left: 0.2rem;
 }
 
 /* Reveal of a live tile's content the first time it loads. The
@@ -4381,18 +4739,24 @@ cap subt:not(:has(.material-symbols)) {
 	.archive-tiles {
 		--u: min(
 			5.5rem,
-			calc((100vw - var(--page-margin) - var(--page-margin-r) - 1.5rem) / 4)
+			calc(
+				(var(--page-w, 100vw) - var(--page-margin) - var(--page-margin-r) - 1.5rem) / 4
+			)
 		);
 	}
 
 	.swatch {
 		width: min(
 			7rem,
-			calc((100vw - var(--page-margin) - var(--page-margin-r) - 1rem) / 3)
+			calc(
+				(var(--page-w, 100vw) - var(--page-margin) - var(--page-margin-r) - 1rem) / 3
+			)
 		);
 		height: min(
 			7rem,
-			calc((100vw - var(--page-margin) - var(--page-margin-r) - 1rem) / 3)
+			calc(
+				(var(--page-w, 100vw) - var(--page-margin) - var(--page-margin-r) - 1rem) / 3
+			)
 		);
 	}
 }

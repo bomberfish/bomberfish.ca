@@ -2949,7 +2949,7 @@ LastFmCard.style = css`
 	/* ...nor, at the size they are for a finger, anywhere the tile is a
 	   section wide (everything but the home page's four-row layout: the
 	   same condition as "start mode" in style.css, turned round) */
-	@media (pointer: coarse) and (max-width: 59.99rem),
+	@media (pointer: coarse) and (max-width: 37.49rem),
 		(pointer: coarse) and (max-height: 35.99rem) {
 		.livecard-header .livecard-stat {
 			display: none;
@@ -3496,29 +3496,9 @@ LastFmCard.style = css`
 		text-wrap: nowrap;
 	}
 
-	/* In the home page's strip on an upright phone, the tile is a column
-	   wide and the whole height of the screen under the headings: more
-	   tall than wide. So the cover goes above the track's details, not
-	   beside them, and gets what height is left (its size is set with the
-	   strip's own measurements: see .pano .lastfm-art in style.css). The
-	   window sizes are those where the strip has one live tile to a
-	   column, and a column is the phone's width. */
-	@media (max-width: 27rem) and (min-height: 30rem) and (max-height: 45.99rem) {
-		.lastfm-track {
-			flex-direction: column;
-			align-items: flex-start;
-			gap: 0.75rem;
-		}
-
-		.lastfm-meta {
-			flex: none;
-			width: 100%;
-		}
-	}
-
-	/* ...and on a phone on its side with the browser's bars showing, the
-	   tile is at its shortest: when it was played gives way */
-	@media (max-height: 22.5rem) {
+	/* On a phone on its side the home page's tiles are eight across, and
+	   this one's at its shortest: when it was played gives way */
+	@media (min-width: 30rem) and (max-width: 36rem) and (max-height: 35.99rem) {
 		.lastfm-when {
 			display: none;
 		}
@@ -3531,8 +3511,10 @@ LastFmCard.style = css`
 	/* On a phone the tile isn't wide enough for all five in a row, and
 	   it was the scrubber that gave way, down to nothing. So two rows:
 	   play, scrubber, time; then the volume under play and the Apple
-	   Music mark at the far end. */
-	@media (max-width: 27rem) {
+	   Music mark at the far end. (And on one on its side, where the tile
+	   is half the screen wide.) */
+	@media (max-width: 27rem),
+		(min-width: 30rem) and (max-width: 52rem) and (max-height: 35.99rem) {
 		.lastfm-player {
 			grid-template-columns: auto minmax(0, 1fr) auto;
 			row-gap: 0.3rem;

@@ -225,41 +225,39 @@ TwitterCard.style = css`
 		overflow: hidden;
 	}
 
-	/* Where the post is a caption over its pictures (every tile but a tall
-	   one: "Social post cards" in style.css has the same condition) these
-	   keep to a line of it: a link is its title and where it goes, a
-	   quoted post who said it and how it starts, side by side. */
-	@media (min-width: 60rem), (max-height: 30rem), (min-height: 46rem) {
-		.is-caption .tweet-linkcard,
-		.is-caption .tweet-quote {
-			flex: none;
-			flex-direction: row;
-			align-items: baseline;
-			gap: 0.6rem;
-			padding-block: 0.35rem 0.4rem;
-		}
+	/* Where the post is a caption over its pictures ("Social post cards"
+	   in style.css) these keep to a line of it: a link is its title and
+	   where it goes, a quoted post who said it and how it starts, side by
+	   side. */
+	.is-caption .tweet-linkcard,
+	.is-caption .tweet-quote {
+		flex: none;
+		flex-direction: row;
+		align-items: baseline;
+		gap: 0.6rem;
+		padding-block: 0.35rem 0.4rem;
+	}
 
-		.is-caption .tweet-linkcard-title,
-		.is-caption .tweet-quote-text {
-			flex: 0 1 auto;
-			display: block;
-			min-width: 0;
-			white-space: nowrap;
-			text-overflow: ellipsis;
-		}
+	.is-caption .tweet-linkcard-title,
+	.is-caption .tweet-quote-text {
+		flex: 0 1 auto;
+		display: block;
+		min-width: 0;
+		white-space: nowrap;
+		text-overflow: ellipsis;
+	}
 
-		.is-caption .tweet-linkcard-domain,
-		.is-caption .tweet-quote-author {
-			flex: none;
-		}
+	.is-caption .tweet-linkcard-domain,
+	.is-caption .tweet-quote-author {
+		flex: none;
+	}
 
-		.is-caption .tweet-linkcard-domain {
-			order: 1;
-		}
+	.is-caption .tweet-linkcard-domain {
+		order: 1;
+	}
 
-		.is-caption .tweet-linkcard-desc {
-			display: none;
-		}
+	.is-caption .tweet-linkcard-desc {
+		display: none;
 	}
 `;
 
