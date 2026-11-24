@@ -1,4 +1,4 @@
-import { Page, PageHeader } from "../metro-dreamland";
+import { Page, PageHeader } from "metro-dreamland";
 import { FC } from "dreamland/core";
 import ContactLinks from "../components/ContactLinks";
 import SiteNav from "../components/SiteNav";

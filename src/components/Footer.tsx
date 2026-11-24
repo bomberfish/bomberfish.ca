@@ -1,6 +1,6 @@
 import { FC, css } from "dreamland/core";
 import humanizeDuration from "humanize-duration";
-import { Link, swapText } from "../metro-dreamland";
+import { Link, swapText } from "metro-dreamland";
 import { onekoOn, toggleOneko } from "./Oneko";
 
 const messages: string[] = [

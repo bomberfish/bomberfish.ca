@@ -1,6 +1,6 @@
 import { FC, createState, css, Stateful } from "dreamland/core";
 import { getGithub, GithubResponse } from "../lib/siteapi";
-import { ProgressBar, ProgressRing, runProgressBar } from "../metro-dreamland";
+import { ProgressBar, ProgressRing, runProgressBar } from "metro-dreamland";
 import { GitHubIcon } from "./SocialIcons";
 import { wsrvPicture } from "./WsrvPicture";
 

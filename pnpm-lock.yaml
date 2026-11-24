@@ -23,6 +23,9 @@ importers:
       humanize-duration:
         specifier: ^3.33.1
         version: 3.33.1
+      metro-dreamland:
+        specifier: link:vendor/metro-dreamland
+        version: link:vendor/metro-dreamland
     devDependencies:
       '@literals/rollup-plugin-html-css-minifier':
         specifier: ^3.0.1

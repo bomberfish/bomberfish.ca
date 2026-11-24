@@ -22,7 +22,7 @@ import {
 	TileIcon,
 	TileLabel,
 	Tiles,
-} from "../metro-dreamland";
+} from "metro-dreamland";
 import { projects } from "../Projects";
 import { reported, scene } from "../lib/weather/index";
 import { glyphFor, weatherGlyph } from "../components/WeatherGlyph";

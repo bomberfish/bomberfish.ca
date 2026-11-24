@@ -16,7 +16,7 @@ import {
 	marquee,
 	placeSlider,
 	runProgressBar,
-} from "../metro-dreamland";
+} from "metro-dreamland";
 import { AppleMusicWordmark, LastFmIcon } from "./SocialIcons";
 import { wsrvPicture } from "./WsrvPicture";
 

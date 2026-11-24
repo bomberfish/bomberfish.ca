@@ -1,7 +1,7 @@
 import { FC } from "dreamland/core";
 import type { ProjectCardDetails } from "../Projects";
 import { getWebpPath } from "../lib/images";
-import { Tile, TileBack, TileFront, TileLabel } from "../metro-dreamland";
+import { Tile, TileBack, TileFront, TileLabel } from "metro-dreamland";
 
 // A project as a live tile: its picture and name on the front, the years
 // and the one-line pitch on the back (metro-dreamland turns it over every so

@@ -1,4 +1,4 @@
-import { Page, PageHeader, Tiles } from "../metro-dreamland";
+import { Page, PageHeader, Tiles } from "metro-dreamland";
 import { FC } from "dreamland/core";
 import ProjectTile from "../components/ProjectTile";
 import { projects } from "../Projects";

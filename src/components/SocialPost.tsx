@@ -6,7 +6,7 @@
 
 import { ComponentChild, createState, FC, Stateful } from "dreamland/core";
 import { ago, compactAgo } from "../lib/format";
-import { ProgressBar, ProgressRing, runProgressBar } from "../metro-dreamland";
+import { ProgressBar, ProgressRing, runProgressBar } from "metro-dreamland";
 import { wsrvFormat, wsrvPicture } from "./WsrvPicture";
 
 export type FeedView<T> =

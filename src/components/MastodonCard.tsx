@@ -1,4 +1,4 @@
-import { Tile } from "../metro-dreamland";
+import { Tile } from "metro-dreamland";
 import { FC } from "dreamland/core";
 import { getMastodon, MastodonStatus } from "../lib/siteapi";
 import { displaySize, visibleLength } from "../lib/postText";

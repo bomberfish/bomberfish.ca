@@ -5,7 +5,7 @@ import { startSky } from "./lib/weather/sky";
 import { startWeather } from "./lib/weather/index";
 import { startPageBg } from "./lib/pageBg";
 import { startAccent } from "./lib/accent";
-import { metroReady, startMetro } from "./metro-dreamland";
+import { metroReady, startMetro } from "metro-dreamland";
 
 startAccent();
 // before hydrating: its popstate listener has to be ahead of the router's

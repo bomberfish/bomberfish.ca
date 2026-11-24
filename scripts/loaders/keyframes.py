@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Prints the @keyframes of the site's two indeterminate loaders.
 
-The loaders (src/metro-dreamland/components/Progress.tsx; "Loaders" in
-src/metro-dreamland/metro.css) are
+The loaders (vendor/metro-dreamland/src/components/Progress.tsx; "Loaders" in
+vendor/metro-dreamland/src/metro.css) are
 Windows 8's: the ProgressRing, dots chasing each other round a circle, and
 the indeterminate ProgressBar, five dots that fly in from the left, bunch up
 in the middle and fly off to the right. Their motion is a table of key
@@ -28,7 +28,7 @@ and how far the bar's row of them drifts. See the notes there.
     python3 scripts/loaders/keyframes.py
 
 and paste the output over the generated block in
-src/metro-dreamland/metro.css.
+vendor/metro-dreamland/src/metro.css.
 """
 
 # ---------------------------------------------------------------- the ring

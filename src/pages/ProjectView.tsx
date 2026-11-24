@@ -1,4 +1,4 @@
-import { Button, Page, PageHeader } from "../metro-dreamland";
+import { Button, Page, PageHeader } from "metro-dreamland";
 import { FC } from "dreamland/core";
 import SiteNav from "../components/SiteNav";
 import Footer from "../components/Footer";

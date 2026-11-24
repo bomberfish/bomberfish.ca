@@ -1,4 +1,4 @@
-import { Tile } from "../metro-dreamland";
+import { Tile } from "metro-dreamland";
 import { ComponentChild, FC } from "dreamland/core";
 
 interface Contact {

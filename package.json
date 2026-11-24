@@ -54,6 +54,7 @@
 		"@photo-sphere-viewer/core": "^5.14.1",
 		"detect-gpu": "^5.0.70",
 		"dreamland": "link:vendor/dreamland",
-		"humanize-duration": "^3.33.1"
+		"humanize-duration": "^3.33.1",
+		"metro-dreamland": "link:vendor/metro-dreamland"
 	}
 }

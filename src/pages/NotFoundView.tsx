@@ -1,5 +1,5 @@
 import { FC } from "dreamland/core";
-import { Button, Page, PageHeader, Tile } from "../metro-dreamland";
+import { Button, Page, PageHeader, Tile } from "metro-dreamland";
 import SiteNav from "../components/SiteNav";
 
 // Styles: "404" in src/style.css.

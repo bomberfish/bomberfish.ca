@@ -1,4 +1,4 @@
-@import "./metro-dreamland/metro.css";
+@import "metro-dreamland/metro.css";
 
 /* ==========================================================================
    bomberfish.ca, Metro edition
@@ -64,27 +64,8 @@ html {
 	   tile is one */
 	--accent-fill: hsl(var(--accent-hsl));
 
-	/* ---- The accent set: Windows Phone 8's twenty ---- */
-	--m-lime: #a4c400;
-	--m-green: #60a917;
-	--m-emerald: #008a00;
-	--m-teal: #00aba9;
-	--m-cyan: #1ba1e2;
-	--m-cobalt: #0050ef;
-	--m-indigo: #6a00ff;
-	--m-violet: #aa00ff;
-	--m-pink: #f472d0;
-	--m-magenta: #d80073;
-	--m-crimson: #a20025;
-	--m-red: #e51400;
-	--m-orange: #fa6800;
-	--m-amber: #f0a30a;
-	--m-yellow: #e3c800;
-	--m-brown: #825a2c;
-	--m-olive: #6d8764;
-	--m-steel: #647687;
-	--m-mauve: #76608a;
-	--m-taupe: #87794e;
+	/* (the accent set, Windows Phone 8's twenty, --m-lime to --m-taupe,
+	   is metro-dreamland's: metro.css) */
 
 	/* ---- Surfaces and text: the phone's dark theme ----
 	   Pure neutrals from black up, so the only colour on a page is accent

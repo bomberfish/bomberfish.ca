@@ -1,5 +1,5 @@
 import { FC } from "dreamland/core";
-import { Link, Pivot as MetroPivot, RingButton } from "../metro-dreamland";
+import { Link, Pivot as MetroPivot, RingButton } from "metro-dreamland";
 
 export type Section = "projects" | "blog" | "about";
 

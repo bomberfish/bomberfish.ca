@@ -1,5 +1,5 @@
 import { FC } from "dreamland/core";
-import { Link, Page, PageHeader } from "../metro-dreamland";
+import { Link, Page, PageHeader } from "metro-dreamland";
 import ContactLinks from "../components/ContactLinks";
 import SiteNav, { Pivot } from "../components/SiteNav";
 import Footer from "../components/Footer";

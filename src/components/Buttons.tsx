@@ -1,5 +1,5 @@
 import { FC, css } from "dreamland/core";
-import { swivelIn, swivelOut } from "../metro-dreamland";
+import { swivelIn, swivelOut } from "metro-dreamland";
 
 export function WebButton(
 	this: FC<

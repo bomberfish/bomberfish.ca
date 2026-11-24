@@ -7,7 +7,7 @@ import {
 	PanoramaTitle,
 	PanoramaTrack,
 	RingButton,
-} from "../metro-dreamland";
+} from "metro-dreamland";
 import { glyphFor, weatherGlyph } from "../components/WeatherGlyph";
 import { airTint } from "../lib/weather/sky";
 import {

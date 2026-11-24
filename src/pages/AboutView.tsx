@@ -13,7 +13,7 @@ import {
 	material,
 	placeSlider,
 	setMaterial,
-} from "../metro-dreamland";
+} from "metro-dreamland";
 
 // (this site's own first: it's what there is until flat is picked)
 const MATERIALS: Material[] = ["acrylic", "flat"];

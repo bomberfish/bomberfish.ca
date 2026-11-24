@@ -2,3 +2,6 @@
 	path = vendor/dreamland
 	url = https://github.com/MercuryWorkshop/dreamlandjs.git
 	branch = rewrite
+[submodule "vendor/metro-dreamland"]
+	path = vendor/metro-dreamland
+	url = https://github.com/bomberfish/metro-dreamland.git
