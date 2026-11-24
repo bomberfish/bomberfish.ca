@@ -198,7 +198,7 @@ function OtherButtons(this: FC) {
 			<WebButton src="/buttons/wdw.gif" href="https://wetdry.world" />
 			<WebButton
 				src="https://eightyeightthirty.one/88x31.png"
-				href="https://eightyeightthirty.one"
+				href="https://eightyeightthirty.one/#bomberfish.ca"
 			/>
 			<WebButton src="/buttons/xkcd.gif" title="XKCD" href="https://xkcd.com" />
 			<WebButton
