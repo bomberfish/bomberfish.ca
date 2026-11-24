@@ -98,25 +98,30 @@ function MoreArrow(this: FC) {
 // group of tiles, panning sideways. On a phone it's a phone's start
 // screen: the same sections one under another, scrolling down.
 function Homepage(this: FC) {
-	// What it's doing in Waterloo, at the end of whoami's first paragraph:
-	// a sentence whose link says "doing this" (the sky behind the page is
-	// the weather), and once Environment Canada's been heard from, says it
-	// in words. It goes to the weather's own page. The sentence isn't in
-	// the page as it's served: it's written here, so that without
-	// scripting (no sky, no weather page) there's nothing of it at all.
+	// What time it is in Waterloo and what it's doing there, at the end of
+	// whoami's first paragraph: the time to the second, its colons blinking
+	// with the seconds; then a link that says "doing this" (the sky behind
+	// the page is the weather), and once Environment Canada's been heard
+	// from, says it in words. It goes to the weather's own page. The
+	// sentence isn't in the page as it's served: it's written here, so that
+	// without scripting (no sky, no weather page, no clock that goes) there's
+	// nothing of it at all.
 	let shown = false; // this page has been on screen
 	const sayWeather = () => {
 		const line = this.root?.querySelector<HTMLElement>(".weather-line");
 		if (line && !line.firstChild) {
 			line.append(
 				"right now it's ",
+				(<time class="clock" />) as Node,
+				" there, and it's ",
 				(
 					<Link href="/weather" class="weather-now">
 						doing this
 					</Link>
 				) as Node,
-				" there."
+				"."
 			);
+			startClock();
 		}
 		const link = line?.querySelector<HTMLElement>(".weather-now");
 		// (left the page: stop listening. Not just "not on the page", though:
@@ -140,6 +145,45 @@ function Homepage(this: FC) {
 				? words
 				: `${Math.round(now.temperature)}° ${joiner} ${words}`;
 	};
+	// The clock: Waterloo's time (whoever's reading), on the 24-hour clock,
+	// written out again at the turn of every second. Its colons blink in step with the seconds
+	// (lit for the first half of each, a CSS animation started on the
+	// second), and stay lit for anyone who's asked for less motion.
+	let ticking = 0;
+	const CLOCK = new Intl.DateTimeFormat("en-CA", {
+		timeZone: "America/Toronto",
+		hour: "2-digit",
+		minute: "2-digit",
+		second: "2-digit",
+		hourCycle: "h23",
+	});
+	const tick = () => {
+		const clock = this.root?.querySelector<HTMLTimeElement>("time.clock");
+		// (left the page: stop, until it's back)
+		if (!clock?.isConnected) {
+			ticking = 0;
+			return;
+		}
+		const now = new Date();
+		const parts = CLOCK.formatToParts(now);
+		const text = (type: string) =>
+			parts.find((p) => p.type === type)?.value ?? "";
+		const sep = () => <span class="clock-sep">:</span>;
+		clock.replaceChildren(
+			text("hour"),
+			sep() as Node,
+			text("minute"),
+			sep() as Node,
+			text("second")
+		);
+		clock.dateTime = now.toISOString();
+		ticking = window.setTimeout(tick, 1000 - (Date.now() % 1000) + 5);
+	};
+	const startClock = () => {
+		if (ticking) return;
+		ticking = window.setTimeout(tick, 0);
+	};
+
 	// ...and on a phone, where the top of the page is a start screen's tiles
 	// (.home-start, below), the weather has one: the picture for it, the
 	// temperature in a tile's big light figures, and what it's doing as the
@@ -181,6 +225,7 @@ function Homepage(this: FC) {
 	this.cx.mount = () => {
 		if (import.meta.env.SSR) return;
 		sayWeather();
+		startClock();
 		window.addEventListener("weatherchange", sayWeather);
 	};
 
@@ -284,7 +329,7 @@ function Homepage(this: FC) {
 										/>
 									</picture>
 								</span>
-								<TileLabel>me</TileLabel>
+								<TileLabel>me!</TileLabel>
 							</Tile>
 							{smallJumps.map((j) => (
 								<Tile
@@ -569,6 +614,31 @@ Homepage.style = css`
 
 	.about-text p {
 		margin: 0 0 0.75rem 0;
+	}
+
+	/* Waterloo's time, in figures that don't jostle as they change; its
+	   colons blink with the seconds (redrawn at the turn of each, so the
+	   blink starts there: lit, then out for the second half) */
+	/* (:global: they're written in after the page is made, outside its scope) */
+	:global(.clock) {
+		font-variant-numeric: tabular-nums;
+		white-space: nowrap;
+	}
+
+	:global(.clock .clock-sep) {
+		animation: clock-blink 1s steps(1, end) infinite;
+	}
+
+	@keyframes clock-blink {
+		50% {
+			opacity: 0;
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		:global(.clock .clock-sep) {
+			animation: none;
+		}
 	}
 
 	/* the site's footer goes under it: at the foot of the column, however

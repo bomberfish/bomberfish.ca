@@ -19,6 +19,25 @@
 	}
 }
 
+/* The site's own tile colours: the brands' shades where a tile is a
+   brand's (Last.fm's red, Discord's blurple), and the shades the site has
+   always had for the rest, over metro-dreamland's phone accents. */
+.c-red {
+	--tile-bg: #d4111e;
+}
+.c-violet {
+	--tile-bg: #9a1ff0;
+}
+.c-orange {
+	--tile-bg: #e85d04;
+}
+.c-teal {
+	--tile-bg: #00918f;
+}
+.c-blurple {
+	--tile-bg: #5865f2;
+}
+
 /* ==========================================================================
    Base Reset & Root Styles
    ========================================================================== */
