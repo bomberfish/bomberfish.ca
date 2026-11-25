@@ -501,6 +501,63 @@ GithubCard.style = css`
 		margin-top: auto;
 	}
 
+	/* a pinned repo: its name, what it is (two lines at most), and its
+	   language and stars along the foot */
+	.gh-repo {
+		display: flex;
+		flex-direction: column;
+		gap: 0.15rem;
+		padding: 0.45rem 0.6rem;
+		border: 1px solid var(--surface2);
+		background: hsla(var(--surface0-hsl), 0.7);
+		color: inherit;
+		text-decoration: none !important;
+		font-size: 0.8rem;
+		min-width: 0;
+	}
+
+	.gh-repo::after {
+		display: none !important;
+	}
+
+	.gh-repo-name {
+		font-weight: 600;
+		color: var(--accent);
+	}
+
+	.gh-repo-desc {
+		color: var(--subtext0);
+		display: -webkit-box;
+		-webkit-line-clamp: 2;
+		-webkit-box-orient: vertical;
+		overflow: hidden;
+	}
+
+	.gh-repo-meta {
+		display: flex;
+		gap: 0.6rem;
+		margin-top: auto;
+		color: var(--subtext1);
+		font-size: 0.75rem;
+	}
+
+	.gh-repo-meta > span {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.2rem;
+	}
+
+	.gh-repo-meta .material-symbols {
+		font-size: 0.9rem;
+	}
+
+	.gh-lang {
+		width: 0.6rem;
+		height: 0.6rem;
+		border-radius: 50%;
+		display: inline-block;
+	}
+
 	/* ---- on a phone's home page (see "Panorama" in metro.css) ----
 	   The tile is as tall as it's wide, which can be a good deal less
 	   than all of this comes to. The pinned repos take what height is
