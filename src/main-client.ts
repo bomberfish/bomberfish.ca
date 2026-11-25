@@ -20,6 +20,10 @@ startMetro({
 	// someone's said otherwise on the about page. index.html has it in place
 	// before the first paint.)
 	material: "acrylic",
+	// (a flick down the Last.fm card's history that reaches its end stops
+	// there, rather than panning the home page: metro-dreamland's wheel
+	// latching, which is off unless asked for)
+	wheelLatch: true,
 });
 
 hydrate(

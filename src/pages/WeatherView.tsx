@@ -56,18 +56,23 @@ import type { WeatherResponse } from "../lib/siteapi";
 // Styles: "the weather page" in src/style.css.
 
 const PLACE = "America/Toronto";
+// Waterloo's time on the 24-hour clock, as the rest of the site has it:
+// "16:30", or for a whole hour (`minutes` false, the forecast's hours)
+// "16:00"
 const clock = (iso: string | null, minutes = true) => {
 	if (!iso) return "–";
 	const parts = new Intl.DateTimeFormat("en-CA", {
-		hour: "numeric",
-		minute: minutes ? "2-digit" : undefined,
-		hour12: true,
+		hour: "2-digit",
+		minute: "2-digit",
+		hourCycle: "h23",
 		timeZone: PLACE,
 	}).formatToParts(new Date(iso));
 	const get = (type: string) => parts.find((p) => p.type === type)?.value ?? "";
-	const half = get("dayPeriod").toLowerCase().replace(/\./g, "");
-	return minutes ? `${get("hour")}:${get("minute")} ${half}` : `${get("hour")} ${half}`;
+	return `${get("hour")}:${minutes ? get("minute") : "00"}`;
 };
+// the same, for minutes after midnight
+const clockOf = (minutes: number) =>
+	`${`${Math.floor(minutes / 60) % 24}`.padStart(2, "0")}:${`${minutes % 60}`.padStart(2, "0")}`;
 const degrees = (n: number | null) => (n == null ? "–" : `${Math.round(n)}°`);
 const isNight = (iso: string | null) =>
 	sunAltitude(iso ? Date.parse(iso) : Date.now()) < -3;
@@ -97,7 +102,7 @@ function moonPicture(fraction: number, waxing: boolean) {
 // A place in the forecast that can be shown instead of now.
 interface Stop extends Glimpse {
 	key: string;
-	/** "3 pm", "wednesday", "thursday night" */
+	/** "15:00", "wednesday", "thursday night" */
 	label: string;
 	rain: number | null;
 }
@@ -177,6 +182,23 @@ function WeatherView(this: FC) {
 	// sharing the section's height between them. (Not a chart: the next
 	// twelve hours are often within a degree or two of each other, and a
 	// line drawn through that to fill a screen is a cliff made of nothing.)
+	// ...as many of them as the section has room for: it ends where the
+	// others do, on one line along the page's foot, so the hours that would
+	// run past it are left out (from the last). Where the section scrolls
+	// instead (a phone), its box grows with the table, and none are.
+	const fitHours = () => {
+		const box = this.root?.querySelector<HTMLElement>(".wx-hours");
+		const table = box?.querySelector<HTMLTableElement>(".wx-table");
+		if (!box || !table) return;
+		const rows = Array.from(table.tBodies[0]?.rows ?? []);
+		for (const row of rows) row.hidden = false;
+		const foot = box.getBoundingClientRect().bottom + 0.5;
+		for (let i = rows.length - 1; i > 0; i--) {
+			if (table.getBoundingClientRect().bottom <= foot) break;
+			rows[i].hidden = true;
+		}
+	};
+
 	const hours = (data: WeatherResponse) => {
 		const list = data.hourly.slice(0, 12);
 		if (!list.length) return <p class="wx-none">no forecast for the next hours just now.</p>;
@@ -188,7 +210,9 @@ function WeatherView(this: FC) {
 						<th scope="col" colspan="2">
 							forecast
 						</th>
-						<th scope="col">temp</th>
+						<th scope="col" class="wx-table-temp-head">
+							temp
+						</th>
 						<th scope="col">chance</th>
 						<th scope="col">wind</th>
 					</tr>
@@ -210,7 +234,11 @@ function WeatherView(this: FC) {
 							</td>
 							<td class="wx-table-words">{(h.condition ?? "").toLowerCase()}</td>
 							<td class="wx-table-temp">{degrees(h.temperature)}</td>
-							<td>{h.precipChance ? `${Math.round(h.precipChance)}%` : "–"}</td>
+							{/* (only when there's a chance: a column of dashes, with no name
+							    over it, says nothing) */}
+							<td title="chance of rain or snow">
+								{h.precipChance ? `${Math.round(h.precipChance)}%` : ""}
+							</td>
 							<td>
 								{h.wind.speed != null
 									? `${Math.round(h.wind.speed)} km/h${h.wind.direction ? ` ${h.wind.direction.toLowerCase()}` : ""}`
@@ -404,11 +432,7 @@ function WeatherView(this: FC) {
 							? new Intl.DateTimeFormat("en-CA", { weekday: "long", timeZone: PLACE })
 									.format(origin + m * 60_000)
 									.toLowerCase()
-							: clockAt === 720
-								? "noon"
-								: clockAt === 360
-									? "6 am"
-									: "6 pm"}
+							: clockOf(clockAt)}
 					</span>
 				) as Node
 			);
@@ -567,6 +591,7 @@ function WeatherView(this: FC) {
 
 		// ---- the hours ahead ----
 		put("hours", hours(data) as Node);
+		fitHours();
 
 		// ---- overhead ----
 		// The sky from top to bottom, a band a level, each as tall as its
@@ -615,7 +640,7 @@ function WeatherView(this: FC) {
 		const set = [
 			picked.kind,
 			picked.time != null
-				? `${Math.floor(picked.time / 60) % 12 || 12}:${`${picked.time % 60}`.padStart(2, "0")} ${picked.time < 720 ? "am" : "pm"}`
+				? clockOf(picked.time)
 				: null,
 		]
 			.filter(Boolean)
@@ -715,10 +740,18 @@ function WeatherView(this: FC) {
 
 	this.cx.mount = () => {
 		if (import.meta.env.SSR) return;
+		// (?noback: without its back button, for a screen that only shows
+		// this. Said again here for getting here by a link, which the script
+		// in index.html didn't see.)
+		document.documentElement.toggleAttribute(
+			"data-noback",
+			new URLSearchParams(location.search).has("noback")
+		);
 		// (this page is the real weather, whatever's been picked for the rest)
 		setAside(true);
 		fill();
 		window.addEventListener("weatherchange", fill);
+		window.addEventListener("resize", fitHours);
 		// The ruler: sliding it is scrolling it. A wheel over it turns it
 		// (rather than panning the page, which is what a wheel does
 		// anywhere else here), and a mouse can take hold of it and drag.
@@ -769,6 +802,7 @@ function WeatherView(this: FC) {
 			if (!shown) return;
 			leaving.disconnect();
 			window.removeEventListener("weatherchange", fill);
+			window.removeEventListener("resize", fitHours);
 			if (previewing()) preview(null);
 			setAside(false);
 		});

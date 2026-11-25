@@ -1188,6 +1188,13 @@ article {
 	font-size: 1rem;
 }
 
+/* /weather?noback: no way back, for a screen that only shows the weather
+   (a tablet on a stand, say). Marked on <html> by the script in
+   index.html, before the first paint, and by the page as it's shown. */
+html[data-noback] .wx-back {
+	display: none;
+}
+
 .wx-place.wx-place {
 	margin: 0;
 	padding: 0;
@@ -1577,6 +1584,11 @@ article {
 	width: 41rem;
 }
 
+/* (its first rule level with the sky's levels' beside it: .wx-levels) */
+.wx-hours-item .wx-hours {
+	padding-top: 0.3rem;
+}
+
 .weather-page .wx-cloud {
 	width: 33rem;
 }
@@ -1608,7 +1620,10 @@ article {
 .wx-table th,
 .wx-table td {
 	padding: 0 1.2rem 0 0;
-	border-top: 1px solid rgba(255, 255, 255, 0.2);
+	/* (rows as low as the hour's picture lets them be, so more fit) */
+	line-height: 1.25;
+	/* (ruled as the sky's levels beside it are) */
+	border-top: 1px solid rgba(255, 255, 255, 0.28);
 	font-size: 0.95rem;
 	font-weight: 400;
 	text-align: left;
@@ -1616,14 +1631,17 @@ article {
 	white-space: nowrap;
 }
 
-.wx-table thead th {
-	height: 2rem;
-	border-top: 0;
-	font-size: 0.75rem;
-	font-weight: 600;
-	letter-spacing: 0.06em;
-	text-transform: uppercase;
-	color: var(--subtext0);
+/* (the columns' names are for a screen reader: to the eye each says what
+   it is, a time, the sky, degrees, a chance in percent, km/h. So the
+   first hour's rule is the table's first line, close under the heading,
+   where the sky's levels beside it start too.) */
+.wx-table thead {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	overflow: hidden;
+	clip-path: inset(50%);
+	white-space: nowrap;
 }
 
 .wx-table tbody th {
@@ -1659,11 +1677,18 @@ article {
 	font-family: var(--font-display);
 	font-size: 1.7rem;
 	font-weight: 200;
+	line-height: 1;
+	/* (a column of numbers: their degree signs in a line, whatever the
+	   digits, a minus standing out to the left) */
+	text-align: right;
+	font-variant-numeric: tabular-nums;
 }
+
 
 .wx-table tbody tr {
 	transition: background-color 0.15s;
 }
+
 
 .wx-table tbody tr:hover {
 	background: rgba(255, 255, 255, 0.08);
@@ -2149,107 +2174,7 @@ article {
 	opacity: 0.85;
 }
 
-/* the hours ahead: a line through their temperatures (it can't be said
-   how tall that is until the temperatures are known, so the points are
-   placed by hand: WeatherView.tsx), and under each its picture, its chance
-   of rain and its time. On a phone it's wider than the window and goes
-   sideways. */
-.wx-hours {
-	margin-top: 0.5rem;
-}
-
-.wx-hours-strip {
-	min-width: calc(var(--hours) * 3.4rem);
-}
-
-.wx-line {
-	position: relative;
-	flex: 1 1 5.5rem;
-	min-height: 5.5rem;
-	max-height: 26rem;
-	margin: 2.6rem 0 1.6rem;
-}
-
-.wx-line svg {
-	position: absolute;
-	inset: 0;
-	width: 100%;
-	height: 100%;
-	overflow: visible;
-}
-
-.wx-line-stroke {
-	fill: none;
-	stroke: var(--supertext);
-	stroke-width: 1.5;
-	vector-effect: non-scaling-stroke;
-}
-
-.wx-line-under {
-	fill: rgba(255, 255, 255, 0.11);
-	stroke: none;
-}
-
-.wx-line-point {
-	position: absolute;
-	width: 0.45rem;
-	height: 0.45rem;
-	margin: -0.225rem;
-	background: var(--supertext);
-}
-
-.wx-line-point b {
-	position: absolute;
-	bottom: 0.7rem;
-	left: 50%;
-	transform: translateX(-50%);
-	font-family: var(--font-display);
-	font-size: 1.5rem;
-	font-weight: 300;
-	color: var(--supertext);
-}
-
-.wx-hour-list {
-	display: grid;
-	grid-template-columns: repeat(var(--hours), minmax(0, 1fr));
-	margin: 0;
-	padding: 0;
-	list-style: none;
-}
-
-.wx-hour-list li {
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	gap: 0.1rem;
-	color: var(--supertext);
-}
-
-.wx-hour-list li {
-	padding-bottom: 0.25rem;
-}
-
-.wx-hour-list .weather-glyph {
-	position: static;
-	width: 2.7rem;
-	height: 2.93rem;
-	stroke-width: 1.2;
-}
-
-.wx-hour-rain {
-	font-size: 0.8rem;
-	color: var(--subtext0);
-}
-
-.wx-hour-list time {
-	margin-top: 0.2rem;
-	font-size: 0.8rem;
-	font-weight: 600;
-	letter-spacing: 0.06em;
-	text-transform: uppercase;
-	color: var(--supertext);
-}
-
+/* (the hours ahead, when there's no forecast for them) */
 .wx-none {
 	color: var(--subtext0);
 }

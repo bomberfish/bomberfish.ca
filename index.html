@@ -57,6 +57,10 @@
 						d.style.setProperty("--bg-turn", String(t));
 						d.style.setProperty("--bg-filter", "hue-rotate(" + t + "deg)");
 					}
+					// (/weather?noback: the weather page without its back
+					// button, for a screen that only shows the weather)
+					if (/[?&]noback(=|&|$)/.test(location.search))
+						d.setAttribute("data-noback", "");
 				} catch (e) {}
 				// (the phone's controls or Windows 8's: metro-dreamland's form
 				// factor, which startMetro keeps up after this. Forced, if it's

@@ -272,11 +272,12 @@ export function AboutView(this: FC) {
 
 	// The weather: the real thing, or one picked here, and likewise the
 	// time of day. Marked by hand like the rest.
-	// "3:40 pm", from minutes after midnight
+	// "15:40", from minutes after midnight (the 24-hour clock, as the home
+	// page's is)
 	const clockWords = (minutes: number) => {
-		const h = Math.floor(minutes / 60);
+		const h = `${Math.floor(minutes / 60) % 24}`.padStart(2, "0");
 		const m = `${minutes % 60}`.padStart(2, "0");
-		return `${h % 12 || 12}:${m} ${h < 12 ? "am" : "pm"}`;
+		return `${h}:${m}`;
 	};
 	let shown = false; // this page has been on screen
 	const markWeather = () => {
