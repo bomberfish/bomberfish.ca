@@ -44,6 +44,10 @@ const REFRESH_JUMP_MS = 350;
 const HISTORY_SIZE = 3; // the first page: what fits the card
 const HISTORY_PAGE = 10; // each page after that, while scrolling
 const PROFILE_URL = "https://www.last.fm/user/bmbrfsh";
+const DRIVER_URL = "https://driver.dev";
+// TODO: false once the layout's settled: then the credit shows only while
+// the data is coming through Driver (siteapi's Last.fm fallback)
+const ALWAYS_CREDIT_DRIVER = true;
 
 // a history entry in the card's full layout, with its stats (duration,
 // play counts...) once /v1/lastfm/track has them
@@ -353,13 +357,21 @@ function LastFmCard(this: FC) {
 		historyOpen: boolean;
 		history: HistoryView;
 		live: LastfmTrack | null; // the latest track, atop the history
+		viaDriver: boolean; // the card's or the history's data came through Driver
 	}> = createState({
 		view: { kind: "loading" } as View,
 		refreshing: false,
 		historyOpen: false,
 		history: { kind: "idle" } as HistoryView,
 		live: null as LastfmTrack | null,
+		viaDriver: false,
 	});
+	// (each kept apart: a fresh main answer shouldn't clear the history's)
+	let liveViaDriver = false;
+	let historyViaDriver = false;
+	const syncCredit = () => {
+		state.viaDriver = liveViaDriver || historyViaDriver;
+	};
 
 	let cancelled = false;
 	let controller: AbortController | null = null;
@@ -411,6 +423,8 @@ function LastFmCard(this: FC) {
 			if (cancelled || controller !== request) return;
 			historyBefore = data.historyBefore ?? null;
 			shownPlayedAt = data.track?.playedAt ?? null;
+			liveViaDriver = data.source === "driver";
+			syncCredit();
 			liveView = data.track
 				? { kind: "loaded", track: data.track, profile: data.profile }
 				: { kind: "empty" };
@@ -493,6 +507,8 @@ function LastFmCard(this: FC) {
 					request.signal
 				);
 				if (cancelled || historyAbort !== request) return;
+				historyViaDriver = data.source === "driver";
+				syncCredit();
 				const page = data.tracks
 					.filter((t) => before != null || t.playedAt !== shownPlayedAt)
 					.slice(0, HISTORY_SIZE);
@@ -2800,10 +2816,31 @@ function LastFmCard(this: FC) {
 							{use(state.history).map(historyItems)}
 						</ol>
 					</div>
-					<a class="lastfm-history-more" href={PROFILE_URL}>
-						view profile
-						<span class="material-symbols">north_east</span>
-					</a>
+					<div class="lastfm-history-foot">
+						{use(state.viaDriver).map((via) =>
+							via || ALWAYS_CREDIT_DRIVER ? (
+								<a
+									class="lastfm-history-credit"
+									href={DRIVER_URL}
+									target="_blank"
+									rel="noopener"
+									title="Last.fm's data reaches this card through Driver's hosted browsers"
+								>
+									{/* driver.dev's mark (app.driver.dev/favicon.svg), in the text's colour */}
+									<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" aria-hidden="true">
+										<path d="M0,0 L12,0 L12,38 L0,38 Z" transform="translate(10,13)" />
+										<path d="M0,0 L13,0 L13,6 L1,17 L-17,17 L-17,5 L0,5 Z" transform="translate(42,34)" />
+										<path d="M0,0 L18,0 L30,11 L30,17 L17,17 L17,12 L0,12 Z" transform="translate(25,13)" />
+									</svg>
+									powered by driver
+								</a>
+							) : null
+						)}
+						<a class="lastfm-history-more" href={PROFILE_URL}>
+							view profile
+							<span class="material-symbols">north_east</span>
+						</a>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -3116,12 +3153,43 @@ LastFmCard.style = css`
 		height: 0.65rem;
 	}
 
+	/* under the list: the Driver credit (when there is one) at the left,
+	   "view profile" at the right */
+	.lastfm-history-foot {
+		display: flex;
+		align-items: center;
+		gap: 0.75rem;
+		margin-top: 0.5rem;
+	}
+
+	.lastfm-history-credit {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.3rem;
+		min-width: 0;
+		color: var(--subtext2) !important;
+		font-size: 0.8rem;
+		white-space: nowrap;
+		text-decoration: none !important;
+		transition: color 0.2s ease;
+	}
+
+	.lastfm-history-credit:hover {
+		color: var(--text) !important;
+	}
+
+	.lastfm-history-credit svg {
+		flex-shrink: 0;
+		width: 1rem;
+		height: 1rem;
+		fill: currentColor;
+	}
+
 	.lastfm-history-more {
 		display: inline-flex;
 		align-items: center;
 		gap: 0.2rem;
-		align-self: flex-end;
-		margin-top: 0.5rem;
+		margin-left: auto;
 		color: var(--subtext1) !important;
 		font-size: 0.8rem;
 		text-decoration: none !important;

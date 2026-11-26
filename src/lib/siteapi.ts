@@ -36,8 +36,13 @@ export interface AppleMusicMatch {
 	isrc: string | null;
 }
 
+// where siteapi got Last.fm's data: its API, or (when that fails) its web
+// pages through a Driver browser. Absent from older API deploys.
+export type LastfmSource = "api" | "driver";
+
 export interface LastfmResponse {
 	user: string;
+	source?: LastfmSource;
 	profile: LastfmProfile | null;
 	track: LastfmTrack | null;
 	// cursor for the scrobbles older than `track` (pass as `before` to
@@ -72,11 +77,13 @@ export interface LastfmTrackInfo {
 
 export interface LastfmTrackInfoResponse {
 	user: string;
+	source?: LastfmSource;
 	info: LastfmTrackInfo | null; // null when Last.fm doesn't know the track
 }
 
 export interface LastfmRecentResponse {
 	user: string;
+	source?: LastfmSource;
 	tracks: LastfmHistoryTrack[]; // newest first, never the now-playing track
 	next: number | null; // cursor for the page after this one
 }
